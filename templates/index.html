@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" dir="rtl">
 
 <head>
     <meta charset="UTF-8">
@@ -8,11 +8,46 @@
     <title>Document</title>
 </head>
 
-<body>
+<style>
+    body {
+        padding: 20px
+    }
+</style>
 
-    <form action="">
-        {{form.as_p}}
-    </form>
+<body>
+    <div>
+        <h2>طلب صيانة </h2>
+        <form action="{% url 'repair_request' %}" method="POST">
+            {% csrf_token %}
+            {{repairForm.as_p}}
+            <button type="submit">أضافة الطلب </button>
+        </form>
+    </div>
+
+    <div>
+        <h2>الطلبات الواردة </h2>
+        {% for request in repair_request %}
+        <h2>{{request.customer_name}}</h2>
+        <h3>{{request.status}}</h3>
+
+        <div>
+            <h3>تحديد موعد </h3>
+            <form action="{% url 'repair_appointment' %}" method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="request" value="{{request.id}}">
+                <input type="date" name="appoint_date" id="">
+                <select name="technician" id="">
+                    <option value="" disabled selected>اختيار الفني </option>
+                    {% for tech in technicians %}
+                    <option value="{{tech.id}}">{{tech.name}}</option>
+                    {% endfor %}
+                </select>
+                <button type="submit">Send</button>
+            </form>
+        </div>
+        {% endfor %}
+    </div>
+
 </body>
 
 </html>

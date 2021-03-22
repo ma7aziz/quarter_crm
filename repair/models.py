@@ -1,5 +1,5 @@
 from django.db import models
-
+from accounts.models import User
 
 import random
 import string
@@ -39,10 +39,21 @@ class Repair_request(models.Model):
                     unique = False
                 else:
                     unique = True
-                    self.tracking_id = new_id
+                    self.code = new_id
 
         super(Repair_request, self).save(*args, **kwargs)
 
+    def __str__(self):
+        return self.customer_name
+
 
 class Appointment(models.Model):
-    pass
+    repair_request = models.ForeignKey(
+        Repair_request, on_delete=models.CASCADE)
+    date = models.DateField()
+    technician = models.ForeignKey(User, on_delete=models.CASCADE)
+    # created_by
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.repair_request.customer_name

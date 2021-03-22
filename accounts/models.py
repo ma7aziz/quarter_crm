@@ -6,6 +6,20 @@ from django.contrib.auth.base_user import BaseUserManager
 # Create your models here.
 
 
+class UserManager(BaseUserManager):
+    use_in_migrations = True
+
+    # def create_superuser(self, email, password, **extra_fields):
+    #     extra_fields.setdefault('is_superuser', True)
+
+    #     if extra_fields.get('is_superuser') is not True:
+    #         raise ValueError('Superuser must have is_superuser=True.')
+
+    #     extra_fields.setdefault('role', 1)
+
+    #     return self._create_user(email, password, **extra_fields)
+
+
 class Section(models.Model):
     ALL = 1
     INSTALL = 2
@@ -36,9 +50,12 @@ class User(AbstractUser):
     name = models.CharField(_('الاسم'), max_length=100, blank=True)
     username = models.CharField(_('اسم المستخدم'), max_length=25, unique=True)
     phone = models.CharField(_('الجوال'), unique=True, max_length=15)
-    role = models.PositiveSmallIntegerField(_('الوظيفة'), choices=ROLE)
+    role = models.PositiveSmallIntegerField(
+        _('الوظيفة'), choices=ROLE, default=1)
     section = models.ManyToManyField(Section)
     created = models.DateTimeField(auto_now_add=True)
+
+    # objects = UserManager()
 
     def __str__(self):
         return self.username

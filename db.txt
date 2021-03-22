@@ -27,5 +27,12 @@
 
 ==========================================
 repair request :
-    -created_by , name , phone , address , machine_type ,invoice_number 
-    
+    -created_by , name , phone , address , machine_type ,invoice_number , customer type (cash , ضمان) ,
+    -request status 
+     
+repair appointment :
+    -technician 
+    -time 
+    -code 
+
+confirm repair done using code .
