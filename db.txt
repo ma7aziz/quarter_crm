@@ -1,0 +1,31 @@
+--users 
+=admin 
+=supervisor 
+=tech
+
+
+== repair
+    -merchant 
+
+
+=sections 
+    -repair 
+    -installments 
+
+
+==user table 
+    -name 
+    -email 
+    -phone 
+    -section 
+    -type 
+    -timestamp 
+    -password 
+
+
+
+
+==========================================
+repair request :
+    -created_by , name , phone , address , machine_type ,invoice_number 
+    
