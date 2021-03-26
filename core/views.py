@@ -1,6 +1,4 @@
 from django.shortcuts import render
-
-from accounts.forms import UserForm
 from accounts.models import User
 from repair.forms import RepairRequestForm
 from repair.models import Repair_request
@@ -9,10 +7,15 @@ from repair.models import Repair_request
 
 def index(request):
     repairForm = RepairRequestForm()
-    repair_requests = Repair_request.objects.all()
+    new_requests = Repair_request.objects.new()
+    under_process = Repair_request.objects.under_process()
+    done = Repair_request.objects.done()
+
     tecnicians = User.objects.all().filter(role=3)
     ctx = {
         'repairForm': repairForm,
-        'repair_request': repair_requests,
+        'new_request': new_requests,
+        'under_process': under_process,
+        'done': done,
         'technicians': tecnicians}
     return render(request, 'index.html', ctx)

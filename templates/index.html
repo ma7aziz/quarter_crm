@@ -1,53 +1,82 @@
 <!DOCTYPE html>
-<html lang="en" dir="rtl">
+<html lang="en">
+{% load static %}
 
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
 
+    <meta charset="UTF-8">
+    <title>Quarter CRM </title>
+    <meta name="keywords" content="" />
+    <meta name="description" content="">
+    <meta name="author" content="okler.net">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+    <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800%7COpen+Sans:400,700,800"
+        rel="stylesheet" type="text/css">
+
+    <link rel="stylesheet" href="{% static 'vendor/bootstrap/css/bootstrap.css' %}" />
+    <link rel="stylesheet" href="{% static 'vendor/animate/animate.compat.css' %}">
+    <link rel="stylesheet" href="{% static 'vendor/font-awesome/css/all.min.css' %}" />
+    <link rel="stylesheet" href="{% static 'vendor/boxicons/css/boxicons.min.css' %}" />
+    <link rel="stylesheet" href="{% static 'vendor/magnific-popup/magnific-popup.css' %}" />
+    <link rel="stylesheet" href="{% static 'vendor/bootstrap-datepicker/css/bootstrap-datepicker3.css' %}" />
+    <link rel="stylesheet" href="{% static 'vendor/owl.carousel/assets/owl.carousel.css' %}" />
+    <link rel="stylesheet" href="{% static 'vendor/owl.carousel/assets/owl.theme.default.css' %}" />
+
+
+    <link rel="stylesheet" href="{% static 'css/theme.css' %}" />
+
+
+    <link rel="stylesheet" href="{% static 'css/landing.css' %}" />
+
+    <link rel="stylesheet" href="{% static 'css/custom.css' %}">
+
+    <script src="{% static 'vendor/modernizr/modernizr.js' %}"></script>
+</head>
 <style>
-    body {
-        padding: 20px
+    * {
+        direction: rtl;
+        box-sizing: border-box;
     }
 </style>
 
 <body>
-    <div>
-        <h2>طلب صيانة </h2>
-        <form action="{% url 'repair_request' %}" method="POST">
-            {% csrf_token %}
-            {{repairForm.as_p}}
-            <button type="submit">أضافة الطلب </button>
-        </form>
-    </div>
-
-    <div>
-        <h2>الطلبات الواردة </h2>
-        {% for request in repair_request %}
-        <h2>{{request.customer_name}}</h2>
-        <h3>{{request.status}}</h3>
-
-        <div>
-            <h3>تحديد موعد </h3>
-            <form action="{% url 'repair_appointment' %}" method="POST">
-                {% csrf_token %}
-                <input type="hidden" name="request" value="{{request.id}}">
-                <input type="date" name="appoint_date" id="">
-                <select name="technician" id="">
-                    <option value="" disabled selected>اختيار الفني </option>
-                    {% for tech in technicians %}
-                    <option value="{{tech.id}}">{{tech.name}}</option>
-                    {% endfor %}
-                </select>
-                <button type="submit">Send</button>
-            </form>
+    <div class="container">
+        <div class="row">
+            <div class="col col-4">
+                <a href="">الصيانة</a>
+            </div>
+            <div class="col col-4">
+                <a href="">التركيب</a>
+            </div>
+            <div class="col col-4">
+                <a href="">كوارتر </a>
+            </div>
         </div>
-        {% endfor %}
     </div>
 
+    <script src="{% static 'vendor/jquery/jquery.js' %}"></script>
+    <script src="{% static 'vendor/jquery-browser-mobile/jquery.browser.mobile.js' %}"></script>
+    <script src="{% static 'vendor/jquery-cookie/jquery.cookie.js' %}"></script>
+    <script src="{% static 'master/style-switcher/style.switcher.js' %}"></script>
+    <script src="{% static 'vendor/popper/umd/popper.min.js' %}"></script>
+    <script src="{% static 'vendor/bootstrap/js/bootstrap.js' %}"></script>
+    <script src="{% static 'vendor/bootstrap-datepicker/js/bootstrap-datepicker.js' %}"></script>
+    <script src="{% static 'vendor/common/common.js' %}"></script>
+    <script src="{% static 'vendor/nanoscroller/nanoscroller.js' %}"></script>
+    <script src="{% static 'vendor/magnific-popup/jquery.magnific-popup.js' %}"></script>
+    <script src="{% static 'vendor/jquery-placeholder/jquery.placeholder.js' %}"></script>
+    <script src="{% static 'vendor/jquery-appear/jquery.appear.js' %}"></script>
+    <script src="{% static 'vendor/owl.carousel/owl.carousel.js' %}"></script>
+    <script src="{% static 'vendor/jquery.lazyload/jquery.lazyload.js' %}"></script>
+
+
+    <script src="{% static 'js/theme.js' %}"></script>
+
+    <script src="{% static 'js/custom.js' %}"></script>
+
+    <script src="{% static 'js/theme.init.js' %}"></script>
 </body>
 
 </html>

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<style>
+    body {
+        padding: 20px
+    }
+</style>
+
+<body>
+    <div>
+        <h2>طلب صيانة </h2>
+        <form action="{% url 'repair_request' %}" method="POST">
+            {% csrf_token %}
+            {{repairForm.as_p}}
+            <button type="submit">أضافة الطلب </button>
+        </form>
+    </div>
+
+    <div>
+        <h2>الطلبات الواردة </h2>
+        {% for request in new_request %}
+        <h2>{{request.customer_name}}</h2>
+        <h3>{{request.status}}</h3>
+
+        <div>
+            <h3>تحديد موعد </h3>
+            <form action="{% url 'repair_appointment' %}" method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="request" value="{{request.id}}">
+                <input type="date" name="appoint_date" id="">
+                <select name="technician" id="">
+                    <option value="" disabled selected>اختيار الفني </option>
+                    {% for tech in technicians %}
+                    <option value="{{tech.id}}">{{tech.name}}</option>
+                    {% endfor %}
+                </select>
+                <button type="submit">Send</button>
+            </form>
+        </div>
+        {% endfor %}
+    </div>
+    <div>
+
+        <h2>طلبات جاري تنفيذها </h2>
+        {% for request in under_process %}
+        <h2>{{request.customer_name}}</h2>
+        <div>
+            <h4>اتمام الطلب </h4>
+            <form action="{% url 'complete_request' %}" method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="request_id" value="{{request.id}}">
+                <input type="text" name="code">
+                <button type="submit">اتمام </button>
+            </form>
+        </div>
+        {% endfor %}
+    </div>
+
+    <div>
+
+        <h2>طلبات تم تنفيذ الصيانة </h2>
+        {% for request in done %}
+        <h2>{{request.customer_name}}</h2>
+        <div>
+            <h4>تأكيد وانهاء الطلب </h4>
+            <form action="{% url 'close_request' %}" method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="request_id" value="{{request.id}}">
+                <button type="submit">اتمام </button>
+            </form>
+        </div>
+        {% endfor %}
+    </div>
+
+</body>
+
+</html>

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+{% load static %}
+
+<head>
+
+    <meta charset="UTF-8">
+    <title>Quarter CRM </title>
+    <meta name="keywords" content="" />
+    <meta name="description" content="">
+    <meta name="author" content="okler.net">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+    <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800%7COpen+Sans:400,700,800"
+        rel="stylesheet" type="text/css">
+
+
+    <!-- Bootstrap Css -->
+    <link href="{% static 'css/bootstrap-rtl.min.css' %}" rel="stylesheet" type="text/css" />
+    <!-- Icons Css -->
+    <link href="{% static 'css/icons.min.css' %}" rel="stylesheet" type="text/css" />
+    <!-- App Css-->
+    <link href="{% static 'css/app-rtl.min.css' %}" rel="stylesheet" type="text/css" />
+
+</head>
+
+<body>
+
+    {% block content %}
+    {% endblock %}
+    <!-- JAVASCRIPT -->
+    <script src="{% static 'libs/jquery/jquery.min.js' %}"></script>
+    <script src="{% static 'libs/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'libs/metismenu/metisMenu.min.js' %}"></script>
+    <script src="{% static 'libs/simplebar/simplebar.min.js' %}"></script>
+    <script src="{% static 'libs/node-waves/waves.min.js' %}"></script>
+    <script src="{% static 'libs/waypoints/lib/jquery.waypoints.min.js' %}"></script>
+    <script src="{% static 'libs/jquery.counterup/jquery.counterup.min.js' %}"></script>
+
+    <!-- apexcharts -->
+    <script src="{% static 'libs/apexcharts/apexcharts.min.js' %}"></script>
+
+    <script src="{% static 'js/pages/dashboard.init.js' %}"></script>
+
+    <script src="{% static 'js/app-rtl.js' %}"></script>
+
+</body>
+
+</html>

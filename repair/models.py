@@ -6,6 +6,21 @@ import string
 # Create your models here.
 
 
+class RequestManager(models.Manager):
+    def new(self):
+        # new requests
+        return self.filter(status='new')
+
+    def under_process(self):
+        return self.filter(status="under_process")
+
+    def done(self):
+        return self.filter(status="done")
+
+    def suspended(self):
+        return self.filter(status="suspended")
+
+
 class Repair_request(models.Model):
     CUSTOMER_TYPE = [
         ('cash', 'كاش'),
@@ -15,20 +30,27 @@ class Repair_request(models.Model):
         ('new', 'جديد'),
         ('under_process', 'قيد التنفيذ'),
         ('done', 'تم'),
-        ('suspended', 'معلق')
+        ('suspended', 'معلق'),
+        ('closed', 'انتهي'),
     ]
-    # created_by
+    created_by = models.ForeignKey(
+        User, on_delete=models.SET_NULL, null=True, blank=True)
     customer_name = models.CharField(max_length=200)
     phone = models.CharField(max_length=25)
     machine_type = models.CharField(max_length=200)
     customer_type = models.CharField(choices=CUSTOMER_TYPE, max_length=10)
     invoice_number = models.CharField(max_length=25, blank=True, null=True)
+    address = models.CharField(max_length=250, blank=True, null=True)
+    notes = models.CharField(max_length=300, blank=True, null=True)
     status = models.CharField(
         max_length=25, choices=REQUEST_STATUS, default='new')
+    file = models.FileField(upload_to='repair/files/', blank=True, null=True)
     timestamp = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     code = models.CharField(
         unique=True, max_length=40, blank=True, null=True, editable=False)
+
+    objects = RequestManager()
 
     def save(self, *args, **kwargs):
         if not self.code:
