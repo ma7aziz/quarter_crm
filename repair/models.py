@@ -29,8 +29,8 @@ class Repair_request(models.Model):
     REQUEST_STATUS = [
         ('new', 'جديد'),
         ('under_process', 'قيد التنفيذ'),
-        ('done', 'تم'),
         ('suspended', 'معلق'),
+        ('done', 'تم'),
         ('closed', 'انتهي'),
     ]
     created_by = models.ForeignKey(
@@ -70,12 +70,16 @@ class Repair_request(models.Model):
 
 
 class Appointment(models.Model):
+    STATUS = [
+        ('open', 'open'),
+        ('closed', 'closed')
+    ]
     repair_request = models.ForeignKey(
         Repair_request, on_delete=models.CASCADE)
     date = models.DateField()
     technician = models.ForeignKey(User, on_delete=models.CASCADE)
-    # created_by
     timestamp = models.DateTimeField(auto_now_add=True)
+    status = models.CharField(max_length=20, choices=STATUS, default="open")
 
     def __str__(self):
         return self.repair_request.customer_name

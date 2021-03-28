@@ -1,18 +1,31 @@
-from django.shortcuts import render, redirect
-from django.http import HttpResponseRedirect
-from .forms import RepairRequestForm
-from .models import Repair_request, Appointment
 from accounts.models import User
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.http import HttpResponseRedirect
+from django.shortcuts import redirect, render
+
+from .forms import RepairRequestForm
+from .models import Appointment, Repair_request
+
 # Create your views here.
 
 
 @login_required
 def repair_index(request):
-    requests = Repair_request.objects.all().filter(created_by=request.user)
+    if request.user.role == 4:
+
+        requests = Repair_request.objects.all().filter(created_by=request.user)
+    elif request.user.role == 1 or request.user.role == 2:
+
+        requests = Repair_request.objects.all().order_by('-timestamp')
+    elif request.user.role == 3:
+
+        requests = Appointment.objects.filter(
+            status="open")
+        print(requests, request.user.role)
     ctx = {
-        "form": RepairRequestForm,
-        "requests": requests
+        "requests": requests,
+        "need_confirm": Repair_request.objects.done()
     }
     return render(request, 'repair/index.html ', ctx)
 
@@ -34,8 +47,31 @@ def repair_request(request):
         repair_request = Repair_request(created_by=user, customer_name=customer_name, phone=phone,
                                         machine_type=machine_type, invoice_number=invoice_number, address=address, customer_type=customer_type, notes=request.POST['notes'])
         repair_request.save()
-        print(repair_request)
+        messages.success(request, "تم تسجيل طلبك بنجاح")
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
+def repair_request_details(request, id):
+    req = Repair_request.objects.get(pk=id)
+    technicians = User.objects.all().filter(role=3)
+    appointment = Appointment.objects.all().filter(repair_request=req).first()
+    ctx = {
+        'req': req,
+        'tech': technicians,
+        'appointment': appointment
+
+
+    }
+    return render(request, 'repair/request_details.html', ctx)
+
+
+def appointment_details(request, id):
+    appointment = Appointment.objects.get(pk=id)
+    ctx = {
+        "appointment": appointment
+    }
+    print(appointment.repair_request.code)
+    return render(request, 'repair/appointment_details.html', ctx)
 
 
 def repair_appointment(request):
@@ -55,8 +91,8 @@ def repair_appointment(request):
         appointment.save()
         repair_request.status = 'under_process'
         repair_request.save()
-
-    return redirect('/')
+        messages.success(request, "تم تحديد الموعد !")
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
 def complete_request(request):
@@ -66,17 +102,19 @@ def complete_request(request):
     if request.method == "POST":
         repair_request = Repair_request.objects.get(
             pk=request.POST['request_id'])
-        print(repair_request.code)
+        appointment = Appointment.objects.get(pk=request.POST['appoint_id'])
         code = request.POST['code']
         if code == repair_request.code:
             repair_request.status = "done"
             repair_request.save()
-
+            appointment.status = "closed"
+            appointment.save()
+            messages.success(request, "تم تنفيذ الطلب ")
         else:
             # send error message
-            pass
+            messages.error(request, "برجاء ادخال كود صحيح ")
 
-    return redirect('/')
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
 def close_request(request):
@@ -90,8 +128,8 @@ def close_request(request):
             pk=request.POST['request_id'])
         repair_request.status = "closed"
         repair_request.save()
-
-        return redirect('/')
+        messages.success(request, "تم تنفيذ و اغلاق الطلب بنجاح !")
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
 def change_status(request):

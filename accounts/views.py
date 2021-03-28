@@ -22,8 +22,8 @@ def userLogin(request):
                 login(request, user)
                 print('user logged in ')
                 if user.role == 1:
-                    return HttpResponseRedirect('admin')
-                elif user.role == 4:
+                    return HttpResponseRedirect('/')
+                elif user.role == 4 or 3:
                     print(user.role)
                     return HttpResponseRedirect('repair/')
         else:

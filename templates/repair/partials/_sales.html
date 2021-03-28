@@ -1,0 +1,163 @@
+<div class="row" dir="rtl">
+    <div class="col-lg-12">
+        <div id="addproduct-accordion" class="custom-accordion">
+            <div class="card">
+                <a href="#addproduct-billinginfo-collapse" class="text-dark" data-bs-toggle="collapse"
+                    aria-expanded="true" aria-controls="addproduct-billinginfo-collapse">
+                    <div class="p-4">
+
+                        <div class="d-flex align-items-center">
+                            <div class="me-3">
+                                <div class="avatar-xs">
+                                    <div class="avatar-title rounded-circle bg-soft-primary text-primary">
+                                        01
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="flex-1 overflow-hidden">
+                                <h5 class="font-size-16 mb-1">أضافة طلب صيانة </h5>
+                                <p class="text-muted text-truncate mb-0">يرجي ملئ جميع البانات التالية </p>
+                            </div>
+                            <i class="mdi mdi-chevron-up accor-down-icon font-size-24"></i>
+                        </div>
+
+                    </div>
+                </a>
+
+                <div id="addproduct-billinginfo-collapse" class="collapse show" data-bs-parent="#addproduct-accordion">
+                    <div class="p-4 border-top">
+                        <form action="{% url 'repair_request' %}" method="POST">
+                            <div class="mb-3">
+                                <label class="form-label" for="customername">اسم العميل </label>
+                                <input id="customername" name="customername" type="text" class="form-control">
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-4">
+
+                                    <div class="mb-3">
+                                        <label class="form-label" for="phone">الجوال</label>
+                                        <input id="phone" name="phone" type="text" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="col-lg-4">
+
+                                    <div class="mb-3">
+                                        <label class="form-label" for="address">الموقع</label>
+                                        <input id="address" name="address" type="text" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="col-lg-4">
+                                    <div class="mb-3">
+                                        <label class="form-label" for="machine_type">نوع الجهاز </label>
+                                        <input id="machine_type" name="machine_type" type="text" class="form-control">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label">نوع العميل </label>
+                                        <select class="form-control select2" name="customer_type">
+                                            <option selected disabled>أختيار</option>
+                                            <option value="cash">كاش</option>
+                                            <option value="warranty">ضمان</option>
+
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4">
+                                    <div class="mb-3">
+                                        <label class="form-label" for="invoice_number">رقم الفاتورة </label>
+                                        <input id="invoice_number" name="invoice_number" type="text"
+                                            class="form-control">
+                                    </div>
+                                </div>
+
+                            </div>
+                            {% csrf_token %}
+                            <div class="mb-0">
+                                <label class="form-label" for="file">ارفاق ملف</label>
+                                <input type="file" class="form-control" id="file" name="attach_file" />
+                            </div>
+                            <div class="mb-0">
+                                <label class="form-label" for="notes">معلومات اضافية </label>
+                                <textarea class="form-control" id="notes" name="notes" rows="4"></textarea>
+                            </div>
+                            <div class="mt-2">
+                                <button type="submit" class="btn btn-lg btn-primary">ارسال الطلب </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!-- end row -->
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title mb-4" dir="rtl">متابعة الطلبات السابقة </h4>
+                <div class="table-responsive">
+                    <table class="table table-centered table-nowrap mb-0" dir="rtl">
+                        <thead class="table-light">
+                            <tr>
+                                <th style="width: 20px;">
+                                    <div class="form-check font-size-16">
+                                        <input type="checkbox" class="form-check-input" id="customCheck1">
+                                        <label class="form-check-label" for="customCheck1">&nbsp;</label>
+                                    </div>
+                                </th>
+                                <th>رقم الطلب </th>
+                                <th>أسم العميل</th>
+                                <th>تاريخ الطلب </th>
+                                <th>نوع العميل </th>
+                                <th>حالة الطلب </th>
+
+                                <th>View Details</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for req in requests %}
+                            <tr>
+                                <td>
+                                    <div class="form-check font-size-16">
+                                        <input type="checkbox" class="form-check-input" id="customCheck2">
+                                        <label class="form-check-label" for="customCheck2">&nbsp;</label>
+                                    </div>
+                                </td>
+                                <td><a href="javascript: void(0);" class="text-body fw-bold">#REP{{req.id}}</a> </td>
+                                <td>{{req.customer_name}}</td>
+                                <td>
+                                    {{req.timestamp.date}}
+                                </td>
+                                <td>
+                                    {% if req.customer_type == "cash" %}
+                                    كاش
+                                    {% elif request.customer_type == "warranty" %}
+                                    ضمان
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <span class="badge rounded-pill bg-soft-success font-size-12">{{req.status}}</span>
+                                </td>
+
+                                <td>
+                                    <!-- Button trigger modal -->
+                                    <button type="button"
+                                        class="btn btn-primary btn-sm btn-rounded waves-effect waves-light">
+                                        View Details
+                                    </button>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <!-- end table-responsive -->
+            </div>
+        </div>
+    </div>
+</div>

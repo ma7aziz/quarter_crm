@@ -1,0 +1,288 @@
+{% extends '../base.html'%}
+{% block content %}
+<!-- ============================================================== -->
+
+
+<div class="page-content" dir="rtl">
+    <div class="container-fluid">
+
+        <!-- start page title -->
+        <div class="row">
+            <div class="col-12">
+                <div class="page-title-box d-flex align-items-center justify-content-between">
+                    <h3 class="mb-0">تفاصيل الطلب</h3>
+
+                    <div class="page-title-right">
+                        <ol class="breadcrumb m-0">
+                            <li class="breadcrumb-item"><a href="javascript: void(0);">Ecommerce</a></li>
+                            <li class="breadcrumb-item active">Product Detail</li>
+                        </ol>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <!-- end page title -->
+
+        <div class="row" dir="rtl">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row" dir="rtl">
+                            <div class="col-xl-7">
+                                <div class="mt-4 mt-xl-3 ps-xl-4">
+                                    <h5 class="font-size-14"><a href="#" class="text-muted"></a></h5>
+                                    <h4 class="font-size-20 mb-3">#rep{{req.id}} </h4>
+
+                                    <div>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-5">
+                                <div class="product-detail">
+                                    <div class="row">
+
+
+
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <!-- end row -->
+
+                        <div class="mt-4 row">
+                            <h5 class="font-size-14 mb-3"></h5>
+                            <div class="product-desc col col-6">
+
+                                <div class="tab-content border border-top-0 p-4">
+
+                                    <div class="tab-pane fade show active" id="specifi" role="tabpanel">
+                                        <div class="table-responsive">
+                                            <table class="table table-nowrap mb-0">
+                                                <tbody>
+                                                    <tr>
+                                                        <th scope="row" style="width: 20%;">اسم العميل </th>
+                                                        <td>{{req}}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th scope="row">تاريخ الطلب </th>
+                                                        <td>{{req.timestamp.date}}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th scope="row">نوع الطلب </th>
+                                                        {% if req.customer_type == "cash" %}
+                                                        <td>كاش</td>
+                                                        {%elif req.customer_type == "warranty" %}
+                                                        <td>ضمان</td>
+                                                        {% endif %}
+
+                                                    </tr>
+                                                    {% if req.customer_type == "warranty" %}
+                                                    <tr>
+                                                        <th scope="row">رقم الفاتورة</th>
+                                                        <td>{{req.invoice_number}}</td>
+                                                    </tr>
+                                                    {% endif %}
+                                                    <tr>
+                                                        <th scope="row">الموقع</th>
+                                                        <td>{{ req.address }}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th scope="row">الجوال</th>
+                                                        <td>{{ req.phone }}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th scope="row">نوع الجهاز </th>
+                                                        <td>{{req.machine_type}}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th scope="row">حالة لطلب </th>
+                                                        <td>
+                                                            {% if req.status == "new" %}
+
+                                                            <span
+                                                                class="badge rounded-pill bg-danger font-size-16">جديد</span>
+
+                                                            {% elif req.status == "under_process" %}
+
+
+                                                            <span
+                                                                class="badge rounded-pill bg-primary font-size-16">جاري
+                                                                التنفيذ</span>
+
+                                                            {% elif req.status == "suspended" %}
+
+                                                            <span
+                                                                class="badge rounded-pill bg-warning font-size-16">جديد</span>
+
+                                                            {% elif req.status == "done" %}
+
+                                                            <span class="badge rounded-pill bg-success font-size-16">تم
+                                                                التنفيذ</span>
+
+                                                            {% elif req.status == "closed" %}
+
+                                                            <span
+                                                                class="badge rounded-pill bg-success font-size-16">انتهي</span>
+
+                                                            {% endif %}
+                                                        </td>
+
+                                                    </tr>
+
+                                                    {% if req.notes %}
+                                                    <tr>
+                                                        <th scope="row">ملاحظات</th>
+                                                        <td>{{req.notes }}</td>
+                                                    </tr>
+                                                    {%  endif %}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="card">
+                                    <div class="card-body">
+
+                                        <div class="accordion" id="accordionExample">
+                                            {% if request.user.role == 1 or 2 %}
+                                            {% if req.status == "new"%}
+                                            <div class="accordion-item">
+                                                <h2 class="accordion-header" id="headingOne">
+                                                    <button class="accordion-button" type="button"
+                                                        data-bs-toggle="collapse" data-bs-target="#collapseOne"
+                                                        aria-expanded="true" aria-controls="collapseOne">
+                                                        تحديد موعد
+                                                    </button>
+                                                </h2>
+                                                <div id="collapseOne" class="accordion-collapse collapse show"
+                                                    aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                                                    <div class="accordion-body">
+                                                        <form method="POST" action="{% url 'repair_appointment' %}">
+                                                            {% csrf_token %}
+                                                            <input type="hidden" name="request" value="{{req.id}}">
+                                                            <div class="row mb-4">
+                                                                <label for="horizontal-firstname-input"
+                                                                    class="col-sm-2 col-form-label">اختيار الفني
+                                                                </label>
+                                                                <div class="col-sm-10">
+                                                                    <select name="technician" id=""
+                                                                        class="form-control">
+                                                                        <option value=""></option>
+                                                                        {% for techn in tech%}
+                                                                        <option value="{{techn.id}}">{{techn}}</option>
+                                                                        {% endfor %}
+                                                                    </select>
+
+                                                                </div>
+                                                            </div>
+                                                            <div class="row mb-4">
+                                                                <label for="horizontal-email-input"
+                                                                    class="col-sm-2 col-form-label">تحديد الموعد</label>
+                                                                <div class="col-sm-10">
+                                                                    <input type="date" name="appoint_date"
+                                                                        class="form-control"
+                                                                        id="horizontal-email-input">
+                                                                </div>
+                                                            </div>
+
+
+                                                            <div class="row justify-content-center">
+                                                                <div class="col-sm-9">
+
+                                                                    <div>
+                                                                        <button type="submit"
+                                                                            class="btn btn-primary w-md">تحديد
+                                                                            الموعد</button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            {% endif %}
+                                            {% endif %}
+                                            {% if req.status == "under_process" %}
+                                            <div class="accordion-item">
+                                                <h2 class="accordion-header" id="headingTwo">
+                                                    <button class="accordion-button collapsed" type="button"
+                                                        data-bs-toggle="collapse" data-bs-target="#collapseTwo"
+                                                        aria-expanded="false" aria-controls="collapseTwo">
+                                                        موعد الصيانة
+                                                    </button>
+                                                </h2>
+                                                <div id="collapseTwo" class="accordion-collapse collapse"
+                                                    aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+                                                    <div class="accordion-body">
+                                                        <table class="table table-nowrap mb-0">
+                                                            <tbody>
+                                                                <tr>
+                                                                    <th scope="row" style="width: 20%;">تاريخ الصيانة
+                                                                    </th>
+                                                                    <td>{{appointment.date}}</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th scope="row" style="width: 20%;">الفني
+                                                                    </th>
+                                                                    <td>{{appointment.technician}}</td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            {% endif %}
+                                            <div class="accordion-item">
+                                                <h2 class="accordion-header" id="headingThree">
+                                                    <button class="accordion-button collapsed" type="button"
+                                                        data-bs-toggle="collapse" data-bs-target="#collapseThree"
+                                                        aria-expanded="false" aria-controls="collapseThree">
+                                                        Accordion Item #3
+                                                    </button>
+                                                </h2>
+                                                <div id="collapseThree" class="accordion-collapse collapse"
+                                                    aria-labelledby="headingThree" data-bs-parent="#accordionExample">
+                                                    <div class="accordion-body">
+                                                        <strong>This is the third item's accordion
+                                                            body.</strong> It is hidden
+                                                        by default, until the collapse plugin adds the
+                                                        appropriate classes that
+                                                        we use to style each element. These classes control
+                                                        the overall
+                                                        appearance, as well as the showing and hiding via
+                                                        CSS transitions. You
+                                                        can modify any of this with custom CSS or overriding
+                                                        our default
+                                                        variables. It's also worth noting that just about
+                                                        any HTML can go within
+                                                        the <code>.accordion-body</code>, though the
+                                                        transition does limit
+                                                        overflow.
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- end row -->
+
+    </div> <!-- container-fluid -->
+</div>
+
+
+<!-- end main content-->
+{% endblock %}

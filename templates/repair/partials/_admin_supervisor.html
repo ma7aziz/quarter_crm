@@ -1,0 +1,130 @@
+<div class="row">
+    <div class="col-lg-6">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title mb-4" dir="rtl">طلبات تم تنفيذ صيانتها </h4>
+                <div class="table-responsive">
+                    <table class="table table-centered table-nowrap mb-0" dir="rtl">
+                        <thead class="table-light">
+                            <tr>
+
+                                <th>رقم الطلب </th>
+                                <th>أسم العميل</th>
+                                <th>تاريخ الطلب </th>
+                                <th>نوع العميل </th>
+                                <th>التفاصيل</th>
+                                <th>تأكيد</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for req in need_confirm %}
+                            <tr>
+
+                                <td><a href="javascript: void(0);" class="text-body fw-bold">#REP{{req.id}}</a> </td>
+                                <td>{{req.customer_name}}</td>
+                                <td>
+                                    {{req.timestamp.date}}
+                                </td>
+                                <td>
+                                    {% if req.customer_type == "cash" %}
+                                    كاش
+                                    {% elif request.customer_type == "warranty" %}
+                                    ضمان
+                                    {% endif %}
+                                </td>
+
+
+                                <td>
+                                    <!-- Button trigger modal -->
+
+                                    <a class="btn btn-primary btn-sm btn-rounded waves-effect waves-light"
+                                        href="{% url 'repair_request_details' req.id %}">
+                                        التفاصيل
+                                    </a>
+
+                                </td>
+                                <td>
+                                    <form action="{% url 'close_request' %}" method="POST">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="request_id" value="{{req.id}}">
+                                        <button class=" btn btn-success btn-rounded waves-effect waves-light"
+                                            type="submit">تأكيد</button>
+                                    </form>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <!-- end table-responsive -->
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title mb-4" dir="rtl">متابعة الطلبات السابقة </h4>
+                <div class="table-responsive">
+                    <table class="table table-centered table-nowrap mb-0" dir="rtl">
+                        <thead class="table-light">
+                            <tr>
+                                <th style="width: 20px;">
+                                    <div class="form-check font-size-16">
+                                        <input type="checkbox" class="form-check-input" id="customCheck1">
+                                        <label class="form-check-label" for="customCheck1">&nbsp;</label>
+                                    </div>
+                                </th>
+                                <th>رقم الطلب </th>
+                                <th>أسم العميل</th>
+                                <th>تاريخ الطلب </th>
+                                <th>نوع العميل </th>
+                                <th>حالة الطلب </th>
+
+                                <th>التفاصيل</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for req in requests %}
+                            <tr>
+                                <td>
+                                    <div class="form-check font-size-16">
+                                        <input type="checkbox" class="form-check-input" id="customCheck2">
+                                        <label class="form-check-label" for="customCheck2">&nbsp;</label>
+                                    </div>
+                                </td>
+                                <td><a href="javascript: void(0);" class="text-body fw-bold">#REP{{req.id}}</a> </td>
+                                <td>{{req.customer_name}}</td>
+                                <td>
+                                    {{req.timestamp.date}}
+                                </td>
+                                <td>
+                                    {% if req.customer_type == "cash" %}
+                                    كاش
+                                    {% elif request.customer_type == "warranty" %}
+                                    ضمان
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <span class="badge rounded-pill bg-soft-success font-size-12">{{req.status}}</span>
+                                </td>
+
+                                <td>
+                                    <!-- Button trigger modal -->
+                                    <button type="button"
+                                        class="btn btn-primary btn-sm btn-rounded waves-effect waves-light">
+                                        <a href="{% url 'repair_request_details' req.id %}">
+
+                                            View Details
+                                        </a>
+                                    </button>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <!-- end table-responsive -->
+            </div>
+        </div>
+    </div>
+</div>
