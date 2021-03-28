@@ -4,8 +4,8 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django.shortcuts import redirect, render
 
-from .forms import RepairRequestForm
-from .models import Appointment, Repair_request
+
+from service.models import Appointment, Service_request
 
 # Create your views here.
 
@@ -14,18 +14,18 @@ from .models import Appointment, Repair_request
 def repair_index(request):
     if request.user.role == 4:
 
-        requests = Repair_request.objects.all().filter(created_by=request.user)
+        requests = Service_request.objects.all().filter(created_by=request.user)
     elif request.user.role == 1 or request.user.role == 2:
 
-        requests = Repair_request.objects.all().order_by('-timestamp')
+        requests = Service_request.objects.all().order_by('-timestamp')
     elif request.user.role == 3:
 
         requests = Appointment.objects.filter(
-            status="open")
+            status="open", technician=request.user)
         print(requests, request.user.role)
     ctx = {
         "requests": requests,
-        "need_confirm": Repair_request.objects.done()
+        "need_confirm": Service_request.objects.done().filter(service_type="repair")
     }
     return render(request, 'repair/index.html ', ctx)
 
@@ -44,17 +44,18 @@ def repair_request(request):
         customer_type = request.POST['customer_type']
         invoice_number = request.POST['invoice_number']
         user = request.user
-        repair_request = Repair_request(created_by=user, customer_name=customer_name, phone=phone,
-                                        machine_type=machine_type, invoice_number=invoice_number, address=address, customer_type=customer_type, notes=request.POST['notes'])
+        repair_request = Servrequests = Service_request(service_type="repair", created_by=user, customer_name=customer_name, phone=phone,
+                                                        machine_type=machine_type, invoice_number=invoice_number,
+                                                        address=address, customer_type=customer_type, notes=request.POST['notes'])
         repair_request.save()
         messages.success(request, "تم تسجيل طلبك بنجاح")
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
 def repair_request_details(request, id):
-    req = Repair_request.objects.get(pk=id)
+    req = Servrequests = Service_request.objects.get(pk=id)
     technicians = User.objects.all().filter(role=3)
-    appointment = Appointment.objects.all().filter(repair_request=req).first()
+    appointment = Appointment.objects.all().filter(service_request=req).first()
     ctx = {
         'req': req,
         'tech': technicians,
@@ -62,6 +63,7 @@ def repair_request_details(request, id):
 
 
     }
+    print(request.user.role, req.status)
     return render(request, 'repair/request_details.html', ctx)
 
 
@@ -70,28 +72,40 @@ def appointment_details(request, id):
     ctx = {
         "appointment": appointment
     }
-    print(appointment.repair_request.code)
+    print(appointment.service_request.code)
     return render(request, 'repair/appointment_details.html', ctx)
 
 
 def repair_appointment(request):
     """
-    set appointment && asign technician for repair service 
+    set NEW appointment && asign technician for repair service 
     - should be done by admin or supervisor 
     - send message to client 
     - change request status from new => underprocess 
 
     """
     if request.method == 'POST':
-        repair_request = Repair_request.objects.get(pk=request.POST['request'])
+        repair_request = Servrequests = Service_request.objects.get(
+            pk=request.POST['request'])
         technician = User.objects.get(pk=request.POST['technician'])
         date = request.POST['appoint_date']
         appointment = Appointment(
-            date=date, technician=technician, repair_request=repair_request)
+            date=date, technician=technician, service_request=repair_request)
         appointment.save()
         repair_request.status = 'under_process'
         repair_request.save()
         messages.success(request, "تم تحديد الموعد !")
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
+def change_appointment(request):
+    appointment = Appointment.objects.get(pk=request.POST["appoint_id"])
+    technician = User.objects.get(pk=request.POST['technician'])
+    date = request.POST['appoint_date']
+    appointment.technician = technician
+    appointment.date = date
+    appointment.save()
+    messages.success(request, "تم تغيير الموعد !")
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
@@ -100,7 +114,7 @@ def complete_request(request):
     change request status from under process to done .. using a verification code .
     """
     if request.method == "POST":
-        repair_request = Repair_request.objects.get(
+        repair_request = Service_request.objects.get(
             pk=request.POST['request_id'])
         appointment = Appointment.objects.get(pk=request.POST['appoint_id'])
         code = request.POST['code']
@@ -124,7 +138,7 @@ def close_request(request):
       == change status to closed  
     """
     if request.method == "POST":
-        repair_request = Repair_request.objects.get(
+        repair_request = Servrequests = Service_request.objects.get(
             pk=request.POST['request_id'])
         repair_request.status = "closed"
         repair_request.save()

@@ -64,7 +64,7 @@
                                                 <tbody>
                                                     <tr>
                                                         <th scope="row" style="width: 20%;">اسم العميل </th>
-                                                        <td>{{appointment.repair_request}}</td>
+                                                        <td>{{appointment.service_request}}</td>
                                                     </tr>
                                                     <tr>
                                                         <th scope="row">الموعد </th>
@@ -73,15 +73,15 @@
 
                                                     <tr>
                                                         <th scope="row">الموقع</th>
-                                                        <td>{{ appointment.repair_request.address }}</td>
+                                                        <td>{{ appointment.service_request.address }}</td>
                                                     </tr>
                                                     <tr>
                                                         <th scope="row">الجوال</th>
-                                                        <td>{{ appointment.repair_request.phone }}</td>
+                                                        <td>{{ appointment.service_request.phone }}</td>
                                                     </tr>
                                                     <tr>
                                                         <th scope="row">نوع الجهاز </th>
-                                                        <td>{{appointment.repair_request.machine_type}}</td>
+                                                        <td>{{appointment.service_request.machine_type}}</td>
                                                     </tr>
                                                     <tr>
                                                         <th scope="row">حالة لطلب </th>
@@ -152,7 +152,7 @@
                                                             <input type="hidden" name="appoint_id"
                                                                 value="{{appointment.id}}">
                                                             <input type="hidden" name="request_id"
-                                                                value="{{appointment.repair_request.id}}">
+                                                                value="{{appointment.service_request.id}}">
                                                             <div class="row mb-4">
                                                                 <label for="horizontal-firstname-input"
                                                                     class="col-sm-2 col-form-label">كود التأكيد

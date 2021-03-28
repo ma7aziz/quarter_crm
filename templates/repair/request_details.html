@@ -149,7 +149,7 @@
                                     <div class="card-body">
 
                                         <div class="accordion" id="accordionExample">
-                                            {% if request.user.role == 1 or 2 %}
+                                            {% if request.user.role == 1 or request.user.role == 2 %}
                                             {% if req.status == "new"%}
                                             <div class="accordion-item">
                                                 <h2 class="accordion-header" id="headingOne">
@@ -234,7 +234,70 @@
                                                             </tbody>
                                                         </table>
                                                     </div>
+                                                    <div class="d-flex flex-wrap gap-2">
+                                                        {%if req.status == "under_process" %}
+                                                        {% if  request.user.role == 1 or request.user.role == 2  %}
+
+                                                        <a class="btn btn-primary" data-bs-toggle="collapse"
+                                                            href="#changeappointment" aria-expanded="false"
+                                                            aria-controls="collapseExample">
+                                                            تغيير الموعد
+                                                        </a>
+                                                        {% endif %}
+                                                        {% endif %}
+
+                                                    </div>
+                                                    <div class="collapse" id="changeappointment">
+                                                        <div class="card card-body mb-0">
+                                                            <form method="POST"
+                                                                action="{% url 'change_repair_appointment' %}">
+                                                                {% csrf_token %}
+                                                                <input type="hidden" name="request" value="{{req.id}}">
+                                                                <input type="hidden" name="appoint_id"
+                                                                    value="{{appointment.id}}">
+                                                                <div class="row mb-4">
+                                                                    <label for="horizontal-firstname-input"
+                                                                        class="col-sm-2 col-form-label">اختيار الفني
+                                                                    </label>
+                                                                    <div class="col-sm-10">
+                                                                        <select name="technician" id=""
+                                                                            class="form-control">
+                                                                            <option value=""></option>
+                                                                            {% for techn in tech%}
+                                                                            <option value="{{techn.id}}">{{techn}}
+                                                                            </option>
+                                                                            {% endfor %}
+                                                                        </select>
+
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row mb-4">
+                                                                    <label for="horizontal-email-input"
+                                                                        class="col-sm-2 col-form-label">تحديد
+                                                                        الموعد</label>
+                                                                    <div class="col-sm-10">
+                                                                        <input type="date" name="appoint_date"
+                                                                            class="form-control"
+                                                                            id="horizontal-email-input">
+                                                                    </div>
+                                                                </div>
+
+
+                                                                <div class="row justify-content-center">
+                                                                    <div class="col-sm-9">
+
+                                                                        <div>
+                                                                            <button type="submit"
+                                                                                class="btn btn-primary w-md">تحديد
+                                                                                الموعد</button>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                    </div>
                                                 </div>
+
                                             </div>
                                             {% endif %}
                                             <div class="accordion-item">
