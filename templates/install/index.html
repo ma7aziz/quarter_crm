@@ -1,0 +1,11 @@
+{% extends '../base.html'%}
+{% block content %}
+<!-- sales  -->
+{% if request.user.role ==  4 %}
+{% include '../repair/partials/_sales.html'%}
+{% elif request.user.role == 1 or request.user.role ==  2 %}
+{% include '../repair/partials/_admin_supervisor.html' %}
+{% elif request.user.role == 3%}
+{% include '../repair/partials/_technician.html' %}
+{%endif %}
+{% endblock %}

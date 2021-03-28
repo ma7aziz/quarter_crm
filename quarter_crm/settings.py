@@ -42,7 +42,8 @@ INSTALLED_APPS = [
     'core',
     'repair',
     'accounts',
-    'service'
+    'service',
+    'install'
 ]
 
 MIDDLEWARE = [
