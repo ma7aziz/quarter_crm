@@ -14,7 +14,8 @@ from service.models import Appointment, Service_request
 def repair_index(request):
     if request.user.role == 4:
 
-        requests = Service_request.objects.all().filter(created_by=request.user)
+        requests = Service_request.objects.all().filter(
+            created_by=request.user).order_by('-timestamp')
     elif request.user.role == 1 or request.user.role == 2:
 
         requests = Service_request.objects.all().order_by('-timestamp')

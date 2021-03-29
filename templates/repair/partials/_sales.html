@@ -26,67 +26,72 @@
 
                 <div id="addproduct-billinginfo-collapse" class="collapse show" data-bs-parent="#addproduct-accordion">
                     <div class="p-4 border-top">
+                        {% if "repair" in request.path %}
                         <form action="{% url 'repair_request' %}" method="POST">
-                            <div class="mb-3">
-                                <label class="form-label" for="customername">اسم العميل </label>
-                                <input id="customername" name="customername" type="text" class="form-control">
-                            </div>
-                            <div class="row">
-                                <div class="col-lg-4">
+                            {% elif "install" in request.path %}
+                            <form action="{% url 'install_request' %}" method="POST">
+                                {% endif %}
+                                <div class="mb-3">
+                                    <label class="form-label" for="customername">اسم العميل </label>
+                                    <input id="customername" name="customername" type="text" class="form-control">
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-4">
 
-                                    <div class="mb-3">
-                                        <label class="form-label" for="phone">الجوال</label>
-                                        <input id="phone" name="phone" type="text" class="form-control">
+                                        <div class="mb-3">
+                                            <label class="form-label" for="phone">الجوال</label>
+                                            <input id="phone" name="phone" type="text" class="form-control">
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="col-lg-4">
+                                    <div class="col-lg-4">
 
-                                    <div class="mb-3">
-                                        <label class="form-label" for="address">الموقع</label>
-                                        <input id="address" name="address" type="text" class="form-control">
+                                        <div class="mb-3">
+                                            <label class="form-label" for="address">الموقع</label>
+                                            <input id="address" name="address" type="text" class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <div class="mb-3">
+                                            <label class="form-label" for="machine_type">نوع الجهاز </label>
+                                            <input id="machine_type" name="machine_type" type="text"
+                                                class="form-control">
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="col-lg-4">
-                                    <div class="mb-3">
-                                        <label class="form-label" for="machine_type">نوع الجهاز </label>
-                                        <input id="machine_type" name="machine_type" type="text" class="form-control">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label class="form-label">نوع العميل </label>
-                                        <select class="form-control select2" name="customer_type">
-                                            <option selected disabled>أختيار</option>
-                                            <option value="cash">كاش</option>
-                                            <option value="warranty">ضمان</option>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label class="form-label">نوع العميل </label>
+                                            <select class="form-control select2" name="customer_type">
+                                                <option selected disabled>أختيار</option>
+                                                <option value="cash">كاش</option>
+                                                <option value="warranty">ضمان</option>
 
-                                        </select>
+                                            </select>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="col-lg-4">
-                                    <div class="mb-3">
-                                        <label class="form-label" for="invoice_number">رقم الفاتورة </label>
-                                        <input id="invoice_number" name="invoice_number" type="text"
-                                            class="form-control">
+                                    <div class="col-lg-4">
+                                        <div class="mb-3">
+                                            <label class="form-label" for="invoice_number">رقم الفاتورة </label>
+                                            <input id="invoice_number" name="invoice_number" type="text"
+                                                class="form-control">
+                                        </div>
                                     </div>
-                                </div>
 
-                            </div>
-                            {% csrf_token %}
-                            <div class="mb-0">
-                                <label class="form-label" for="file">ارفاق ملف</label>
-                                <input type="file" class="form-control" id="file" name="attach_file" />
-                            </div>
-                            <div class="mb-0">
-                                <label class="form-label" for="notes">معلومات اضافية </label>
-                                <textarea class="form-control" id="notes" name="notes" rows="4"></textarea>
-                            </div>
-                            <div class="mt-2">
-                                <button type="submit" class="btn btn-lg btn-primary">ارسال الطلب </button>
-                            </div>
-                        </form>
+                                </div>
+                                {% csrf_token %}
+                                <div class="mb-0">
+                                    <label class="form-label" for="file">ارفاق ملف</label>
+                                    <input type="file" class="form-control" id="file" name="attach_file" />
+                                </div>
+                                <div class="mb-0">
+                                    <label class="form-label" for="notes">معلومات اضافية </label>
+                                    <textarea class="form-control" id="notes" name="notes" rows="4"></textarea>
+                                </div>
+                                <div class="mt-2">
+                                    <button type="submit" class="btn btn-lg btn-primary">ارسال الطلب </button>
+                                </div>
+                            </form>
                     </div>
                 </div>
             </div>
@@ -136,7 +141,7 @@
                                 <td>
                                     {% if req.customer_type == "cash" %}
                                     كاش
-                                    {% elif request.customer_type == "warranty" %}
+                                    {% elif req.customer_type == "warranty" %}
                                     ضمان
                                     {% endif %}
                                 </td>
@@ -146,7 +151,7 @@
 
                                 <td>
                                     <!-- Button trigger modal -->
-                                    <a href="{% url 'service_request_details' %}"
+                                    <a href="{% url 'service_request_details' req.id %}"
                                         class="btn btn-primary btn-sm btn-rounded waves-effect waves-light">
                                         View Details
                                     </a>
