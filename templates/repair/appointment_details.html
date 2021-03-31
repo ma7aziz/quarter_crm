@@ -1,202 +1,190 @@
 {% extends '../base.html'%}
 {% block content %}
-<!-- ============================================================== -->
+<div class="row">
+    <div class="col-12">
+        <div class="page-title-box d-flex align-items-center justify-content-between">
+            <h3 class="mb-0">تفاصيل الطلب</h3>
+
+            <div class="page-title-right">
+                <ol class="breadcrumb m-0">
+
+                    <li class="breadcrumb-item"><a href="javascript: void(0);">Ecommerce</a></li>
+                    <li class="breadcrumb-item active">Product Detail</li>
+                </ol>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!-- end page title -->
+
+<div class="row" dir="rtl">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="row" dir="rtl">
+                    <div class="col-xl-7">
+                        <div class="mt-4 mt-xl-3 ps-xl-4">
+                            <h5 class="font-size-14"><a href="#" class="text-muted"></a></h5>
+                            <!-- <h4 class="font-size-20 mb-3">{{appointment.id}} </h4> -->
+
+                            <div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-5">
+                        <div class="product-detail">
+                            <div class="row">
 
 
-<div class="page-content" dir="rtl">
-    <div class="container-fluid">
 
-        <!-- start page title -->
-        <div class="row">
-            <div class="col-12">
-                <div class="page-title-box d-flex align-items-center justify-content-between">
-                    <h3 class="mb-0">تفاصيل الطلب</h3>
-
-                    <div class="page-title-right">
-                        <ol class="breadcrumb m-0">
-                            <li class="breadcrumb-item"><a href="javascript: void(0);">Ecommerce</a></li>
-                            <li class="breadcrumb-item active">Product Detail</li>
-                        </ol>
+                            </div>
+                        </div>
                     </div>
 
                 </div>
-            </div>
-        </div>
-        <!-- end page title -->
+                <!-- end row -->
 
-        <div class="row" dir="rtl">
-            <div class="col-lg-12">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="row" dir="rtl">
-                            <div class="col-xl-7">
-                                <div class="mt-4 mt-xl-3 ps-xl-4">
-                                    <h5 class="font-size-14"><a href="#" class="text-muted"></a></h5>
-                                    <!-- <h4 class="font-size-20 mb-3">{{appointment.id}} </h4> -->
+                <div class="mt-4 row">
+                    <h5 class="font-size-14 mb-3"></h5>
+                    <div class="product-desc col col-6">
 
-                                    <div>
+                        <div class="tab-content border border-top-0 p-4">
 
-                                    </div>
+                            <div class="tab-pane fade show active" id="specifi" role="tabpanel">
+                                <div class="table-responsive">
+                                    <table class="table table-nowrap mb-0">
+                                        <tbody>
+                                            <tr>
+                                                <th scope="row" style="width: 20%;">اسم العميل </th>
+                                                <td>{{appointment.service_request}}</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">الموعد </th>
+                                                <td>{{appointment.date}}</td>
+                                            </tr>
+
+                                            <tr>
+                                                <th scope="row">الموقع</th>
+                                                <td>{{ appointment.service_request.address }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">الجوال</th>
+                                                <td>{{ appointment.service_request.phone }}</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">نوع الجهاز </th>
+                                                <td>{{appointment.service_request.machine_type}}</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">حالة لطلب </th>
+                                                <td>
+                                                    {% if appointment.status == "new" %}
+
+                                                    <span class="badge rounded-pill bg-danger font-size-16">جديد</span>
+
+                                                    {% elif appointment.status == "under_process" %}
+
+
+                                                    <span class="badge rounded-pill bg-primary font-size-16">جاري
+                                                        التنفيذ</span>
+
+                                                    {% elif appointment.status == "suspended" %}
+
+                                                    <span class="badge rounded-pill bg-warning font-size-16">جديد</span>
+
+                                                    {% elif appointment.status == "done" %}
+
+                                                    <span class="badge rounded-pill bg-success font-size-16">تم
+                                                        التنفيذ</span>
+
+                                                    {% elif appointment.status == "closed" %}
+
+                                                    <span
+                                                        class="badge rounded-pill bg-success font-size-16">انتهي</span>
+
+                                                    {% endif %}
+                                                </td>
+
+                                            </tr>
+
+                                            {% if appointment.notes %}
+                                            <tr>
+                                                <th scope="row">ملاحظات</th>
+                                                <td>{{appointment.notes }}</td>
+                                            </tr>
+                                            {%  endif %}
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
-                            <div class="col-xl-5">
-                                <div class="product-detail">
-                                    <div class="row">
-
-
-
-                                    </div>
-                                </div>
-                            </div>
-
                         </div>
-                        <!-- end row -->
+                    </div>
+                    <div class="col-6">
+                        <div class="card">
+                            <div class="card-body">
 
-                        <div class="mt-4 row">
-                            <h5 class="font-size-14 mb-3"></h5>
-                            <div class="product-desc col col-6">
+                                {% if appointment.service_request.status == "under_process"%}
+                                <div class="accordion" id="accordionExample">
 
-                                <div class="tab-content border border-top-0 p-4">
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header" id="headingThree">
+                                            <button class="accordion-button collapsed" type="button"
+                                                data-bs-toggle="collapse" data-bs-target="#collapseThree"
+                                                aria-expanded="true" aria-controls="collapseThree">
+                                                تأكيد الصيانة
+                                            </button>
+                                        </h2>
 
-                                    <div class="tab-pane fade show active" id="specifi" role="tabpanel">
-                                        <div class="table-responsive">
-                                            <table class="table table-nowrap mb-0">
-                                                <tbody>
-                                                    <tr>
-                                                        <th scope="row" style="width: 20%;">اسم العميل </th>
-                                                        <td>{{appointment.service_request}}</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th scope="row">الموعد </th>
-                                                        <td>{{appointment.date}}</td>
-                                                    </tr>
+                                        <div id="collapseThree" class="accordion-collapse collapse"
+                                            aria-labelledby="headingThree" data-bs-parent="#accordionExample">
+                                            <div class="accordion-body">
+                                                <form method="POST" action="{% url 'complete_request' %}">
+                                                    {% csrf_token %}
+                                                    <input type="hidden" name="appoint_id" value="{{appointment.id}}">
+                                                    <input type="hidden" name="request_id"
+                                                        value="{{appointment.service_request.id}}">
+                                                    <div class="row mb-4">
+                                                        <label for="horizontal-firstname-input"
+                                                            class="col-sm-2 col-form-label">كود التأكيد
+                                                        </label>
+                                                        <div class="col-sm-10">
 
-                                                    <tr>
-                                                        <th scope="row">الموقع</th>
-                                                        <td>{{ appointment.service_request.address }}</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th scope="row">الجوال</th>
-                                                        <td>{{ appointment.service_request.phone }}</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th scope="row">نوع الجهاز </th>
-                                                        <td>{{appointment.service_request.machine_type}}</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th scope="row">حالة لطلب </th>
-                                                        <td>
-                                                            {% if appointment.status == "new" %}
+                                                            <input type="text" name="code" id="" class="form-control">
 
-                                                            <span
-                                                                class="badge rounded-pill bg-danger font-size-16">جديد</span>
-
-                                                            {% elif appointment.status == "under_process" %}
-
-
-                                                            <span
-                                                                class="badge rounded-pill bg-primary font-size-16">جاري
-                                                                التنفيذ</span>
-
-                                                            {% elif appointment.status == "suspended" %}
-
-                                                            <span
-                                                                class="badge rounded-pill bg-warning font-size-16">جديد</span>
-
-                                                            {% elif appointment.status == "done" %}
-
-                                                            <span class="badge rounded-pill bg-success font-size-16">تم
-                                                                التنفيذ</span>
-
-                                                            {% elif appointment.status == "closed" %}
-
-                                                            <span
-                                                                class="badge rounded-pill bg-success font-size-16">انتهي</span>
-
-                                                            {% endif %}
-                                                        </td>
-
-                                                    </tr>
-
-                                                    {% if appointment.notes %}
-                                                    <tr>
-                                                        <th scope="row">ملاحظات</th>
-                                                        <td>{{appointment.notes }}</td>
-                                                    </tr>
-                                                    {%  endif %}
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-6">
-                                <div class="card">
-                                    <div class="card-body">
-
-                                        <div class="accordion" id="accordionExample">
-
-                                            <div class="accordion-item">
-                                                <h2 class="accordion-header" id="headingThree">
-                                                    <button class="accordion-button collapsed" type="button"
-                                                        data-bs-toggle="collapse" data-bs-target="#collapseThree"
-                                                        aria-expanded="true" aria-controls="collapseThree">
-                                                        تأكيد الصيانة
-                                                    </button>
-                                                </h2>
-                                                <div id="collapseThree" class="accordion-collapse collapse"
-                                                    aria-labelledby="headingThree" data-bs-parent="#accordionExample">
-                                                    <div class="accordion-body">
-                                                        <form method="POST" action="{% url 'complete_request' %}">
-                                                            {% csrf_token %}
-                                                            <input type="hidden" name="appoint_id"
-                                                                value="{{appointment.id}}">
-                                                            <input type="hidden" name="request_id"
-                                                                value="{{appointment.service_request.id}}">
-                                                            <div class="row mb-4">
-                                                                <label for="horizontal-firstname-input"
-                                                                    class="col-sm-2 col-form-label">كود التأكيد
-                                                                </label>
-                                                                <div class="col-sm-10">
-
-                                                                    <input type="text" name="code" id=""
-                                                                        class="form-control">
-
-                                                                </div>
-                                                            </div>
-
-
-
-                                                            <div class="row justify-content-center">
-                                                                <div class="col-sm-9">
-
-                                                                    <div>
-                                                                        <button type="submit"
-                                                                            class="btn btn-primary w-md">تأكيد</button>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </form>
+                                                        </div>
                                                     </div>
-                                                </div>
+
+
+
+                                                    <div class="row justify-content-center">
+                                                        <div class="col-sm-9">
+
+                                                            <div>
+                                                                <button type="submit"
+                                                                    class="btn btn-primary w-md">تأكيد</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </form>
                                             </div>
                                         </div>
-
-
                                     </div>
                                 </div>
+
+                                {% endif %}
+
+
                             </div>
                         </div>
-
                     </div>
                 </div>
+
             </div>
         </div>
-        <!-- end row -->
-
-    </div> <!-- container-fluid -->
+    </div>
 </div>
+<!-- end row -->
 
-
-<!-- end main content-->
 {% endblock %}

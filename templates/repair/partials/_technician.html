@@ -42,14 +42,10 @@
                                 </td>
 
                                 <td>
-                                    <!-- Button trigger modal -->
-                                    <button type="button"
-                                        class="btn btn-primary btn-sm btn-rounded waves-effect waves-light">
-                                        <a href="{% url 'appointment_details' req.id %}">
-
-                                            View Details
-                                        </a>
-                                    </button>
+                                    <a class="btn btn-primary btn-sm btn-rounded waves-effect waves-light"
+                                        href="{% url 'appointment_details' req.id %}">
+                                        التفاصيل
+                                    </a>
                                 </td>
                             </tr>
                             {% endfor %}

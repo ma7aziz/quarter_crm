@@ -8,7 +8,7 @@ from django.http import HttpResponseRedirect
 
 
 def service_request_details(request, id):
-    req = Servrequests = Service_request.objects.get(pk=id)
+    req = Service_request.objects.get(pk=id)
     technicians = User.objects.all().filter(role=3)
     appointment = Appointment.objects.all().filter(service_request=req).first()
     ctx = {

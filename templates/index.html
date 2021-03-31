@@ -11,72 +11,102 @@
     <meta name="author" content="okler.net">
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=El+Messiri:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800%7COpen+Sans:400,700,800"
         rel="stylesheet" type="text/css">
 
-    <link rel="stylesheet" href="{% static 'vendor/bootstrap/css/bootstrap.css' %}" />
-    <link rel="stylesheet" href="{% static 'vendor/animate/animate.compat.css' %}">
-    <link rel="stylesheet" href="{% static 'vendor/font-awesome/css/all.min.css' %}" />
-    <link rel="stylesheet" href="{% static 'vendor/boxicons/css/boxicons.min.css' %}" />
-    <link rel="stylesheet" href="{% static 'vendor/magnific-popup/magnific-popup.css' %}" />
-    <link rel="stylesheet" href="{% static 'vendor/bootstrap-datepicker/css/bootstrap-datepicker3.css' %}" />
-    <link rel="stylesheet" href="{% static 'vendor/owl.carousel/assets/owl.carousel.css' %}" />
-    <link rel="stylesheet" href="{% static 'vendor/owl.carousel/assets/owl.theme.default.css' %}" />
-
-
-    <link rel="stylesheet" href="{% static 'css/theme.css' %}" />
-
-
-    <link rel="stylesheet" href="{% static 'css/landing.css' %}" />
-
-    <link rel="stylesheet" href="{% static 'css/custom.css' %}">
-
-    <script src="{% static 'vendor/modernizr/modernizr.js' %}"></script>
+    <!-- Bootstrap Css -->
+    <link href="{% static 'css/bootstrap-rtl.min.css' %}" rel="stylesheet" type="text/css" />
+    <!-- Icons Css -->
+    <link href="{% static 'css/icons.min.css' %}" rel="stylesheet" type="text/css" />
+    <!-- App Css-->
+    <link href="{% static 'css/app-rtl.min.css' %}" rel="stylesheet" type="text/css" />
 </head>
 <style>
     * {
+        font-family: 'El Messiri', sans-serif;
         direction: rtl;
         box-sizing: border-box;
+    }
+
+    body {
+        background: #f1eeee
+    }
+
+    .container {
+        width: 80%;
+        padding-top: 100px;
+
     }
 </style>
 
 <body>
     <div class="container">
-        <div class="row">
-            <div class="col col-4">
-                <a href="{% url 'repair_index' %}">الصيانة</a>
+
+
+        <div class="row nav-btns ">
+            <div class="col-lg-4">
+                <a href="/repair">
+                    <div class="card bg-primary text-white-50">
+                        <div class="card-body text-white text-center">
+                            <i class="fas fa-tools fa-3x"></i>
+                            <h3 class="mt-3 mb-4 text-white text-center">
+                                الصيانة</h3>
+
+                        </div>
+                    </div>
+                </a>
+
             </div>
-            <div class="col col-4">
-                <a href="{% url 'install_index' %}">التركيب</a>
+            <div class="col-lg-4">
+                <a href="/install">
+                    <div class="card bg-success text-white-50">
+                        <div class="card-body text-white text-center">
+                            <i class="fas fa-tools fa-3x"></i>
+                            <h3 class="mt-3 mb-4 text-white text-center">
+                                التركيب</h3>
+
+                        </div>
+                    </div>
+                </a>
+
             </div>
-            <div class="col col-4">
-                <a href="">كوارتر </a>
+
+            <div class="col-lg-4">
+                <a href="">
+                    <div class="card bg-primary text-white-50">
+                        <div class="card-body text-white text-center">
+                            <i class="fas fa-tools fa-3x"></i>
+                            <h3 class="mt-3 mb-4 text-white text-center">
+                                كوارتر </h3>
+
+                        </div>
+                    </div>
+                </a>
+
             </div>
         </div>
+
+        <!-- end row -->
+
     </div>
 
-    <script src="{% static 'vendor/jquery/jquery.js' %}"></script>
-    <script src="{% static 'vendor/jquery-browser-mobile/jquery.browser.mobile.js' %}"></script>
-    <script src="{% static 'vendor/jquery-cookie/jquery.cookie.js' %}"></script>
-    <script src="{% static 'master/style-switcher/style.switcher.js' %}"></script>
-    <script src="{% static 'vendor/popper/umd/popper.min.js' %}"></script>
-    <script src="{% static 'vendor/bootstrap/js/bootstrap.js' %}"></script>
-    <script src="{% static 'vendor/bootstrap-datepicker/js/bootstrap-datepicker.js' %}"></script>
-    <script src="{% static 'vendor/common/common.js' %}"></script>
-    <script src="{% static 'vendor/nanoscroller/nanoscroller.js' %}"></script>
-    <script src="{% static 'vendor/magnific-popup/jquery.magnific-popup.js' %}"></script>
-    <script src="{% static 'vendor/jquery-placeholder/jquery.placeholder.js' %}"></script>
-    <script src="{% static 'vendor/jquery-appear/jquery.appear.js' %}"></script>
-    <script src="{% static 'vendor/owl.carousel/owl.carousel.js' %}"></script>
-    <script src="{% static 'vendor/jquery.lazyload/jquery.lazyload.js' %}"></script>
+    <!-- JAVASCRIPT -->
+    <script src="{% static 'libs/jquery/jquery.min.js' %}"></script>
+    <script src="{% static 'libs/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'libs/metismenu/metisMenu.min.js' %}"></script>
+    <script src="{% static 'libs/simplebar/simplebar.min.js' %}"></script>
+    <script src="{% static 'libs/node-waves/waves.min.js' %}"></script>
+    <script src="{% static 'libs/waypoints/lib/jquery.waypoints.min.js' %}"></script>
+    <script src="{% static 'libs/jquery.counterup/jquery.counterup.min.js' %}"></script>
 
+    <!-- apexcharts -->
+    <script src="{% static 'libs/apexcharts/apexcharts.min.js' %}"></script>
 
-    <script src="{% static 'js/theme.js' %}"></script>
+    <script src="{% static 'js/pages/dashboard.init.js' %}"></script>
 
-    <script src="{% static 'js/custom.js' %}"></script>
-
-    <script src="{% static 'js/theme.init.js' %}"></script>
+    <script src="{% static 'js/app-rtl.js' %}"></script>
 </body>
 
 </html>
