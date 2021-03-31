@@ -295,45 +295,79 @@
                                             <button type="button" class="btn-close" data-bs-dismiss="modal"
                                                 aria-label="Close">
                                             </button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <h5 class="font-size-16">Overflowing text to show scroll behavior</h5>
-                                            <p>Cras mattis consectetur purus sit amet fermentum.
-                                                Cras justo odio, dapibus ac facilisis in,
-                                                egestas eget quam. Morbi leo risus, porta ac
-                                                consectetur ac, vestibulum at eros.</p>
-                                            <p>Praesent commodo cursus magna, vel scelerisque
-                                                nisl consectetur et. Vivamus sagittis lacus vel
-                                                augue laoreet rutrum faucibus dolor auctor.</p>
-                                            <p>Aenean lacinia bibendum nulla sed consectetur.
-                                                Praesent commodo cursus magna, vel scelerisque
-                                                nisl consectetur et. Donec sed odio dui. Donec
-                                                ullamcorper nulla non metus auctor
-                                                fringilla.</p>
-                                            <p>Cras mattis consectetur purus sit amet fermentum.
-                                                Cras justo odio, dapibus ac facilisis in,
-                                                egestas eget quam. Morbi leo risus, porta ac
-                                                consectetur ac, vestibulum at eros.</p>
-                                            <p>Praesent commodo cursus magna, vel scelerisque
-                                                nisl consectetur et. Vivamus sagittis lacus vel
-                                                augue laoreet rutrum faucibus dolor auctor.</p>
-                                            <p>Aenean lacinia bibendum nulla sed consectetur.
-                                                Praesent commodo cursus magna, vel scelerisque
-                                                nisl consectetur et. Donec sed odio dui. Donec
-                                                ullamcorper nulla non metus auctor
-                                                fringilla.</p>
-                                            <p>Cras mattis consectetur purus sit amet fermentum.
-                                                Cras justo odio, dapibus ac facilisis in,
-                                                egestas eget quam. Morbi leo risus, porta ac
-                                                consectetur ac, vestibulum at eros.</p>
 
                                         </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-light waves-effect"
-                                                data-bs-dismiss="modal">Close</button>
-                                            <button type="button" class="btn btn-primary waves-effect waves-light">Save
-                                                changes</button>
+                                        <div class="modal-body">
+                                            <p class="text-muted text-truncate mb-0">يرجي ملئ جميع البانات التالية </p>
+                                            <form action="{% url 'create_user' %}" method="POST"
+                                                enctype="multipart/form-data">
+                                                <label class="form-label" for="customername">الاسم</label>
+                                                <input name="name" type="text" class="form-control" required>
+
+                                                <div class="row">
+
+
+                                                    <div class="mb-3">
+                                                        <label class="form-label" for="phone">الجوال</label>
+                                                        <input name="phone" type="text" class="form-control" required>
+                                                    </div>
+                                                </div>
+
+
+                                                <div class="row">
+                                                    <div class="mb-3">
+                                                        <label class="form-label" for="machine_type">اسم المستخدم
+                                                        </label>
+                                                        <input name="username" type="text" class="form-control"
+                                                            required />
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+
+                                                    <div class=" col-6 mb-3">
+                                                        <label class="form-label" for="machine_type">كلمة السر
+                                                        </label>
+                                                        <input name="password1" type="password" class="form-control"
+                                                            required />
+                                                    </div>
+
+                                                    <div class=" col-6 mb-3">
+                                                        <label class="form-label" for="machine_type">تأكيد كلمة السر
+                                                        </label>
+                                                        <input name="password2" type="password" class="form-control"
+                                                            required />
+                                                    </div>
+
+                                                </div>
+                                                <div class="row">
+                                                    <div class="mb-3">
+                                                        <label class="form-label">الوظيفة</label>
+                                                        <select class="form-control select2" name="role">
+                                                            <option selected disabled>أختيار</option>
+                                                            <option value="1">مدير الموقع</option>
+                                                            <option value="2">مشرف</option>
+                                                            <option value="3">فني</option>
+                                                            <option value="4">منفذ بيع </option>
+                                                        </select>
+                                                    </div>
+
+
+
+                                                </div>
+                                                {% csrf_token %}
+                                                <div class="mb-0">
+                                                    <label class="form-label" for="file">ارفاق ملف</label>
+                                                    <input type="file" class="form-control" name="attach_file" />
+                                                </div>
+
+                                                <div class="mt-2">
+                                                    <button type="submit" class="btn btn-lg btn-primary">ارسال الطلب
+                                                    </button>
+                                                </div>
+                                            </form>
+
                                         </div>
+
                                     </div><!-- /.modal-content -->
                                 </div><!-- /.modal-dialog -->
                             </div><!-- /.modal -->
