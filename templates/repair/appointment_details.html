@@ -80,26 +80,26 @@
                                             <tr>
                                                 <th scope="row">حالة لطلب </th>
                                                 <td>
-                                                    {% if appointment.status == "new" %}
+                                                    {% if appointment.service_request.status == "new" %}
 
                                                     <span class="badge rounded-pill bg-danger font-size-16">جديد</span>
 
-                                                    {% elif appointment.status == "under_process" %}
+                                                    {% elif appointment.service_request.status == "under_process" %}
 
 
                                                     <span class="badge rounded-pill bg-primary font-size-16">جاري
                                                         التنفيذ</span>
 
-                                                    {% elif appointment.status == "suspended" %}
+                                                    {% elif appointment.service_request.status == "suspended" %}
 
                                                     <span class="badge rounded-pill bg-warning font-size-16">جديد</span>
 
-                                                    {% elif appointment.status == "done" %}
+                                                    {% elif appointment.service_request.status == "done" %}
 
                                                     <span class="badge rounded-pill bg-success font-size-16">تم
                                                         التنفيذ</span>
 
-                                                    {% elif appointment.status == "closed" %}
+                                                    {% elif appointment.service_request.status == "closed" %}
 
                                                     <span
                                                         class="badge rounded-pill bg-success font-size-16">انتهي</span>

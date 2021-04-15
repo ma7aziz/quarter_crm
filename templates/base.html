@@ -236,17 +236,34 @@
                                 </li>
 
                                 <li class="nav-item dropdown">
-                                    <a class="nav-link dropdown-toggle arrow-none" href="{% url 'install_index' %}"
-                                        id="topnav-uielement" role="button">
+                                    <a class="nav-link dropdown-toggle arrow-none
+                                    {%if 'install' in request.path %}
+                                    active
+                                    {% endif %}
+                                    " href="{% url 'install_index' %}" id="topnav-uielement" role="button">
                                         <i class="uil-flask me-2"></i>التركيب
                                     </a>
 
 
                                 </li>
                                 <li class="nav-item dropdown">
-                                    <a class="nav-link dropdown-toggle arrow-none" href="{% url 'repair_index' %}"
-                                        id="topnav-uielement" role="button">
+                                    <a class="nav-link dropdown-toggle arrow-none
+                                    {%if 'repair' in request.path %}
+                                    active
+                                    {% endif %}
+                                    " href="{% url 'repair_index' %}" id="topnav-uielement" role="button">
                                         <i class="uil-flask me-2"></i>الصيانة
+                                    </a>
+
+
+                                </li>
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle arrow-none
+                                        {%if 'quarter' in request.path %}
+                                        active
+                                        {% endif %}
+                                    " href="{% url 'quarter_index' %}" role="button">
+                                        <i class="uil-flask me-2"></i> كوارتر
                                     </a>
 
 
@@ -280,9 +297,9 @@
                     {% endfor %}
                     {% endif%}
                     {% if request.user.role == 1 or request.user.role == 2 %}
-                    <div class="row mb-3  " dir="rtl">
-                        <div class=" col col-sm-12 col-lg-4 ">
-                            <button class="btn btn-lg btn-primary btn-rounded waves-effect waves-light"
+                    <div class="row mb-3" dir="rtl">
+                        <div class=" col col-sm-6 col-lg-3 text-center ">
+                            <button class="btn btn-lg btn-primary btn-rounded waves-effect waves-light "
                                 data-bs-toggle="modal" data-bs-target="#newUserModal">أضافة مستخدم
                                 جديد </button>
                             <!-- sample modal content -->
@@ -301,8 +318,14 @@
                                             <p class="text-muted text-truncate mb-0">يرجي ملئ جميع البانات التالية </p>
                                             <form action="{% url 'create_user' %}" method="POST"
                                                 enctype="multipart/form-data">
-                                                <label class="form-label" for="customername">الاسم</label>
-                                                <input name="name" type="text" class="form-control" required>
+                                                <div class="row">
+                                                    <div class="mb-3">
+                                                        <label class="form-label" for="customername">الاسم</label>
+                                                        <input name="name" type="text" class="form-control" required>
+                                                    </div>
+                                                </div>
+
+                                                <hr>
 
                                                 <div class="row">
 
@@ -313,6 +336,7 @@
                                                     </div>
                                                 </div>
 
+                                                <hr>
 
                                                 <div class="row">
                                                     <div class="mb-3">
@@ -322,6 +346,9 @@
                                                             required />
                                                     </div>
                                                 </div>
+
+                                                <hr>
+
                                                 <div class="row">
 
                                                     <div class=" col-6 mb-3">
@@ -339,29 +366,57 @@
                                                     </div>
 
                                                 </div>
+
+                                                <hr>
+
                                                 <div class="row">
                                                     <div class="mb-3">
                                                         <label class="form-label">الوظيفة</label>
                                                         <select class="form-control select2" name="role">
                                                             <option selected disabled>أختيار</option>
-                                                            <option value="1">مدير الموقع</option>
+                                                            {% for k , v in roles %}
+                                                            <!-- <option value="1">مدير الموقع</option>
                                                             <option value="2">مشرف</option>
                                                             <option value="3">فني</option>
-                                                            <option value="4">منفذ بيع </option>
+                                                            <option value="4">منفذ بيع </option> -->
+                                                            <option value="{{k}}">{{v}}</option>
+                                                            {% endfor %}
                                                         </select>
+                                                    </div>
+
+                                                </div>
+
+                                                <hr>
+
+                                                <div class="row">
+                                                    <div class="mb-3">
+                                                        <label for="">القسم</label>
+                                                        <p class="text-muted">يرجي اختيار الاقسام المتاحة
+                                                            للمستخدم
+                                                            <br>
+                                                            اضغط CTR مع تحديد الاقسام المطلوبة
+                                                        </p>
+                                                        <select class="form-select" name="section" multiple>
+                                                            {% for section in sections %}
+                                                            <option value="{{section.id}}">{{section}}</option>
+                                                            {% endfor %}
+                                                        </select>
+
                                                     </div>
 
 
 
                                                 </div>
                                                 {% csrf_token %}
-                                                <div class="mb-0">
+                                                <hr>
+
+                                                <div class="mb-3">
                                                     <label class="form-label" for="file">ارفاق ملف</label>
                                                     <input type="file" class="form-control" name="attach_file" />
                                                 </div>
 
                                                 <div class="mt-2">
-                                                    <button type="submit" class="btn btn-lg btn-primary">ارسال الطلب
+                                                    <button type="submit" class="btn btn-lg btn-primary">انشاء حساب
                                                     </button>
                                                 </div>
                                             </form>
@@ -372,7 +427,7 @@
                                 </div><!-- /.modal-dialog -->
                             </div><!-- /.modal -->
                         </div>
-                        <div class="col col-sm-12 col-lg-4">
+                        <div class="col col-sm-6 col-lg-3 text-center">
                             <button class="btn btn-lg btn-primary btn-rounded waves-effect waves-light"
                                 data-bs-toggle="modal" data-bs-target="#newRepairRequestModal">أضافة طلب صيانة</button>
                             <!-- sample modal content -->
@@ -470,7 +525,7 @@
                                 </div><!-- /.modal-dialog -->
                             </div><!-- /.modal -->
                         </div>
-                        <div class="col col-sm-12 col-lg-4">
+                        <div class="col col-sm-6 col-lg-3 text-center">
                             <button class="btn btn-lg btn-primary btn-rounded waves-effect waves-light"
                                 data-bs-toggle="modal" data-bs-target="#newInstallRequestModal">أضافة طلب تركيب</button>
                             <!-- sample modal content -->
@@ -557,6 +612,74 @@
                                 </div><!-- /.modal-dialog -->
                             </div><!-- /.modal -->
                         </div>
+                        <div class="col col-sm-6 col-lg-3 text-center">
+                            <button class="btn btn-lg btn-primary btn-rounded waves-effect waves-light"
+                                data-bs-toggle="modal" data-bs-target="#newQuarterRequestModal">أضافة طلب خدمة</button>
+                            <!-- sample modal content -->
+                            <div id="newQuarterRequestModal" class="modal fade" tabindex="-1" role="dialog"
+                                aria-labelledby="myModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title mt-0">طلب خدمة جديد </h5>
+
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                aria-label="Close">
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p class="text-muted text-truncate mb-3">يرجي ملئ جميع البانات التالية </p>
+                                            <form action="{% url 'new_quarter_request' %}" method="POST"
+                                                enctype="multipart/form-data">
+                                                <div class="mb-3">
+
+                                                    <label class="form-label" for="customername">اسم العميل </label>
+                                                    <input name="customername" type="text" class="form-control">
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-lg-6">
+
+                                                        <div class="mb-3">
+                                                            <label class="form-label" for="phone">الجوال</label>
+                                                            <input name="phone" type="text" class="form-control">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-6">
+
+                                                        <div class="mb-3">
+                                                            <label class="form-label" for="address">الموقع</label>
+                                                            <input name="address" type="text" class="form-control">
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label class="form-label" for="customername">البريد
+                                                        الالكتروني</label>
+                                                    <input name="email" type="email" class="form-control">
+                                                </div>
+
+                                                {% csrf_token %}
+                                                <div class="mb-3">
+                                                    <label class="form-label" for="file">ارفاق ملف</label>
+                                                    <input type="file" class="form-control" name="attach_file" />
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label class="form-label" for="notes">معلومات اضافية </label>
+                                                    <textarea class="form-control" name="notes" rows="4"></textarea>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <button type="submit" class="btn btn-lg btn-primary">ارسال الطلب
+                                                    </button>
+                                                </div>
+                                            </form>
+                                        </div>
+
+                                    </div><!-- /.modal-content -->
+                                </div><!-- /.modal-dialog -->
+                            </div><!-- /.modal -->
+                        </div>
                     </div>
                     {% endif %}
                     {% block content %}
@@ -575,7 +698,6 @@
     <script src="{% static 'libs/node-waves/waves.min.js' %}"></script>
     <script src="{% static 'libs/waypoints/lib/jquery.waypoints.min.js' %}"></script>
     <script src="{% static 'libs/jquery.counterup/jquery.counterup.min.js' %}"></script>
-
     <!-- apexcharts -->
     <script src="{% static 'libs/apexcharts/apexcharts.min.js' %}"></script>
 

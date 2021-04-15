@@ -1,38 +1,16 @@
---users 
-=admin 
-=supervisor 
-=tech
+service_request :
+    name , phone , email , location , timestamp , created_by(FK) , money-transfer1 , money-transfer2 
+    pricing(FK)
+    Design (FK)
 
 
-== repair
-    -merchant 
+pricing:
+    price
+    priced by 
+    date 
+    status -pending , reviewed , approved by customer - rejected by customer 
 
-
-=sections 
-    -repair 
-    -installments 
-
-
-==user table 
-    -name 
-    -email 
-    -phone 
-    -section 
-    -type 
-    -timestamp 
-    -password 
-
-
-
-
-==========================================
-repair request :
-    -created_by , name , phone , address , machine_type ,invoice_number , customer type (cash , ضمان) ,
-    -request status 
-     
-repair appointment :
-    -technician 
-    -time 
-    -code 
-
-confirm repair done using code .
+designs:
+    files 
+    date 
+    status 

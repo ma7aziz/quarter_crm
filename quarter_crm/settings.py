@@ -43,7 +43,8 @@ INSTALLED_APPS = [
     'repair',
     'accounts',
     'service',
-    'install'
+    'install',
+    'quarter'
 ]
 
 MIDDLEWARE = [
@@ -69,6 +70,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'core.context_processors.add_variable_to_context',
             ],
         },
     },

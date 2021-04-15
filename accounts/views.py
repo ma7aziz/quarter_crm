@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .models import User
+from .models import User, Section
 from django.contrib.auth import authenticate, login
 from django.http import HttpResponseRedirect
 from django.contrib import messages
@@ -7,7 +7,7 @@ from django.contrib import messages
 
 
 def index(request):
-    return render(request, 'index.html', {'form': RepairRequestForm})
+    return render(request, 'index.html')
 
 
 def create_user(request):
@@ -21,6 +21,10 @@ def create_user(request):
             user = User(username=username, name=name,
                         phone=phone, role=role)
             user.set_password(request.POST['password1'])
+            user.save()
+            for s in request.POST.getlist('section'):
+                sect = Section.objects.get(pk=s)
+                user.section.add(sect)
             user.save()
             messages.success(request, "تم انشاء حساب المستخدم")
         else:
