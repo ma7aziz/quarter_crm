@@ -8,7 +8,8 @@ urlpatterns = [
     path('service/<int:id>', views.request_details,
          name="quarter_request_details"),
     path('pricing', views.pricing, name="pricing"),
-    path('confirm_price/<int:id>',  views.confirm_prcie, name="confirm_price"),
+    path('confirm_process/<int:id>',
+         views.confirm_process, name="confirm_process"),
     path('first_transfer', views.first_transfer, name="first_transfer"),
 
 ]

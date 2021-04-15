@@ -17,14 +17,15 @@ class Quarter_service(models.Model):
     email = models.CharField(max_length=100, blank=True, null=True)
     location = models.CharField(max_length=200, blank=True, null=True)
     notes = models.CharField(max_length=500, blank=True, null=True)
-    status = models.CharField(default="new", max_length=10)
+    status = models.CharField(default="new", max_length=30)
     created_by = models.ForeignKey(User, on_delete=models.DO_NOTHING)
     timestamp = models.DateTimeField(auto_now_add=True)
     active = models.BooleanField(default=True)
     # designs FK
     pricing = models.ForeignKey(
         "Price", on_delete=models.SET_NULL, null=True, blank=True)
-    # transfers FK
+    money_transfer = models.ForeignKey(
+        "Transfer", on_delete=models.SET_NULL, null=True, blank=True)
     objects = Quarter_service_Manager()
 
     def __str__(self):

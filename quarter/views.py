@@ -53,10 +53,11 @@ def pricing(request):
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
-def confirm_prcie(request, id):
+def confirm_process(request, id):
     """
         if request is in 'pending price review status ' => first review approved ,change request status to under negotiaion 
-        if 'undernegtiaion' : =>  customer approved the price , change status to 'waiting for first transfer'
+        if 'under negtiaion' : =>  customer approved the price , change status to 'waiting for first transfer'
+        if 'waiting for accounting review' : => change to "pending for designs "
     """
     req = Quarter_service.objects.get(pk=id)
     if req.status == "pending price review":
@@ -70,6 +71,9 @@ def confirm_prcie(request, id):
         transfer.save()
         messages.success(
             request, 'تم اعتماد السعر .. سيتم البدء في التنفيذ بعد تحويل الجزء الاول من السعر')
+    elif req.status == 'waiting for accounting review':
+        req.status = "pending for designs "
+        req.save()
 
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
@@ -84,6 +88,7 @@ def first_transfer(request):
                             transfer1_file=files, transfer1_notes=notes, total_price=int(req.pricing.price))
         transfer.save()
         req.status = "waiting for accounting review"
+        req.money_transfer = transfer
         req.save()
         messages.success(
             request, 'تم ارسال مستندات التحويل ')
