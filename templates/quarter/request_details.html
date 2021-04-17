@@ -3,10 +3,7 @@
 <div class="row " dir="rtl">
     <div class="col-12 ">
         <div class="page-title-box d-flex align-items-center justify-content-between">
-            <h3 class="mb-0 ">تفاصيل الطلب</h3>
-
-
-
+            <h3 class="mb-0">تفاصيل الطلب</h3>
         </div>
     </div>
 </div>
@@ -27,402 +24,237 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-xl-5">
-                        <div class="product-detail">
-                            <div class="row">
-
-
-
-                            </div>
-                        </div>
-                    </div>
-
                 </div>
                 <!-- end row -->
+            </div>
 
-                <div class="mt-4 row">
-                    <h5 class="font-size-14 mb-3"></h5>
-                    <div class="product-desc col col-6">
+            <div class="mt-4 row" dir="rtl">
+                <div class="product-desc col col-7">
+                    <div class="tab-content border border-top-0 p-4">
+                        <!-- Request Details -->
+                        <div class="tab-pane fade show active">
+                            <div class="table-responsive">
+                                <h4 class="font-size-20 mb-3">
 
-                        <div class="tab-content border border-top-0 p-4">
+                                    <i class="far fa-user-circle"></i> بيانات العميل </h4>
+                                <table class="table table-nowrap mb-3 table-striped">
+                                    <tbody>
+                                        <tr>
+                                            <th scope="row" style="width: 20%;">اسم العميل
+                                                <i class="far fa-user-circle"></i> </th>
+                                            <td>{{req}}</td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">تاريخ الطلب
+                                                <i class="far fa-calendar-alt"></i>
+                                            </th>
+                                            <td>{{req.timestamp.date}}</td>
+                                        </tr>
 
-                            <div class="tab-pane fade show active" id="specifi" role="tabpanel">
-                                <div class="table-responsive">
+
+                                        <tr>
+                                            <th scope="row">الموقع
+                                                <i class="fas fa-map-marker-alt"></i>
+                                            </th>
+                                            <td>{{ req.location }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">الجوال
+                                                <i class="fas fa-mobile-alt"></i>
+                                            </th>
+                                            <td>{{ req.phone }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">البريد الالكتروني
+                                                <i class="fas fa-at"></i>
+                                            </th>
+                                            <td>{{ req.email }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">حالة لطلب
+                                                <i class="fas fa-info-circle"></i>
+                                            </th>
+                                            <td>
+
+
+                                                <span
+                                                    class="badge rounded-pill bg-danger font-size-16 p-2">{{req.get_status_display}}</span>
+                                            </td>
+
+                                        </tr>
+
+                                        {% if req.notes %}
+                                        <tr>
+                                            <th scope="row">ملاحظات</th>
+                                            <td>{{req.notes }}</td>
+                                        </tr>
+                                        {%  endif %}
+
+
+                                    </tbody>
+
+                                </table>
+
+                                {% if req.pricing %}
+                                <div class="mt-3 container">
+                                    <h3>
+                                        <i class="fas fa-dollar-sign"></i>
+                                        التسعير
+                                    </h3>
+                                    <div class="table-responsive bg-light p-3">
+                                        <table class="table table-nowrap mb-0 " style="font-size: 18px;">
+                                            <tbody>
+                                                <tr>
+                                                    {% if req.status == "pending price review" %}
+                                                    <th scope="row" style="width: 20%;"> السعر المقترح </th>
+                                                    {% else %}
+                                                    <th scope="row" style="width: 20%;"> السعر </th>
+                                                    {% endif %}
+                                                    <td>{{req.pricing.price}}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th scope="row">ملفات التسعير </th>
+                                                    <td><a href="{{req.pricing.files.url}}" target="__blank">عرض
+                                                            الملفات</a>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <th scope="row">ملاحظات</th>
+                                                    <td>{{ req.pricing.notes }}</td>
+                                                </tr>
+
+
+
+                                            </tbody>
+
+                                        </table>
+                                        {% if req.status == 3 %}
+                                        <div>
+
+                                            <a href="{%url 'confirm_process' req.id %}"
+                                                class="btn btn-lg btn-success btn-rounded">
+                                                الموافقة علي السعر <i class="far fa-check-circle "></i>
+                                            </a>
+
+                                            <a href="" class="btn btn-lg btn-danger btn-rounded">
+                                                تعديل السعر <i class="far fa-edit"></i>
+                                            </a>
+
+                                        </div>
+                                        {% elif req.status == 4 %}
+                                        <div>
+
+                                            <a href="{%url 'confirm_process' req.id %}"
+                                                class="btn btn-lg btn-success btn-rounded">
+                                                قبول السعر
+                                            </a>
+
+                                            <a href="" class="btn btn-lg btn-warning btn-rounded">
+                                                تعديل السعر
+                                            </a>
+
+                                        </div>
+                                        {% endif %}
+
+                                    </div>
+                                </div>
+                                {% endif %}
+                                <!-- accountant confirm transfer  -->
+                                {% if request.user.role == 1 or request.user.role == 6 %}
+                                {% if req.money_transfer %}
+                                <div class="mt-3 pt-3 container">
+                                    <h4> تحويل مالي رقم 1 </h4>
+                                    <div class="table-responsive">
+                                        <table class="table table-nowrap mb-0 table-striped">
+                                            <tbody>
+                                                <tr>
+
+                                                    <th scope="row" style="width: 20%;"> قيمة التحويل </th>
+
+                                                    <td> {{req.money_transfer.transfer1_qty}}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th scope="row">مستند التحويل </th>
+                                                    <td><a href="{{req.money_transfer.transfer1_file.url}}"
+                                                            target="__blank">عرض
+                                                            الملفات</a>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <th scope="row">ملاحظات</th>
+                                                    <td>{{ req.money_transfer.transfer1_notes }}</td>
+                                                </tr>
+
+                                            </tbody>
+
+                                        </table>
+                                        {% if req.status == 6 %}
+                                        <div>
+                                            <a href="{%url 'confirm_process' req.id %}"
+                                                class="btn btn-lg btn-success btn-rounded">تأكيد
+                                                التحويل </a>
+                                        </div>
+                                        {% endif %}
+
+                                    </div>
+
+                                </div>
+                                {% endif %}
+                                {%endif %}
+
+                                <!-- designs  -->
+                                {% if req.designs %}
+                                <h4>التصميم</h4>
+                                <div class="table-responsive container">
                                     <table class="table table-nowrap mb-0">
                                         <tbody>
                                             <tr>
-                                                <th scope="row" style="width: 20%;">اسم العميل </th>
-                                                <td>{{req}}</td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row">تاريخ الطلب </th>
-                                                <td>{{req.timestamp.date}}</td>
-                                            </tr>
+                                                {% if req.status == 8 %}
+                                                <th scope="row" style="width: 20%;"> التصميم المقترح </th>
+                                                {% else %}
+                                                <th scope="row" style="width: 20%;"> التصميم </th>
+                                                {% endif %}
 
 
-                                            <tr>
-                                                <th scope="row">الموقع</th>
-                                                <td>{{ req.location }}</td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row">الجوال</th>
-                                                <td>{{ req.phone }}</td>
-                                            </tr>
-
-                                            <tr>
-                                                <th scope="row">حالة لطلب </th>
                                                 <td>
-
-
-                                                    <span
-                                                        class="badge rounded-pill bg-danger font-size-16">{{req.get_status_display}}</span>
+                                                    <a href="{{req.designs.files.url}}" target="__blank">عرض
+                                                        الملفات</a>
                                                 </td>
 
                                             </tr>
 
-                                            {% if req.notes %}
                                             <tr>
                                                 <th scope="row">ملاحظات</th>
-                                                <td>{{req.notes }}</td>
+                                                <td>{{ req.pricing.notes }}</td>
                                             </tr>
-                                            {%  endif %}
+
 
 
                                         </tbody>
 
                                     </table>
-                                    {% if req.pricing %}
-                                    <div class="mt-3 container">
-                                        <h4>التسعير </h4>
-                                        <div class="table-responsive">
-                                            <table class="table table-nowrap mb-0">
-                                                <tbody>
-                                                    <tr>
-                                                        {% if req.status == "pending price review" %}
-                                                        <th scope="row" style="width: 20%;"> السعر المقترح </th>
-                                                        {% else %}
-                                                        <th scope="row" style="width: 20%;"> السعر </th>
-                                                        {% endif %}
-                                                        <td>{{req.pricing.price}}</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th scope="row">ملفات التسعير </th>
-                                                        <td><a href="{{req.pricing.files.url}}" target="__blank">عرض
-                                                                الملفات</a>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th scope="row">ملاحظات</th>
-                                                        <td>{{ req.pricing.notes }}</td>
-                                                    </tr>
-
-
-
-                                                </tbody>
-
-                                            </table>
-                                            {% if req.status == 3 %}
-                                            <div>
-
-                                                <a href="{%url 'confirm_process' req.id %}"
-                                                    class="btn btn-lg btn-success btn-rounded">
-                                                    الموافقة علي السعر
-                                                </a>
-
-                                                <a href="" class="btn btn-lg btn-warning btn-rounded">
-                                                    تعديل السعر
-                                                </a>
-
-                                            </div>
-                                            {% elif req.status == 4 %}
-                                            <div>
-
-                                                <a href="{%url 'confirm_process' req.id %}"
-                                                    class="btn btn-lg btn-success btn-rounded">
-                                                    قبول السعر
-                                                </a>
-
-                                                <a href="" class="btn btn-lg btn-warning btn-rounded">
-                                                    تعديل السعر
-                                                </a>
-
-                                            </div>
-
-
-                                            <!-- accountant confirm transfer  -->
-                                            {% elif req.status == 6 %}
-                                            <div class="mt-3">
-                                                <h4> تحويل مالي رقم 1 </h4>
-                                                <div class="table-responsive">
-                                                    <table class="table table-nowrap mb-0">
-                                                        <tbody>
-                                                            <tr>
-
-                                                                <th scope="row" style="width: 20%;"> قيمة التحويل </th>
-
-                                                                <td> {{req.money_transfer.transfer1_qty}}</td>
-                                                            </tr>
-                                                            <tr>
-                                                                <th scope="row">مستند التحويل </th>
-                                                                <td><a href="{{req.money_transfer.transfer1_file.url}}"
-                                                                        target="__blank">عرض
-                                                                        الملفات</a>
-                                                                </td>
-                                                            </tr>
-                                                            <tr>
-                                                                <th scope="row">ملاحظات</th>
-                                                                <td>{{ req.money_transfer.transfer1_notes }}</td>
-                                                            </tr>
-
-
-
-
-                                                        </tbody>
-
-                                                    </table>
-                                                    <div>
-                                                        <a href="{%url 'confirm_process' req.id %}"
-                                                            class="btn btn-lg btn-success btn-rounded">تأكيد
-                                                            التحويل </a>
-                                                    </div>
-                                                </div>
-                                                {% endif %}
-
-                                            </div>
-                                        </div>
-                                        {% endif %}
-                                        {% if req.designs %}
-                                        <h4>التصميم</h4>
-                                        <div class="table-responsive container">
-                                            <table class="table table-nowrap mb-0">
-                                                <tbody>
-                                                    <tr>
-                                                        {% if req.status == 8 %}
-                                                        <th scope="row" style="width: 20%;"> التصميم المقترح </th>
-                                                        {% else %}
-                                                        <th scope="row" style="width: 20%;"> التصميم </th>
-                                                        {% endif %}
-
-
-                                                        <td>
-                                                            <a href="{{req.designs.files.url}}" target="__blank">عرض
-                                                                الملفات</a>
-                                                        </td>
-
-                                                    </tr>
-
-                                                    <tr>
-                                                        <th scope="row">ملاحظات</th>
-                                                        <td>{{ req.pricing.notes }}</td>
-                                                    </tr>
-
-
-
-                                                </tbody>
-
-                                            </table>
-                                            {% if req.status == 8 %}
-                                            <div>
-                                                <a href="{%url 'confirm_process' req.id %}"
-                                                    class="btn btn-lg btn-success btn-rounded">الموافقة علي التصميمات
-                                                </a>
-                                            </div>
-                                            {% endif %}
-                                        </div>
-                                        {% endif %}
+                                    {% if req.status == 8 %}
+                                    <div>
+                                        <a href="{%url 'confirm_process' req.id %}"
+                                            class="btn btn-lg btn-success btn-rounded">الموافقة
+                                            علي التصميمات
+                                        </a>
                                     </div>
+                                    {% endif %}
                                 </div>
+                                {% endif %}
                             </div>
                         </div>
-                        <div class="col-6">
-                            <div class="card">
-                                <div class="card-body">
 
-                                    <div class="accordion" id="accordionExample">
-
-                                        {% if req.status == 1 %}
-                                        <div class="accordion-item">
-                                            <h2 class="accordion-header" id="headingOne">
-                                                <button class="accordion-button" type="button" data-bs-toggle="collapse"
-                                                    data-bs-target="#collapseOne" aria-expanded="true"
-                                                    aria-controls="collapseOne">
-                                                    اضافة السعر المقترح
-                                                </button>
-                                            </h2>
-                                            <div id="collapseOne" class="accordion-collapse collapse show"
-                                                aria-labelledby="headingOne" data-bs-parent="#accordionExample">
-                                                <div class="accordion-body">
-                                                    <form method="POST" action="{% url 'pricing' %}"
-                                                        enctype="multipart/form-data">
-                                                        {% csrf_token %}
-                                                        <input type="hidden" name="request" value="{{req.id}}">
-                                                        <div class="row mb-4">
-                                                            <label for="price" class="col-form-label col-4">
-                                                                السعر الاجمالي
-                                                            </label>
-                                                            <div class="col-8">
-                                                                <input type="number" name="price"
-                                                                    class="col-8 form-control ">
-                                                            </div>
-                                                        </div>
-                                                        <div class="row mb-4">
-                                                            <label for="horizontal-email-input"
-                                                                class="col-sm-4 col-form-label">ارفق ملفات التسعير
-                                                            </label>
-                                                            <div class="col-sm-8">
-                                                                <input type="file" name="files" class="form-control"
-                                                                    id="horizontal-email-input">
-                                                            </div>
-                                                        </div>
-                                                        <div class="row mb-4">
-                                                            <label for="horizontal-email-input"
-                                                                class="col-sm-4 col-form-label">ملاحظات</label>
-                                                            <div class="col-sm-8">
-                                                                <textarea class="form-control" name="notes">
-                                                            </textarea>
-                                                            </div>
-                                                        </div>
-
-
-                                                        <div class="row justify-content-center">
-                                                            <div class="col-sm-9">
-                                                                <div>
-                                                                    <button type="submit"
-                                                                        class="btn btn-primary w-md">اضافة
-                                                                        السعر </button>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </form>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        {% endif %}
-
-
-                                        <!-- attach first transfer files  -->
-                                        {% if req.status == 5 %}
-                                        <div class="accordion-item">
-                                            <h2 class="accordion-header" id="headingTwo">
-                                                <button class="accordion-button collapsed" type="button"
-                                                    data-bs-toggle="collapse" data-bs-target="#collapseTwo"
-                                                    aria-expanded="false" aria-controls="collapseTwo">
-                                                    ارفاق ملفات التحويل
-                                                </button>
-                                            </h2>
-                                            <div id="collapseTwo" class="accordion-collapse collapse"
-                                                aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
-                                                <div class="accordion-body">
-                                                    <form method="POST" action="{% url 'first_transfer' %}"
-                                                        enctype="multipart/form-data">
-                                                        {% csrf_token %}
-                                                        <input type="hidden" name="request" value="{{req.id}}">
-                                                        <div class="row mb-4">
-                                                            <label for="price" class="col-form-label col-4">
-                                                                المبلغ المحول
-                                                            </label>
-                                                            <div class="col-8">
-                                                                <input type="number" name="transfered_ammount"
-                                                                    class="col-8 form-control " required />
-                                                            </div>
-                                                        </div>
-                                                        <div class="row mb-4">
-                                                            <label for="horizontal-email-input"
-                                                                class="col-sm-4 col-form-label">ملف التحويل </label>
-                                                            <div class="col-sm-8">
-                                                                <input type="file" name="files" class="form-control"
-                                                                    id="horizontal-email-input" required />
-                                                            </div>
-                                                        </div>
-                                                        <div class="row mb-4">
-                                                            <label for="horizontal-email-input"
-                                                                class="col-sm-4 col-form-label">ملاحظات</label>
-                                                            <div class="col-sm-8">
-                                                                <textarea class="form-control" name="notes">
-                                                            </textarea>
-                                                            </div>
-                                                        </div>
-
-
-                                                        <div class="row justify-content-center">
-                                                            <div class="col-sm-9">
-                                                                <div>
-                                                                    <button type="submit"
-                                                                        class="btn btn-primary w-md">ارسال</button>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </form>
-                                                </div>
-
-                                            </div>
-
-                                        </div>
-                                        {% elif req.status == 7 %}
-                                        <div class="accordion-item">
-                                            <h2 class="accordion-header" id="headingTwo">
-                                                <button class="accordion-button collapsed" type="button"
-                                                    data-bs-toggle="collapse" data-bs-target="#collapseTwo"
-                                                    aria-expanded="false" aria-controls="collapseTwo">
-                                                    ارفاق ملفات التصميمات
-                                                </button>
-                                            </h2>
-                                            <div id="collapseTwo" class="accordion-collapse collapse"
-                                                aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
-                                                <div class="accordion-body">
-                                                    <form method="POST" action="{% url 'attach_designs' %}"
-                                                        enctype="multipart/form-data">
-                                                        {% csrf_token %}
-                                                        <input type="hidden" name="request" value="{{req.id}}">
-
-                                                        <div class="row mb-4">
-                                                            <label for="horizontal-email-input"
-                                                                class="col-sm-4 col-form-label">التصميمات </label>
-                                                            <div class="col-sm-8">
-                                                                <input type="file" name="files" class="form-control"
-                                                                    id="horizontal-email-input" required />
-                                                            </div>
-                                                        </div>
-                                                        <div class="row mb-4">
-                                                            <label for="horizontal-email-input"
-                                                                class="col-sm-4 col-form-label">ملاحظات</label>
-                                                            <div class="col-sm-8">
-                                                                <textarea class="form-control" name="notes">
-                                                            </textarea>
-                                                            </div>
-                                                        </div>
-
-
-                                                        <div class="row justify-content-center">
-                                                            <div class="col-sm-9">
-                                                                <div>
-                                                                    <button type="submit"
-                                                                        class="btn btn-primary w-md">ارسال</button>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </form>
-                                                </div>
-
-                                            </div>
-
-                                        </div>
-                                        {% endif %}
-
-
-
-                                    </div>
-
-
-                                </div>
-                            </div>
-                        </div>
                     </div>
-
                 </div>
+                {% include './partials/_request_details_accordins.html'%}
             </div>
+
+
+            <!-- end row -->
         </div>
     </div>
-    <!-- end row -->
+</div>
 
-    {% endblock %}
+{% endblock %}

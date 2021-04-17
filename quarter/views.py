@@ -111,3 +111,8 @@ def attach_designs(request):
         req.status = 8
         req.save()
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
+# Pricing Details
+# design Details
+# transfers

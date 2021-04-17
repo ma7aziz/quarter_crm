@@ -1,0 +1,173 @@
+<div class="col-5">
+    <div class="card">
+        <div class="card-body">
+
+            <!-- PRICING  -->
+
+            <div class="accordion" id="accordionExample">
+                <!-- PRICING  -->
+                {% if req.status == 1 %}
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingOne">
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                            اضافة السعر المقترح
+                        </button>
+                    </h2>
+                    <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne"
+                        data-bs-parent="#accordionExample">
+                        <div class="accordion-body">
+                            <form method="POST" action="{% url 'pricing' %}" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                <input type="hidden" name="request" value="{{req.id}}">
+                                <div class="row mb-4">
+                                    <label for="price" class="col-form-label col-4">
+                                        السعر الاجمالي
+                                    </label>
+                                    <div class="col-8">
+                                        <input type="number" name="price" class="col-8 form-control ">
+                                    </div>
+                                </div>
+                                <div class="row mb-4">
+                                    <label for="horizontal-email-input" class="col-sm-4 col-form-label">ارفق ملفات
+                                        التسعير
+                                    </label>
+                                    <div class="col-sm-8">
+                                        <input type="file" name="files" class="form-control"
+                                            id="horizontal-email-input">
+                                    </div>
+                                </div>
+                                <div class="row mb-4">
+                                    <label for="horizontal-email-input" class="col-sm-4 col-form-label">ملاحظات</label>
+                                    <div class="col-sm-8">
+                                        <textarea class="form-control" name="notes">
+                                    </textarea>
+                                    </div>
+                                </div>
+
+
+                                <div class="row justify-content-center">
+                                    <div class="col-sm-9">
+                                        <div>
+                                            <button type="submit" class="btn btn-primary w-md">اضافة
+                                                السعر </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- attach first transfer files  -->
+                {% if req.status == 5 %}
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingTwo">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                            ارفاق ملفات التحويل
+                        </button>
+                    </h2>
+                    <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo"
+                        data-bs-parent="#accordionExample">
+                        <div class="accordion-body">
+                            <form method="POST" action="{% url 'first_transfer' %}" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                <input type="hidden" name="request" value="{{req.id}}">
+                                <div class="row mb-4">
+                                    <label for="price" class="col-form-label col-4">
+                                        المبلغ المحول
+                                    </label>
+                                    <div class="col-8">
+                                        <input type="number" name="transfered_ammount" class="col-8 form-control "
+                                            required />
+                                    </div>
+                                </div>
+                                <div class="row mb-4">
+                                    <label for="horizontal-email-input" class="col-sm-4 col-form-label">ملف التحويل
+                                    </label>
+                                    <div class="col-sm-8">
+                                        <input type="file" name="files" class="form-control" id="horizontal-email-input"
+                                            required />
+                                    </div>
+                                </div>
+                                <div class="row mb-4">
+                                    <label for="horizontal-email-input" class="col-sm-4 col-form-label">ملاحظات</label>
+                                    <div class="col-sm-8">
+                                        <textarea class="form-control" name="notes">
+                                    </textarea>
+                                    </div>
+                                </div>
+
+
+                                <div class="row justify-content-center">
+                                    <div class="col-sm-9">
+                                        <div>
+                                            <button type="submit" class="btn btn-primary w-md">ارسال</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- ATTACH DESIGNS  -->
+                {% elif req.status == 7 %}
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingTwo">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                            ارفاق ملفات التصميمات
+                        </button>
+                    </h2>
+                    <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo"
+                        data-bs-parent="#accordionExample">
+                        <div class="accordion-body">
+                            <form method="POST" action="{% url 'attach_designs' %}" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                <input type="hidden" name="request" value="{{req.id}}">
+
+                                <div class="row mb-4">
+                                    <label for="horizontal-email-input" class="col-sm-4 col-form-label">التصميمات
+                                    </label>
+                                    <div class="col-sm-8">
+                                        <input type="file" name="files" class="form-control" id="horizontal-email-input"
+                                            required />
+                                    </div>
+                                </div>
+                                <div class="row mb-4">
+                                    <label for="horizontal-email-input" class="col-sm-4 col-form-label">ملاحظات</label>
+                                    <div class="col-sm-8">
+                                        <textarea class="form-control" name="notes">
+                                    </textarea>
+                                    </div>
+                                </div>
+
+
+                                <div class="row justify-content-center">
+                                    <div class="col-sm-9">
+                                        <div>
+                                            <button type="submit" class="btn btn-primary w-md">ارسال</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+
+                    </div>
+
+                </div>
+                {% endif %}
+
+
+
+            </div>
+
+
+        </div>
+    </div>
+</div>
