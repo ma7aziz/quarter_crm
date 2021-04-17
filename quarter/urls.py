@@ -11,5 +11,6 @@ urlpatterns = [
     path('confirm_process/<int:id>',
          views.confirm_process, name="confirm_process"),
     path('first_transfer', views.first_transfer, name="first_transfer"),
+    path('attach_designs', views.attach_designs, name="attach_designs")
 
 ]

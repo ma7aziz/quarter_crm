@@ -1,5 +1,6 @@
 from django.db import models
 from accounts.models import User
+from .choices import STATUS_CHOICES
 # Create your models here.
 
 
@@ -17,15 +18,18 @@ class Quarter_service(models.Model):
     email = models.CharField(max_length=100, blank=True, null=True)
     location = models.CharField(max_length=200, blank=True, null=True)
     notes = models.CharField(max_length=500, blank=True, null=True)
-    status = models.CharField(default="new", max_length=30)
+    status = models.IntegerField(
+        default=1, choices=STATUS_CHOICES)
     created_by = models.ForeignKey(User, on_delete=models.DO_NOTHING)
     timestamp = models.DateTimeField(auto_now_add=True)
     active = models.BooleanField(default=True)
-    # designs FK
+
     pricing = models.ForeignKey(
         "Price", on_delete=models.SET_NULL, null=True, blank=True)
     money_transfer = models.ForeignKey(
         "Transfer", on_delete=models.SET_NULL, null=True, blank=True)
+    designs = models.ForeignKey(
+        "Design", on_delete=models.SET_NULL, null=True, blank=True)
     objects = Quarter_service_Manager()
 
     def __str__(self):
@@ -76,3 +80,13 @@ class Transfer(models.Model):
             (self.transfer1_qty + self.transfer2_qty + self.transfer3_qty)
 
         super(Transfer, self).save(*args, **kwargs)
+
+
+class Design(models.Model):
+    service = models.ForeignKey(Quarter_service, on_delete=models.CASCADE)
+    files = models.FileField(upload_to='designes/', blank=True,  null=True)
+    notes = models.TextField(max_length=500, blank=True, null=True)
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Designes for {self.service}"
