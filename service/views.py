@@ -93,9 +93,22 @@ def close_request(request):
       == change status to closed  
     """
     if request.method == "POST":
-        repair_request = Servrequests = Service_request.objects.get(
+        repair_request = Service_request.objects.get(
             pk=request.POST['request_id'])
         repair_request.status = "closed"
+
+        #  technician completed task count
+        appointment = Appointment.objects.get(service_request=repair_request)
+        technician = appointment.technician
+        technician.completed_tasks += 1
+        technician.save()
+
+        # sales submitted orders count
+        sales = repair_request.created_by
+        sales.submitted_orders += 1
+        sales.save()
+
         repair_request.save()
+
         messages.success(request, "تم تنفيذ و اغلاق الطلب بنجاح !")
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))

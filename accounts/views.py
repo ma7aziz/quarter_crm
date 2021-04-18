@@ -52,3 +52,9 @@ def userLogin(request):
             print('user is none')
     else:
         return render(request, 'login.html')
+
+
+def profile(request, id):
+    user = User.objects.get(pk=id)
+    print(user.name)
+    return render(request, 'registration/profile.html', {'user': user})

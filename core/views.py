@@ -19,3 +19,7 @@ def index(request):
         'done': done,
         'technicians': tecnicians}
     return render(request, 'index.html', ctx)
+
+
+def dashboard(request):
+    pass

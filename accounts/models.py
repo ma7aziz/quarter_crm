@@ -68,6 +68,9 @@ class User(AbstractUser):
         _('الوظيفة'), choices=ROLE, default=1)
     section = models.ManyToManyField(Section)
     favourite_count = models.IntegerField(blank=True, null=True, default=1)
+    completed_tasks = models.IntegerField(default=0)
+    submitted_orders = models.IntegerField(default=0)
+
     USERNAME_FIELD = 'username'
 
     def __str__(self):
