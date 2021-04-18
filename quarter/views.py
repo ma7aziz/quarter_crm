@@ -10,7 +10,10 @@ from .models import Price, Quarter_service, Transfer, Design
 
 @login_required
 def index(request):
+    new_transfers = Quarter_service.objects.filter(status=6)
+
     ctx = {
+        "new_transfers": Quarter_service.objects.filter(status=6),
         "new_requests": Quarter_service.objects.all().order_by('-timestamp')
     }
     return render(request, 'quarter/index.html', ctx)

@@ -3,5 +3,7 @@
 {% block content %}
 {%if request.user.role == 1 %}
 {% include './partials/_admin_supervisor.html' %}
+{% elif request.user.role == 6 %}
+{% include './partials/_accountant.html' %}
 {% endif %}
 {% endblock %}

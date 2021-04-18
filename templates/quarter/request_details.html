@@ -161,7 +161,7 @@
                                 {% endif %}
                                 <!-- accountant confirm transfer  -->
                                 {% if request.user.role == 1 or request.user.role == 6 %}
-                                {% if req.money_transfer %}
+                                {% if req.money_transfer and not req.status == 6 %}
                                 <div class="mt-3 pt-3 container">
                                     <h4> تحويل مالي رقم 1 </h4>
                                     <div class="table-responsive">
@@ -188,13 +188,8 @@
                                             </tbody>
 
                                         </table>
-                                        {% if req.status == 6 %}
-                                        <div>
-                                            <a href="{%url 'confirm_process' req.id %}"
-                                                class="btn btn-lg btn-success btn-rounded">تأكيد
-                                                التحويل </a>
-                                        </div>
-                                        {% endif %}
+
+
 
                                     </div>
 

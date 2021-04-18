@@ -39,17 +39,15 @@ def userLogin(request):
         username = request.POST['username']
         password = request.POST['password']
         user = authenticate(username=username, password=password)
-        print(user)
         if user is not None:
-            print('user not none ')
             if user.is_active:
                 login(request, user)
-                print('user logged in ')
                 if user.role == 1:
                     return HttpResponseRedirect('/')
-                elif user.role == 4 or 3:
-                    print(user.role)
+                elif user.role == 4 or user.role == 3:
                     return HttpResponseRedirect('repair/')
+                elif user.role == 6:
+                    return HttpResponseRedirect('quarter')
         else:
             print('user is none')
     else:

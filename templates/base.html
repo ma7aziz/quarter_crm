@@ -39,26 +39,34 @@
     }
 </style>
 
-<body data-layout="horizontal" data-topbar="colored">
+<body data-sidebar="dark" dir="rtl">
     <div id="layout-wrapper">
         <header id="page-topbar">
             <div class="navbar-header">
                 <div class="d-flex">
                     <!-- LOGO -->
                     <div class="navbar-brand-box">
-                        <a href="{% url 'index' %}" class="logo logo-dark">
-                            Quarter CRM
+                        <a href="" class="logo logo-dark">
+                            <span class="logo-sm">
+                                QUARTER
+                            </span>
+                            <span class="logo-lg">
+                                QUARTER
+                            </span>
                         </a>
 
-                        <a href="{% url 'index' %}" class="logo logo-dark">
-
-                            Quarter CRM
+                        <a href="" class="logo logo-light">
+                            <span class="logo-sm">
+                                QUARTER
+                            </span>
+                            <span class="logo-lg">
+                                QUARTER
+                            </span>
                         </a>
                     </div>
 
                     <button type="button"
-                        class="btn btn-sm px-3 font-size-16 d-lg-none header-item waves-effect waves-light"
-                        data-bs-toggle="collapse" data-bs-target="#topnav-menu-content">
+                        class="btn btn-sm px-3 font-size-16 header-item waves-effect vertical-menu-btn">
                         <i class="fa fa-fw fa-bars"></i>
                     </button>
 
@@ -213,68 +221,82 @@
                         </div>
                     </div>
 
-                    <!-- <div class="dropdown d-inline-block">
-                        <button type="button" class="btn header-item noti-icon right-bar-toggle waves-effect">
-                            <i class="uil-cog"></i>
-                        </button>
-                    </div> -->
 
-                </div>
-            </div>
-            <div class="container-fluid">
-                <div class="topnav">
-
-                    <nav class="navbar navbar-light navbar-expand-lg topnav-menu" dir="rtl">
-
-                        <div class="collapse navbar-collapse" id="topnav-menu-content">
-                            <ul class="navbar-nav">
-
-                                <li class="nav-item">
-                                    <a class="nav-link" href="">
-                                        <i class="uil-home-alt me-2"></i> Dashboard
-                                    </a>
-                                </li>
-
-                                <li class="nav-item dropdown">
-                                    <a class="nav-link dropdown-toggle arrow-none
-                                    {%if 'install' in request.path %}
-                                    active
-                                    {% endif %}
-                                    " href="{% url 'install_index' %}" id="topnav-uielement" role="button">
-                                        <i class="uil-flask me-2"></i>التركيب
-                                    </a>
-
-
-                                </li>
-                                <li class="nav-item dropdown">
-                                    <a class="nav-link dropdown-toggle arrow-none
-                                    {%if 'repair' in request.path %}
-                                    active
-                                    {% endif %}
-                                    " href="{% url 'repair_index' %}" id="topnav-uielement" role="button">
-                                        <i class="uil-flask me-2"></i>الصيانة
-                                    </a>
-
-
-                                </li>
-                                <li class="nav-item dropdown">
-                                    <a class="nav-link dropdown-toggle arrow-none
-                                        {%if 'quarter' in request.path %}
-                                        active
-                                        {% endif %}
-                                    " href="{% url 'quarter_index' %}" role="button">
-                                        <i class="uil-flask me-2"></i> كوارتر
-                                    </a>
-
-
-                                </li>
-
-                            </ul>
-                        </div>
-                    </nav>
                 </div>
             </div>
         </header>
+
+        <div class="vertical-menu">
+            <div class="navbar-brand-box">
+                <a href="{% url 'index' %}" class="logo logo-dark">
+                    Quarter CRM
+                </a>
+
+                <a href="{% url 'index' %}" class="logo logo-dark">
+
+                    Quarter CRM
+                </a>
+            </div>
+            <!-- <button type="button" class="btn btn-sm px-3 font-size-16 header-item waves-effect vertical-menu-btn">
+                <i class="fa fa-fw fa-bars"></i>
+            </button> -->
+            <div data-simplebar class="sidebar-menu-scroll">
+
+                <!-- LOGO -->
+
+                <div class="navbar-brand-box">
+                    <a href="{% url 'index' %}" class="logo logo-dark">
+                        Quarter CRM
+                    </a>
+
+                    <a href="{% url 'index' %}" class="logo logo-lg">
+
+                        Quarter CRM
+                    </a>
+                </div>
+                <button type="button" class="btn btn-sm px-3 font-size-16 header-item waves-effect vertical-menu-btn">
+                    <i class="fa fa-fw fa-bars"></i>
+                </button>
+
+                <div data-simplebar class="sidebar-menu-scroll">
+
+                    <!--- Sidemenu -->
+                    <div id="sidebar-menu">
+                        <!-- Left Menu Start -->
+                        <ul class="metismenu list-unstyled" id="side-menu">
+                            <li>
+                                <a href="/">
+                                    <i class="uil-home-alt"></i>
+                                    Dashboard
+                                </a>
+                            </li>
+
+                            <li>
+                                <a href="{% url 'repair_index' %}">
+                                    <i class="fas fa-tools fa-3x"></i>الصيانة
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{% url 'install_index' %}">
+                                    <i class="fas fa-tools fa-3x"></i> التركيب
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{% url 'quarter_index' %}">
+                                    <i class="fas fa-tools fa-3x"></i>كوارتر
+                                </a>
+                            </li>
+
+                        </ul>
+                    </div>
+                    <!-- Sidebar -->
+                </div>
+            </div>
+            <!-- Left Sidebar End -->
+
+
+
+        </div>
 
         <div class="main-content">
 
@@ -283,12 +305,12 @@
                     {% if messages %}
                     {% for  message in messages %}
                     <div class="alert text-center 
-        {% if "success" in  message.tags %}
-        alert-success
-        {% elif "error" in message.tags %}
-        alert-danger
-        {% endif %}
-         alert-dismissible fade show" role="alert">
+                    {% if "success" in  message.tags %}
+                    alert-success
+                    {% elif "error" in message.tags %}
+                    alert-danger
+                    {% endif %}
+                    alert-dismissible fade show" role="alert">
                         {{message}}
                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
 
@@ -301,14 +323,16 @@
                         <div class=" col col-sm-6 col-lg-3 text-center ">
                             <button class="btn btn-lg btn-primary btn-rounded waves-effect waves-light "
                                 data-bs-toggle="modal" data-bs-target="#newUserModal">أضافة مستخدم
-                                جديد </button>
+                                جديد
+                                <i class="fas fa-user-friends"></i></button>
                             <!-- sample modal content -->
                             <div id="newUserModal" class="modal fade" tabindex="-1" role="dialog"
                                 aria-labelledby="myModalLabel" aria-hidden="true">
                                 <div class="modal-dialog">
                                     <div class="modal-content">
                                         <div class="modal-header">
-                                            <h5 class="modal-title mt-0" id="myModalLabel">أضافة مستخدم جديد </h5>
+                                            <h5 class="modal-title mt-0" id="myModalLabel">أضافة مستخدم جديد <i
+                                                    class="fas fa-user-friends"></i></h5>
                                             <button type="button" class="btn-close" data-bs-dismiss="modal"
                                                 aria-label="Close">
                                             </button>
@@ -429,14 +453,18 @@
                         </div>
                         <div class="col col-sm-6 col-lg-3 text-center">
                             <button class="btn btn-lg btn-primary btn-rounded waves-effect waves-light"
-                                data-bs-toggle="modal" data-bs-target="#newRepairRequestModal">أضافة طلب صيانة</button>
+                                data-bs-toggle="modal" data-bs-target="#newRepairRequestModal">أضافة طلب صيانة
+                                <i class="fas fa-tools"></i>
+                            </button>
                             <!-- sample modal content -->
                             <div id="newRepairRequestModal" class="modal fade" tabindex="-1" role="dialog"
                                 aria-labelledby="myModalLabel" aria-hidden="true">
                                 <div class="modal-dialog">
                                     <div class="modal-content">
                                         <div class="modal-header">
-                                            <h5 class="modal-title mt-0">طلب صيانة جديد </h5>
+                                            <h5 class="modal-title mt-0">طلب صيانة جديد
+                                                <i class="fas fa-tools"></i>
+                                            </h5>
 
                                             <button type="button" class="btn-close" data-bs-dismiss="modal"
                                                 aria-label="Close">
@@ -527,14 +555,17 @@
                         </div>
                         <div class="col col-sm-6 col-lg-3 text-center">
                             <button class="btn btn-lg btn-primary btn-rounded waves-effect waves-light"
-                                data-bs-toggle="modal" data-bs-target="#newInstallRequestModal">أضافة طلب تركيب</button>
+                                data-bs-toggle="modal" data-bs-target="#newInstallRequestModal">أضافة طلب تركيب
+                                <i class="fas fa-toolbox"></i>
+                            </button>
                             <!-- sample modal content -->
                             <div id="newInstallRequestModal" class="modal fade" tabindex="-1" role="dialog"
                                 aria-labelledby="myModalLabel" aria-hidden="true">
                                 <div class="modal-dialog">
                                     <div class="modal-content">
                                         <div class="modal-header">
-                                            <h5 class="modal-title mt-0">طلب تركيب جديد </h5>
+                                            <h5 class="modal-title mt-0">طلب تركيب جديد
+                                                <i class="fas fa-toolbox"></i> </h5>
 
                                             <button type="button" class="btn-close" data-bs-dismiss="modal"
                                                 aria-label="Close">
@@ -688,7 +719,9 @@
                 </div>
             </div>
         </div>
+
     </div>
+
 
     <!-- JAVASCRIPT -->
     <script src="{% static 'libs/jquery/jquery.min.js' %}"></script>
