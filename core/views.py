@@ -25,7 +25,11 @@ def index(request):
 
 
 def dashboard(request):
-    # all requests count
+
+    # all service requests
+    service_request = Service_request.objects.all()
+    quarter_requests = Quarter_service.objects.all()
+    all_requests = list(chain(service_request, quarter_requests))
     # all new process count
 
     # under_process
@@ -34,23 +38,39 @@ def dashboard(request):
 
     ########################################################### NEED TO CHANGE LATER ###########
     quarter_under_process = Quarter_service.objects.all()
-    print(quarter_under_process.count())
     ###############################
     # All under process
     all_under_process = sorted(
         chain(repair_under_process, install_under_process, quarter_under_process),
         key=attrgetter('timestamp'), reverse=True)
 
-    # all done count
-    # all users
-    users = User.objects.all().order_by("role")[:10]
+    # NEW REQUESTS
+    new_repair = Service_request.objects.repair().filter(status="new")
+    new_install = Service_request.objects.install().filter(status="new")
+    new_quarter = Quarter_service.objects.all().filter(status=1)
+    all_new = sorted(
+        chain(new_repair, new_install, new_quarter), key=attrgetter('timestamp'), reverse=True
+    )
+
+    users = User.objects.all().order_by("role")
     ctx = {
-        'users': users,
+        "all_users": users,
+        'users': users[:10],
+        # all requests
+        "quarter_request": quarter_requests,
+        "service_requests": service_request,
+        "all_requests": all_requests,
         ## under process requests ##
         "all_cur": all_under_process,
         'repair_cur': repair_under_process,
         'install_cur': install_under_process,
-        'quarter_cur': quarter_under_process
+        'quarter_cur': quarter_under_process,
+        # NEW REQUESTS
+        "all_new": all_new,
+        "new_install": new_install,
+        "new_repair": new_repair,
+        "new_quarter": new_quarter
+
     }
     return render(request, 'core/dashboard.html', ctx)
 
