@@ -15,7 +15,7 @@
 <!-- end page title -->
 
 <div class="row mb-4">
-    <div class="col-xl-4">
+    <div class="col-xl-6">
         <div class="card h-100">
             <div class="card-body">
                 <div class="text-center">
@@ -40,8 +40,18 @@
                     <p class="text-muted">{{user.get_role_display}}</p>
 
                     <div class="mt-4">
-                        <button type="button" class="btn btn-light btn-sm"><i class="uil uil-envelope-alt me-2"></i>
-                            Message</button>
+                        {% if request.user.username != user.username %}
+                        <button type="button" class="btn btn-light btn"><i class="uil uil-envelope-alt me-2"></i>
+                            رسالة </button>
+                        {% endif %}
+                        {% if request.user.role == 1   %}
+                        {% if request.user.username != user.username %}
+                        <a href="{% url 'delete_user' user.username %}" class="btn btn-light text-danger btn "
+                            id="confirm_delete"><i class="uil uil-trash-alt me-2"></i>
+                            حذف </a>
+                        {% endif %}
+                        {% endif %}
+
                     </div>
                 </div>
 
@@ -69,7 +79,7 @@
         </div>
     </div>
 
-    <div class="col-xl-8">
+    <div class="col-xl-6">
         <div class="card mb-0">
             <!-- Nav tabs -->
             <ul class="nav nav-tabs nav-tabs-custom nav-justified" role="tablist">
@@ -549,4 +559,11 @@
     </div>
 </div>
 <!-- end row -->
+<script>
+    let btn = document.getElementById('confirm_delete')
+    btn.addEventListener("click", () => {
+        return confirm("حذف المستخدم ؟")
+    })
+</script>
+
 {% endblock %}

@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from .models import User, Section
 from django.contrib.auth import authenticate, login
 from django.http import HttpResponseRedirect
@@ -54,7 +54,14 @@ def userLogin(request):
         return render(request, 'login.html')
 
 
-def profile(request, id):
-    user = User.objects.get(pk=id)
-    print(user.name)
+def profile(request, username):
+    user = User.objects.get(username=username)
     return render(request, 'registration/profile.html', {'user': user})
+
+
+def delete_user(request, username):
+    user = User.objects.get(username=username)
+    user.delete()
+
+    messages.success(request, "تم حدف المستخدم !")
+    return redirect('dashboard')

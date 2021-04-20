@@ -44,5 +44,7 @@ def install_request(request):
                                                         machine_type=machine_type, invoice_number=invoice_number,
                                                         address=address, customer_type=customer_type, notes=request.POST['notes'])
         repair_request.save()
+        user.submitted_orders += 1
+        user.save()
         messages.success(request, "تم تسجيل طلبك بنجاح")
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))

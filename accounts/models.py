@@ -17,6 +17,10 @@ class UserManager(BaseUserManager):
             user.save()
         return user
 
+    def sales(self):
+        sales = self.filter(role=4)
+        return sales
+
 
 class Section(models.Model):
     ALL = 1
