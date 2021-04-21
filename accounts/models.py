@@ -64,7 +64,6 @@ ROLE = (
 
 
 class User(AbstractUser):
-
     name = models.CharField(_('الاسم'), max_length=100, blank=True)
     phone = models.CharField(_('الجوال'),
                              max_length=15, blank=True)
@@ -74,6 +73,10 @@ class User(AbstractUser):
     favourite_count = models.IntegerField(blank=True, null=True, default=1)
     completed_tasks = models.IntegerField(default=0)
     submitted_orders = models.IntegerField(default=0)
+    profile_pic = models.ImageField(
+        upload_to="user_data/profile_pics", blank=True, null=True)
+    files = models.FileField(
+        upload_to="user_data/files", blank=True, null=True)
 
     USERNAME_FIELD = 'username'
 

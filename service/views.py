@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from .models import Service_request, Appointment
 from accounts.models import User
 from django.contrib import messages
@@ -40,7 +40,7 @@ def service_appointment(request):
 
     """
     if request.method == 'POST':
-        repair_request = Servrequests = Service_request.objects.get(
+        repair_request = Service_request.objects.get(
             pk=request.POST['request'])
         technician = User.objects.get(pk=request.POST['technician'])
         date = request.POST['appoint_date']
@@ -48,6 +48,7 @@ def service_appointment(request):
             date=date, technician=technician, service_request=repair_request)
         appointment.save()
         repair_request.status = 'under_process'
+        repair_request.appointment = appointment
         repair_request.save()
         messages.success(request, "تم تحديد الموعد !")
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
@@ -112,3 +113,15 @@ def close_request(request):
 
         messages.success(request, "تم تنفيذ و اغلاق الطلب بنجاح !")
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
+def delete_request(request, id):
+    req = Service_request.objects.get(pk=id)
+    req.delete()
+    messages.success(request, "تم حذف الطلب ")
+    if req.service_type == "repair":
+        return redirect('/repair')
+    elif req.service_type == "install":
+        return redirect('/install')
+    elif request.user.role == 1:
+        return redirect('dashboard')

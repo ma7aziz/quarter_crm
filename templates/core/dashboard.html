@@ -17,7 +17,6 @@
             </div>
         </div>
     </div> <!-- end col-->
-
     <div class="col-md-6 col-xl-3">
         <div class="card">
             <div class="card-body">
@@ -70,6 +69,8 @@
         </div>
     </div> <!-- end col-->
 </div> <!-- end row-->
+
+
 <!-- NEW REQUESTS -->
 <div class="card">
     <div class="card-body">
@@ -117,7 +118,7 @@
                     <div class="card-body">
                         <h4 class="card-title mb-4" dir="rtl">جميع الطلبات الجاري تنفيذها </h4>
 
-                        <div class="table-responsive text-center">
+                        <div class="table-responsive text-center" data-simplebar style="max-height: 430px;">
                             {% if not all_new  %}
                             <p class="text-bold " style="font-size:16px">لا يـوجد طلبات جديدة </p>
                             {% else %}
@@ -130,14 +131,20 @@
                                         <th>حالة الطلب </th>
                                         <th>تاريخ الطلب</th>
 
-                                        <th>تأكيد</th>
+                                        <th></th>
                                     </tr>
                                 </thead>
 
                                 <tbody>
                                     {% for process in all_new %}
                                     <tr>
-                                        <td><a href="{% url 'profile' user.username %}">{{process}}</a>
+                                        <td>
+                                            {% if process in repair_cur or process in install_cur %}
+                                            <a href="{% url 'service_request_details' process.id %}">
+                                                {% elif process in quarter_cur %}
+                                                <a href="{% url 'quarter_request_details' process.id %}">
+                                                    {% endif %}
+                                                    {{process}}</a>
                                         </td>
                                         <td>
                                             {% if process in repair_cur %}
@@ -168,11 +175,22 @@
 
                                         <td>
 
-                                            <button class=" btn btn-primary btn-rounded waves-effect waves-light ">
-                                                <i class="uil uil-pen "></i>
+                                            <button class=" btn btn-soft-primary btn-rounded waves-effect waves-light ">
+                                                {% if process in repair_cur or process in install_cur %}
+                                                <a href="{% url 'service_request_details' process.id %}">
+                                                    {% elif process in quarter_cur %}
+                                                    <a href="{% url 'quarter_request_details' process.id %}">
+                                                        {% endif %}
+                                                        <i class="uil uil-pen "></i> التفاصيل
                                             </button>
-                                            <button class=" btn btn-danger btn-rounded waves-effect waves-light">
-                                                <i class="uil uil-trash-alt "></i>
+                                            <button class=" btn btn-soft-danger btn-rounded waves-effect waves-light">
+                                                {% if process in repair_cur or process in install_cur %}
+                                                <a href="{% url 'delete_request' process.id %}" class="text-danger">
+                                                    {% elif process in quarter_cur %}
+                                                    <a href="{% url 'delete_quarter_request' process.id %}"
+                                                        class="text-danger">
+                                                        {% endif %}
+                                                        <i class="uil uil-trash-alt "></i> حذف
                                             </button>
 
                                         </td>
@@ -193,7 +211,7 @@
                     <div class="card-body">
                         <h4 class="card-title mb-4" dir="rtl">طلبات الصيانة </h4>
 
-                        <div class="table-responsive text-center">
+                        <div class="table-responsive text-center" data-simplebar style="max-height: 430px;">
                             {% if not new_repair%}
                             <p class="text-bold " style="font-size:16px">لا يـوجد طلبات جديدة </p>
                             {% else %}
@@ -213,7 +231,7 @@
                                 <tbody>
                                     {% for process  in new_repair %}
                                     <tr>
-                                        <td><a href="{% url 'profile' user.username %}">{{process}}</a>
+                                        <td><a href="{% url 'service_request_details' process.id %}">{{process}}</a>
                                         </td>
                                         <td>{{process.phone}}</td>
                                         <td>
@@ -234,10 +252,16 @@
                                         </td>
                                         <td>
 
+                                            <a href="{% url  'delete_request' process.id %}"
+                                                class=" btn btn-soft-danger btn-rounded waves-effect waves-light">
+                                                <i class="uil uil-trash-alt "></i> حذف
+                                            </a>
+                                            <a href="{% url 'service_request_details' process.id %}"
+                                                class=" btn btn-soft-primary btn-rounded waves-effect waves-light">
+                                                <i class="uil uil-pen "></i>
+                                                التفاصيل
+                                            </a>
 
-                                            <button class=" btn btn-danger btn-rounded waves-effect waves-light">
-                                                <i class="uil uil-trash-alt "></i>
-                                            </button>
 
                                         </td>
                                     </tr>
@@ -257,7 +281,7 @@
                     <div class="card-body">
                         <h4 class="card-title mb-4" dir="rtl">طلبات التركيب </h4>
 
-                        <div class="table-responsive text-center">
+                        <div class="table-responsive text-center" data-simplebar style="max-height: 430px;">
                             {% if not new_install %}
 
                             <p class="text-bold " style="font-size:16px">لا يـوجد طلبات جديدة </p>
@@ -281,7 +305,7 @@
 
                                     {% for process  in new_install %}
                                     <tr>
-                                        <td><a href="{% url 'profile' user.username %}">{{process}}</a>
+                                        <td><a href="{% url 'service_request_details' process.id %}">{{process}}</a>
                                         </td>
                                         <td>{{process.phone}}</td>
                                         <td>
@@ -304,8 +328,15 @@
                                         <td>
 
 
-                                            <button class=" btn btn-danger btn-rounded waves-effect waves-light">
-                                                <i class="uil uil-trash-alt "></i>
+                                            <a href="{% url  'delete_request' process.id %}"
+                                                class=" btn btn-soft-danger btn-rounded waves-effect waves-light">
+                                                <i class="uil uil-trash-alt "></i> حذف
+                                            </a>
+                                            <a href="{% url 'service_request_details' process.id %}"
+                                                class=" btn btn-soft-primary btn-rounded waves-effect waves-light">
+                                                <i class="uil uil-pen "></i>
+                                                التفاصيل
+                                            </a>
                                             </button>
 
                                         </td>
@@ -326,7 +357,7 @@
                     <div class="card-body">
                         <h4 class="card-title mb-4" dir="rtl">كوارتر</h4>
 
-                        <div class="table-responsive text-center">
+                        <div class="table-responsive text-center" data-simplebar style="max-height: 430px;">
                             {% if not new_quarter%}
                             <p class="text-bold " style="font-size:16px">لا يـوجد طلبات جديدة </p>
                             {% else %}
@@ -346,7 +377,7 @@
                                 <tbody>
                                     {% for process  in new_quarter %}
                                     <tr>
-                                        <td><a href="{% url 'profile' user.username %}">{{process}}</a>
+                                        <td><a href="{% url 'quarter_request_details' process.id %}">{{process}}</a>
                                         </td>
                                         <td>{{process.phone}}</td>
                                         <td>
@@ -369,9 +400,15 @@
                                         <td>
 
 
-                                            <button class=" btn btn-danger btn-rounded waves-effect waves-light">
-                                                <i class="uil uil-trash-alt "></i>
-                                            </button>
+                                            <a href="{% url  'delete_quarter_request' process.id %}"
+                                                class=" btn btn-soft-danger btn-rounded waves-effect waves-light">
+                                                <i class="uil uil-trash-alt "></i> حذف
+                                            </a>
+                                            <a href="{% url 'quarter_request_details' process.id %}"
+                                                class=" btn btn-soft-primary btn-rounded waves-effect waves-light">
+                                                <i class="uil uil-pen "></i>
+                                                التفاصيل
+                                            </a>
 
                                         </td>
                                     </tr>
@@ -453,10 +490,17 @@
                                         <th>تأكيد</th>
                                     </tr>
                                 </thead>
+
                                 <tbody>
                                     {% for process in all_cur %}
                                     <tr>
-                                        <td><a href="{% url 'profile' user.username %}">{{process}}</a>
+                                        <td>
+                                            {% if process in repair_cur or process in install_cur %}
+                                            <a href="{% url 'service_request_details' process.id %}">
+                                                {% elif process in quarter_cur %}
+                                                <a href="{% url 'quarter_request_details' process.id %}">
+                                                    {% endif %}
+                                                    {{process}}</a>
                                         </td>
                                         <td>
                                             {% if process in repair_cur %}
@@ -487,11 +531,22 @@
 
                                         <td>
 
-                                            <button class=" btn btn-primary btn-rounded waves-effect waves-light ">
-                                                <i class="uil uil-pen "></i>
+                                            <button class=" btn btn-soft-primary btn-rounded waves-effect waves-light ">
+                                                {% if process in repair_cur or process in install_cur %}
+                                                <a href="{% url 'service_request_details' process.id %}">
+                                                    {% elif process in quarter_cur %}
+                                                    <a href="{% url 'quarter_request_details' process.id %}">
+                                                        {% endif %}
+                                                        <i class="uil uil-pen "></i> التفاصيل
                                             </button>
-                                            <button class=" btn btn-danger btn-rounded waves-effect waves-light">
-                                                <i class="uil uil-trash-alt "></i>
+                                            <button class=" btn btn-soft-danger btn-rounded waves-effect waves-light">
+                                                {% if process in repair_cur or process in install_cur %}
+                                                <a href="{% url 'delete_request' process.id %}" class="text-danger">
+                                                    {% elif process in quarter_cur %}
+                                                    <a href="{% url 'delete_quarter_request' process.id %}"
+                                                        class="text-danger">
+                                                        {% endif %}
+                                                        <i class="uil uil-trash-alt "></i> حذف
                                             </button>
 
                                         </td>
@@ -511,7 +566,7 @@
                     <div class="card-body">
                         <h4 class="card-title mb-4" dir="rtl">طلبات الصيانة </h4>
 
-                        <div class="table-responsive text-center">
+                        <div class="table-responsive text-center" data-simplebar style="max-height: 430px;">
                             {% if not repair_cur %}
                             <p class="text-bold " style="font-size:16px">لا يوجد طلبات قيد التنفيذ </p>
                             {% else %}
@@ -531,7 +586,7 @@
                                 <tbody>
                                     {% for process  in repair_cur %}
                                     <tr>
-                                        <td><a href="{% url 'profile' user.username %}">{{process}}</a>
+                                        <td><a href="{% url 'service_request_details' process.id %}">{{process}}</a>
                                         </td>
                                         <td>{{process.phone}}</td>
                                         <td>
@@ -552,10 +607,16 @@
                                         </td>
                                         <td>
 
+                                            <a href="{% url  'delete_request' process.id %}"
+                                                class=" btn btn-soft-danger btn-rounded waves-effect waves-light">
+                                                <i class="uil uil-trash-alt "></i> حذف
+                                            </a>
+                                            <a href="{% url 'service_request_details' process.id %}"
+                                                class=" btn btn-soft-primary btn-rounded waves-effect waves-light">
+                                                <i class="uil uil-pen "></i>
+                                                التفاصيل
+                                            </a>
 
-                                            <button class=" btn btn-danger btn-rounded waves-effect waves-light">
-                                                <i class="uil uil-trash-alt "></i>
-                                            </button>
 
                                         </td>
                                     </tr>
@@ -575,7 +636,7 @@
                     <div class="card-body">
                         <h4 class="card-title mb-4" dir="rtl">طلبات الصيانة </h4>
 
-                        <div class="table-responsive text-center">
+                        <div class="table-responsive text-center" data-simplebar style="max-height: 430px;">
                             {% if not install_cur %}
                             <p class="text-bold " style="font-size:16px">لا يوجد طلبات قيد التنفيذ </p>
                             {% else %}
@@ -595,14 +656,13 @@
                                 <tbody>
                                     {% for process  in install_cur %}
                                     <tr>
-                                        <td><a href="{% url 'profile' user.username %}">{{process}}</a>
+                                        <td><a href="{% url 'service_request_details' process.id %}">{{process}}</a>
                                         </td>
                                         <td>{{process.phone}}</td>
                                         <td>
                                             {{process.address}}
                                         </td>
                                         <td>
-
                                             <span class="badge bg-soft-success p-2">
 
                                                 {{process.get_status_display }}
@@ -617,10 +677,16 @@
                                         </td>
                                         <td>
 
+                                            <a href="{% url  'delete_request' process.id %}"
+                                                class=" btn btn-soft-danger btn-rounded waves-effect waves-light">
+                                                <i class="uil uil-trash-alt "></i> حذف
+                                            </a>
+                                            <a href="{% url 'service_request_details' process.id %}"
+                                                class=" btn btn-soft-primary btn-rounded waves-effect waves-light">
+                                                <i class="uil uil-pen "></i>
+                                                التفاصيل
+                                            </a>
 
-                                            <button class=" btn btn-danger btn-rounded waves-effect waves-light">
-                                                <i class="uil uil-trash-alt "></i>
-                                            </button>
 
                                         </td>
                                     </tr>
@@ -639,7 +705,7 @@
                     <div class="card-body">
                         <h4 class="card-title mb-4" dir="rtl">كوارتر</h4>
 
-                        <div class="table-responsive text-center">
+                        <div class="table-responsive text-center" data-simplebar style="max-height: 430px;">
                             {% if not quarter_cur %}
                             <p class="text-bold " style="font-size:16px">لا يوجد طلبات قيد التنفيذ </p>
                             {% else %}
@@ -659,7 +725,7 @@
                                 <tbody>
                                     {% for process  in quarter_cur %}
                                     <tr>
-                                        <td><a href="{% url 'profile' user.username %}">{{process}}</a>
+                                        <td><a href="{% url 'quarter_request_details' process.id %}">{{process}}</a>
                                         </td>
                                         <td>{{process.phone}}</td>
                                         <td>
@@ -682,9 +748,15 @@
                                         <td>
 
 
-                                            <button class=" btn btn-danger btn-rounded waves-effect waves-light">
-                                                <i class="uil uil-trash-alt "></i>
-                                            </button>
+                                            <a href="{% url  'delete_quarter_request' process.id %}"
+                                                class=" btn btn-soft-danger btn-rounded waves-effect waves-light">
+                                                <i class="uil uil-trash-alt "></i> حذف
+                                            </a>
+                                            <a href="{% url 'quarter_request_details' process.id %}"
+                                                class=" btn btn-soft-primary btn-rounded waves-effect waves-light">
+                                                <i class="uil uil-pen "></i>
+                                                التفاصيل
+                                            </a>
 
                                         </td>
                                     </tr>
@@ -701,14 +773,11 @@
         </div>
     </div>
 </div>
-
-
-
 <!-- users  -->
 <div class="card">
     <div class="card-body">
         <h4 class="card-title mb-4" dir="rtl">بيانات المستخدمين </h4>
-        <div class="table-responsive text-center">
+        <div class="table-responsive text-center" data-simplebar style="max-height: 430px;">
             <table class="table table-centered table-striped table-nowrap mb-0" dir="rtl">
                 <thead class="table-dark">
                     <tr>
@@ -739,17 +808,17 @@
 
 
                         <td>
-
-                            {{user.section }}
-
+                            {% for sec in user.section.all %}
+                            {{sec}}
+                            {% endfor%}
                         </td>
                         <td>
 
-                            <button class=" btn btn-primary btn-rounded waves-effect waves-light ">
+                            <button class=" btn btn-soft-primary btn-rounded waves-effect waves-light ">
                                 <i class="uil uil-pen "></i>
                             </button>
 
-                            <a class=" btn btn-danger btn-rounded waves-effect waves-light"
+                            <a class=" btn btn-soft-danger btn-rounded waves-effect waves-light"
                                 href="{% url 'delete_user' user.username %}">
                                 <i class="uil uil-trash-alt "></i>
                             </a>
@@ -759,7 +828,7 @@
                     {% endfor %}
                 </tbody>
             </table>
-            <a href="{% url 'all_users' %}" class=" btn btn-rounded btn-success btn-lg mt-2">
+            <a href="{% url 'all_users' %}" class=" btn btn-rounded btn-soft-success btn-lg mt-2">
                 جميع المستخدمين
             </a>
         </div>

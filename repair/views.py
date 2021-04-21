@@ -18,13 +18,14 @@ def repair_index(request):
         requests = Service_request.objects.repair().filter(
             created_by=request.user).order_by('-timestamp')
     elif request.user.role == 1 or request.user.role == 2:
-
-        requests = Service_request.objects.repair().order_by('-timestamp')
+        requests = Service_request.objects.repair().order_by(
+            '-timestamp').exclude(status="new").exclude(status="closed")
     elif request.user.role == 3:
         requests = Appointment.objects.filter(
             status="open", technician=request.user)
 
     ctx = {
+        "new_requests": Service_request.objects.repair().filter(status="new").order_by("-timestamp"),
         "requests": requests,
         "need_confirm": Service_request.objects.done().filter(service_type="repair")
     }

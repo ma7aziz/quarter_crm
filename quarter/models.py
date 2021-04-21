@@ -87,6 +87,8 @@ class Design(models.Model):
     files = models.FileField(upload_to='designes/', blank=True,  null=True)
     notes = models.TextField(max_length=500, blank=True, null=True)
     timestamp = models.DateTimeField(auto_now_add=True)
+    created_by = models.ForeignKey(
+        User, on_delete=models.SET_NULL, null=True, blank=True)
 
     def __str__(self):
         return f"Designes for {self.service}"

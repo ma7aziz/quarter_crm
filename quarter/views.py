@@ -38,6 +38,13 @@ def request_details(request, id):
     return render(request, 'quarter/request_details.html', {'req': req})
 
 
+def delete_request(request, id):
+    req = Quarter_service.objects.get(pk=id)
+    req.delete()
+    messages.success(request, "تم حذف الطلب ")
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
 def pricing(request):
     if request.method == "POST":
         req = Quarter_service.objects.get(pk=request.POST['request'])

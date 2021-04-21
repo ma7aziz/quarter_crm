@@ -1,129 +1,228 @@
-<div class="row">
+       <div class="card">
+           <div class="card-body">
+               <h4 class="card-title mb-4" dir="rtl">الطلبات الحالية </h4>
 
-    <div class="col-lg-6 col-md-12">
-        <div class="card">
-            <div class="card-body">
-                <h4 class="card-title mb-4" dir="rtl">طلبات تم تنفيذ صيانتها </h4>
-                <div class="table-responsive">
-                    <table class="table table-centered table-nowrap mb-0" dir="rtl">
-                        <thead class="table-light">
-                            <tr>
+               <ul class="nav nav-tabs" role="tablist">
+                   <!-- == new requests  -->
+                   <li class="nav-item">
+                       <a class="nav-link active" data-bs-toggle="tab" href="#navtabs-new" role="tab">
+                           <span class="d-block d-sm-none"><i class="fas fa-home"></i></span>
+                           <span class="d-none d-sm-block">
+                               طلبات جديدة
+                           </span>
+                       </a>
+                   </li>
+                   <!-- == Current requests  -->
+                   <li class="nav-item">
+                       <a class="nav-link" data-bs-toggle="tab" href="#navtabs-current" role="tab">
+                           <span class="d-block d-sm-none"><i class="far fa-user"></i></span>
+                           <span class="d-none d-sm-block">طلبات جاري تنفيذها
+                               <i class="fas fa-tools "></i>
+                           </span>
+                       </a>
+                   </li>
+                   <!-- === need confirmation  -->
+                   <li class="nav-item">
+                       <a class="nav-link" data-bs-toggle="tab" href="#navtabs-confirm" role="tab">
+                           <span class="d-block d-sm-none"><i class="far fa-user"></i></span>
+                           <span class="d-none d-sm-block"> تأكيد طلبات تم صيانتها
+                               <i class="fas fa-tools "></i>
+                           </span>
+                       </a>
+                   </li>
 
-                                <th>رقم الطلب </th>
-                                <th>أسم العميل</th>
-                                <th>تاريخ الطلب </th>
-                                <th>نوع العميل </th>
-                                <th>التفاصيل</th>
-                                <th>تأكيد</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for req in need_confirm %}
-                            <tr>
-                                <td>{{req.id}}</td>
-                                <td>{{req.customer_name}}</td>
-                                <td>
-                                    {{req.timestamp.date}}
-                                </td>
-                                <td>
-                                    {% if req.customer_type == "cash" %}
-                                    كاش
-                                    {% elif request.customer_type == "warranty" %}
-                                    ضمان
-                                    {% endif %}
-                                </td>
+               </ul>
+               <div class="tab-content">
+                   <!-- NEW REQUESTS  -->
+                   <div class="tab-pane active" id="navtabs-new" role="tabpanel">
+                       <div class="card">
+                           <div class="card-body">
+                               <h4 class="card-title mb-4" dir="rtl">طلبات جديدة </h4>
+                               <div class="table-responsive">
+                                   <table class="table table-centered table-nowrap mb-0" dir="rtl">
+                                       <thead class="table-light">
+                                           <tr>
 
+                                               <th>رقم الطلب </th>
+                                               <th>أسم العميل</th>
+                                               <th>تاريخ الطلب </th>
+                                               <th>نوع العميل </th>
+                                               <th>التفاصيل</th>
 
-                                <td>
-
-                                    <a class="btn btn-primary btn-sm btn-rounded waves-effect waves-light"
-                                        href="{% url 'service_request_details' req.id %}">
-                                        التفاصيل
-                                    </a>
-
-                                </td>
-                                <td>
-                                    <form action="{% url 'close_request' %}" method="POST">
-                                        {% csrf_token %}
-                                        <input type="hidden" name="request_id" value="{{req.id}}">
-                                        <button class=" btn btn-success btn-rounded waves-effect waves-light"
-                                            type="submit">تأكيد</button>
-                                    </form>
-                                </td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-                <!-- end table-responsive -->
-            </div>
-        </div>
-    </div>
-    <div class="col-lg-6 col-md-12">
-        <div class="card">
-            <div class="card-body">
-                <h4 class="card-title mb-4" dir="rtl">متابعة الطلبات السابقة </h4>
-                <div class="table-responsive">
-                    <table class="table table-centered table-nowrap mb-0" dir="rtl">
-                        <thead class="table-light">
-                            <tr>
-                                <th style="width: 20px;">
-                                    <div class="form-check font-size-16">
-                                        <input type="checkbox" class="form-check-input" id="customCheck1">
-                                        <label class="form-check-label" for="customCheck1">&nbsp;</label>
-                                    </div>
-                                </th>
-                                <th>رقم الطلب </th>
-                                <th>أسم العميل</th>
-                                <th>تاريخ الطلب </th>
-                                <th>نوع العميل </th>
-                                <th>حالة الطلب </th>
-
-                                <th>التفاصيل</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for req in requests %}
-                            <tr>
-                                <td>
-                                    <div class="form-check font-size-16">
-                                        <input type="checkbox" class="form-check-input" id="customCheck2">
-                                        <label class="form-check-label" for="customCheck2">&nbsp;</label>
-                                    </div>
-                                </td>
-                                <td><a href="javascript: void(0);" class="text-body fw-bold">#REP{{req.id}}</a> </td>
-                                <td>{{req.customer_name}}</td>
-                                <td>
-                                    {{req.timestamp.date}}
-                                </td>
-                                <td>
-                                    {% if req.customer_type == "cash" %}
-                                    كاش
-                                    {% elif request.customer_type == "warranty" %}
-                                    ضمان
-                                    {% endif %}
-                                </td>
-                                <td>
-                                    <span class="badge rounded-pill bg-soft-success font-size-12">{{req.status}}</span>
-                                </td>
-
-                                <td>
+                                           </tr>
+                                       </thead>
+                                       <tbody>
+                                           {% for req in new_requests %}
+                                           <tr>
+                                               <td>{{req.id}}</td>
+                                               <td>{{req.customer_name}}</td>
+                                               <td>
+                                                   {{req.timestamp.date}}
+                                               </td>
+                                               <td>
+                                                   {% if req.customer_type == "cash" %}
+                                                   كاش
+                                                   {% elif request.customer_type == "warranty" %}
+                                                   ضمان
+                                                   {% endif %}
+                                               </td>
 
 
-                                    <a href="{% url 'service_request_details' req.id %}"
-                                        class="btn btn-primary btn-sm btn-rounded waves-effect waves-light">
+                                               <td>
 
-                                        التفاصيل
-                                    </a>
+                                                   <a class="btn btn-primary btn-sm btn-rounded waves-effect waves-light"
+                                                       href="{% url 'service_request_details' req.id %}">
+                                                       التفاصيل
+                                                   </a>
 
-                                </td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-                <!-- end table-responsive -->
-            </div>
-        </div>
-    </div>
-</div>
+                                               </td>
+
+                                           </tr>
+                                           {% endfor %}
+                                       </tbody>
+                                   </table>
+                               </div>
+                               <!-- end table-responsive -->
+                           </div>
+                       </div>
+                   </div>
+                   <!-- CURRENT REQUESTS -->
+                   <div class="tab-pane " id="navtabs-current" role="tabpanel">
+                       <div class="card">
+                           <div class="card-body">
+                               <h4 class="card-title mb-4" dir="rtl">طلبات قيد التنفيذ</h4>
+                               <div class="table-responsive">
+                                   <table class="table table-centered table-nowrap mb-0" dir="rtl">
+                                       <thead class="table-light">
+                                           <tr>
+
+                                               <th>رقم الطلب </th>
+                                               <th>أسم العميل</th>
+                                               <th>تاريخ الطلب </th>
+                                               <th>نوع العميل </th>
+                                               <th>حالة الطلب </th>
+                                               <th>التفاصيل</th>
+                                           </tr>
+                                       </thead>
+                                       <tbody>
+                                           {% for req in requests %}
+                                           <tr>
+                                               <td>{{req.id}}</td>
+                                               <td>{{req.customer_name}}</td>
+                                               <td>
+                                                   {{req.timestamp.date}}
+                                               </td>
+                                               <td>
+                                                   {% if req.customer_type == "cash" %}
+                                                   كاش
+                                                   {% elif req.customer_type == "warranty" %}
+                                                   ضمان
+                                                   {% endif %}
+                                               </td>
+                                               <td>
+                                                   {{req.status}}
+                                               </td>
+
+                                               <td>
+
+                                                   <a class="btn btn-primary btn-sm btn-rounded waves-effect waves-light"
+                                                       href="{% url 'service_request_details' req.id %}">
+                                                       التفاصيل
+                                                   </a>
+
+                                               </td>
+
+                                           </tr>
+                                           {% endfor %}
+                                       </tbody>
+                                   </table>
+                               </div>
+                               <!-- end table-responsive -->
+                           </div>
+                       </div>
+                   </div>
+                   <!-- NEED CONFIRMATION  -->
+                   <div class="tab-pane" id="navtabs-confirm" role="tabpanel">
+                       <div class="card">
+                           <div class="card-body">
+                               <h4 class="card-title mb-4" dir="rtl">تـأكيد الصيانة </h4>
+                               <div class="table-responsive">
+                                   <table class="table table-centered table-nowrap mb-0" dir="rtl">
+                                       <thead class="table-light">
+                                           <tr>
+                                               <th style="width: 20px;">
+                                                   <div class="form-check font-size-16">
+                                                       <input type="checkbox" class="form-check-input"
+                                                           id="customCheck1">
+                                                       <label class="form-check-label" for="customCheck1">&nbsp;</label>
+                                                   </div>
+                                               </th>
+                                               <th>رقم الطلب </th>
+                                               <th>أسم العميل</th>
+                                               <th>تاريخ الطلب </th>
+                                               <th>نوع العميل </th>
+                                               <th>حالة الطلب </th>
+                                               <th>تأكيد </th>
+                                               <th>التفاصيل</th>
+                                           </tr>
+                                       </thead>
+                                       <tbody>
+                                           {% for req in need_confirm %}
+                                           <tr>
+                                               <td>
+                                                   <div class="form-check font-size-16">
+                                                       <input type="checkbox" class="form-check-input"
+                                                           id="customCheck2">
+                                                       <label class="form-check-label" for="customCheck2">&nbsp;</label>
+                                                   </div>
+                                               </td>
+                                               <td><a href="javascript: void(0);"
+                                                       class="text-body fw-bold">#REP{{req.id}}</a>
+                                               </td>
+                                               <td>{{req.customer_name}}</td>
+                                               <td>
+                                                   {{req.timestamp.date}}
+                                               </td>
+                                               <td>
+                                                   {% if req.customer_type == "cash" %}
+                                                   كاش
+                                                   {% elif request.customer_type == "warranty" %}
+                                                   ضمان
+                                                   {% endif %}
+                                               </td>
+                                               <td>
+                                                   <span
+                                                       class="badge rounded-pill bg-soft-success font-size-12">{{req.status}}</span>
+                                               </td>
+
+                                               <td>
+                                                   <form action="{% url 'close_request' %}" method="POST">
+                                                       {% csrf_token %}
+                                                       <input type="hidden" name="request_id" value="{{req.id}}">
+                                                       <button type="submit"
+                                                           class="btn btn-primary btn-sm btn-rounded waves-effect waves-light">
+                                                           <i class="far fa-check-circle"></i>
+                                                           تأكيد
+                                                       </button>
+                                                   </form>
+                                               </td>
+                                               <td>
+
+
+                                                   <a href="{% url 'service_request_details' req.id %}"
+                                                       class="btn btn-primary btn-sm btn-rounded waves-effect waves-light">
+
+                                                       التفاصيل
+                                                   </a>
+
+                                               </td>
+                                           </tr>
+                                           {% endfor %}
+                                       </tbody>
+                                   </table>
+                               </div>
+                               <!-- end table-responsive -->
+                           </div>
+                       </div>
+                   </div>
+               </div>

@@ -41,8 +41,8 @@ class Service_request(models.Model):
     ]
 
     REQUEST_TYPE = (
-        ("repair", "repair"),
-        ("install", "install")
+        ("repair", "صيانة"),
+        ("install", "تركيب")
     )
 
     service_type = models.CharField(
@@ -63,7 +63,8 @@ class Service_request(models.Model):
     updated = models.DateTimeField(auto_now=True)
     code = models.CharField(
         unique=True, max_length=40, blank=True, null=True, editable=False)
-
+    appointment = models.ForeignKey(
+        "Appointment", on_delete=models.SET_NULL, null=True, blank=True, related_name="repair_appointment")
     objects = RequestManager()
 
     def save(self, *args, **kwargs):
@@ -89,7 +90,7 @@ class Appointment(models.Model):
         ('closed', 'closed')
     ]
     service_request = models.ForeignKey(
-        Service_request, on_delete=models.CASCADE)
+        Service_request, on_delete=models.CASCADE, related_name="request")
     date = models.DateField()
     technician = models.ForeignKey(User, on_delete=models.CASCADE)
     timestamp = models.DateTimeField(auto_now_add=True)
