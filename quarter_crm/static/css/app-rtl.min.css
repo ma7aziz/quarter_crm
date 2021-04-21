@@ -420,7 +420,7 @@ body[data-layout="horizontal"] .footer {
 }
 
 .metismenu {
-  margin: 0;
+  margin-top: 80px;
 }
 
 .metismenu li {
@@ -483,7 +483,7 @@ body[data-layout="horizontal"] .footer {
 
 .sidebar-menu-scroll {
   height: calc(100% - 70px);
-  margin-top: 70px;
+  /* margin-top: 70px; */
 }
 
 #sidebar-menu {

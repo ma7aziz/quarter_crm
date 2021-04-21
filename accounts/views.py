@@ -8,6 +8,7 @@ from service.models import Service_request, Appointment
 from quarter.models import Quarter_service
 from operator import attrgetter
 from itertools import chain
+from core.models import Task
 # Create your views here.
 
 
@@ -89,13 +90,16 @@ def profile(request, username):
             technician=user).filter(status="closed")
         current_tasks = Appointment.objects.all().filter(
             technician=user).filter(status="open")
+    other_tasks = Task.objects.open().filter(employee=user)
+    print(other_tasks)
     ctx = {
         'user': user,
         'submitted_orders': submitted_orders,
         'submitted_quarter_orders': submitted_quarter_orders,
         'all_submitted': all_submitted,
         'completed_tasks': completed_tasks,
-        'current_tasks': current_tasks
+        'current_tasks': current_tasks,
+        'other_tasks': other_tasks
     }
     return render(request, 'registration/profile.html', ctx)
 

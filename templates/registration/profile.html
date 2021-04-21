@@ -26,8 +26,7 @@
                         </a>
 
                         <div class="dropdown-menu dropdown-menu-end">
-                            <a class="dropdown-item" href="#">Edit</a>
-                            <a class="dropdown-item" href="#">Action</a>
+
                             <a class="dropdown-item" href="#">Remove</a>
                         </div>
                     </div>
@@ -45,12 +44,15 @@
 
                     <div class="mt-4">
                         {% if request.user.username != user.username %}
-                        <button type="button" class="btn btn-light btn"><i class="uil uil-envelope-alt me-2"></i>
-                            رسالة </button>
+                        <button type="button" class="btn btn-dark btn"><i class="uil uil-envelope-alt me-2"></i>
+                            ارسال رسالة </button>
                         {% endif %}
+                        <button type="button" class="btn btn-dark btn" data-bs-toggle="modal"
+                            data-bs-target="#newTaskModal"> <i class="uil uil-clipboard-notes "></i>
+                            تعيين مهمة </button>
                         {% if request.user.role == 1   %}
                         {% if request.user.username != user.username %}
-                        <a href="{% url 'delete_user' user.username %}" class="btn btn-light text-danger btn "
+                        <a href="{% url 'delete_user' user.username %}" class="btn btn-danger text-light btn "
                             id="confirm_delete"><i class="uil uil-trash-alt me-2"></i>
                             حذف </a>
                         {% endif %}
@@ -105,13 +107,45 @@
             <div class="tab-content p-4">
                 <div class="tab-pane active" id="tasks" role="tabpanel">
                     <div>
-                        <h4 class=" mb-3">مهام جاري تنفيذها </h4>
+                        <h4 class=" mb-3">المهام الحالية </h4>
+                        {% if not other_tasks%}
+                        <p class="text-bold text-center " style="font-size: 18px ; font-weight : 600"> لا يوجد مهام
+                            حالية </p>
+                        {% else%}
+                        <div class="table-responsive mb-2 border-bottom border-primary">
+                            <table class="table table-nowrap table-centered">
+                                <tbody>
+                                    {% for task in other_tasks %}
+                                    <tr>
 
+                                        <td>
+                                            <a href="#" class="fw-bold text-dark">{{task.title}}</a>
+                                        </td>
+
+                                        <td> الوقت المحدد للتنفيذ : <span
+                                                class="badge bg-soft-primary font-size-14 p-2">{{task.due_date.date}}</span>
+                                        </td>
+
+                                        <td>
+                                            <a href=""
+                                                class="btn btn-rounded waves-effect waves-light bg-soft-success ">
+                                                تفاصيل المهمة
+                                                <i class="fas fa-info-circle"></i>
+                                            </a>
+                                        </td>
+
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        {% endif %}
                         {% if not current_tasks%}
                         <p class="text-bold text-center " style="font-size: 18px ; font-weight : 600"> لا يوجد مهام
                             حالية </p>
                         {% else%}
                         <div class="table-responsive mb-2 border-bottom border-primary">
+                            <h4 class="my-3">عمليات جاري تنفيذها </h4>
                             <table class="table table-nowrap table-centered">
                                 <tbody>
                                     {% for task in current_tasks %}
@@ -133,7 +167,7 @@
                         </div>
                         {% endif %}
 
-                        <h4 class=" my-3">مهام مكتملة </h4>
+                        <h4 class=" my-3">عمليات مكتملة </h4>
 
                         <div class="table-responsive">
                             {% if not completed_tasks%}
@@ -147,7 +181,9 @@
                                         <tr>
 
                                             <td>
-                                                <a href="#" class="fw-bold text-dark">{{task}}</a>
+
+                                                <a href="#" class="fw-bold text-dark">
+                                                    {{task}}</a>
                                             </td>
 
                                             <td>{{task.date}}</td>
@@ -302,6 +338,7 @@
         </div>
     </div>
 </div>
+{% include './partials/_task_modal.html'%}
 <!-- end row -->
 <script>
     let btn = document.getElementById('confirm_delete')

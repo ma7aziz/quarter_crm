@@ -230,28 +230,28 @@
 
         <div class="vertical-menu">
             <div class="navbar-brand-box">
-                <a href="{% url 'index' %}" class="logo logo-dark">
+                <a href="{% url 'index' %}" class="logo logo-dark" style="color:#fff ; font-size: 20px ">
                     Quarter CRM
                 </a>
 
-                <a href="{% url 'index' %}" class="logo logo-dark">
+                <a href="{% url 'index' %}" class="logo logo-dark" style="color:#fff ; font-size: 20px">
 
                     Quarter CRM
                 </a>
             </div>
-            <!-- <button type="button" class="btn btn-sm px-3 font-size-16 header-item waves-effect vertical-menu-btn">
+            <button type="button" class="btn btn-sm px-3 font-size-16 header-item waves-effect vertical-menu-btn">
                 <i class="fa fa-fw fa-bars"></i>
-            </button> -->
+            </button>
             <div data-simplebar class="sidebar-menu-scroll">
 
                 <!-- LOGO -->
 
                 <div class="navbar-brand-box">
-                    <a href="{% url 'index' %}" class="logo logo-dark">
+                    <a href="{% url 'index' %}" class="logo logo-dark" style="color:#fff ; font-size: 20px">
                         Quarter CRM
                     </a>
 
-                    <a href="{% url 'index' %}" class="logo logo-lg">
+                    <a href="{% url 'index' %}" class="logo logo-lg" style="color:#fff ; font-size: 20px">
 
                         Quarter CRM
                     </a>
@@ -265,7 +265,9 @@
                     <!--- Sidemenu -->
                     <div id="sidebar-menu">
                         <!-- Left Menu Start -->
+
                         <ul class="metismenu list-unstyled" id="side-menu">
+                            <li class="menu-title">الاقسام </li>
                             <li>
                                 <a href="{% url 'dashboard' %}">
                                     <i class="uil-home-alt"></i>
@@ -288,6 +290,7 @@
                                     <i class="fas fa-tools fa-3x"></i>كوارتر
                                 </a>
                             </li>
+
 
                         </ul>
                     </div>
@@ -378,14 +381,14 @@
                                                 <div class="row">
 
                                                     <div class=" col-6 mb-3">
-                                                        <label class="form-label" for="machine_type">كلمة السر
+                                                        <label class="form-label" for="machine_type">كلمة المرور
                                                         </label>
                                                         <input name="password1" type="password" class="form-control"
                                                             required />
                                                     </div>
 
                                                     <div class=" col-6 mb-3">
-                                                        <label class="form-label" for="machine_type">تأكيد كلمة السر
+                                                        <label class="form-label" for="machine_type">تأكيد كلمة المرور
                                                         </label>
                                                         <input name="password2" type="password" class="form-control"
                                                             required />
@@ -394,17 +397,20 @@
                                                 </div>
 
                                                 <hr>
-
+                                                <div class="row">
+                                                    <div class="mb-3">
+                                                        <label class="form-label" for="email">البريد الاليكتروني
+                                                        </label>
+                                                        <input name="email" type="email" class="form-control" />
+                                                    </div>
+                                                </div>
+                                                <hr>
                                                 <div class="row">
                                                     <div class="mb-3">
                                                         <label class="form-label">الوظيفة</label>
                                                         <select class="form-control select2" name="role">
                                                             <option selected disabled>أختيار</option>
                                                             {% for k , v in roles %}
-                                                            <!-- <option value="1">مدير الموقع</option>
-                                                            <option value="2">مشرف</option>
-                                                            <option value="3">فني</option>
-                                                            <option value="4">منفذ بيع </option> -->
                                                             <option value="{{k}}">{{v}}</option>
                                                             {% endfor %}
                                                         </select>
@@ -440,6 +446,8 @@
                                                     <label class="form-label" for="file">ارفاق ملف</label>
                                                     <input type="file" class="form-control" name="attach_file" />
                                                 </div>
+
+
 
                                                 <div class="mt-2">
                                                     <button type="submit" class="btn btn-lg btn-primary">انشاء حساب
@@ -580,7 +588,7 @@
                                                 <label class="form-label" for="customername">اسم العميل </label>
                                                 <input name="customername" type="text" class="form-control">
 
-                                                <div class="row">
+                                                <div class="row mt-2">
                                                     <div class="col-lg-6">
 
                                                         <div class="mb-3">
@@ -714,6 +722,7 @@
                             </div><!-- /.modal -->
                         </div>
                     </div>
+
                     {% endif %}
                     {% block content %}
 
