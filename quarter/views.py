@@ -14,7 +14,10 @@ def index(request):
 
     ctx = {
         "new_transfers": Quarter_service.objects.filter(status=6),
-        "new_requests": Quarter_service.objects.all().order_by('-timestamp')
+        "all_requests": Quarter_service.objects.all().order_by('-timestamp'),
+        "new_requests": Quarter_service.objects.all().filter(status=1).order_by('-timestamp'),
+        "pricing": Quarter_service.objects.all().filter(status=3),
+        "design": Quarter_service.objects.all().filter(status=8)
     }
     return render(request, 'quarter/index.html', ctx)
 
@@ -35,6 +38,7 @@ def create_request(request):
 
 def request_details(request, id):
     req = Quarter_service.objects.get(pk=id)
+
     return render(request, 'quarter/request_details.html', {'req': req})
 
 
