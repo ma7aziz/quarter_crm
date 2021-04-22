@@ -119,22 +119,97 @@
                                     <tr>
 
                                         <td>
-                                            <a href="#" class="fw-bold text-dark">{{task.title}}</a>
+                                            <a href="" data-bs-toggle="modal"
+                                                data-bs-target="#staticBackdrop{{task.id}}"
+                                                class="fw-bold text-dark">{{task.title|truncatechars:25}}</a>
                                         </td>
 
-                                        <td> الوقت المحدد للتنفيذ : <span
-                                                class="badge bg-soft-primary font-size-14 p-2">{{task.due_date.date}}</span>
+                                        <td> <i class="far fa-clock"></i> الوقت المحدد : <span
+                                                class="badge bg-soft-warning font-size-14 p-2">{{task.due_date.date}}</span>
                                         </td>
 
                                         <td>
-                                            <a href=""
-                                                class="btn btn-rounded waves-effect waves-light bg-soft-success ">
+                                            <button class="btn btn-rounded waves-effect waves-light bg-soft-primary "
+                                                data-bs-toggle="modal" data-bs-target="#staticBackdrop{{task.id}}">
                                                 تفاصيل المهمة
                                                 <i class="fas fa-info-circle"></i>
-                                            </a>
+                                            </button>
                                         </td>
+                                        {% if request.user.role == 1 %}
+                                        <td>
 
+                                            <a class="btn btn-rounded waves-effect waves-light bg-soft-danger "
+                                                href="{% url 'delete_task' task.id %}">
+                                                حذف
+                                                <i class="fas fa-ban"></i>
+                                            </a>
+
+                                        </td>
+                                        {% elif request.user == user %}
+                                        <td>
+                                            <form action="{% url 'update_task' %}" method="POST">
+                                                {% csrf_token %}
+                                                <input type="hidden" name="task_id" value="{{task.id}}">
+                                                <button
+                                                    class="btn btn-rounded waves-effect waves-light bg-soft-success ">
+                                                    اتمام
+                                                    <i class="fas fa-check-circle"></i>
+                                                </button>
+                                            </form>
+                                        </td>
+                                        {% endif %}
                                     </tr>
+                                    <!-- staticBackdrop Modal -->
+                                    <div class="modal fade" id="staticBackdrop{{task.id}}" data-bs-backdrop="static"
+                                        data-bs-keyboard="false" tabindex="-1" role="dialog"
+                                        aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header text-center">
+                                                    <h5 class="modal-title ">{{task.title}}</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                        aria-label="Close">
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <div class="border-bottom">
+
+                                                        <p>تاريخ تعيين المهمة : {{task.timestamp.date}}</p>
+                                                        <p>بواسطة :
+                                                            {%if task.created_by.name %}
+                                                            <span
+                                                                style="font-size: 18px;">{{task.created_by.name}}</span>
+                                                            {% else %}
+                                                            {{task.created_by.user.name}}
+                                                            {% endif %}
+                                                        </p>
+                                                    </div>
+                                                    <div class="border-bottom">
+                                                        <span>تفاصيل المهمة :</span>
+                                                        <p style="font-size: 18px;">{{task.details}}</p>
+                                                    </div>
+                                                    <div class=" border-bottom mt-2">
+                                                        <span>الوقت المحدد للتنفيذ :</span>
+                                                        <p>{{task.due_date.date}}</p>
+                                                    </div>
+                                                    {% if task.files %}
+                                                    <div class="  mt-2">
+                                                        <span></span>
+                                                        <a class="btn btn-lg bg-soft-primary" href="{{task.files.url}}"
+                                                            target="_blank">عرض الملفات </a>
+                                                    </div>
+                                                    {% endif %}
+
+
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-light"
+                                                        data-bs-dismiss="modal">اغلاق</button>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                     {% endfor %}
                                 </tbody>
                             </table>
@@ -183,12 +258,31 @@
                                             <td>
 
                                                 <a href="#" class="fw-bold text-dark">
-                                                    {{task}}</a>
+                                                    {% if task in other_completed %}
+                                                    {{task.title}}
+                                                    {% else %}
+                                                    {{task}}
+                                                    {% endif %}
+                                                </a>
                                             </td>
 
-                                            <td>{{task.date}}</td>
+                                            <td>
+
+                                                {% if task in other_completed %}
+                                                {{task.due_date.date}}
+                                                {% else %}
+                                                {{task.date}}
+                                                {% endif %}
+
+                                            </td>
                                             <td style="width: 160px;"><span
-                                                    class="badge bg-soft-primary font-size-14 p-2">{{task.service_request.get_service_type_display}}</span>
+                                                    class="badge bg-soft-primary font-size-14 p-2">
+                                                    {% if task in other_completed %}
+                                                    مهام اخري
+                                                    {% else %}
+                                                    {{task.service_request.get_service_type_display}}
+                                                    {% endif %}
+                                                </span>
                                             </td>
 
                                         </tr>
@@ -338,13 +432,7 @@
         </div>
     </div>
 </div>
-{% include './partials/_task_modal.html'%}
-<!-- end row -->
-<script>
-    let btn = document.getElementById('confirm_delete')
-    btn.addEventListener("click", () => {
-        return confirm("حذف المستخدم ؟")
-    })
-</script>
+
+
 
 {% endblock %}

@@ -13,6 +13,7 @@ class TaskManager(models.Manager):
 class Task(models.Model):
     TASK_STATUS = [
         ("open", "open"),
+        ("completed", "completed"),
         ("closed", "closed")
     ]
     title = models.CharField(max_length=100, blank=True, null=True)

@@ -1,0 +1,350 @@
+<div class="card" id="tasks">
+    <div class="card-body">
+        <h4 class="card-title mb-4" dir="rtl">مهام الموظفين </h4>
+
+        <ul class="nav nav-tabs" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" data-bs-toggle="tab" href="#navtabs-all_tasks" role="tab">
+                    <span class="d-block d-sm-none"><i class="fas fa-home"></i></span>
+                    <span class="d-none d-sm-block">
+                        جميع المهام
+
+                    </span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-bs-toggle="tab" href="#navtabs-current" role="tab">
+                    <span class="d-block d-sm-none"><i class="far fa-user"></i></span>
+                    <span class="d-none d-sm-block">مهام جاري تنفيذها
+                        <i class="fas fa-tools "></i>
+                    </span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-bs-toggle="tab" href="#navtabs-completed" role="tab">
+                    <span class="d-block d-sm-none"><i class="far fa-envelope"></i></span>
+                    <span class="d-none d-sm-block">مهم مكتملة
+
+                        <i class="fas fa-tools "></i>
+                    </span>
+                </a>
+            </li>
+
+        </ul>
+        <div class="tab-content">
+
+            <!-- ALL TASKS TAB  -->
+            <div class="tab-pane active" id="navtabs-all_tasks" role="tabpanel">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title mb-4" dir="rtl">جميع الطلبات الجاري تنفيذها </h4>
+
+                        <div class="table-responsive text-center" data-simplebar style="max-height: 430px;">
+                            {% if not tasks  %}
+                            <p class="text-bold " style="font-size:16px">لا يـوجد مهامة </p>
+                            {% else %}
+                            <table class="table table-centered table-striped table-nowrap mb-0" dir="rtl">
+                                <thead class="table-dark">
+                                    <tr>
+
+                                        <th>اسم الموظف </th>
+                                        <th>المهمة </th>
+                                        <th>حالة الطلب </th>
+                                        <th>الوقت المحدد </th>
+
+                                        <th></th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    {% for task in tasks %}
+                                    <tr>
+                                        <td>
+                                            {% if task.employee.name %}
+                                            <a
+                                                href="{% url 'profile' task.employee.username %}">{{task.employee.name}}</a>
+                                            {% else %}
+                                            <a
+                                                href="{% url 'profile' task.employee.username %}">{{task.employee.username}}</a>
+                                            {% endif %}
+
+                                        </td>
+                                        <td>
+                                            {{task.title|truncatechars:20}}
+                                        </td>
+                                        <td>
+                                            {% if task.status == "open" %}
+                                            <span class="badge bg-soft-danger p-2">
+                                                جاري التنفيذ
+                                                {% elif task.status  == "completed" %}
+                                                <span class="badge bg-soft-success p-2">
+                                                    تمت المهمة
+                                                    {% endif %}
+                                                </span>
+                                        </td>
+                                        <td>
+                                            {{ task.due_date.date }}
+                                        </td>
+
+
+
+                                        <td>
+
+                                            <button class=" btn btn-soft-primary btn-rounded waves-effect waves-light "
+                                                data-bs-toggle="modal" data-bs-target="#taskmodal{{task.id}}">
+                                                <i class="uil uil-pen "></i> التفاصيل
+                                            </button>
+                                            {% if task.status == "completed" %}
+                                            <button class=" btn btn-soft-success btn-rounded waves-effect waves-light">
+                                                <a href="" class="text-success"><i class="uil uil-check-circle "></i>
+                                                    تأكيد
+                                                    و اغلاق
+                                                </a>
+                                            </button>
+                                            {%else%}
+                                            <button class=" btn btn-soft-danger btn-rounded waves-effect waves-light">
+                                                <a href="" class="text-danger"><i class="uil uil-trash-alt "></i> حذف
+                                                </a>
+                                            </button>
+                                            {% endif %}
+
+                                        </td>
+                                    </tr>
+                                    <div class="modal fade" id="taskmodal{{task.id}}" tabindex="-1" role="dialog"
+                                        aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header text-center">
+                                                    <h5 class="modal-title ">{{task.title}}</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                        aria-label="Close">
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <div class="border-bottom">
+
+                                                        <p>تاريخ تعيين المهمة : {{task.timestamp.date}}</p>
+                                                        <p>بواسطة :
+                                                            {%if task.created_by.name %}
+                                                            <span
+                                                                style="font-size: 18px;">{{task.created_by.name}}</span>
+                                                            {% else %}
+                                                            {{task.created_by.user.name}}
+                                                            {% endif %}
+                                                        </p>
+                                                    </div>
+                                                    <div class="border-bottom">
+                                                        <span>تفاصيل المهمة :</span>
+                                                        <p style="font-size: 18px;">{{task.details}}</p>
+                                                    </div>
+                                                    <div class=" border-bottom mt-2">
+                                                        <span>الوقت المحدد للتنفيذ :</span>
+                                                        <p>{{task.due_date.date}}</p>
+                                                    </div>
+                                                    {% if task.files %}
+                                                    <div class="  mt-2">
+                                                        <span></span>
+                                                        <a class="btn btn-lg bg-soft-primary" href="{{task.files.url}}"
+                                                            target="_blank">عرض الملفات </a>
+                                                    </div>
+                                                    {% endif %}
+
+
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-light"
+                                                        data-bs-dismiss="modal">اغلاق</button>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                            {% endif %}
+
+                        </div>
+                        <!-- end table-responsive -->
+                    </div>
+                </div>
+            </div>
+            <!-- CURRENT TAB  -->
+            <div class="tab-pane" id="navtabs-current" role="tabpanel">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title mb-4" dir="rtl">مهام جاري تنفيذها </h4>
+
+                        <div class="table-responsive text-center" data-simplebar style="max-height: 430px;">
+                            {% if not active_tasks%}
+                            <p class="text-bold " style="font-size:16px">لا يـوجد طلبات جديدة </p>
+                            {% else %}
+                            <table class="table table-centered table-striped table-nowrap mb-0 " dir="rtl">
+                                <thead class="table-dark">
+                                    <tr>
+
+                                        <th>اسم الموظف </th>
+                                        <th>المهمة </th>
+                                        <th>حالة الطلب </th>
+                                        <th>الوقت المحدد </th>
+
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for task in active_tasks %}
+                                    <tr>
+                                        <td>
+                                            {% if task.employee.name %}
+                                            <a
+                                                href="{% url 'profile' task.employee.username %}">{{task.employee.name}}</a>
+                                            {% else %}
+                                            <a
+                                                href="{% url 'profile' task.employee.username %}">{{task.employee.username}}</a>
+                                            {% endif %}
+
+                                        </td>
+                                        <td>
+                                            {{task.title|truncatechars:20}}
+                                        </td>
+                                        <td>
+                                            {% if task.status == "open" %}
+                                            <span class="badge bg-soft-danger p-2">
+                                                جاري التنفيذ
+                                                {% elif task.status  == "completed" %}
+                                                <span class="badge bg-soft-success p-2">
+                                                    تمت المهمة
+                                                    {% endif %}
+                                                </span>
+                                        </td>
+                                        <td>
+                                            {{ task.due_date.date }}
+                                        </td>
+
+
+
+                                        <td>
+
+                                            <button class=" btn btn-soft-primary btn-rounded waves-effect waves-light ">
+                                                {% if process in repair_cur or process in install_cur %}
+                                                <a href="{% url 'service_request_details' process.id %}">
+                                                    {% elif process in quarter_cur %}
+                                                    <a href="{% url 'quarter_request_details' process.id %}">
+                                                        {% endif %}
+                                                        <i class="uil uil-pen "></i> التفاصيل
+                                            </button>
+                                            <button class=" btn btn-soft-danger btn-rounded waves-effect waves-light">
+                                                {% if process in repair_cur or process in install_cur %}
+                                                <a href="{% url 'delete_request' process.id %}" class="text-danger">
+                                                    {% elif process in quarter_cur %}
+                                                    <a href="{% url 'delete_quarter_request' process.id %}"
+                                                        class="text-danger">
+                                                        {% endif %}
+                                                        <i class="uil uil-trash-alt "></i> حذف
+                                            </button>
+
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                            {% endif %}
+                        </div>
+                        <!-- end table-responsive -->
+                    </div>
+                </div>
+            </div>
+            <!-- Completed TAB  -->
+
+            <div class="tab-pane" id="navtabs-completed" role="tabpanel">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title mb-4" dir="rtl">مهام تمت .. وتحتاج الي تأكيد </h4>
+
+                        <div class="table-responsive text-center" data-simplebar style="max-height: 430px;">
+                            {% if not completed_tasks %}
+
+                            <p class="text-bold " style="font-size:16px">لا يـوجد مهام </p>
+                            {% else %}
+                            <table class="table table-centered table-striped table-nowrap mb-0 " dir="rtl">
+                                <thead class="table-dark">
+                                    <tr>
+
+                                        <th>اسم الموظف </th>
+                                        <th>المهمة </th>
+                                        <th>حالة الطلب </th>
+                                        <th>الوقت المحدد </th>
+
+                                        <th></th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+
+
+                                    {% for task in completed_tasks %}
+                                    <tr>
+                                        <td>
+                                            {% if task.employee.name %}
+                                            <a
+                                                href="{% url 'profile' task.employee.username %}">{{task.employee.name}}</a>
+                                            {% else %}
+                                            <a
+                                                href="{% url 'profile' task.employee.username %}">{{task.employee.username}}</a>
+                                            {% endif %}
+
+                                        </td>
+                                        <td>
+                                            {{task.title|truncatechars:20}}
+                                        </td>
+                                        <td>
+                                            {% if task.status == "open" %}
+                                            <span class="badge bg-soft-danger p-2">
+                                                جاري التنفيذ
+                                                {% elif task.status  == "completed" %}
+                                                <span class="badge bg-soft-success p-2">
+                                                    تمت المهمة
+                                                    {% endif %}
+                                                </span>
+                                        </td>
+                                        <td>
+                                            {{ task.due_date.date }}
+                                        </td>
+
+
+
+                                        <td class="d-flex">
+
+                                            <button
+                                                class=" btn btn-soft-primary btn-rounded waves-effect waves-light mx-2 ">
+                                                <i class="uil uil-pen "></i> التفاصيل
+                                            </button>
+
+                                            <form action="{% url 'update_task' %}" method="POST">
+                                                {% csrf_token %}
+                                                <input type="hidden" name="task_id" value="{{task.id}}">
+                                                <button
+                                                    class=" btn btn-soft-success btn-rounded waves-effect waves-light">
+                                                    <i class="uil uil-check-circle "></i>
+                                                    تأكيد
+                                                    و اغلاق
+
+                                                </button>
+                                            </form>
+
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+
+                            </table>
+                            {% endif%}
+                        </div>
+                        <!-- end table-responsive -->
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

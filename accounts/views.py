@@ -86,12 +86,12 @@ def profile(request, username):
     completed_tasks = []
     current_tasks = []
     if user.role == 3:
-        completed_tasks = Appointment.objects.all().filter(
-            technician=user).filter(status="closed")
+        completed_tasks = sorted(chain(Appointment.objects.all().filter(
+            technician=user).filter(status="closed"), Task.objects.all().filter(employee=user).exclude(status="open")), key=attrgetter("timestamp"))
         current_tasks = Appointment.objects.all().filter(
             technician=user).filter(status="open")
-    other_tasks = Task.objects.open().filter(employee=user)
-    print(other_tasks)
+    other_tasks = Task.objects.open().filter(employee=user).order_by("due_date")
+
     ctx = {
         'user': user,
         'submitted_orders': submitted_orders,
@@ -99,7 +99,8 @@ def profile(request, username):
         'all_submitted': all_submitted,
         'completed_tasks': completed_tasks,
         'current_tasks': current_tasks,
-        'other_tasks': other_tasks
+        'other_tasks': other_tasks,
+        'other_completed': Task.objects.all().filter(employee=user).exclude(status="open")
     }
     return render(request, 'registration/profile.html', ctx)
 

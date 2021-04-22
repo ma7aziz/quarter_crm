@@ -1,11 +1,13 @@
+from django.shortcuts import get_object_or_404
 from operator import attrgetter
 from itertools import chain
 from django.shortcuts import render
 from accounts.models import User
-
+from django.contrib import messages
 from service.models import Service_request
 from quarter.models import Quarter_service
 from core.models import Task
+from django.http import HttpResponseRedirect
 # Create your views here.
 
 
@@ -52,6 +54,11 @@ def dashboard(request):
     all_new = sorted(
         chain(new_repair, new_install, new_quarter), key=attrgetter('timestamp'), reverse=True
     )
+    # special tasks
+    tasks = Task.objects.all()
+    current_tasks = Task.objects.all().exclude(status="closed")
+    active_tasks = Task.objects.all().filter(status="open")
+    completed_tasks = Task.objects.all().filter(status="completed")
 
     users = User.objects.all().order_by("role")
     ctx = {
@@ -70,7 +77,11 @@ def dashboard(request):
         "all_new": all_new,
         "new_install": new_install,
         "new_repair": new_repair,
-        "new_quarter": new_quarter
+        "new_quarter": new_quarter,
+        # TASKS
+        "tasks": current_tasks,
+        "active_tasks": active_tasks,
+        "completed_tasks": completed_tasks
 
     }
     return render(request, 'core/dashboard.html', ctx)
@@ -87,3 +98,34 @@ def all_users(request):
         "tech": tech
     }
     return render(request, "core/users.html", ctx)
+
+
+def create_task(request):
+    task = Task(title=request.POST["title"], due_date=request.POST['due_date'],
+                created_by=request.user, employee=User.objects.get(pk=request.POST["employee"]), details=request.POST['details'])
+    task.save()
+    if request.FILES:
+        task.files = request.FILES['files']
+        task.save()
+    messages.success(request, "تم ارسال المهمة ! ")
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
+def update_task(request):
+    task = Task.objects.get(pk=request.POST['task_id'])
+    if task.status == "open":
+        task.status = "completed"
+        task.save()
+        messages.success(request, "اتمام المهمة بنجاح ")
+    elif task.status == "completed":
+        task.status = "closed"
+        task.save()
+        messages.success(request, "تم اغلاق المهمة بنجاح !")
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
+def delete_task(request, id):
+    task = get_object_or_404(Task, pk=id)
+    task.delete()
+    messages.error(request, " تم حذف المهمة ")
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
