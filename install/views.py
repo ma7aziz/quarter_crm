@@ -3,6 +3,7 @@ from service.models import Service_request, Appointment
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.http import HttpResponseRedirect
+from core.add_customer import add_customer
 # Create your views here.
 
 
@@ -43,11 +44,13 @@ def install_request(request):
         install_request = Servrequests = Service_request(service_type="install", created_by=user, customer_name=customer_name, phone=phone,
                                                          machine_type=machine_type, invoice_number=invoice_number,
                                                          address=address, customer_type=customer_type, notes=request.POST['notes'])
+        install_request.customer = add_customer(phone, customer_name)
         install_request.save()
         if request.FILES:
-            install_request.file = request.FILES['files']
+            install_request.file = request.FILES['attach_file']
             install_request.save()
         user.submitted_orders += 1
         user.save()
+
         messages.success(request, "تم تسجيل طلبك بنجاح")
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))

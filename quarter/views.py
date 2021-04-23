@@ -4,7 +4,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render
 
 from .models import Price, Quarter_service, Transfer, Design
-
+from core.add_customer import add_customer
 # Create your views here.
 
 
@@ -31,6 +31,7 @@ def create_request(request):
         notes = request.POST['notes']
         new_request = Quarter_service(
             name=name, phone=phone, location=location, email=email, notes=notes, created_by=request.user)
+        new_request.customer = add_customer(phone, name, email)
         new_request.save()
         messages.success(request, "تم تسجيل طلبك بنجاح")
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))

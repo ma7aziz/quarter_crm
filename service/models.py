@@ -1,6 +1,6 @@
 from django.db import models
 from accounts.models import User
-
+from core.models import Customer
 import random
 import string
 # Create your models here.
@@ -50,6 +50,8 @@ class Service_request(models.Model):
     created_by = models.ForeignKey(
         User, on_delete=models.SET_NULL, null=True, blank=True)
     customer_name = models.CharField(max_length=200)
+    customer = models.ForeignKey(
+        Customer, on_delete=models.SET_NULL, null=True, blank=True)
     phone = models.CharField(max_length=25)
     machine_type = models.CharField(max_length=200)
     customer_type = models.CharField(choices=CUSTOMER_TYPE, max_length=10)

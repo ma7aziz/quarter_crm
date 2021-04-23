@@ -1,6 +1,7 @@
 from django.db import models
 from accounts.models import User
 from .choices import STATUS_CHOICES
+from core.models import Customer
 # Create your models here.
 
 
@@ -17,6 +18,8 @@ class Quarter_service(models.Model):
     phone = models.CharField(max_length=20)
     email = models.CharField(max_length=100, blank=True, null=True)
     location = models.CharField(max_length=200, blank=True, null=True)
+    cusomer = models.ForeignKey(
+        Customer, on_delete=models.SET_NULL, null=True, blank=True)
     notes = models.CharField(max_length=500, blank=True, null=True)
     status = models.IntegerField(
         default=1, choices=STATUS_CHOICES)

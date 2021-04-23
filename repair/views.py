@@ -3,7 +3,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django.shortcuts import redirect, render
-
+from core.add_customer import add_customer
 
 from service.models import Appointment, Service_request
 
@@ -48,6 +48,7 @@ def repair_request(request):
         repair_request = Servrequests = Service_request(service_type="repair", created_by=user, customer_name=customer_name, phone=phone,
                                                         machine_type=machine_type, invoice_number=invoice_number,
                                                         address=address, customer_type=customer_type, notes=request.POST['notes'])
+        repair_request.customer = add_customer(phone, customer_name)
         repair_request.save()
         if request.FILES:
             repair_request.file = request.FILES['attach_file']
