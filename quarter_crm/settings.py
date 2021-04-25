@@ -39,12 +39,17 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    # 3rd party apps
+    'import_export',
+
+    # DEVELOPED APPS
     'core',
     'repair',
     'accounts',
     'service',
     'install',
-    'quarter'
+    'quarter',
+    'files'
 ]
 
 MIDDLEWARE = [
@@ -138,3 +143,5 @@ MEDIA_URL = '/media/'
 AUTH_USER_MODEL = 'accounts.User'
 LOGIN_REDIRECT_URL = "/"
 LOGOUT_REDIRECT_URL = '/'
+
+IMPORT_EXPORT_USE_TRANSACTIONS = True

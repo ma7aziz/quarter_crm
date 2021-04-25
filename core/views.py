@@ -1,3 +1,4 @@
+from django.core.paginator import Paginator
 from django.shortcuts import get_object_or_404
 from operator import attrgetter
 from itertools import chain
@@ -8,6 +9,7 @@ from service.models import Service_request
 from quarter.models import Quarter_service
 from core.models import Task
 from django.http import HttpResponseRedirect
+from .models import Customer
 # Create your views here.
 
 
@@ -129,3 +131,31 @@ def delete_task(request, id):
     task.delete()
     messages.error(request, " تم حذف المهمة ")
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
+def customers(request):
+    customers = Customer.objects.all()
+    paginator = Paginator(customers, 25)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    count = customers.count()
+
+    return render(request, 'core/customers_data.html', {'page_obj': page_obj, })
+
+
+def customer_details(request, id):
+    customer = Customer.objects.get(pk=id)
+    quarter_orders = Quarter_service.objects.all().filter(customer=customer)
+    service_requests = Service_request.objects.all().filter(customer=customer)
+    orders = sorted(
+        chain(quarter_orders, service_requests), key=attrgetter('timestamp'), reverse=True
+    )
+
+    ctx = {
+        "customer": customer,
+        "quarter_orders": quarter_orders,
+        "service_requests": service_requests,
+        "orders": orders
+    }
+    print(ctx)
+    return render(request, "core/customer_details.html", ctx)

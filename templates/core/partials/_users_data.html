@@ -1,6 +1,16 @@
 <div class="card" id="users">
     <div class="card-body">
-        <h4 class="card-title mb-4" dir="rtl">بيانات المستخدمين </h4>
+        <div class="row">
+            <div class="col-10">
+
+                <h4 class="card-title mb-4" dir="rtl">بيانات المستخدمين </h4>
+            </div>
+            <div class="col-2">
+                <a href="{% url 'export_users' %}" class="btn btn-small btn-success uppercase">Export to Excel File </a>
+            </div>
+
+        </div>
+
         <div class="table-responsive text-center" data-simplebar style="max-height: 430px;">
             <table class="table table-centered table-striped table-nowrap mb-0" dir="rtl">
                 <thead class="table-dark">

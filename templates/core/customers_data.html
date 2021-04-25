@@ -1,0 +1,88 @@
+{% extends '../base.html' %}
+{% block content %}
+<div class="card" id="users">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-10">
+
+                <h4 class="card-title mb-4" dir="rtl">بيانات العملاء </h4>
+            </div>
+            <div class="col-2">
+                <a href="{% url 'export_customers_data' %}" class="btn btn-small btn-success uppercase">Export to Excel
+                    File </a>
+            </div>
+
+        </div>
+
+        <div class="table-responsive text-center" data-simplebar style="max-height: 430px;">
+            <table class="table table-centered table-striped table-nowrap mb-0" dir="rtl">
+                <thead class="table-dark">
+                    <tr>
+
+
+                        <th>الاسم </th>
+                        <th>الجوال </th>
+                        <th>البريد الاليكتروني </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for customer in page_obj  %}
+                    <tr>
+                        <td><a href="{% url 'customer_details' customer.id %}">
+
+                                {{customer}}
+                            </a>
+                        </td>
+                        <td>{{customer.phone}}</td>
+                        <td>
+                            {{user.email}}
+                        </td>
+
+                        <td>
+
+                            <button class=" btn btn-soft-primary btn-rounded waves-effect waves-light ">
+                                <i class="uil uil-pen "></i>
+                            </button>
+
+                            <a class=" btn btn-soft-danger btn-rounded waves-effect waves-light"
+                                href="{% url 'delete_user' user.username %}">
+                                <i class="uil uil-trash-alt "></i>
+                            </a>
+
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+        </div>
+        <!-- end table-responsive -->
+    </div>
+</div>
+<nav aria-label="Page navigation example">
+    <ul class="pagination justify-content-center">
+        {% if page_obj.has_previous %}
+        <li class="page-item ">
+
+            <a class="page-link" href="?page={{ page_obj.previous_page_number }}" tabindex="-1"
+                aria-disabled="true">السابق </a>
+        </li>
+        {% endif %}
+        {% for i in page_obj.paginator.page_range %}
+        {% if page_obj.number == i %}
+        <li class="page-item active"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+        {% else %}
+        <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+        {% endif %}
+        {% endfor %}
+
+        {% if page_obj.has_next %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.next_page_number }}">التالي </a>
+        </li>
+        {% endif %}
+    </ul>
+</nav>
+
+{% endblock %}

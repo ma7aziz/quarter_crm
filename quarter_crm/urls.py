@@ -14,8 +14,9 @@ urlpatterns = [
     path('', include('core.urls')),
     path('', include('service.urls')),
     path('', include('accounts.urls')),
-    path('install', include('install.urls')),
+    path('install/', include('install.urls')),
     path('repair/', include('repair.urls')),
-    path('quarter/', include('quarter.urls'))
+    path('quarter/', include('quarter.urls')),
+    path('files/', include("files.urls"))
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
