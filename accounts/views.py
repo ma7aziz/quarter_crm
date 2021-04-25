@@ -63,16 +63,21 @@ def userLogin(request):
         password = request.POST['password']
         user = authenticate(username=username, password=password)
         if user is not None:
-            if user.is_active:
-                login(request, user)
-                if user.role == 1:
-                    return HttpResponseRedirect('/')
-                elif user.role == 4 or user.role == 3:
-                    return HttpResponseRedirect('repair/')
-                elif user.role == 6:
-                    return HttpResponseRedirect('quarter')
+            login(request, user)
+            messages.success(request, "أهلا بك مرة اخري ")
+            if user.role == 1:
+                return HttpResponseRedirect('/')
+            elif user.role == 4 or user.role == 3:
+                return HttpResponseRedirect('repair/')
+            elif user.role == 6:
+                return HttpResponseRedirect('quarter')
+
         else:
-            print('user is none')
+
+            messages.error(
+                request, 'username or password not correct')
+            print(messages)
+            return redirect('login')
     else:
         return render(request, 'login.html')
 

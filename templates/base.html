@@ -268,13 +268,14 @@
 
                         <ul class="metismenu list-unstyled" id="side-menu">
                             <li class="menu-title">الاقسام </li>
+                            {% if request.user.role == 1 or request.user.role == 2 %}
                             <li>
                                 <a href="{% url 'dashboard' %}">
                                     <i class="uil-home-alt"></i>
                                     Dashboard
                                 </a>
                             </li>
-
+                            {% endif %}
                             <li>
                                 <a href="{% url 'repair_index' %}">
                                     <i class="fas fa-tools fa-3x"></i>الصيانة
@@ -290,9 +291,21 @@
                                     <i class="fas fa-tools fa-3x"></i>كوارتر
                                 </a>
                             </li>
+                            <li class="menu-title">روابط سريعة </li>
+                            <li>
+                                <a href="">بيانات المستخدمين </a>
+                            </li>
+                            <li>
+                                <a href="">العملاء </a>
+                            </li>
+
+                            <li>
+                                <a href="">الطلبات </a>
+                            </li>
 
 
                         </ul>
+
                     </div>
                     <!-- Sidebar -->
                 </div>

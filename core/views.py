@@ -157,5 +157,5 @@ def customer_details(request, id):
         "service_requests": service_requests,
         "orders": orders
     }
-    print(ctx)
+
     return render(request, "core/customer_details.html", ctx)
