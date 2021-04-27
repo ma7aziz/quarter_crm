@@ -1,3 +1,4 @@
+from django.db.models import Q
 from django.core.paginator import Paginator
 from django.shortcuts import get_object_or_404
 from operator import attrgetter
@@ -159,3 +160,35 @@ def customer_details(request, id):
     }
 
     return render(request, "core/customer_details.html", ctx)
+
+
+# search
+# search users
+# search customers
+# search orders
+
+
+def search(request):
+    keyword = request.GET.get('s').strip()
+    quarter_result = Quarter_service.objects.filter(Q(name__icontains=keyword) | Q(phone__icontains=keyword) | Q(
+        notes__icontains=keyword))
+    service_result = Service_request.objects.filter(Q(customer_name__icontains=keyword) | Q(phone__icontains=keyword) | Q(
+        notes__icontains=keyword))
+    customer_result = Customer.objects.filter(
+        Q(name__icontains=keyword) | Q(phone__icontains=keyword))
+    user_result = User.objects.filter(
+        Q(name__icontains=keyword) | Q(phone__icontains=keyword))
+
+    result = list(chain(quarter_result, service_result,
+                        customer_result, user_result))
+
+    ctx = {
+        'results': result,
+        'quarter_result': quarter_result,
+        'service_result': service_result,
+        'customer_result': customer_result,
+        'user_result': user_result,
+        'keyword': keyword
+    }
+
+    return render(request, 'core/search_results.html', ctx)

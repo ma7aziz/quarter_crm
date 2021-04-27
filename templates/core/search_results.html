@@ -1,0 +1,69 @@
+{% extends '../base.html' %}
+{% block content %}
+<div class="card">
+    <div class="card-body">
+        <h2 class="card-title mb-3">نتائج البحث عن :
+            <span class="text-bold " style="font-size :1.3em;">
+                {{keyword}}
+            </span>
+        </h2>
+
+        <ul class="list-group">
+            {% for result in results%}
+            <li class="list-group-item">
+                <div class="card ">
+                    <div class="card-body">
+                        {% if result in quarter_result %}
+                        <div class="d-flex justify-content-between ">
+                            <h2 class="card-title"><a
+                                    href="{% url 'quarter_request_details' result.id %}">{{result}}</a></h2>
+                            <span class="badge bg-soft-info p-2">كوارتر </span>
+                        </div>
+                        <p>رقم الهاتف : {{result.phone}}</p>
+                        <p>حالة الطلب : {{result.get_status_display }}
+
+                        </p>
+
+
+                        {% elif result in service_result %}
+
+                        <div class="d-flex justify-content-between ">
+                            <h2 class="card-title"><a
+                                    href="{% url 'service_request_details' result.id %}">{{result}}</a></h2>
+                            <span class="badge bg-soft-info p-2">{{result.get_service_type_display}} </span>
+                        </div>
+
+                        <p>رقم الهاتف : {{result.phone}}</p>
+                        <p>حالة الطلب : {{result.get_status_display }}
+
+                        </p>
+
+                        {% elif result in customer_result %}
+
+                        <div class="d-flex justify-content-between ">
+                            <h2 class="card-title"><a href="{% url 'customer_details' result.id %}">{{result}}</a></h2>
+                            <span class="badge bg-soft-info p-2">عميل </span>
+                        </div>
+                        <p>رقم الهاتف : {{result.phone}}</p>
+
+
+                        {% elif result in user_result %}
+
+                        <div class="d-flex justify-content-between ">
+                            <h2 class="card-title"><a href="{% url 'profile' result.username %}">{{result}}</a></h2>
+                            <span class="badge bg-soft-info p-2">مستخد للموقع </span>
+                        </div>
+                        <p>رقم الهاتف : {{result.phone}}</p>
+                        <p>الوظيفة : {{result.get_role_display }}</p>
+                    </div>
+
+                    {% endif %}
+                </div>
+
+
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+{% endblock %}
