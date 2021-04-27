@@ -14,3 +14,19 @@ designs:
     files 
     date 
     status 
+
+
+
+pricing 
+if approved =>  ok
+if rejected : 
+    1- by admin ?
+        send rejection notes and reason - propose new price 
+        pricing Department : change price 
+        
+    2- by client ? 
+        propose new price ? 
+        pricing Dep : 
+            update price 
+            status ==> review by admin .. approve or reject 
+

@@ -86,7 +86,7 @@ def confirm_process(request, id):
         transfer = Transfer(service=req, total_price=int(req.pricing.price))
         transfer.save()
         messages.success(
-            request, 'تم اعتماد السعر .. سيتم البدء في التنفيذ بعد تحويل الجزء الاول من السعر')
+            request, ' تم اعتماد السعر .. سيتم البدء في التنفيذ بعد تحويل الجزء الاول من السعر المتفق عليه ')
     elif req.status == 6:
         req.status = 7
         req.save()

@@ -35,6 +35,7 @@ class Quarter_service(models.Model):
         "Design", on_delete=models.SET_NULL, null=True, blank=True)
     objects = Quarter_service_Manager()
 
+    # price ##outstanding
     def __str__(self):
         return f'{self.name}'
 
