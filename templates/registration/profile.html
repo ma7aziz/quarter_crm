@@ -73,9 +73,22 @@
                             <p class="mb-1">الجوال:</p>
                             <h5 class="font-size-16">{{user.phone}}</h5>
                         </div>
+                        {% if user.email %}
                         <div class="mt-4">
                             <p class="mb-1">البريد الاليكتروني :</p>
                             <h5 class="font-size-16">{{user.email}}</h5>
+                        </div>
+                        {% endif %}
+                        <div class="mt-4">
+                            <p class="mb-1">الوظيفة :</p>
+                            <h5 class="font-size-16">{{user.get_role_display}}</h5>
+                        </div>
+
+                        <div class="mt-4">
+                            <p class="mb-1">القسم:</p>
+                            {% for s in user.section.all %}
+                            <h5 class="font-size-16">{{s}}</h5>
+                            {% endfor %}
                         </div>
 
 
@@ -337,8 +350,7 @@
 
                                     <div class="mb-3">
                                         <label class="form-label" for="email">البريد الالكتروني</label>
-                                        <input name="email" type="email" class="form-control" value="{{user.email}}"
-                                            required>
+                                        <input name="email" type="email" class="form-control" value="{{user.email}}">
                                     </div>
                                 </div>
 
@@ -348,7 +360,7 @@
 
 
                                 <hr>
-
+                                {% if request.user.role == 1 or request.user.role == 2%}
                                 <div class="row">
                                     <div class="mb-3">
                                         <label class="form-label">الوظيفة</label>
@@ -389,6 +401,10 @@
 
 
                                 </div>
+                                {% else %}
+                                <input type="hidden" name="role" value="{{user.role}}">
+
+                                {% endif %}
                                 {% csrf_token %}
                                 <hr>
 

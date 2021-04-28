@@ -120,7 +120,7 @@
                                                    {% endif %}
                                                </td>
                                                <td>
-                                                   {{req.status}}
+                                                   {{req.get_status_display}}
                                                </td>
 
                                                <td>
@@ -192,7 +192,7 @@
                                                </td>
                                                <td>
                                                    <span
-                                                       class="badge rounded-pill bg-soft-success font-size-12">{{req.status}}</span>
+                                                       class="badge rounded-pill bg-soft-success font-size-12">{{req.get_status_display}}</span>
                                                </td>
 
                                                <td>

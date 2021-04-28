@@ -42,8 +42,11 @@
 </style>
 
 <body>
-    <div class="container">
-
+    <div class="container d-flex flex-column justify-content-between " style="min-height: 90vh">
+        <div class="header text-center ">
+            <h2 style="font-size:30px; color:#fff">Quarter</h2>
+        </div>
+        {% if request.user.is_authenticated %}
 
         <div class="row nav-btns ">
             <div class="col-lg-4">
@@ -88,8 +91,73 @@
             </div>
         </div>
 
-        <!-- end row -->
+        {% else %}
+        <div class="account-pages my-5 pt-sm-5">
+            <div class="row align-items-center justify-content-center">
+                <div class="col-md-8 col-lg-6 col-xl-5">
+                    <div class="card">
+                        {% if form.non_field_errors%}
 
+                        <div class="alert text-center 
+                                    
+                                    alert-danger
+                                    
+                                    alert-dismissible fade show" role="alert">
+                            اسم المرور وكلمة السر غير متطابقين
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+
+                            </button>
+                        </div>
+
+                        {% endif%}
+                        <div class="card-body p-4">
+                            <div class="text-center mt-2">
+                                <h5 class="text-primary">اهلا بك مرة أخري !</h5>
+                                <p class="text-muted">برجاء تسجيل الدخول لحسابك </p>
+                            </div>
+                            <div class="p-2 mt-4">
+                                <form action="{% url 'user_login' %}" method="POST">
+                                    {% csrf_token %}
+
+                                    <div class="mb-3">
+                                        <label class="form-label" for="username">اسم المستخدم </label>
+                                        <input type="text" class="form-control" name="username" id="username"
+                                            placeholder="ادخال اسم المستخدم ">
+                                    </div>
+
+                                    <div class="mb-3">
+
+                                        <label class="form-label" for="userpassword">كلمة السر </label>
+                                        <input type="password" class="form-control" name="password" id="userpassword"
+                                            placeholder="كلمة السر ">
+                                    </div>
+
+
+
+                                    <div class="mt-3 text-end">
+                                        <button class="btn btn-primary w-sm waves-effect waves-light" type="submit">دخول
+                                        </button>
+                                    </div>
+
+                                </form>
+                            </div>
+
+                        </div>
+                    </div>
+
+
+
+                </div>
+            </div>
+            <!-- end row -->
+
+        </div>
+
+        {% endif %}
+        <!-- end row -->
+        <div class="text-center">
+            <a href="" style="color: #fff;">للمساعدة <i class="far fa-question-circle"></i></a>
+        </div>
     </div>
 
     <!-- JAVASCRIPT -->

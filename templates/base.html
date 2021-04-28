@@ -267,8 +267,9 @@
                     </div>
                     {% endfor %}
                     {% endif%}
-                    {% if request.user.role == 1 or request.user.role == 2 %}
+
                     <div class="row mb-3" dir="rtl">
+                        {% if request.user.role == 1 or request.user.role == 2 %}
                         <div class=" col col-sm-6 col-lg-3 text-center ">
                             <button class="btn btn-lg btn-primary btn-rounded waves-effect waves-light "
                                 data-bs-toggle="modal" data-bs-target="#newUserModal">أضافة مستخدم
@@ -294,18 +295,16 @@
                                                 <div class="row">
                                                     <div class="mb-3">
                                                         <label class="form-label" for="customername">الاسم</label>
-                                                        <input name="name" type="text" class="form-control" required>
+                                                        <input name="name" type="text" class="form-control" required />
                                                     </div>
                                                 </div>
 
                                                 <hr>
 
                                                 <div class="row">
-
-
                                                     <div class="mb-3">
                                                         <label class="form-label" for="phone">الجوال</label>
-                                                        <input name="phone" type="text" class="form-control" required>
+                                                        <input name="phone" type="text" class="form-control" required />
                                                     </div>
                                                 </div>
 
@@ -315,6 +314,9 @@
                                                     <div class="mb-3">
                                                         <label class="form-label" for="machine_type">اسم المستخدم
                                                         </label>
+                                                        <p class="text-muted text-small">-يستخدم للدخول للموقع
+
+                                                        </p>
                                                         <input name="username" type="text" class="form-control"
                                                             required />
                                                     </div>
@@ -337,7 +339,10 @@
                                                         <input name="password2" type="password" class="form-control"
                                                             required />
                                                     </div>
+                                                    <p class="text-muted">تتكون كلمة المرور من 8 حروف و ارقام علي الاقل
 
+                                                    </p>
+                                                    <p class="text-muted">-يجب ان تحتوي علي حرف واحد علي الاقل</p>
                                                 </div>
 
                                                 <hr>
@@ -405,7 +410,9 @@
                                 </div><!-- /.modal-dialog -->
                             </div><!-- /.modal -->
                         </div>
-                        <div class="col col-sm-6 col-lg-3 text-center">
+                        {% endif %}
+
+                        <div class="col col-sm-6   col-lg-3 text-center">
                             <button class="btn btn-lg btn-primary btn-rounded waves-effect waves-light"
                                 data-bs-toggle="modal" data-bs-target="#newRepairRequestModal">أضافة طلب صيانة
                                 <i class="fas fa-tools"></i>
@@ -432,7 +439,7 @@
                                                 <input id="customername" name="customername" type="text"
                                                     class="form-control">
 
-                                                <div class="row">
+                                                <div class="row mt-2">
                                                     <div class="col-lg-6">
 
                                                         <div class="mb-3">
@@ -474,19 +481,24 @@
                                                         <div class="mb-3">
                                                             <label class="form-label" for="invoice_number">رقم الفاتورة
                                                             </label>
+                                                            <p class="text-muted text-small">يجب ادخال رقم الفاتورة
+                                                                لعميل
+                                                                الضمان
+                                                            </p>
                                                             <input id="invoice_number" name="invoice_number" type="text"
                                                                 class="form-control">
+
                                                         </div>
                                                     </div>
 
                                                 </div>
                                                 {% csrf_token %}
-                                                <div class="mb-0">
+                                                <div class="mb-2">
                                                     <label class="form-label" for="file">ارفاق ملف</label>
                                                     <input type="file" class="form-control" id="file"
                                                         name="attach_file" />
                                                 </div>
-                                                <div class="mb-0">
+                                                <div class="mb-0 ">
                                                     <label class="form-label" for="notes">معلومات اضافية </label>
                                                     <textarea class="form-control" id="notes" name="notes"
                                                         rows="4"></textarea>
@@ -565,6 +577,10 @@
                                                         <div class="mb-3">
                                                             <label class="form-label" for="invoice_number">رقم الفاتورة
                                                             </label>
+                                                            <p class="text-muted text-small">يجب ادخال رقم الفاتورة
+                                                                لعميل
+                                                                الضمان
+                                                            </p>
                                                             <input name="invoice_number" type="text"
                                                                 class="form-control">
                                                         </div>
@@ -572,7 +588,7 @@
 
                                                 </div>
                                                 {% csrf_token %}
-                                                <div class="mb-0">
+                                                <div class="mb-2">
                                                     <label class="form-label" for="file">ارفاق ملف</label>
                                                     <input type="file" class="form-control" name="attach_file" />
                                                 </div>
@@ -661,7 +677,7 @@
                         </div>
                     </div>
 
-                    {% endif %}
+
                     {% block content %}
 
                     {% endblock %}

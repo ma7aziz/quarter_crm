@@ -49,9 +49,12 @@ def edit_user(request):
     user.phone = request.POST['phone']
     user.email = request.POST['email']
     user.role = request.POST['role']
-    for s in request.POST.getlist('section'):
-        sect = Section.objects.get(pk=s)
-        user.section.add(sect)
+    if request.POST.get('section'):
+        for s in request.POST.getlist('section'):
+            sect = Section.objects.get(pk=s)
+            user.section.add(sect)
+    if request.FILES.get('attach_file'):
+        user.files = request.FILES['attach_file']
     user.save()
     messages.success(request, "تم تعديل البيانات بنجاح ")
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
