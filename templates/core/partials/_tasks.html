@@ -103,7 +103,8 @@
                                             </button>
                                             {%else%}
                                             <button class=" btn btn-soft-danger btn-rounded waves-effect waves-light">
-                                                <a href="" class="text-danger"><i class="uil uil-trash-alt "></i> حذف
+                                                <a href="{% url 'delete_task' task.id %}" class="text-danger"><i
+                                                        class="uil uil-trash-alt "></i> حذف
                                                 </a>
                                             </button>
                                             {% endif %}

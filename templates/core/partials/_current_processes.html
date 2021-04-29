@@ -65,8 +65,15 @@
                                 <tbody>
                                     {% for process in all_cur %}
                                     <tr>
-                                        <td><a href="{% url 'quarter_request_details' process.id %}">{{process.request_number}}
-                                            </a>
+                                        <td>
+                                            {% if process in repair_cur or process in install_cur %}
+                                            <a href="{% url 'service_request_details' process.id %}">
+                                                {% elif process in quarter_cur %}
+                                                <a href="{% url 'quarter_request_details' process.id %}">
+                                                    {% endif %}
+
+                                                    {{process.request_number}}
+                                                </a>
                                         </td>
                                         <td>
                                             {% if process in repair_cur or process in install_cur %}
@@ -160,8 +167,13 @@
                                 <tbody>
                                     {% for process  in repair_cur %}
                                     <tr>
-                                        <td><a href="{% url 'quarter_request_details' process.id %}">{{process.request_number}}
-                                            </a>
+                                        <td>{% if process in repair_cur or process in install_cur %}
+                                            <a href="{% url 'service_request_details' process.id %}">
+                                                {% elif process in quarter_cur %}
+                                                <a href="{% url 'quarter_request_details' process.id %}">
+                                                    {% endif %}
+                                                    {{process.request_number}}
+                                                </a>
                                         </td>
                                         <td><a href="{% url 'service_request_details' process.id %}">{{process}}</a>
                                         </td>
@@ -232,8 +244,13 @@
                                 <tbody>
                                     {% for process  in install_cur %}
                                     <tr>
-                                        <td><a href="{% url 'quarter_request_details' process.id %}">{{process.request_number}}
-                                            </a>
+                                        <td>{% if process in repair_cur or process in install_cur %}
+                                            <a href="{% url 'service_request_details' process.id %}">
+                                                {% elif process in quarter_cur %}
+                                                <a href="{% url 'quarter_request_details' process.id %}">
+                                                    {% endif %}
+                                                    {{process.request_number}}
+                                                </a>
                                         </td>
                                         <td><a href="{% url 'service_request_details' process.id %}">{{process}}</a>
                                         </td>
@@ -243,16 +260,13 @@
                                         </td>
                                         <td>
                                             <span class="badge bg-soft-success p-2">
-
                                                 {{process.get_status_display }}
                                             </span>
                                         </td>
 
 
                                         <td>
-
                                             {{process.timestamp.date}}
-
                                         </td>
                                         <td>
 
@@ -304,8 +318,13 @@
                                 <tbody>
                                     {% for process  in quarter_cur %}
                                     <tr>
-                                        <td><a href="{% url 'quarter_request_details' process.id %}">{{process.request_number}}
-                                            </a>
+                                        <td>{% if process in repair_cur or process in install_cur %}
+                                            <a href="{% url 'service_request_details' process.id %}">
+                                                {% elif process in quarter_cur %}
+                                                <a href="{% url 'quarter_request_details' process.id %}">
+                                                    {% endif %}
+                                                    {{process.request_number}}
+                                                </a>
                                         </td>
                                         <td><a href="{% url 'quarter_request_details' process.id %}">{{process}}</a>
                                         </td>
