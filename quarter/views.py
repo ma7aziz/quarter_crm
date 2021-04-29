@@ -34,6 +34,8 @@ def create_request(request):
         new_request.customer = add_customer(phone, name, email)
         new_request.save()
         messages.success(request, "تم تسجيل طلبك بنجاح")
+        new_request.request_number = "qua{id}".format(id=new_request.id)
+        new_request.save()
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 

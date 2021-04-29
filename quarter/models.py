@@ -14,6 +14,7 @@ class Quarter_service_Manager(models.Manager):
 
 
 class Quarter_service(models.Model):
+    request_number = models.CharField(max_length=15, blank=True, null=True)
     name = models.CharField(max_length=100)
     phone = models.CharField(max_length=20)
     email = models.CharField(max_length=100, blank=True, null=True)

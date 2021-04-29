@@ -56,5 +56,8 @@ def install_request(request):
             user.submitted_orders += 1
             user.save()
 
+            install_request.request_number = 'inst{id}'.format(
+                id=install_request.id)
+            install_request.save()
             messages.success(request, "تم تسجيل طلبك بنجاح")
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))

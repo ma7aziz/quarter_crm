@@ -171,9 +171,9 @@ def customer_details(request, id):
 def search(request):
     keyword = request.GET.get('s').strip()
     quarter_result = Quarter_service.objects.filter(Q(name__icontains=keyword) | Q(phone__icontains=keyword) | Q(
-        notes__icontains=keyword))
+        notes__icontains=keyword) | Q(request_number__iexact=keyword))
     service_result = Service_request.objects.filter(Q(customer_name__icontains=keyword) | Q(phone__icontains=keyword) | Q(
-        notes__icontains=keyword))
+        notes__icontains=keyword) | Q(request_number__iexact=keyword))
     customer_result = Customer.objects.filter(
         Q(name__icontains=keyword) | Q(phone__icontains=keyword))
     user_result = User.objects.filter(

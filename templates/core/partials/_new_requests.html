@@ -51,7 +51,7 @@
                             <table class="table table-centered table-striped table-nowrap mb-0" dir="rtl">
                                 <thead class="table-dark">
                                     <tr>
-
+                                        <th>رقم الطلب </th>
                                         <th>اسم العميل </th>
                                         <th>نوع الطلب </th>
                                         <th>حالة الطلب </th>
@@ -64,6 +64,9 @@
                                 <tbody>
                                     {% for process in all_new %}
                                     <tr>
+                                        <td><a href="{% url 'quarter_request_details' process.id %}">{{process.request_number}}
+                                            </a>
+                                        </td>
                                         <td>
                                             {% if process in repair_cur or process in install_cur %}
                                             <a href="{% url 'service_request_details' process.id %}">
@@ -144,9 +147,8 @@
                             <table class="table table-centered table-striped table-nowrap mb-0 " dir="rtl">
                                 <thead class="table-dark">
                                     <tr>
-
+                                        <th>رقم الطلب </th>
                                         <th>الاسم </th>
-
                                         <th>الجوال </th>
                                         <th>الموقع </th>
                                         <th>حالة الطلب </th>
@@ -157,6 +159,9 @@
                                 <tbody>
                                     {% for process  in new_repair %}
                                     <tr>
+                                        <td><a href="{% url 'quarter_request_details' process.id %}">{{process.request_number}}
+                                            </a>
+                                        </td>
                                         <td><a href="{% url 'service_request_details' process.id %}">{{process}}</a>
                                         </td>
                                         <td>{{process.phone}}</td>
@@ -215,9 +220,8 @@
                             <table class="table table-centered table-striped table-nowrap mb-0 " dir="rtl">
                                 <thead class="table-dark">
                                     <tr>
-
+                                        <th>رقم الطلب </th>
                                         <th>الاسم </th>
-
                                         <th>الجوال </th>
                                         <th>الموقع </th>
                                         <th>حالة الطلب </th>
@@ -231,6 +235,9 @@
 
                                     {% for process  in new_install %}
                                     <tr>
+                                        <td><a href="{% url 'quarter_request_details' process.id %}">{{process.request_number}}
+                                            </a>
+                                        </td>
                                         <td><a href="{% url 'service_request_details' process.id %}">{{process}}</a>
                                         </td>
                                         <td>{{process.phone}}</td>
@@ -290,9 +297,8 @@
                             <table class="table table-centered table-striped table-nowrap mb-0 " dir="rtl">
                                 <thead class="table-dark">
                                     <tr>
-
+                                        <th>رقم الطلب </th>
                                         <th>الاسم </th>
-
                                         <th>الجوال </th>
                                         <th>الموقع </th>
                                         <th>حالة الطلب </th>
@@ -303,6 +309,9 @@
                                 <tbody>
                                     {% for process  in new_quarter %}
                                     <tr>
+                                        <td><a href="{% url 'quarter_request_details' process.id %}">{{process.request_number}}
+                                            </a>
+                                        </td>
                                         <td><a href="{% url 'quarter_request_details' process.id %}">{{process}}</a>
                                         </td>
                                         <td>{{process.phone}}</td>

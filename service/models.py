@@ -45,6 +45,7 @@ class Service_request(models.Model):
         ("install", "تركيب")
     )
 
+    request_number = models.CharField(blank=True, null=True, max_length=15)
     service_type = models.CharField(
         max_length=10, choices=REQUEST_TYPE)
     created_by = models.ForeignKey(
