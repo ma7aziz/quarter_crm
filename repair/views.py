@@ -59,7 +59,7 @@ def repair_request(request):
                 repair_request.save()
             user.submitted_orders += 1
             user.save()
-            install_request.request_number = 'inst{id}'.format(
+            repair_request.request_number = 'rep{id}'.format(
                 id=repair_request.id)
             repair_request.save()
             messages.success(request, "تم تسجيل طلبك بنجاح")

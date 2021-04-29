@@ -43,13 +43,14 @@
                     <p class="text-muted">{{user.get_role_display}}</p>
 
                     <div class="mt-4">
-                        {% if request.user.username != user.username %}
+                        {% if request.user.role == 1   %}
                         <button type="button" class="btn btn-dark btn"><i class="uil uil-envelope-alt me-2"></i>
                             ارسال رسالة </button>
-                        {% endif %}
+
                         <button type="button" class="btn btn-dark btn" data-bs-toggle="modal"
                             data-bs-target="#newTaskModal"> <i class="uil uil-clipboard-notes "></i>
                             تعيين مهمة </button>
+                        {% endif %}
                         {% if request.user.role == 1   %}
                         {% if request.user.username != user.username %}
                         <a href="{% url 'delete_user' user.username %}" class="btn btn-danger text-light btn "

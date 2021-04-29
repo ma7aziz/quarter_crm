@@ -204,7 +204,8 @@
 
 
 
-                            {% endif %}
+
+
                             <li>
                                 <a href="{% url 'repair_index' %}">
 
@@ -231,6 +232,24 @@
                                     <i class="fas fa-tools fa-3x"></i>
                                 </a>
                             </li>
+                            {% elif request.user.role == 3 %}
+                            <li>
+                                <a href="{% url 'new_tasks' %}">
+                                    <span>
+                                        المهام الجديدة
+                                    </span>
+                                    <i class="fas fa-tools fa-3x"></i>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{% url 'history' %}">
+                                    <span>
+                                        المهام السابقة
+                                    </span>
+                                    <i class="fas fa-tools fa-3x"></i>
+                                </a>
+                            </li>
+                            {% endif %}
 
 
 

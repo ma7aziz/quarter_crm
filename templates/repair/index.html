@@ -5,7 +5,7 @@
 {% include './partials/_sales.html'%}
 {% elif request.user.role == 1 or request.user.role ==  2 %}
 {% include './partials/_admin_supervisor.html' %}
-{% elif request.user.role == 3%}
+{% elif request.user.role == 3 %}
 {% include './partials/_technician.html' %}
 {%endif %}
 {% endblock %}

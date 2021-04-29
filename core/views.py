@@ -162,12 +162,6 @@ def customer_details(request, id):
     return render(request, "core/customer_details.html", ctx)
 
 
-# search
-# search users
-# search customers
-# search orders
-
-
 def search(request):
     keyword = request.GET.get('s').strip()
     quarter_result = Quarter_service.objects.filter(Q(name__icontains=keyword) | Q(phone__icontains=keyword) | Q(

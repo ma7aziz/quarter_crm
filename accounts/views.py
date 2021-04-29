@@ -71,7 +71,7 @@ def userLogin(request):
             if user.role == 1:
                 return HttpResponseRedirect('/')
             elif user.role == 4 or user.role == 3:
-                return HttpResponseRedirect('repair/')
+                return HttpResponseRedirect('/new_tasks')
             elif user.role == 6:
                 return HttpResponseRedirect('quarter')
 
@@ -119,3 +119,23 @@ def delete_user(request, username):
 
     messages.success(request, "تم حدف المستخدم !")
     return redirect('dashboard')
+
+
+# custome  users views
+def new_tasks(request):
+
+    if request.user.role == 3:
+        requests = Appointment.objects.filter(
+            status="open", technician=request.user)
+    other_tasks = Task.objects.open().filter(employee=request.user)
+
+    return render(request, 'repair/index.html', {'requests': requests, 'other_tasks': other_tasks})
+
+
+def history(request):
+    if request.user.role == 3:
+        requests = Appointment.objects.filter(
+            technician=request.user).exclude(status="open")
+    other_tasks = Task.objects.filter(
+        employee=request.user).exclude(status="open")
+    return render(request, 'repair/index.html', {'requests': requests, 'other_tasks': other_tasks})

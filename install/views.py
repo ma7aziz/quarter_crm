@@ -30,7 +30,7 @@ def index(request):
 @login_required
 def install_request(request):
     """
-    initiate service request  === done by sales team 
+    initiate service request  === done by sales team
     """
     if request.method == 'POST':
         print(request.POST)
@@ -45,9 +45,9 @@ def install_request(request):
             messages.error(
                 request, "يجب ادخال رقم الفاتورة لتسجيل عميل الضمان ")
         else:
-            install_request = Servrequests = Service_request(service_type="install", created_by=user, customer_name=customer_name, phone=phone,
-                                                             machine_type=machine_type, invoice_number=invoice_number,
-                                                             address=address, customer_type=customer_type, notes=request.POST['notes'])
+            install_request = Service_request(service_type="install", created_by=user, customer_name=customer_name, phone=phone,
+                                              machine_type=machine_type, invoice_number=invoice_number,
+                                              address=address, customer_type=customer_type, notes=request.POST['notes'])
             install_request.customer = add_customer(phone, customer_name)
             install_request.save()
             if request.FILES:

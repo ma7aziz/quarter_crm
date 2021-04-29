@@ -117,8 +117,20 @@
                                                 <td>{{req.notes }}</td>
                                             </tr>
                                             {%  endif %}
+
                                         </tbody>
                                     </table>
+                                    {% if request.user.role == 1 or request.user.role == 2 %}
+                                    <div class="mt-3">
+                                        <a href="{% url 'delete_request' req.id %}"
+                                            class="btn btn-lg bt-rounded bg-danger text-light">حذف الطلب </a>
+                                    </div>
+                                    {% elif request.user == req.created_by and req.status == "new" %}
+                                    <div class="mt-3">
+                                        <a href="{% url 'delete_request' req.id %}"
+                                            class="btn btn-lg bt-rounded bg-danger text-light">حذف الطلب </a>
+                                    </div>
+                                    {% endif %}
                                 </div>
                             </div>
                         </div>
@@ -278,6 +290,7 @@
 
 
                             </div>
+
                         </div>
                     </div>
                 </div>
