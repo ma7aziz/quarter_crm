@@ -221,6 +221,31 @@
                             </a>
 
                         </li>
+
+                        <li>
+                            <a href="javascript: void(0);" class="has-arrow waves-effect">
+                                <i class="far fa-file-excel"></i>
+                                <span>تقارير </span>
+                            </a>
+
+
+                            <ul class="sub-menu" aria-expanded="true">
+                                <li class="menu-title">الافراد</li>
+                                <li><a href="{% url 'export_users' %}">مستخدمي الموقع </a></li>
+                                <li><a href="{% url 'export_customers_data' %}">العملاء</a></li>
+                                <li class="menu-title">الطلبات الحالية </li>
+                                <li><a href="{% url 'export_current_service' %}">طلبات الصيانة و التركيب الحالية </a>
+                                </li>
+                                <li><a href="{% url 'export_current_quarter_services' %}">طلبات كوارتر الحالية </a></li>
+
+                                <li class="menu-title">جميع الطلبات </li>
+                                <li><a href="{% url 'export_all_services' %}"> جميع طلبات الصيانة و التركيب </a>
+                                </li>
+                                <li><a href="{% url 'export_all_quarter_services' %}">طلبات كوارتر </a></li>
+
+                            </ul>
+                        </li>
+
                         {% elif request.user.role == 3  %}
                         <li>
                             <a href="{% url 'new_tasks' %}" class=" waves-effect">
@@ -270,9 +295,9 @@
 
                     <div class="row mb-3" dir="rtl">
                         {% if request.user.role == 1 or request.user.role == 2 %}
-                        <div class=" col-lg-3 col-sm-6 mb-1 text-center ">
+                        <div class=" col col-lg-3 col-sm-6 mb-1 text-center ">
                             <button class="btn btn-lg btn-primary btn-rounded waves-effect waves-light "
-                                data-bs-toggle="modal" data-bs-target="#newUserModal">أضافة مستخدم
+                                data-bs-toggle="modal" data-bs-target="#newUserModal"> مستخدم
                                 جديد
                                 <i class="fas fa-user-friends"></i></button>
                             <!-- sample modal content -->
@@ -412,9 +437,9 @@
                         </div>
                         {% endif %}
 
-                        <div class="col-lg-3 col-sm-6 mb-1 text-center">
+                        <div class="col col-lg-3 col-sm-6 mb-1 text-center">
                             <button class="btn btn-lg btn-primary btn-rounded waves-effect waves-light"
-                                data-bs-toggle="modal" data-bs-target="#newRepairRequestModal">أضافة طلب صيانة
+                                data-bs-toggle="modal" data-bs-target="#newRepairRequestModal"> طلب صيانة
                                 <i class="fas fa-tools"></i>
                             </button>
                             <!-- sample modal content -->
@@ -513,9 +538,9 @@
                                 </div><!-- /.modal-dialog -->
                             </div><!-- /.modal -->
                         </div>
-                        <div class="col-lg-3 col-sm-6 mb-1 text-center">
+                        <div class="col col-lg-3 col-sm-6 mb-1 text-center">
                             <button class="btn btn-lg btn-primary btn-rounded waves-effect waves-light"
-                                data-bs-toggle="modal" data-bs-target="#newInstallRequestModal">أضافة طلب تركيب
+                                data-bs-toggle="modal" data-bs-target="#newInstallRequestModal"> طلب تركيب
                                 <i class="fas fa-toolbox"></i>
                             </button>
                             <!-- sample modal content -->
@@ -607,9 +632,9 @@
                                 </div><!-- /.modal-dialog -->
                             </div><!-- /.modal -->
                         </div>
-                        <div class="col-lg-3 col-sm-6 mb-1 text-center">
+                        <div class="col col-lg-3 col-sm-6 mb-1 text-center">
                             <button class="btn btn-lg btn-primary btn-rounded waves-effect waves-light"
-                                data-bs-toggle="modal" data-bs-target="#newQuarterRequestModal">أضافة طلب خدمة
+                                data-bs-toggle="modal" data-bs-target="#newQuarterRequestModal"> طلب خدمة
                                 <i class="fab fa-quora "></i></button>
                             <!-- sample modal content -->
                             <div id="newQuarterRequestModal" class="modal fade" tabindex="-1" role="dialog"

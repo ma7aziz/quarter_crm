@@ -7,5 +7,10 @@ urlpatterns = [
     path("export_current_quarter_services", views.export_current_quarter_services,
          name="export_current_quarter_services"),
     path("export_customers_data", views.export_customers_data,
-         name="export_customers_data")
+         name="export_customers_data"),
+
+    path('export_all_services', views.export_all_services,
+         name="export_all_services"),
+    path('export_all_quarter', views.export_all_quarter_services,
+         name="export_all_quarter_services")
 ]

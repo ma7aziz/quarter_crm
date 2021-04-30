@@ -17,7 +17,7 @@ def export_users_csv(request):
     """
         Export all website users data
     """
-    response = HttpResponse(content_type='application/vnd.ms-excel')
+    response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="users.xls"'
 
     writer = csv.writer(response)
@@ -38,14 +38,51 @@ def export_current_service(request):
         Export Repair / Install Current Processes
     """
     response = HttpResponse(content_type='text/csv')
-    response['Content-Disposition'] = 'attachment; filename="current_install_requests.csv"'
+    response['Content-Disposition'] = 'attachment; filename="current_install/repair_requests.csv"'
 
     writer = csv.writer(response)
     writer.writerow(["id", "service_type", "customer_name", "customer_type", "phone",
                     "address", "time_created", "status", "created by"])
 
     processes = Service_request.objects.all().exclude(status="new").values_list("id", "service_type", "customer_name", "customer_type", "phone",
-                                                                                "address", "timestamp__date", "status", "created_by")
+                                                                                "address", "timestamp__date", "status", "created_by__username")
+
+    for process in processes:
+        writer.writerow(process)
+
+    return response
+
+
+def export_all_services(request):
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="all_install/repair_requests.csv"'
+
+    writer = csv.writer(response)
+    writer.writerow(["id", "service_type", "customer_name", "customer_type", "phone",
+                    "address", "time_created", "status", "created by"])
+
+    processes = Service_request.objects.all().values_list("id", "service_type", "customer_name", "customer_type", "phone",
+                                                                                "address", "timestamp__date", "status", "created_by__username")
+
+    for process in processes:
+        writer.writerow(process)
+
+    return response
+
+
+def export_all_quarter_services(request):
+    """
+        Export current quarter proceses
+    """
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="current_quarter_services.csv"'
+
+    writer = csv.writer(response)
+    writer.writerow(["id",  "customer_name", "phone",
+                    "address", "time_created", "created_by",  "status", "price", "outstanding_ammount"])
+
+    processes = Quarter_service.objects.all().values_list("id", "name", "phone",
+                                                          "location", "timestamp__date", "created_by__name",  "status", "pricing__price", "transfer__outstanding_ammount")
 
     for process in processes:
         writer.writerow(process)
