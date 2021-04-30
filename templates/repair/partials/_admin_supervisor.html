@@ -6,7 +6,7 @@
                    <!-- == new requests  -->
                    <li class="nav-item">
                        <a class="nav-link active" data-bs-toggle="tab" href="#navtabs-new" role="tab">
-                           <span class="d-block d-sm-none"><i class="fas fa-home"></i></span>
+                           <span class="d-block d-sm-none">طلبات جديدة </span>
                            <span class="d-none d-sm-block">
                                طلبات جديدة
                            </span>
@@ -15,7 +15,7 @@
                    <!-- == Current requests  -->
                    <li class="nav-item">
                        <a class="nav-link" data-bs-toggle="tab" href="#navtabs-current" role="tab">
-                           <span class="d-block d-sm-none"><i class="far fa-user"></i></span>
+                           <span class="d-block d-sm-none">جاري التنفيذ</span>
                            <span class="d-none d-sm-block">طلبات جاري تنفيذها
                                <i class="fas fa-tools "></i>
                            </span>
@@ -24,10 +24,17 @@
                    <!-- === need confirmation  -->
                    <li class="nav-item">
                        <a class="nav-link" data-bs-toggle="tab" href="#navtabs-confirm" role="tab">
-                           <span class="d-block d-sm-none"><i class="far fa-user"></i></span>
+                           {% if 'repair' in request.path %}
+                           <span class="d-block d-sm-none">تأكيدالصيانة </span>
                            <span class="d-none d-sm-block"> تأكيد طلبات تم صيانتها
                                <i class="fas fa-tools "></i>
                            </span>
+                           {% elif 'install' in request.path %}
+                           <span class="d-block d-sm-none">تأكيد التركيب </span>
+                           <span class="d-none d-sm-block">تأكيد التركيب
+                               <i class="fas fa-tools "></i>
+                           </span>
+                           {% endif %}
                        </a>
                    </li>
 
@@ -145,7 +152,11 @@
                    <div class="tab-pane" id="navtabs-confirm" role="tabpanel">
                        <div class="card">
                            <div class="card-body">
+                               {% if repair in request.path %}
                                <h4 class="card-title mb-4" dir="rtl">تـأكيد الصيانة </h4>
+                               {% elif 'install' in request.path %}
+                               <h4 class="card-title mb-4" dir="rtl">تـأكيد التركيب </h4>
+                               {% endif %}
                                <div class="table-responsive">
                                    <table class="table table-centered table-nowrap mb-0" dir="rtl">
                                        <thead class="table-light">
