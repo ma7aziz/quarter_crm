@@ -291,6 +291,32 @@
                         </li>
 
                         {% endif %}
+                        {% if not request.user.role == 1 or not request.user.role == 2 %}
+
+                        <li>
+                            <a href="javascript: void(0);" class="has-arrow waves-effect">
+                                <i class="far fa-file-excel"></i>
+                                <span>أضافة </span>
+                            </a>
+
+
+                            <ul class="sub-menu" aria-expanded="true">
+
+                                <li class="menu-title">طلبات جديدة</li>
+                                <li><a href="" data-bs-toggle="modal" data-bs-target="#newRepairRequestModal"> طلب صيانة
+                                        جديد</a>
+                                </li>
+                                <li><a href="" data-bs-toggle="modal" data-bs-target="#newInstallRequestModal">طلب تركيب
+                                        جديد</a>
+                                </li>
+                                <li><a href="" data-bs-toggle="modal" data-bs-target="#newQuarterRequestModal">طلب
+                                        كوارتر </a>
+                                </li>
+
+
+                            </ul>
+                        </li>
+                        {% endif %}
 
 
                     </ul>
