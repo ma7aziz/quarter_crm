@@ -29,7 +29,7 @@ def repair_index(request):
         "requests": requests,
         "need_confirm": Service_request.objects.done().filter(service_type="repair")
     }
-    return render(request, 'repair/index.html ', ctx)
+    return render(request, 'repair/index.html', ctx)
 
 
 @login_required
