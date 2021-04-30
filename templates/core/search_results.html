@@ -1,6 +1,6 @@
 {% extends '../base.html' %}
 {% block content %}
-<div class="card">
+<div class="card h-100">
     <div class="card-body">
         <h2 class="card-title mb-3">نتائج البحث عن :
             <span class="text-bold " style="font-size :1.3em;">
@@ -8,6 +8,7 @@
             </span>
         </h2>
 
+        {% if results %}
         <ul class="list-group">
             {% for result in results%}
             <li class="list-group-item">
@@ -64,6 +65,16 @@
             </li>
             {% endfor %}
         </ul>
+        {% else %}
+        <div class="card text-center" style="font-size: 1.3em">
+            <p class="text-muted">لايوجد نتائج للبحث عن <blockquote class="text-dark">{{keyword}}</blockquote>
+            </p>
+            <form action="{% url 'search' %}" class="m-2">
+                <input type="text" class="form-control" placeholder="بحث جديد .. " name="s">
+                <input type="submit" value="حاول مرة أخري" class="btn btn-rounded btn-soft-primary mt-2">
+            </form>
+        </div>
+        {% endif %}
     </div>
 </div>
 {% endblock %}

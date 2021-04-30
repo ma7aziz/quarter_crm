@@ -46,7 +46,7 @@
                 <div class="d-flex">
                     <!-- LOGO -->
                     <div class="navbar-brand-box">
-                        <a href="" class="logo logo-dark">
+                        <a href="{% url 'index' %}" class="logo logo-dark">
                             <span class="logo-sm">
                                 QUARTER
                             </span>
@@ -55,7 +55,7 @@
                             </span>
                         </a>
 
-                        <a href="" class="logo logo-light">
+                        <a href="{% url 'index' %}" class="logo logo-light">
                             <span class="logo-sm">
                                 QUARTER
                             </span>
@@ -90,11 +90,10 @@
                         <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right p-0"
                             aria-labelledby="page-header-search-dropdown">
 
-                            <form class="p-3">
+                            <form class="p-3" action="{% url 'search' %}">
                                 <div class="form-group m-0">
                                     <div class="input-group">
-                                        <input type="text" class="form-control" placeholder="Search ..."
-                                            aria-label="Recipient's username">
+                                        <input type="text" class="form-control" placeholder="الـبـحـث... " name="s">
                                         <div class="input-group-append">
                                             <button class="btn btn-primary" type="submit"><i
                                                     class="mdi mdi-magnify"></i></button>
@@ -289,7 +288,7 @@
 
                     <div class="row mb-3" dir="rtl">
                         {% if request.user.role == 1 or request.user.role == 2 %}
-                        <div class=" col col-sm-6 col-lg-3 text-center ">
+                        <div class=" col-lg-3 col-sm-6 mb-1 text-center ">
                             <button class="btn btn-lg btn-primary btn-rounded waves-effect waves-light "
                                 data-bs-toggle="modal" data-bs-target="#newUserModal">أضافة مستخدم
                                 جديد
@@ -431,7 +430,7 @@
                         </div>
                         {% endif %}
 
-                        <div class="col col-sm-6   col-lg-3 text-center">
+                        <div class="col-lg-3 col-sm-6 mb-1 text-center">
                             <button class="btn btn-lg btn-primary btn-rounded waves-effect waves-light"
                                 data-bs-toggle="modal" data-bs-target="#newRepairRequestModal">أضافة طلب صيانة
                                 <i class="fas fa-tools"></i>
@@ -532,7 +531,7 @@
                                 </div><!-- /.modal-dialog -->
                             </div><!-- /.modal -->
                         </div>
-                        <div class="col col-sm-6 col-lg-3 text-center">
+                        <div class="col-lg-3 col-sm-6 mb-1 text-center">
                             <button class="btn btn-lg btn-primary btn-rounded waves-effect waves-light"
                                 data-bs-toggle="modal" data-bs-target="#newInstallRequestModal">أضافة طلب تركيب
                                 <i class="fas fa-toolbox"></i>
@@ -626,9 +625,10 @@
                                 </div><!-- /.modal-dialog -->
                             </div><!-- /.modal -->
                         </div>
-                        <div class="col col-sm-6 col-lg-3 text-center">
+                        <div class="col-lg-3 col-sm-6 mb-1 text-center">
                             <button class="btn btn-lg btn-primary btn-rounded waves-effect waves-light"
-                                data-bs-toggle="modal" data-bs-target="#newQuarterRequestModal">أضافة طلب خدمة</button>
+                                data-bs-toggle="modal" data-bs-target="#newQuarterRequestModal">أضافة طلب خدمة
+                                <i class="fab fa-quora "></i></button>
                             <!-- sample modal content -->
                             <div id="newQuarterRequestModal" class="modal fade" tabindex="-1" role="dialog"
                                 aria-labelledby="myModalLabel" aria-hidden="true">
