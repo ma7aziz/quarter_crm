@@ -140,131 +140,113 @@
             </div>
         </header>
 
+        <!-- ========== Left Sidebar Start ========== -->
         <div class="vertical-menu">
+
+            <!-- LOGO -->
             <div class="navbar-brand-box">
-                <a href="{% url 'index' %}" class="logo logo-dark" style="color:#fff ; font-size: 20px ">
-                    Quarter CRM
+                <a href="{% url 'index' %}" class="logo logo-dark">
+                    <span class="logo-sm text-light">
+                        <i class="fab fa-quora fa-2x"></i>
+                        <!-- <img src="assets/images/logo-sm.png" alt="" height="22"> -->
+                    </span>
+                    <span class="logo-lg">
+                        <i class="fab fa-quora fa-2x"></i>
+                        <!-- <img src="assets/images/logo-dark.png" alt="" height="20"> -->
+                    </span>
                 </a>
 
-                <a href="{% url 'index' %}" class="logo logo-dark" style="color:#fff ; font-size: 20px">
+                <a href="{% url 'index' %}" class="logo logo-light">
+                    <span class="logo-sm text-light">
+                        <!-- <img src="assets/images/logo-sm.png" alt="" height="22"> -->
+                        <i class="fab fa-quora fa-2x"></i>
 
-                    Quarter CRM
+                    </span>
+                    <span class="logo-lg text-light text-left" style="font-size: 18px; ">
+                        arter CRM<i class="fab fa-quora fa-2x"></i>
+                        <!-- <i class="fab fa-quora fa-2x"></i> -->
+                        <!-- <img src="assets/images/logo-light.png" alt="" height="20"> -->
+                    </span>
                 </a>
             </div>
+
             <button type="button" class="btn btn-sm px-3 font-size-16 header-item waves-effect vertical-menu-btn">
                 <i class="fa fa-fw fa-bars"></i>
             </button>
+
             <div data-simplebar class="sidebar-menu-scroll">
 
-                <!-- LOGO -->
+                <!--- Sidemenu -->
+                <div id="sidebar-menu">
+                    <!-- Left Menu Start -->
+                    <ul class="metismenu list-unstyled" id="side-menu">
+                        <li class="menu-title">Menu</li>
 
-                <div class="navbar-brand-box">
-                    <a href="{% url 'index' %}" class="logo logo-dark" style="color:#fff ; font-size: 20px">
-                        Quarter CRM
-                    </a>
 
-                    <a href="{% url 'index' %}" class="logo logo-lg" style="color:#fff ; font-size: 20px">
+                        {% if request.user.role == 1 or request.user.role == 2%}
+                        <li>
+                            <a href="javascript: void(0);" class="has-arrow waves-effect">
+                                <i class="uil-home-alt"></i>
+                                <span>Dashboard</span>
+                            </a>
 
-                        Quarter CRM
-                    </a>
+
+                            <ul class="sub-menu" aria-expanded="true">
+                                <li><a href="{% url 'dashboard' %}">الرئيسية </a></li>
+                                <li><a href="{% url 'all_users' %}">بيانات المستخدمين</a></li>
+                                <li><a href="{% url 'customers_data' %}">العملاء</a></li>
+
+                            </ul>
+                        </li>
+
+                        <li>
+                            <a href="/repair" class="waves-effect">
+                                <i class="fas fa-tools"></i>
+                                <span>الصيانة </span>
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="/install" class=" waves-effect">
+                                <i class="fas fa-toolbox"></i>
+
+                                <span>التركيب</span>
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="/quarter" class=" waves-effect">
+                                <i class="fab fa-quora"></i>
+                                <span>كوارتر </span>
+                            </a>
+
+                        </li>
+                        {% elif request.user.role == 3  %}
+                        <li>
+                            <a href="{% url 'new_tasks' %}" class=" waves-effect">
+                                <i class="fas fa-rss"></i>
+
+                                <span>المهام الجديدة</span>
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="{% url 'history' %}" class=" waves-effect">
+                                <i class="fas fa-history"></i>
+                                <span>المهام السابقة </span>
+                            </a>
+
+                        </li>
+
+                        {% endif %}
+
+
+                    </ul>
                 </div>
-                <button type="button" class="btn btn-sm px-3 font-size-16 header-item waves-effect vertical-menu-btn">
-                    <i class="fa fa-fw fa-bars"></i>
-                </button>
-
-                <div data-simplebar class="sidebar-menu-scroll">
-
-                    <!--- Sidemenu -->
-                    <div id="sidebar-menu">
-                        <!-- Left Menu Start -->
-
-                        <ul class="metismenu list-unstyled" id="side-menu">
-
-                            {% if request.user.role == 1 or request.user.role == 2 %}
-                            <li>
-                                <a href="javascript: void(0);" class="has-arrow waves-effect">
-                                    <span>Dashboard</span>
-                                    <i class="uil-home-alt"></i>
-                                </a>
-
-                                <ul class="sub-menu" aria-expanded="true">
-                                    <li>
-                                        <a href="{% url 'dashboard' %}">الرئيسية </a>
-                                    </li>
-                                    <li>
-                                        <a href="{% url 'all_users' %}">بيانات المستخدمين </a>
-                                    </li>
-                                    <li>
-                                        <a href="{%url 'customers_data' %}">العملاء </a>
-                                    </li>
-
-                                </ul>
-                            </li>
-
-
-
-
-
-                            <li>
-                                <a href="{% url 'repair_index' %}">
-
-                                    <span>
-                                        الصيانة
-                                    </span>
-                                    <i class="fas fa-tools fa-3x"></i>
-
-                                </a>
-                            </li>
-                            <li>
-                                <a href="{% url 'install_index' %}">
-                                    <span>
-                                        التركيب
-                                    </span>
-                                    <i class="fas fa-tools fa-3x"></i>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="{% url 'quarter_index' %}">
-                                    <span>
-                                        كوارتر
-                                    </span>
-                                    <i class="fas fa-tools fa-3x"></i>
-                                </a>
-                            </li>
-                            {% elif request.user.role == 3 %}
-                            <li>
-                                <a href="{% url 'new_tasks' %}">
-                                    <span>
-                                        المهام الجديدة
-                                    </span>
-                                    <i class="fas fa-tools fa-3x"></i>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="{% url 'history' %}">
-                                    <span>
-                                        المهام السابقة
-                                    </span>
-                                    <i class="fas fa-tools fa-3x"></i>
-                                </a>
-                            </li>
-                            {% endif %}
-
-
-
-
-                        </ul>
-
-                    </div>
-                    <!-- Sidebar -->
-                </div>
+                <!-- Sidebar -->
             </div>
-            <!-- Left Sidebar End -->
-
-
-
         </div>
-
+        <!-- Left Sidebar End -->
         <div class="main-content">
 
             <div class="page-content">

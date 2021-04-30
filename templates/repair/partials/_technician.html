@@ -181,7 +181,7 @@
                                 <th>أسم العميل</th>
                                 <th>التاريخ</th>
 
-                                <th>الموقع</th>
+                                <th>نوع الطلب </th>
 
                                 <th>التفاصيل</th>
                             </tr>
@@ -194,11 +194,16 @@
                                         class="text-body fw-bold">#{{req.service_request.request_number}}</a> </td>
                                 <td>{{req.service_request.customer_name}}</td>
                                 <td>
+                                    {% if req.is_today %}
+                                    <div class="badge bg-soft-success p-1" style="font-size: 16px;">اليوم </div>
+
+                                    {% else%}
                                     {{req.date}}
+                                    {% endif %}
                                 </td>
 
                                 <td>
-                                    {{req.service_request.address}}
+                                    {{req.service_request.get_service_type_display}}
                                 </td>
 
                                 <td>

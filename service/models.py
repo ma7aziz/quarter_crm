@@ -1,3 +1,4 @@
+from datetime import date
 from django.db import models
 from accounts.models import User
 from core.models import Customer
@@ -98,6 +99,14 @@ class Appointment(models.Model):
     technician = models.ForeignKey(User, on_delete=models.CASCADE)
     timestamp = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=20, choices=STATUS, default="open")
+
+    @property
+    def is_past_due(self):
+        return date.today() > self.date
+
+    @property
+    def is_today(self):
+        return date.today() == self.date
 
     def __str__(self):
         return self.service_request.customer_name

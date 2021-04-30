@@ -23,7 +23,9 @@ def service_request_details(request, id):
 
 
 def appointment_details(request, id):
+
     appointment = Appointment.objects.get(pk=id)
+    print(appointment.is_today)
     ctx = {
         "appointment": appointment
     }

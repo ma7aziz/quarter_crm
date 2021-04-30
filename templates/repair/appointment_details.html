@@ -50,7 +50,22 @@
                                             </tr>
                                             <tr>
                                                 <th scope="row">الموعد </th>
-                                                <td>{{appointment.date}}</td>
+                                                {% if appointment.is_today %}
+                                                <td>
+                                                    <div class="badge bg-soft-success p-1" style="font-size: 16px;">
+                                                        اليوم </div>
+                                                </td>
+                                                {% elif appointment.is_past_due %}
+                                                <td>
+                                                    <div class="badge bg-soft-danger p-1" style="font-size: 16px;">
+                                                        {{appointment.date}} </div>
+                                                </td>
+                                                {% else %}
+                                                <td>
+                                                    <div class="badge bg-soft-info p-1" style="font-size: 16px;">
+                                                        {{appointment.date}} </div>
+                                                </td>
+                                                {% endif %}
                                             </tr>
 
                                             <tr>
