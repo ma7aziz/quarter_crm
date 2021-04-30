@@ -30,3 +30,10 @@ if rejected :
             update price 
             status ==> review by admin .. approve or reject 
 
+
+CREATE DATABASE quartercrm;
+CREATE USER quartercrm WITH PASSWORD 'quarter123';
+ALTER ROLE quartercrm SET client_encoding TO 'utf8';
+ALTER ROLE quartercrm SET default_transaction_isolation TO 'read committed';
+ALTER ROLE quartercrm SET timezone TO 'Asia/Riyadh';
+GRANT ALL PRIVILEGES ON DATABASE quartercrm TO quartercrm;
