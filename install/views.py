@@ -14,7 +14,6 @@ def index(request):
         requests = Service_request.objects.install().filter(
             created_by=request.user).order_by('-timestamp')
     elif request.user.role == 1 or request.user.role == 2:
-
         requests = Service_request.objects.install().order_by('-timestamp')
     elif request.user.role == 3:
         requests = Appointment.objects.filter(
@@ -22,7 +21,10 @@ def index(request):
         print(requests, request.user.role)
     ctx = {
         "requests": requests,
-        "need_confirm": Service_request.objects.done().filter(service_type="repair")
+        "on_hold": Service_request.objects.on_hold().filter(service_type="install"),
+        "new_requests": requests.filter(status="new"),
+
+        "need_confirm": Service_request.objects.done().filter(service_type="install")
     }
     return render(request, 'repair/index.html', ctx)
 

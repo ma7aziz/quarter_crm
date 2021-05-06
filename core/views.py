@@ -32,11 +32,19 @@ def index(request):
 
 def dashboard(request):
 
-    # all service requests
-    service_request = Service_request.objects.all()
+    # all  requests
+    repair_requests = Service_request.objects.repair()
+    install_requests = Service_request.objects.install()
     quarter_requests = Quarter_service.objects.all()
-    all_requests = list(chain(service_request, quarter_requests))
-    # all new process count
+    all_requests = sorted(
+        chain(repair_requests, install_requests, quarter_requests), key=attrgetter('timestamp'), reverse=True)
+
+    # ON HOLD
+    quarter_hold = Quarter_service.objects.on_hold()
+    service_hold = Service_request.objects.on_hold()
+
+    all_on_hold = sorted(chain(quarter_hold, service_hold),
+                         key=attrgetter('timestamp'), reverse=True)
 
     # under_process
     repair_under_process = Service_request.objects.repair().exclude(status="closed")
@@ -64,13 +72,19 @@ def dashboard(request):
     completed_tasks = Task.objects.all().filter(status="completed")
 
     users = User.objects.all().order_by("role")
+
     ctx = {
         "all_users": users,
         'users': users[:10],
         # all requests
-        "quarter_request": quarter_requests,
-        "service_requests": service_request,
+        "quarter_requests": quarter_requests,
+        "repair_requests": repair_requests,
+        "install_requests": install_requests,
         "all_requests": all_requests,
+        # ON HOLD
+        'quarter_hold': quarter_hold,
+        'service_hold': service_hold,
+        'all_on_hold': all_on_hold,
         ## under process requests ##
         "all_cur": all_under_process,
         'repair_cur': repair_under_process,

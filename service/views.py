@@ -127,3 +127,18 @@ def delete_request(request, id):
         return redirect('/install')
     elif request.user.role == 1:
         return redirect('dashboard')
+
+
+def hold(request, id):
+    '''
+        flip hold boolen 
+    '''
+    req = Service_request.objects.get(pk=id)
+    req.hold = not req.hold
+    req.save()
+    if req.hold:
+        messages.success(request, "تم تعليق الطلب !")
+    else:
+        messages.success(request, "تم اعادة تفعيل الطلب  !")
+
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))

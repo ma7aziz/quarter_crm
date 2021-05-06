@@ -1,6 +1,6 @@
 {% extends '../base.html'%}
 {% block content %}
-<!-- ============================================================== -->
+
 
 <div class="row " dir="rtl">
     <div class="col-12 ">
@@ -22,7 +22,7 @@
                     <div class="col-xl-7">
                         <div class="mt-4 mt-xl-3 ps-xl-4">
 
-                            <h4 class="font-size-20 mb-3">#{{req.request_number}}</h4>
+                            <h4 class="font-size-20 mb-3">{{req.request_number}}</h4>
 
                             <div>
 
@@ -44,6 +44,17 @@
                                 <div class="table-responsive">
                                     <table class="table table-nowrap mb-0">
                                         <tbody>
+                                            <tr>
+                                                {% if req.hold %}
+                                                <h3>هذا الطلب معلق ..
+                                                    {% if request.user.role == 1 or request.user.role == 2 %}
+                                                    <a href="{% url 'hold_request' req.id %}" class="text-success">اضغط
+                                                        هنا </a>
+                                                    لأعادة التفعيل
+                                                    {% endif %}
+                                                </h3>
+                                                {% endif %}
+                                            </tr>
                                             <tr>
                                                 <th scope="row" style="width: 20%;">اسم العميل </th>
                                                 <td>{{req}}</td>
@@ -120,17 +131,7 @@
 
                                         </tbody>
                                     </table>
-                                    {% if request.user.role == 1 or request.user.role == 2 %}
-                                    <div class="mt-3">
-                                        <a href="{% url 'delete_request' req.id %}"
-                                            class="btn btn-lg bt-rounded bg-danger text-light">حذف الطلب </a>
-                                    </div>
-                                    {% elif request.user == req.created_by and req.status == "new" %}
-                                    <div class="mt-3">
-                                        <a href="{% url 'delete_request' req.id %}"
-                                            class="btn btn-lg bt-rounded bg-danger text-light">حذف الطلب </a>
-                                    </div>
-                                    {% endif %}
+
                                 </div>
                             </div>
                         </div>
@@ -141,6 +142,63 @@
 
                                 <div class="accordion" id="accordionExample">
                                     {% if request.user.role == 1 or request.user.role == 2 %}
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header" id="headingOne">
+                                            <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                                                data-bs-target="#collapseActions" aria-expanded="false"
+                                                aria-controls="collapseOne">
+                                                تعديل حالة الطلب
+                                            </button>
+                                        </h2>
+                                        <div id="collapseActions" class="accordion-collapse collapse show"
+                                            aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                                            <div class="accordion-body">
+                                                <div class="row">
+                                                    <div class="col">
+                                                        {% if req.hold %}
+                                                        <a href="{% url 'hold_request' req.id %}"
+                                                            class="btn btn-lg btn-soft-success btn-rounded btn-waves">تفعيل
+                                                            الطلب <i class="far fa-check-circle"></i>
+                                                        </a>
+                                                        {% else %}
+                                                        <a href="{% url 'hold_request' req.id %}"
+                                                            class="btn btn-lg btn-soft-warning btn-rounded btn-waves">تعليق
+                                                            الطلب <i class="far fa-pause-circle"></i>
+                                                        </a>
+                                                        {% endif %}
+                                                    </div>
+                                                    {% if not req.hold %}
+                                                    <div class="col">
+                                                        <button
+                                                            class="btn btn-lg btn-soft-primary btn-rounded btn-waves">
+                                                            تغيير الحالة <i class="far fa-edit"></i>
+                                                        </button>
+                                                    </div>
+                                                    {% endif %}
+                                                    <div class="col">
+                                                        {% if request.user.role == 1 or request.user.role == 2 %}
+
+                                                        <a href="{% url  'delete_request' req.id %}"
+                                                            class="btn btn-lg btn-soft-danger btn-rounded btn-waves">حذف
+                                                            الطلب <i class="far fa-trash-alt"></i>
+                                                        </a>
+
+                                                        {% elif request.user == req.created_by and req.status == "new" %}
+
+                                                        <a href="{% url  'delete_request' req.id %}"
+                                                            class="btn btn-lg btn-soft-danger btn-rounded btn-waves">حذف
+                                                            الطلب <i class="far fa-trash-alt"></i>
+                                                        </a>
+
+                                                        {% endif %}
+                                                    </div>
+
+                                                </div>
+
+
+                                            </div>
+                                        </div>
+                                    </div>
                                     {% if req.status == "new"%}
                                     <div class="accordion-item">
                                         <h2 class="accordion-header" id="headingOne">

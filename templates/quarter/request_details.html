@@ -31,6 +31,18 @@
 
 
             <div class=" row" dir="rtl">
+                {% if req.hold %}
+                <h2>هذا الطلب معلق ..
+                    {% if request.user.role == 1 or request.user.role == 2%}
+                    <span>
+                        لاعادة التفعيل
+                        <a href="{% url 'hold_quarter_request' req.id %}" class="text-success ">
+                            اضغط هنا
+                        </a>
+                    </span>
+                    {% endif %}
+                </h2>
+                {% endif %}
                 <div class="col col-lg-7">
                     <ul class="nav nav-tabs" role="tablist">
                         <li class="nav-item">

@@ -2,7 +2,6 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
-
 from .models import Price, Quarter_service, Transfer, Design
 from core.add_customer import add_customer
 # Create your views here.
@@ -10,11 +9,11 @@ from core.add_customer import add_customer
 
 @login_required
 def index(request):
-    new_transfers = Quarter_service.objects.filter(status=6)
-
+    print(Quarter_service.objects.all().order_by('-timestamp'))
     ctx = {
         "new_transfers": Quarter_service.objects.filter(status=6),
         "all_requests": Quarter_service.objects.all().order_by('-timestamp'),
+
         "new_requests": Quarter_service.objects.all().filter(status=1).order_by('-timestamp'),
         "pricing": Quarter_service.objects.all().filter(status=3),
         "design": Quarter_service.objects.all().filter(status=8)
@@ -49,6 +48,18 @@ def delete_request(request, id):
     req = Quarter_service.objects.get(pk=id)
     req.delete()
     messages.success(request, "تم حذف الطلب ")
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
+def hold_request(request, id):
+    req = Quarter_service.objects.get(pk=id)
+    req.hold = not req.hold
+    req.save()
+    if req.hold:
+        messages.success(request, "تم تعليق الطلب !")
+    else:
+        messages.success(request, "تم اعادة تفعيل الطلب  !")
+
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 

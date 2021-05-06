@@ -73,11 +73,9 @@
 <div class="card bg-dark">
     <div class="row p-3 text-center ">
         <div class="col ">
-            <a href="#new_requests" class="btn btn-small btn-light ">طلبات جديدة </a>
+            <a href="#new_requests" class="btn btn-small btn-light ">الطلبات </a>
         </div>
-        <div class="col">
-            <a href="#current" class="btn btn-small btn-light">جاري تنفيذها </a>
-        </div>
+
         <div class=" col">
             <a href="#users" class="btn btn-small btn-light">بيانات المستخدمين </a>
         </div>
@@ -88,10 +86,10 @@
     </div>
 </div>
 <!-- NEW REQUESTS -->
-{% include './partials/_new_requests.html' %}
+{% include './partials/_all_requests.html' %}
 <!-- END -->
 <!-- Current processes   -->
-{% include './partials/_current_processes.html' %}
+
 <!-- END -->
 <!-- TASKS -->
 {% include './partials/_tasks.html' %}

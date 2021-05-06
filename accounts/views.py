@@ -24,10 +24,11 @@ def create_user(request):
         name = request.POST['name']
         phone = request.POST['phone']
         role = request.POST['role']
+        favourite_count = request.POST['favourite_count']
         # file = request.FILES['attach_file']
         if request.POST['password1'] == request.POST['password2']:
             user = User(username=username, name=name,
-                        phone=phone, role=role)
+                        phone=phone, role=role, favourite_count=favourite_count)
             user.set_password(request.POST['password1'])
             user.save()
             for s in request.POST.getlist('section'):

@@ -7,10 +7,13 @@ from core.models import Customer
 
 class Quarter_service_Manager(models.Manager):
     def all(self):
-        return self.filter(active=True)
+        return self.filter(active=True).filter(hold=False)
 
     def new(self):
         return self.filter(status="new")
+
+    def on_hold(self):
+        return self.filter(hold=True)
 
 
 class Quarter_service(models.Model):
@@ -34,6 +37,8 @@ class Quarter_service(models.Model):
         "Transfer", on_delete=models.SET_NULL, null=True, blank=True)
     designs = models.ForeignKey(
         "Design", on_delete=models.SET_NULL, null=True, blank=True)
+
+    hold = models.BooleanField(default=False)
     objects = Quarter_service_Manager()
 
     # price ##outstanding

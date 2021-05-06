@@ -37,7 +37,67 @@
     * {
         font-family: 'El Messiri', sans-serif
     }
+
+    .btn-group-fab {
+        position: fixed;
+        width: 50px;
+        height: auto;
+        left: 20px;
+        bottom: 20px;
+        z-index: 100000
+    }
+
+    .btn-group-fab div {
+        position: relative;
+        width: 100%;
+        height: auto;
+    }
+
+    .btn-group-fab .btn {
+        position: absolute;
+        bottom: 0;
+        border-radius: 50%;
+        display: block;
+        margin-bottom: 4px;
+        width: 40px;
+        height: 40px;
+        margin: 4px auto;
+    }
+
+    .btn-group-fab .btn-main {
+        width: 50px;
+        height: 50px;
+        right: 50%;
+        margin-right: -25px;
+        z-index: 9;
+    }
+
+    .btn-group-fab .btn-sub {
+        bottom: 0;
+        z-index: 8;
+        right: 50%;
+        margin-right: -20px;
+        -webkit-transition: all 2s;
+        transition: all 0.5s;
+    }
+
+    .btn-group-fab.active .btn-sub:nth-child(2) {
+        bottom: 60px;
+    }
+
+    .btn-group-fab.active .btn-sub:nth-child(3) {
+        bottom: 110px;
+    }
+
+    .btn-group-fab.active .btn-sub:nth-child(4) {
+        bottom: 160px;
+    }
+
+    .btn-group-fab .btn-sub:nth-child(5) {
+        bottom: 210px;
+    }
 </style>
+
 
 <body data-sidebar="dark" dir="rtl">
     <div id="layout-wrapper" dir="rtl">
@@ -191,7 +251,7 @@
                             </a>
 
 
-                            <ul class="sub-menu" aria-expanded="true">
+                            <ul class="sub-menu" aria-expanded="false">
                                 <li><a href="{% url 'dashboard' %}">الرئيسية </a></li>
                                 <li><a href="{% url 'all_users' %}">بيانات المستخدمين</a></li>
                                 <li><a href="{% url 'customers_data' %}">العملاء</a></li>
@@ -229,12 +289,12 @@
 
 
                             <ul class="sub-menu" aria-expanded="true">
-                                <li class="menu-title">الافراد</li>
+
                                 <li>
                                     <a href="" data-bs-toggle="modal" data-bs-target="#newUserModal"> مستخدم جديد
                                     </a>
                                 </li>
-                                <li class="menu-title">طلبات جديدة</li>
+
                                 <li><a href="" data-bs-toggle="modal" data-bs-target="#newRepairRequestModal"> طلب صيانة
                                         جديد</a>
                                 </li>
@@ -365,6 +425,7 @@
                     {% endblock %}
                     {% include './core/partials/_task_modal.html'%}
                     {% include './core/partials/_new_requests_modals.html' %}
+                    {% include './core/partials/_action_btn.html' %}
                 </div>
             </div>
         </div>
@@ -374,6 +435,14 @@
 
     <!-- JAVASCRIPT -->
     <script src="{% static 'libs/jquery/jquery.min.js' %}"></script>
+    <script>
+        $(function () {
+            $('.btn-group-fab').on('click', '.btn', function () {
+                $('.btn-group-fab').toggleClass('active');
+            });
+            $('has-tooltip').tooltip();
+        });
+    </script>
     <script src="{% static 'libs/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
     <script src="{% static 'libs/metismenu/metisMenu.min.js' %}"></script>
     <script src="{% static 'libs/simplebar/simplebar.min.js' %}"></script>

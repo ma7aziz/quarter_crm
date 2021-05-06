@@ -1,6 +1,6 @@
 <div class="card" id="new_requests">
     <div class="card-body">
-        <h4 class="card-title mb-4" dir="rtl">طلبات جديدة </h4>
+        <h4 class="card-title mb-4" dir="rtl">الطلبات الواردة</h4>
 
         <ul class="nav nav-tabs" role="tablist">
             <li class="nav-item">
@@ -35,6 +35,12 @@
                     <span class="d-none d-sm-block">كوارتر <i class="fab fa-quora"></i></span>
                 </a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link" data-bs-toggle="tab" href="#navtabs-on_hold" role="tab">
+                    <span class="d-block d-sm-none"><i class="far fa-pause-circle"></i></span>
+                    <span class="d-none d-sm-block">المعلقة <i class="far fa-pause-circle"></i></span>
+                </a>
+            </li>
         </ul>
         <div class="tab-content">
 
@@ -42,15 +48,16 @@
             <div class="tab-pane active" id="navtabs-all_new" role="tabpanel">
                 <div class="card">
                     <div class="card-body">
-                        <h4 class="card-title mb-4" dir="rtl">جميع الطلبات الجديدة </h4>
+                        <h4 class="card-title mb-4" dir="rtl">جميع الطلبات </h4>
 
                         <div class="table-responsive text-center" data-simplebar style="max-height: 430px;">
-                            {% if not all_new  %}
+                            {% if not all_requests  %}
                             <p class="text-bold " style="font-size:16px">لا يـوجد طلبات جديدة </p>
                             {% else %}
                             <table class="table table-centered table-striped table-nowrap mb-0" dir="rtl">
                                 <thead class="table-dark">
                                     <tr>
+                                        <th></th>
                                         <th>رقم الطلب </th>
                                         <th>اسم العميل </th>
                                         <th>نوع الطلب </th>
@@ -62,12 +69,18 @@
                                 </thead>
 
                                 <tbody>
-                                    {% for process in all_new %}
+                                    {% for process in all_requests %}
                                     <tr>
                                         <td>
-                                            {% if process in repair_cur or process in install_cur %}
+                                            <div class="form-check font-size-16">
+                                                <input type="checkbox" class="form-check-input" id="customCheck2">
+                                                <label class="form-check-label" for="customCheck2">&nbsp;</label>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            {% if process in repair_requests or process in install_requests %}
                                             <a href="{% url 'service_request_details' process.id %}">
-                                                {% elif process in quarter_cur %}
+                                                {% elif process in quarter_requests %}
                                                 <a href="{% url 'quarter_request_details' process.id %}">
                                                     {% endif %}{{process.request_number}}
                                                 </a>
@@ -81,12 +94,12 @@
                                                     {{process}}</a>
                                         </td>
                                         <td>
-                                            {% if process in repair_cur %}
+                                            {% if process in repair_requests %}
                                             <span class="badge bg-soft-danger p-2">
                                                 صيانة
                                                 <i class="fas fa-tools "></i>
                                             </span>
-                                            {% elif process in install_cur %}
+                                            {% elif process in install_requests %}
                                             <span class="badge bg-soft-warning p-2">
                                                 تركيب
                                                 <i class="fas fa-toolbox "></i>
@@ -99,7 +112,9 @@
                                             {% endif %}
                                         </td>
                                         <td>
+
                                             {{process.get_status_display}}
+
                                         </td>
                                         <td>
                                             {{ process.timestamp.date }}
@@ -110,21 +125,31 @@
                                         <td>
 
                                             <button class=" btn btn-soft-primary btn-rounded waves-effect waves-light ">
-                                                {% if process in repair_cur or process in install_cur %}
+                                                {% if process in repair_requests or process in install_requests %}
                                                 <a href="{% url 'service_request_details' process.id %}">
-                                                    {% elif process in quarter_cur %}
+                                                    {% elif process in quarter_requests %}
                                                     <a href="{% url 'quarter_request_details' process.id %}">
                                                         {% endif %}
                                                         <i class="uil uil-pen "></i> التفاصيل
                                             </button>
-                                            <button class=" btn btn-soft-danger btn-rounded waves-effect waves-light">
-                                                {% if process in repair_cur or process in install_cur %}
+                                            <!-- <button class=" btn btn-soft-danger btn-rounded waves-effect waves-light">
+                                                {% if process in repair_requests or process in install_requests %}
                                                 <a href="{% url 'delete_request' process.id %}" class="text-danger">
-                                                    {% elif process in quarter_cur %}
+                                                    {% elif process in quarter_requests %}
                                                     <a href="{% url 'delete_quarter_request' process.id %}"
                                                         class="text-danger">
                                                         {% endif %}
                                                         <i class="uil uil-trash-alt "></i> حذف
+                                            </button> -->
+
+                                            <button class="btn btn-soft-warning btn-rounded waves-effect waves-light">
+                                                {% if process in repair_requests or process in install_requests %}
+                                                <a href="{% url 'hold_request' process.id %}" class="text-warning">
+                                                    {% elif process in quarter_requests %}
+                                                    <a href="{% url 'hold_quarter_request' process.id %}"
+                                                        class="text-warning">
+                                                        {% endif %}
+                                                        <i class="far fa-pause-circle"></i> تعليق
                                             </button>
 
                                         </td>
@@ -146,7 +171,7 @@
                         <h4 class="card-title mb-4" dir="rtl">طلبات الصيانة </h4>
 
                         <div class="table-responsive text-center" data-simplebar style="max-height: 430px;">
-                            {% if not new_repair%}
+                            {% if not repair_requests%}
                             <p class="text-bold " style="font-size:16px">لا يـوجد طلبات جديدة </p>
                             {% else %}
                             <table class="table table-centered table-striped table-nowrap mb-0 " dir="rtl">
@@ -162,7 +187,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {% for process  in new_repair %}
+                                    {% for process  in repair_requests %}
                                     <tr>
                                         <td><a href="{% url 'service_request_details' process.id %}">{{process.request_number}}
                                             </a>
@@ -218,7 +243,7 @@
                         <h4 class="card-title mb-4" dir="rtl">طلبات التركيب </h4>
 
                         <div class="table-responsive text-center" data-simplebar style="max-height: 430px;">
-                            {% if not new_install %}
+                            {% if not install_requests %}
 
                             <p class="text-bold " style="font-size:16px">لا يـوجد طلبات جديدة </p>
                             {% else %}
@@ -238,7 +263,7 @@
                                 <tbody>
 
 
-                                    {% for process  in new_install %}
+                                    {% for process  in install_requests %}
                                     <tr>
                                         <td><a href="{% url 'service_request_details' process.id %}">{{process.request_number}}
                                             </a>
@@ -296,8 +321,8 @@
                         <h4 class="card-title mb-4" dir="rtl">كوارتر</h4>
 
                         <div class="table-responsive text-center" data-simplebar style="max-height: 430px;">
-                            {% if not new_quarter%}
-                            <p class="text-bold " style="font-size:16px">لا يـوجد طلبات جديدة </p>
+                            {% if not quarter_requests  %}
+                            <p class="text-bold " style="font-size:16px"> لا يـوجد طلبات جديدة </p>
                             {% else %}
                             <table class="table table-centered table-striped table-nowrap mb-0 " dir="rtl">
                                 <thead class="table-dark">
@@ -305,14 +330,14 @@
                                         <th>رقم الطلب </th>
                                         <th>الاسم </th>
                                         <th>الجوال </th>
-                                        <th>الموقع </th>
                                         <th>حالة الطلب </th>
                                         <th>تاريخ الطلب </th>
                                         <th></th>
                                     </tr>
                                 </thead>
+
                                 <tbody>
-                                    {% for process  in new_quarter %}
+                                    {% for process  in quarter_requests %}
                                     <tr>
                                         <td><a href="{% url 'quarter_request_details' process.id %}">{{process.request_number}}
                                             </a>
@@ -320,9 +345,7 @@
                                         <td><a href="{% url 'quarter_request_details' process.id %}">{{process}}</a>
                                         </td>
                                         <td>{{process.phone}}</td>
-                                        <td>
-                                            {{process.location }}
-                                        </td>
+
                                         <td>
 
                                             <span class="badge bg-soft-success p-2">
@@ -350,6 +373,95 @@
                                                 التفاصيل
                                             </a>
 
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                            {% endif %}
+                        </div>
+                        <!-- end table-responsive -->
+                    </div>
+                </div>
+            </div>
+            <!-- ON HOLD TAB  -->
+            <div class="tab-pane" id="navtabs-on_hold" role="tabpanel">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title mb-4" dir="rtl">الطلبات المعلقة </h4>
+
+                        <div class="table-responsive text-center" data-simplebar style="max-height: 430px;">
+                            {% if not all_on_hold  %}
+                            <p class="text-bold " style="font-size:16px"> لا يـوجد طلبات معلقة </p>
+                            {% else %}
+                            <table class="table table-centered table-striped table-nowrap mb-0 " dir="rtl">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th>رقم الطلب </th>
+                                        <th>الاسم </th>
+                                        <th>الجوال </th>
+                                        <th>نوع الطلب </th>
+                                        <th>تاريخ الطلب </th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    {% for process  in all_on_hold %}
+                                    <tr>
+                                        <td><a href="{% url 'quarter_request_details' process.id %}">{{process.request_number}}
+                                            </a>
+                                        </td>
+                                        <td><a href="{% url 'quarter_request_details' process.id %}">{{process}}</a>
+                                        </td>
+                                        <td>{{process.phone}}</td>
+
+                                        <td>
+
+                                            {% if process in service_hold %}
+
+                                            <span class="badge bg-soft-danger p-2">
+                                                {{process.get_service_type_display}}
+                                                <i class="fas fa-tools "></i>
+                                            </span>
+
+
+                                            {% else %}
+                                            <span class="badge bg-soft-primary p-2">
+                                                كوارتر
+                                                <i class="fas fa-toolbox "></i>
+                                            </span>
+                                            {% endif %}
+                                        </td>
+
+
+                                        <td>
+
+                                            {{process.timestamp.date}}
+
+                                        </td>
+                                        <td>
+
+
+                                            <a href="{% url  'delete_quarter_request' process.id %}"
+                                                class=" btn btn-soft-danger btn-rounded waves-effect waves-light">
+                                                <i class="uil uil-trash-alt "></i> حذف
+                                            </a>
+                                            <a href="{% url 'quarter_request_details' process.id %}"
+                                                class=" btn btn-soft-primary btn-rounded waves-effect waves-light">
+                                                <i class="uil uil-pen "></i>
+                                                التفاصيل
+                                            </a>
+
+                                            <button class="btn btn-soft-success btn-rounded waves-effect waves-light">
+                                                {% if process in service_hold %}
+                                                <a href="{% url 'hold_request' process.id %}" class="text-success">
+                                                    {% elif process in quarter_hold %}
+                                                    <a href="{% url 'hold_quarter_request' process.id %}"
+                                                        class="text-success">
+                                                        {% endif %}
+                                                        <i class="far fa-pause-circle"></i> تفعيل
+                                            </button>
                                         </td>
                                     </tr>
                                     {% endfor %}

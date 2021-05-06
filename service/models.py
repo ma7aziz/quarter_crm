@@ -9,10 +9,16 @@ import string
 
 class RequestManager(models.Manager):
     def repair(self):
-        return self.filter(service_type="repair")
+        return self.filter(service_type="repair").filter(hold=False)
 
     def install(self):
-        return self.filter(service_type="install")
+        return self.filter(service_type="install").filter(hold=False)
+
+    def on_hold(self):
+        return self.filter(hold=True)
+
+    def favourite(self):
+        return self.filter(favourite=True)
 
     def new(self):
         # new requests
@@ -69,6 +75,8 @@ class Service_request(models.Model):
         unique=True, max_length=40, blank=True, null=True, editable=False)
     appointment = models.ForeignKey(
         "Appointment", on_delete=models.SET_NULL, null=True, blank=True, related_name="repair_appointment")
+    hold = models.BooleanField(default=False)
+    favourite = models.BooleanField(default=False)
     objects = RequestManager()
 
     def save(self, *args, **kwargs):
