@@ -8,6 +8,7 @@ urlpatterns = [
     path('service/<int:id>', views.request_details,
          name="quarter_request_details"),
     path('delete/<int:id>', views.delete_request, name="delete_quarter_request"),
+    path('change_status', views.change_status, name="change_quarter_status"),
     path('hold_quarter_request/<int:id>',
          views.hold_request, name="hold_quarter_request"),
     path('pricing', views.pricing, name="pricing"),

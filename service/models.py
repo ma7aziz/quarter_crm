@@ -34,17 +34,18 @@ class RequestManager(models.Manager):
         return self.filter(status="suspended")
 
 
+REQUEST_STATUS = [
+    ('new', 'جديد'),
+    ('under_process', 'قيد التنفيذ'),
+    ('done', 'تم'),
+    ('closed', 'انتهي'),
+]
+
+
 class Service_request(models.Model):
     CUSTOMER_TYPE = [
         ('cash', 'كاش'),
         ('warranty', 'ضمان')
-    ]
-    REQUEST_STATUS = [
-        ('new', 'جديد'),
-        ('under_process', 'قيد التنفيذ'),
-        ('suspended', 'معلق'),
-        ('done', 'تم'),
-        ('closed', 'انتهي'),
     ]
 
     REQUEST_TYPE = (

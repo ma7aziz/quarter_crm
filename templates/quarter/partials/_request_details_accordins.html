@@ -31,9 +31,10 @@
                             </div>
                             {% if not req.hold %}
                             <div class="col">
-                                <button class="btn btn-lg btn-soft-primary btn-rounded btn-waves">
+                                <a data-bs-toggle="collapse" href="#changestatus" aria-expanded="false"
+                                    class="btn btn-lg btn-soft-primary btn-rounded btn-waves">
                                     تغيير الحالة <i class="far fa-edit"></i>
-                                </button>
+                                </a>
                             </div>
                             {% endif %}
                             <div class="col">
@@ -55,7 +56,44 @@
                             </div>
 
                         </div>
+                        <div class="collapse" id="changestatus">
+                            <div class="card card-body mb-0">
+                                <form method="POST" action="{% url 'change_quarter_status' %}">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="request" value="{{req.id}}">
 
+                                    <div class="row mb-4">
+                                        <label for="horizontal-firstname-input" class="col-sm-2 col-form-label">اختار
+                                            الحالة
+                                        </label>
+                                        <div class="col-sm-10">
+                                            <select name="new_status" id="" class="form-control">
+                                                <option value="">
+                                                </option>
+                                                {% for v , k in status_choices %}
+                                                <option value="{{v}}">
+                                                    {{k}}
+                                                </option>
+                                                {% endfor %}
+                                            </select>
+
+                                        </div>
+                                    </div>
+
+
+
+                                    <div class="row ">
+                                        <div class="col">
+
+                                            <div>
+                                                <button type="submit" class="btn btn-primary w-md">تحديث
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
 
                     </div>
                 </div>

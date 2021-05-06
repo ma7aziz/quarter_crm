@@ -4,6 +4,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from .models import Price, Quarter_service, Transfer, Design
 from core.add_customer import add_customer
+from .choices import STATUS_CHOICES
 # Create your views here.
 
 
@@ -41,7 +42,7 @@ def create_request(request):
 def request_details(request, id):
     req = Quarter_service.objects.get(pk=id)
 
-    return render(request, 'quarter/request_details.html', {'req': req})
+    return render(request, 'quarter/request_details.html', {'req': req, 'status_choices': STATUS_CHOICES})
 
 
 def delete_request(request, id):
@@ -60,6 +61,15 @@ def hold_request(request, id):
     else:
         messages.success(request, "تم اعادة تفعيل الطلب  !")
 
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
+def change_status(request):
+    if request.method == "POST":
+        req = Quarter_service.objects.get(pk=request.POST['request'])
+        req.status = request.POST['new_status']
+        req.save()
+        messages.success(request, "تم تحديث حالة الطلب بنجاح !")
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 

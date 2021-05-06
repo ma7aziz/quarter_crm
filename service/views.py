@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .models import Service_request, Appointment
+from .models import Service_request, Appointment, REQUEST_STATUS
 from accounts.models import User
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -14,8 +14,8 @@ def service_request_details(request, id):
     ctx = {
         'req': req,
         'tech': technicians,
-        'appointment': appointment
-
+        'appointment': appointment,
+        'request_status': REQUEST_STATUS
 
     }
     print(request.user.role, req.status)
@@ -141,4 +141,13 @@ def hold(request, id):
     else:
         messages.success(request, "تم اعادة تفعيل الطلب  !")
 
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
+def change_status(request):
+    if request.method == "POST":
+        req = Service_request.objects.get(pk=request.POST['request'])
+        req.status = request.POST['new_status']
+        req.save()
+        messages.success(request, "تم تحديث حالة الطلب بنجاح !")
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
