@@ -242,7 +242,8 @@
                                             </div>
                                         </div>
                                     </div>
-                                    {% if req.status == "new"%}
+                                    {% if req.status  == "new" or req.status == "under_process" %}
+                                    {% if not appointment %}
                                     <div class="accordion-item">
                                         <h2 class="accordion-header" id="headingOne">
                                             <button class="accordion-button" type="button" data-bs-toggle="collapse"
@@ -294,9 +295,11 @@
                                             </div>
                                         </div>
                                     </div>
+                                    {% endif%}
                                     {% endif %}
                                     {% endif %}
-                                    {% if req.status == "under_process" %}
+                                    {% if req.status == "under_process"  %}
+                                    {% if appointment %}
                                     <div class="accordion-item">
                                         <h2 class="accordion-header" id="headingTwo">
                                             <button class="accordion-button collapsed " type="button"
@@ -385,6 +388,7 @@
                                         </div>
 
                                     </div>
+                                    {% endif %}
                                     {% endif %}
 
                                 </div>

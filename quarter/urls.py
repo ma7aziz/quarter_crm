@@ -11,6 +11,8 @@ urlpatterns = [
     path('change_status', views.change_status, name="change_quarter_status"),
     path('hold_quarter_request/<int:id>',
          views.hold_request, name="hold_quarter_request"),
+    path('quarter_multi_delete', views.quarter_multi_delete,
+         name="quarter_multi_delete"),
     path('pricing', views.pricing, name="pricing"),
     path('confirm_process/<int:id>',
          views.confirm_process, name="confirm_process"),

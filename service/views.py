@@ -1,9 +1,12 @@
+from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from .models import Service_request, Appointment, REQUEST_STATUS
 from accounts.models import User
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
+from django.views.decorators.csrf import csrf_exempt
+
 # Create your views here.
 
 
@@ -35,10 +38,10 @@ def appointment_details(request, id):
 
 def service_appointment(request):
     """
-    set NEW appointment && asign technician for repair service 
-    - should be done by admin or supervisor 
-    - send message to client 
-    - change request status from new => underprocess 
+    set NEW appointment && asign technician for repair service
+    - should be done by admin or supervisor
+    - send message to client
+    - change request status from new => underprocess
 
     """
     if request.method == 'POST':
@@ -91,9 +94,9 @@ def complete_request(request):
 
 def close_request(request):
     """
-      done by supervisor or admin 
-      confirm finishing the repair service and close the request 
-      == change status to closed  
+      done by supervisor or admin
+      confirm finishing the repair service and close the request
+      == change status to closed
     """
     if request.method == "POST":
         repair_request = Service_request.objects.get(
@@ -131,7 +134,7 @@ def delete_request(request, id):
 
 def hold(request, id):
     '''
-        flip hold boolen 
+        flip hold boolen
     '''
     req = Service_request.objects.get(pk=id)
     req.hold = not req.hold
@@ -151,3 +154,17 @@ def change_status(request):
         req.save()
         messages.success(request, "تم تحديث حالة الطلب بنجاح !")
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
+@csrf_exempt
+def multiple_delete(request):
+    if request.is_ajax:
+        ids = request.POST.getlist('ids[]')
+        for i in ids:
+            req = Service_request.objects.get(pk=i)
+            req.delete()
+        data = {
+            'message':  'تم حذف الطلبات المختارة '
+        }
+
+        return JsonResponse(data)

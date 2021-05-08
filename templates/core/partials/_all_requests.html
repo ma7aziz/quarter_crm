@@ -57,7 +57,7 @@
                             <table class="table table-centered table-striped table-nowrap mb-0" dir="rtl">
                                 <thead class="table-dark">
                                     <tr>
-                                        <th></th>
+
                                         <th>رقم الطلب </th>
                                         <th>اسم العميل </th>
                                         <th>نوع الطلب </th>
@@ -71,12 +71,7 @@
                                 <tbody>
                                     {% for process in all_requests %}
                                     <tr>
-                                        <td>
-                                            <div class="form-check font-size-16">
-                                                <input type="checkbox" class="form-check-input" id="customCheck2">
-                                                <label class="form-check-label" for="customCheck2">&nbsp;</label>
-                                            </div>
-                                        </td>
+
                                         <td>
                                             {% if process in repair_requests or process in install_requests %}
                                             <a href="{% url 'service_request_details' process.id %}">
@@ -168,7 +163,13 @@
             <div class="tab-pane" id="navtabs-repair_new" role="tabpanel">
                 <div class="card">
                     <div class="card-body">
-                        <h4 class="card-title mb-4" dir="rtl">طلبات الصيانة </h4>
+                        <div class="d-flex justify-content-between">
+                            <h4 class="card-title mb-4" dir="rtl">طلبات الصيانة </h4>
+                            <button id="" class="d-none btn btn-soft-danger serviceMultiDeleteBtn" type="submit">
+                                حذف
+                                المختارة
+                            </button>
+                        </div>
 
                         <div class="table-responsive text-center" data-simplebar style="max-height: 430px;">
                             {% if not repair_requests%}
@@ -177,6 +178,7 @@
                             <table class="table table-centered table-striped table-nowrap mb-0 " dir="rtl">
                                 <thead class="table-dark">
                                     <tr>
+                                        <th></th>
                                         <th>رقم الطلب </th>
                                         <th>الاسم </th>
                                         <th>الجوال </th>
@@ -188,7 +190,15 @@
                                 </thead>
                                 <tbody>
                                     {% for process  in repair_requests %}
+
                                     <tr>
+                                        <td>
+                                            <div class="form-check font-size-16">
+                                                <input type="checkbox" class="form-check-input req_checkbox "
+                                                    id="customCheck2" name="req_id[]" value="{{process.id}}">
+                                                <label class="form-check-label" for="customCheck2">&nbsp;</label>
+                                            </div>
+                                        </td>
                                         <td><a href="{% url 'service_request_details' process.id %}">{{process.request_number}}
                                             </a>
                                         </td>
@@ -240,7 +250,13 @@
             <div class="tab-pane" id="navtabs-install_new" role="tabpanel">
                 <div class="card">
                     <div class="card-body">
-                        <h4 class="card-title mb-4" dir="rtl">طلبات التركيب </h4>
+                        <div class="d-flex justify-content-between">
+                            <h4 class="card-title mb-4" dir="rtl">طلبات التركيب </h4>
+                            <button id="" class="d-none btn btn-soft-danger serviceMultiDeleteBtn" type="submit">
+                                حذف
+                                المختارة
+                            </button>
+                        </div>
 
                         <div class="table-responsive text-center" data-simplebar style="max-height: 430px;">
                             {% if not install_requests %}
@@ -250,6 +266,7 @@
                             <table class="table table-centered table-striped table-nowrap mb-0 " dir="rtl">
                                 <thead class="table-dark">
                                     <tr>
+                                        <th></th>
                                         <th>رقم الطلب </th>
                                         <th>الاسم </th>
                                         <th>الجوال </th>
@@ -265,6 +282,13 @@
 
                                     {% for process  in install_requests %}
                                     <tr>
+                                        <td>
+                                            <div class="form-check font-size-16">
+                                                <input type="checkbox" class="form-check-input req_checkbox "
+                                                    id="customCheck2" name="req_id[]" value="{{process.id}}">
+                                                <label class="form-check-label" for="customCheck2">&nbsp;</label>
+                                            </div>
+                                        </td>
                                         <td><a href="{% url 'service_request_details' process.id %}">{{process.request_number}}
                                             </a>
                                         </td>
@@ -318,7 +342,13 @@
             <div class="tab-pane" id="navtabs-quarter_new" role="tabpanel">
                 <div class="card">
                     <div class="card-body">
-                        <h4 class="card-title mb-4" dir="rtl">كوارتر</h4>
+                        <div class="d-flex justify-content-between">
+                            <h4 class="card-title mb-4" dir="rtl">كوارتر </h4>
+                            <button id="" class="d-none btn btn-soft-danger quarterMultiDeleteBtn" type="submit">
+                                حذف
+                                المختارة
+                            </button>
+                        </div>
 
                         <div class="table-responsive text-center" data-simplebar style="max-height: 430px;">
                             {% if not quarter_requests  %}
@@ -327,6 +357,7 @@
                             <table class="table table-centered table-striped table-nowrap mb-0 " dir="rtl">
                                 <thead class="table-dark">
                                     <tr>
+                                        <th></th>
                                         <th>رقم الطلب </th>
                                         <th>الاسم </th>
                                         <th>الجوال </th>
@@ -339,6 +370,13 @@
                                 <tbody>
                                     {% for process  in quarter_requests %}
                                     <tr>
+                                        <td>
+                                            <div class="form-check font-size-16">
+                                                <input type="checkbox" class="form-check-input qua_checkbox "
+                                                    id="customCheck2" name="req_id[]" value="{{process.id}}">
+                                                <label class="form-check-label" for="customCheck2">&nbsp;</label>
+                                            </div>
+                                        </td>
                                         <td><a href="{% url 'quarter_request_details' process.id %}">{{process.request_number}}
                                             </a>
                                         </td>

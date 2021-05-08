@@ -13,5 +13,7 @@ urlpatterns = [
     path('close_request', views.close_request, name="close_request"),
     path('delete_request/<int:id>', views.delete_request, name="delete_request"),
     path('hold_request/<int:id>', views.hold, name='hold_request'),
-    path('change_status', views.change_status, name="change_request_status")
+    path('change_status', views.change_status, name="change_request_status"),
+    path('service_multiple_delete', views.multiple_delete,
+         name="service_multiple_delete")
 ]

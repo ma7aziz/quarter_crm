@@ -1,3 +1,4 @@
+       {% load static %}
        <div class="card">
            <div class="card-body">
                <h4 class="card-title mb-4" dir="rtl">الطلبات </h4>
@@ -44,12 +45,19 @@
                    <div class="tab-pane active" id="navtabs-new" role="tabpanel">
                        <div class="card">
                            <div class="card-body">
-                               <h4 class="card-title mb-4" dir="rtl">طلبات جديدة </h4>
+                               <div class="d-flex justify-content-between">
+                                   <h4 class="card-title mb-4" dir="rtl">طلبات جديدة </h4>
+                                   <button id="" class="d-none btn btn-soft-danger serviceMultiDeleteBtn" type="submit">
+                                       حذف
+                                       المختارة
+                                   </button>
+                               </div>
+
                                <div class="table-responsive">
                                    <table class="table table-centered table-nowrap mb-0" dir="rtl">
                                        <thead class="table-light">
                                            <tr>
-
+                                               <th></th>
                                                <th>رقم الطلب </th>
                                                <th>أسم العميل</th>
                                                <th>تاريخ الطلب </th>
@@ -59,8 +67,17 @@
                                            </tr>
                                        </thead>
                                        <tbody>
+
                                            {% for req in new_requests %}
+
                                            <tr>
+                                               <td>
+                                                   <div class="form-check font-size-16">
+                                                       <input type="checkbox" class="form-check-input req_checkbox "
+                                                           id="customCheck2" name="req_id[]" value="{{req.id}}">
+                                                       <label class="form-check-label" for="customCheck2">&nbsp;</label>
+                                                   </div>
+                                               </td>
                                                <td>
                                                    <a href="{% url 'service_request_details' req.id %}">
 
@@ -106,12 +123,18 @@
                    <div class="tab-pane " id="navtabs-current" role="tabpanel">
                        <div class="card">
                            <div class="card-body">
-                               <h4 class="card-title mb-4" dir="rtl">طلبات قيد التنفيذ</h4>
+                               <div class="d-flex justify-content-between">
+                                   <h4 class="card-title mb-4" dir="rtl">طلبات قيد التنفيذ </h4>
+                                   <button id="" class="d-none btn btn-soft-danger serviceMultiDeleteBtn" type="submit">
+                                       حذف
+                                       المختارة
+                                   </button>
+                               </div>
                                <div class="table-responsive">
                                    <table class="table table-centered table-nowrap mb-0" dir="rtl">
                                        <thead class="table-light">
                                            <tr>
-
+                                               <th></th>
                                                <th>رقم الطلب </th>
                                                <th>أسم العميل</th>
                                                <th>تاريخ الطلب </th>
@@ -122,7 +145,15 @@
                                        </thead>
                                        <tbody>
                                            {% for req in requests %}
+
                                            <tr>
+                                               <td>
+                                                   <div class="form-check font-size-16">
+                                                       <input type="checkbox" class="form-check-input req_checkbox "
+                                                           id="customCheck2" name="req_id[]" value="{{req.id}}">
+                                                       <label class="form-check-label" for="customCheck2">&nbsp;</label>
+                                                   </div>
+                                               </td>
                                                <td><a href="{% url 'service_request_details' req.id %}">
 
                                                        {{req.request_number}}
@@ -167,11 +198,17 @@
                    <div class="tab-pane" id="navtabs-confirm" role="tabpanel">
                        <div class="card">
                            <div class="card-body">
-                               {% if repair in request.path %}
-                               <h4 class="card-title mb-4" dir="rtl">تـأكيد الصيانة </h4>
-                               {% elif 'install' in request.path %}
-                               <h4 class="card-title mb-4" dir="rtl">تـأكيد التركيب </h4>
-                               {% endif %}
+                               <div class="d-flex justify-content-between">
+                                   {% if 'repair' in request.path %}
+                                   <h4 class="card-title mb-4" dir="rtl">تـأكيد الصيانة </h4>
+                                   {% elif 'install' in request.path %}
+                                   <h4 class="card-title mb-4" dir="rtl">تـأكيد التركيب </h4>
+                                   {% endif %}
+                                   <button id="" class="d-none btn btn-soft-danger serviceMultiDeleteBtn" type="submit">
+                                       حذف
+                                       المختارة
+                                   </button>
+                               </div>
                                <div class="table-responsive">
                                    <table class="table table-centered table-nowrap mb-0" dir="rtl">
                                        <thead class="table-light">

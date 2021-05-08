@@ -27,12 +27,18 @@
             <div class="tab-pane active" id="navtabs-all" role="tabpanel">
                 <div class="card">
                     <div class="card-body">
-                        <h4 class="card-title mb-4" dir="rtl">الطلبات الواردة </h4>
+                        <div class="d-flex justify-content-between">
+                            <h4 class="card-title mb-4" dir="rtl">الطلبات الواردة </h4>
+                            <button id="" class="d-none btn btn-soft-danger quarterMultiDeleteBtn" type="submit">
+                                حذف
+                                المختارة
+                            </button>
+                        </div>
                         <div class="table-responsive">
                             <table class="table table-centered table-nowrap mb-0 text-center" dir="rtl">
                                 <thead class="table-light">
                                     <tr>
-
+                                        <th></th>
                                         <th>رقم الطلب </th>
                                         <th>أسم العميل</th>
                                         <th>تاريخ الطلب </th>
@@ -44,7 +50,14 @@
                                 <tbody>
                                     {% for req in all_requests %}
                                     <tr>
-                                        <td>{{req.id}}</td>
+                                        <td>
+                                            <div class="form-check font-size-16">
+                                                <input type="checkbox" class="form-check-input qua_checkbox "
+                                                    id="customCheck2" name="req_id[]" value="{{req.id}}">
+                                                <label class="form-check-label" for="customCheck2">&nbsp;</label>
+                                            </div>
+                                        </td>
+                                        <td>{{req.request_number}}</td>
                                         <td>{{req.name}}</td>
                                         <td>
                                             {{req.timestamp.date}}
@@ -74,12 +87,18 @@
             <div class="tab-pane " id="navtabs-new" role="tabpanel">
                 <div class="card">
                     <div class="card-body">
-                        <h4 class="card-title mb-4" dir="rtl">الطلبات الجديدة </h4>
+                        <div class="d-flex justify-content-between">
+                            <h4 class="card-title mb-4" dir="rtl">طلبات جديدة </h4>
+                            <button id="" class="d-none btn btn-soft-danger quarterMultiDeleteBtn" type="submit">
+                                حذف
+                                المختارة
+                            </button>
+                        </div>
                         <div class="table-responsive">
                             <table class="table table-centered table-nowrap mb-0 text-center" dir="rtl">
                                 <thead class="table-light">
                                     <tr>
-
+                                        <th></th>
                                         <th>رقم الطلب </th>
                                         <th>أسم العميل</th>
                                         <th>تاريخ الطلب </th>
@@ -91,7 +110,14 @@
                                 <tbody>
                                     {% for req in new_requests %}
                                     <tr>
-                                        <td>{{req.id}}</td>
+                                        <td>
+                                            <div class="form-check font-size-16">
+                                                <input type="checkbox" class="form-check-input qua_checkbox "
+                                                    id="customCheck2" name="req_id[]" value="{{req.id}}">
+                                                <label class="form-check-label" for="customCheck2">&nbsp;</label>
+                                            </div>
+                                        </td>
+                                        <td>{{req.request_number}}</td>
                                         <td>{{req.name}}</td>
                                         <td>
                                             {{req.timestamp.date}}

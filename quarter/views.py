@@ -1,10 +1,11 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
 from .models import Price, Quarter_service, Transfer, Design
 from core.add_customer import add_customer
 from .choices import STATUS_CHOICES
+from django.views.decorators.csrf import csrf_exempt
 # Create your views here.
 
 
@@ -71,6 +72,20 @@ def change_status(request):
         req.save()
         messages.success(request, "تم تحديث حالة الطلب بنجاح !")
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
+@csrf_exempt
+def quarter_multi_delete(request):
+    if request.is_ajax:
+        ids = request.POST.getlist('ids[]')
+    for i in ids:
+        req = Quarter_service.objects.get(pk=i)
+        req.delete()
+    data = {
+        'message':  'تم حذف الطلبات المختارة '
+    }
+
+    return JsonResponse(data)
 
 
 def pricing(request):

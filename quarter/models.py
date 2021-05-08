@@ -7,7 +7,7 @@ from core.models import Customer
 
 class Quarter_service_Manager(models.Manager):
     def all(self):
-        return self.filter(active=True).filter(hold=False)
+        return self.filter(hold=False)
 
     def new(self):
         return self.filter(status="new")
