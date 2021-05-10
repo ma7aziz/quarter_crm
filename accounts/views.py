@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .models import User, Section
+from .models import User, Section, Qouta
 from django.contrib.auth import authenticate, login
 from django.http import HttpResponseRedirect
 from django.contrib import messages
@@ -25,16 +25,22 @@ def create_user(request):
         phone = request.POST['phone']
         role = request.POST['role']
         favourite_count = request.POST['favourite_count']
-        # file = request.FILES['attach_file']
+
         if request.POST['password1'] == request.POST['password2']:
             user = User(username=username, name=name,
-                        phone=phone, role=role, favourite_count=favourite_count)
+                        phone=phone, role=role)
             user.set_password(request.POST['password1'])
+            if request.FILES['attach_file']:
+                user.files = request.FILES['attach_file']
             user.save()
             for s in request.POST.getlist('section'):
                 sect = Section.objects.get(pk=s)
                 user.section.add(sect)
+            qouta = Qouta(user=user, max_requests=favourite_count)
+            qouta.save()
+            user.favourite_qouta = qouta
             user.save()
+
             messages.success(request, "تم انشاء حساب المستخدم")
         else:
             messages.error(request,

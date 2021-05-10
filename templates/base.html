@@ -467,6 +467,16 @@
             $('has-tooltip').tooltip();
         });
     </script>
+    <script>
+        $(document).ready(function () {
+            $(".table_search").on("keyup", function () {
+                var value = $(this).val().toLowerCase();
+                $('.data-table tr').filter(function () {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                });
+            });
+        });
+    </script>
     <script src="{% static 'js/multipleDelete.js' %}"></script>
     <script src="{% static 'libs/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
     <script src="{% static 'libs/metismenu/metisMenu.min.js' %}"></script>

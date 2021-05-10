@@ -18,7 +18,7 @@ def repair_index(request):
             created_by=request.user).order_by('-timestamp')
     elif request.user.role == 1 or request.user.role == 2:
         requests = Service_request.objects.repair().order_by(
-            '-timestamp').exclude(status="new").exclude(status="closed")
+            '-timestamp')
         on_hold = Service_request.objects.on_hold().filter(service_type="repair")
     elif request.user.role == 3:
         requests = Appointment.objects.filter(

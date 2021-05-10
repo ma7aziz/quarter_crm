@@ -1,5 +1,4 @@
-#218173
-#7EC7AE
-#D3DEDC
-#98BBD6
-#FFFFFF
+if current_requests == max_requests 
+    reject 
+elif current_requests < max_requests
+    approve 

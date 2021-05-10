@@ -70,15 +70,25 @@ class User(AbstractUser):
     role = models.PositiveSmallIntegerField(
         _('الوظيفة'), choices=ROLE, default=1)
     section = models.ManyToManyField(Section)
-    favourite_count = models.IntegerField(blank=True, null=True, default=1)
     completed_tasks = models.IntegerField(default=0)
     submitted_orders = models.IntegerField(default=0)
     profile_pic = models.ImageField(
         upload_to="user_data/profile_pics", blank=True, null=True)
     files = models.FileField(
         upload_to="user_data/files", blank=True, null=True)
+    favourite_qouta = models.ForeignKey(
+        'Qouta', on_delete=models.SET_NULL, null=True, blank=True, related_name='favourite_count')
 
     USERNAME_FIELD = 'username'
 
     def __str__(self):
         return self.username
+
+
+class Qouta(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    max_requests = models.SmallIntegerField(default=1)
+    current_requests = models.SmallIntegerField(default=0)
+
+    def __str__(self):
+        return f'{self.max_requests}'

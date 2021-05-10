@@ -93,12 +93,16 @@
                             {% endfor %}
                         </div>
                         <div class="mt-4">
-                            <p class="mb-1">عدد المفضلة </p>
-
-                            <h5 class="font-size-16">{{user.favourite_count}}</h5>
+                            <p class="mb-1">عدد مفضلات التركيب المسموح بها </p>
+                            <h5 class="font-size-16">{{user.favourite_qouta}}</h5>
 
                         </div>
 
+                        <div class="mt-4">
+                            <p class="mb-1">عدد طلبات التركيب المفضلة لهذا اليوم </p>
+                            <h5 class="font-size-16">{{user.favourite_qouta.current_requests}}</h5>
+
+                        </div>
 
 
                     </div>

@@ -35,26 +35,22 @@ def install_request(request):
     initiate service request  === done by sales team
     """
     if request.method == 'POST':
-        print(request.POST)
         customer_name = request.POST['customername']
         phone = request.POST['phone']
         address = request.POST['address']
-        machine_type = request.POST['machine_type']
-        customer_type = request.POST['customer_type']
+
+        customer_type = "cash"
         invoice_number = request.POST['invoice_number']
         user = request.user
-        if customer_type == "warranty" and invoice_number == "":
-            messages.error(
-                request, "يجب ادخال رقم الفاتورة لتسجيل عميل الضمان ")
-        else:
-            install_request = Service_request(service_type="install", created_by=user, customer_name=customer_name, phone=phone,
-                                              machine_type=machine_type, invoice_number=invoice_number,
-                                              address=address, customer_type=customer_type, notes=request.POST['notes'])
-            install_request.customer = add_customer(phone, customer_name)
+
+        install_request = Service_request(service_type="install", created_by=user, customer_name=customer_name, phone=phone,
+                                          invoice_number=invoice_number,
+                                          address=address, customer_type=customer_type, notes=request.POST['notes'])
+        install_request.customer = add_customer(phone, customer_name)
+        install_request.save()
+        if request.FILES:
+            install_request.file = request.FILES['attach_file']
             install_request.save()
-            if request.FILES:
-                install_request.file = request.FILES['attach_file']
-                install_request.save()
             user.submitted_orders += 1
             user.save()
 
