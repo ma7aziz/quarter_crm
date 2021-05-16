@@ -63,10 +63,10 @@
                                         <th>رقم الطلب </th>
                                         <th>اسم العميل </th>
                                         <th>نوع الطلب </th>
-                                        <th>حالة الطلب </th>
                                         <th>تاريخ الطلب</th>
+                                        <th>حالة الطلب </th>
                                         <th class="d-none">phone</th>
-                                        <th></th>
+
                                     </tr>
                                 </thead>
 
@@ -109,48 +109,23 @@
                                             {% endif %}
                                         </td>
                                         <td>
-
-                                            {{process.get_status_display}}
-
-                                        </td>
-                                        <td>
                                             {{ process.timestamp.date }}
                                         </td>
+                                        <td>
+                                            {% if process in repair_requests or process in install_requests %}
+                                            <a href="{% url 'service_request_details' process.id %}">
+                                                {% elif process in quarter_requests %}
+                                                <a href="{% url 'quarter_request_details' process.id %}">
+                                                    {% endif %}
+                                                    {{process.get_status_display}}
+                                                </a>
+
+                                        </td>
+
 
                                         <td class="d-none">{{process.phone}}</td>
 
 
-                                        <td>
-
-                                            <button class=" btn btn-soft-primary btn-rounded waves-effect waves-light ">
-                                                {% if process in repair_requests or process in install_requests %}
-                                                <a href="{% url 'service_request_details' process.id %}">
-                                                    {% elif process in quarter_requests %}
-                                                    <a href="{% url 'quarter_request_details' process.id %}">
-                                                        {% endif %}
-                                                        <i class="uil uil-pen "></i> التفاصيل
-                                            </button>
-                                            <!-- <button class=" btn btn-soft-danger btn-rounded waves-effect waves-light">
-                                                {% if process in repair_requests or process in install_requests %}
-                                                <a href="{% url 'delete_request' process.id %}" class="text-danger">
-                                                    {% elif process in quarter_requests %}
-                                                    <a href="{% url 'delete_quarter_request' process.id %}"
-                                                        class="text-danger">
-                                                        {% endif %}
-                                                        <i class="uil uil-trash-alt "></i> حذف
-                                            </button> -->
-
-                                            <button class="btn btn-soft-warning btn-rounded waves-effect waves-light">
-                                                {% if process in repair_requests or process in install_requests %}
-                                                <a href="{% url 'hold_request' process.id %}" class="text-warning">
-                                                    {% elif process in quarter_requests %}
-                                                    <a href="{% url 'hold_quarter_request' process.id %}"
-                                                        class="text-warning">
-                                                        {% endif %}
-                                                        <i class="far fa-pause-circle"></i> تعليق
-                                            </button>
-
-                                        </td>
                                     </tr>
                                     {% endfor %}
                                 </tbody>
@@ -188,9 +163,9 @@
                                         <th>الاسم </th>
                                         <th>الجوال </th>
                                         <th>الموقع </th>
-                                        <th>حالة الطلب </th>
                                         <th>تاريخ الطلب </th>
-                                        <th></th>
+                                        <th>حالة الطلب </th>
+
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -214,32 +189,23 @@
                                             {{process.address}}
                                         </td>
                                         <td>
-                                            <span class="badge bg-soft-success p-2">
-
-                                                {{process.get_status_display }}
-                                            </span>
-                                        </td>
-
-
-                                        <td>
 
                                             {{process.timestamp.date}}
 
                                         </td>
                                         <td>
 
-                                            <a href="{% url  'delete_request' process.id %}"
-                                                class=" btn btn-soft-danger btn-rounded waves-effect waves-light">
-                                                <i class="uil uil-trash-alt "></i> حذف
-                                            </a>
                                             <a href="{% url 'service_request_details' process.id %}"
                                                 class=" btn btn-soft-primary btn-rounded waves-effect waves-light">
-                                                <i class="uil uil-pen "></i>
-                                                التفاصيل
+
+                                                {{process.get_status_display }}
                                             </a>
 
-
                                         </td>
+
+
+
+
                                     </tr>
                                     {% endfor %}
                                 </tbody>
@@ -277,9 +243,9 @@
                                         <th>الاسم </th>
                                         <th>الجوال </th>
                                         <th>الموقع </th>
-                                        <th>حالة الطلب </th>
                                         <th>تاريخ الطلب </th>
-                                        <th></th>
+                                        <th>حالة الطلب </th>
+
                                     </tr>
                                 </thead>
 
@@ -306,33 +272,20 @@
                                         </td>
                                         <td>
 
-                                            <span class="badge bg-soft-success p-2">
-
-                                                {{process.get_status_display }}
-                                            </span>
-                                        </td>
-
-
-                                        <td>
-
                                             {{process.timestamp.date}}
 
                                         </td>
                                         <td>
-
-
-                                            <a href="{% url  'delete_request' process.id %}"
-                                                class=" btn btn-soft-danger btn-rounded waves-effect waves-light">
-                                                <i class="uil uil-trash-alt "></i> حذف
-                                            </a>
                                             <a href="{% url 'service_request_details' process.id %}"
                                                 class=" btn btn-soft-primary btn-rounded waves-effect waves-light">
-                                                <i class="uil uil-pen "></i>
-                                                التفاصيل
-                                            </a>
-                                            </button>
 
+                                                {{process.get_status_display }}
+                                            </a>
                                         </td>
+
+
+
+
                                     </tr>
                                     {% endfor %}
                                 </tbody>
@@ -368,9 +321,9 @@
                                         <th>رقم الطلب </th>
                                         <th>الاسم </th>
                                         <th>الجوال </th>
-                                        <th>حالة الطلب </th>
                                         <th>تاريخ الطلب </th>
-                                        <th></th>
+                                        <th>حالة الطلب </th>
+
                                     </tr>
                                 </thead>
 
@@ -390,16 +343,6 @@
                                         <td><a href="{% url 'quarter_request_details' process.id %}">{{process}}</a>
                                         </td>
                                         <td>{{process.phone}}</td>
-
-                                        <td>
-
-                                            <span class="badge bg-soft-success p-2">
-
-                                                {{process.get_status_display }}
-                                            </span>
-                                        </td>
-
-
                                         <td>
 
                                             {{process.timestamp.date}}
@@ -407,18 +350,17 @@
                                         </td>
                                         <td>
 
-
-                                            <a href="{% url  'delete_quarter_request' process.id %}"
-                                                class=" btn btn-soft-danger btn-rounded waves-effect waves-light">
-                                                <i class="uil uil-trash-alt "></i> حذف
-                                            </a>
                                             <a href="{% url 'quarter_request_details' process.id %}"
                                                 class=" btn btn-soft-primary btn-rounded waves-effect waves-light">
-                                                <i class="uil uil-pen "></i>
-                                                التفاصيل
+
+                                                {{process.get_status_display }}
                                             </a>
 
                                         </td>
+
+
+
+
                                     </tr>
                                     {% endfor %}
                                 </tbody>
