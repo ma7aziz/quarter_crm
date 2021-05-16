@@ -12,6 +12,8 @@
         </div>
     </div>
 </div>
+
+
 <!-- end page title -->
 
 <div class="row" dir="rtl">
@@ -147,6 +149,8 @@
                     <div class="col-lg-6 ">
                         <div class="card">
                             <div class="card-body">
+
+                                {% if req.active %}
 
                                 <div class="accordion" id="accordionExample">
                                     {% if request.user.role == 1 or request.user.role == 2 %}
@@ -445,7 +449,11 @@
                                     {% endif %}
 
                                 </div>
-
+                                {% else %}
+                                <h3>هذا الطلب غير مفعل </h3>
+                                <a href="{% url 'deactivate_request' req.id  %}"
+                                    class="btn btn-lg btn-soft-success mt-1"> اعادة تفعيل </a>
+                                {% endif %}
 
                             </div>
 
@@ -458,5 +466,14 @@
     </div>
 </div>
 <!-- end row -->
+{% if req.active %}
+{% if request.user.role == 1 or request.user.role == 2 %}
+<div class="card ">
 
+    <a href="{% url 'deactivate_request' req.id %}" class="btn btn-lg btn-soft-danger">
+        أغلاق الطلب
+    </a>
+</div>
+{% endif %}
+{% endif %}
 {% endblock %}

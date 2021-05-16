@@ -74,6 +74,17 @@ def change_status(request):
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
+def deactivate_request(request, id):
+    req = Quarter_service.objects.get(pk=id)
+    req.active = not req.active
+    req.save()
+    if req.active:
+        messages.success(request, "تم اعادة تفعيل الطلب  !")
+    else:
+        messages.success(request, "تم اغلاق الطلب  !")
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
 @csrf_exempt
 def quarter_multi_delete(request):
     if request.is_ajax:

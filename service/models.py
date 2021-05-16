@@ -8,6 +8,7 @@ import string
 
 
 class RequestManager(models.Manager):
+
     def repair(self):
         return self.filter(service_type="repair").filter(hold=False)
 
@@ -80,6 +81,7 @@ class Service_request(models.Model):
     hold_reason = models.ForeignKey(
         "Hold_reason", on_delete=models.SET_NULL, null=True, blank=True)
     favourite = models.BooleanField(default=False)
+    active = models.BooleanField(default=True)
     objects = RequestManager()
 
     def save(self, *args, **kwargs):

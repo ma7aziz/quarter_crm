@@ -117,7 +117,9 @@ def close_request(request):
         repair_request.save()
 
         messages.success(request, "تم تنفيذ و اغلاق الطلب بنجاح !")
-        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    else:
+        pass
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
 def delete_request(request, id):
@@ -171,6 +173,17 @@ def change_status(request):
         req.status = request.POST['new_status']
         req.save()
         messages.success(request, "تم تحديث حالة الطلب بنجاح !")
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
+def deactivate_request(request, id):
+    req = Service_request.objects.get(pk=id)
+    req.active = not req.active
+    req.save()
+    if req.active:
+        messages.success(request, "تم اعادة تفعيل الطلب  !")
+    else:
+        messages.success(request, "تم اغلاق الطلب  !")
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 

@@ -318,13 +318,36 @@
                         {% endif %}
                     </div>
                 </div>
-                <div class=" col col-lg-5  ">
 
+                <div class=" col col-lg-5  ">
+                    {% if req.active %}
                     {% include './partials/_request_details_accordins.html'%}
+                    {% else %}
+                    <div class="card">
+                        <div class="card-body">
+                            <h3>هذا الطلب غير مفعل </h3>
+                            <a href="{% url 'deactivate_quarter' req.id  %}" class="btn btn-lg btn-soft-success mt-1">
+                                اعادة
+                                تفعيل </a>
+                        </div>
+
+                    </div>
+                    {% endif %}
+
                 </div>
             </div>
         </div>
     </div>
+    {% if req.active %}
+    {% if request.user.role == 1 or request.user.role == 2 %}
+    <div class="card ">
+
+        <a href="{% url 'deactivate_quarter' req.id %}" class="btn btn-lg btn-soft-danger">
+            أغلاق الطلب
+        </a>
+    </div>
+    {% endif %}
+    {% endif %}
 </div>
 
 {% endblock %}

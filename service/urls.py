@@ -11,6 +11,8 @@ urlpatterns = [
          views.appointment_details, name="appointment_details"),
     path('complete_request', views.complete_request, name="complete_request"),
     path('close_request', views.close_request, name="close_request"),
+    path('deactivate_request/<int:id>',
+         views.deactivate_request, name="deactivate_request"),
     path('delete_request/<int:id>', views.delete_request, name="delete_request"),
     path('hold_request/<int:id>', views.hold, name='hold_request'),
     path('change_status', views.change_status, name="change_request_status"),
