@@ -17,7 +17,7 @@ def export_users_csv(request):
     """
         Export all website users data
     """
-    response = HttpResponse(content_type='text/csv')
+    response = HttpResponse(content_type='text/csv, charset=utf-8-sig')
     response['Content-Disposition'] = 'attachment; filename="users.xls"'
 
     writer = csv.writer(response)
@@ -37,7 +37,7 @@ def export_current_service(request):
     """
         Export Repair / Install Current Processes
     """
-    response = HttpResponse(content_type='text/csv')
+    response = HttpResponse(content_type='text/csv, charset=utf-8-sig')
     response['Content-Disposition'] = 'attachment; filename="current_install/repair_requests.csv"'
 
     writer = csv.writer(response)
@@ -54,7 +54,7 @@ def export_current_service(request):
 
 
 def export_all_services(request):
-    response = HttpResponse(content_type='text/csv')
+    response = HttpResponse(content_type='text/csv, charset=utf-8-sig')
     response['Content-Disposition'] = 'attachment; filename="all_install/repair_requests.csv"'
 
     writer = csv.writer(response)
@@ -74,7 +74,7 @@ def export_all_quarter_services(request):
     """
         Export current quarter proceses
     """
-    response = HttpResponse(content_type='text/csv')
+    response = HttpResponse(content_type='text/csv, charset=utf-8-sig')
     response['Content-Disposition'] = 'attachment; filename="current_quarter_services.csv"'
 
     writer = csv.writer(response)
@@ -94,7 +94,7 @@ def export_current_quarter_services(request):
     """
         Export current quarter proceses
     """
-    response = HttpResponse(content_type='text/csv')
+    response = HttpResponse(content_type='text/csv, charset=utf-8-sig')
     response['Content-Disposition'] = 'attachment; filename="current_quarter_services.csv"'
 
     writer = csv.writer(response)
@@ -114,7 +114,7 @@ def export_customers_data(request):
     """
         Export customer data
     """
-    response = HttpResponse(content_type='text/csv')
+    response = HttpResponse(content_type='text/csv, charset=utf-8-sig')
     response['Content-Disposition'] = 'attachment; filename="customer_data.csv"'
 
     writer = csv.writer(response)
@@ -129,7 +129,7 @@ def export_customers_data(request):
 
 
 def export_repair_customers(request):
-    response = HttpResponse(content_type='text/csv')
+    response = HttpResponse(content_type='text/csv, charset=utf-8-sig')
     response['Content-Disposition'] = 'attachment; filename="repair_customer_data.csv"'
 
     writer = csv.writer(response)
