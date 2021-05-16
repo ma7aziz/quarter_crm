@@ -1,6 +1,6 @@
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
-from .models import Service_request, Appointment, REQUEST_STATUS
+from .models import Service_request, Appointment, REQUEST_STATUS, Hold_reason
 from accounts.models import User
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -133,17 +133,35 @@ def delete_request(request, id):
 
 
 def hold(request, id):
-    '''
-        flip hold boolen
-    '''
-    req = Service_request.objects.get(pk=id)
-    req.hold = not req.hold
-    req.save()
-    if req.hold:
-        messages.success(request, "تم تعليق الطلب !")
-    else:
-        messages.success(request, "تم اعادة تفعيل الطلب  !")
+    if request.method == "POST":
+        req = Service_request.objects.get(pk=request.POST['req_id'])
+        reason = request.POST['hold_reason']
+        if req.hold_reason:
+            req.hold_reason.reason = reason
+            req.hold_by = request.user
+            if request.FILES["holding_file"]:
+                req.hold_reason.file = request.FILES["holding_file"]
 
+            req.hold_reason.save()
+            req.hold = True
+            req.save()
+            messages.success(request, "تم تعليق الطلب !")
+
+        else:
+            hold_reason = Hold_reason(
+                service=req, reason=reason, hold_by=request.user)
+            if request.FILES["holding_file"]:
+                hold_reason.file = request.FILES["holding_file"]
+            hold_reason.save()
+            req.hold_reason = hold_reason
+            req.hold = True
+            req.save()
+            messages.success(request, "تم تعليق الطلب !")
+    else:
+        req = Service_request.objects.get(pk=id)
+        req.hold = False
+        req.save()
+        messages.success(request, "تم اعادة تفعيل الطلب  !")
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 

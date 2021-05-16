@@ -112,7 +112,7 @@ def export_current_quarter_services(request):
 
 def export_customers_data(request):
     """
-        Export customer data 
+        Export customer data
     """
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="customer_data.csv"'
@@ -121,6 +121,22 @@ def export_customers_data(request):
     writer.writerow(["id", "name", "phone", "email", ])
 
     processes = Customer.objects.all().values_list("id", "name", "phone", "email")
+
+    for process in processes:
+        writer.writerow(process)
+
+    return response
+
+
+def export_repair_customers(request):
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="repair_customer_data.csv"'
+
+    writer = csv.writer(response)
+    writer.writerow(["id", "customer_name", "phone", "address", 'date '])
+
+    processes = Service_request.objects.repair(
+    ).values_list("id", "customer_name", "phone", "address", "timestamp__date")
 
     for process in processes:
         writer.writerow(process)

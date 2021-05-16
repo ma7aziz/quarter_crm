@@ -361,3 +361,13 @@
            </div>
 
        </div>
+
+       {% if "repair" in request.path %}
+       <div class="card p-2">
+           <div class="card-body d-flex justify-content-between">
+               <h1>بيانات عملاء التركيبات </h1>
+               <a href="{% url 'export_repair_customers' %}" class="btn btn-lg btn-soft-primary btn-rounded">استخراج
+                   بيانات العملاء </a>
+           </div>
+       </div>
+       {% endif %}

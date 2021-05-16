@@ -48,7 +48,7 @@
                                                 {% if req.hold %}
                                                 <h3>هذا الطلب معلق ..
                                                     {% if request.user.role == 1 or request.user.role == 2 %}
-                                                    <a href="{% url 'hold_request' req.id %}" class="text-success">اضغط
+                                                    <a href="{% url 'hold_request' req.id  %}" class="text-success">اضغط
                                                         هنا </a>
                                                     لأعادة التفعيل
                                                     {% endif %}
@@ -170,7 +170,8 @@
                                                             الطلب <i class="far fa-check-circle"></i>
                                                         </a>
                                                         {% else %}
-                                                        <a href="{% url 'hold_request' req.id %}"
+                                                        <a data-bs-toggle="collapse" href="#hold_reason"
+                                                            aria-expanded="false"
                                                             class="btn btn-lg btn-soft-warning btn-rounded btn-waves">تعليق
                                                             الطلب <i class="far fa-pause-circle"></i>
                                                         </a>
@@ -237,6 +238,50 @@
                                                                         <div>
                                                                             <button type="submit"
                                                                                 class="btn btn-primary w-md">تحديث
+                                                                            </button>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                    <div class="collapse" id="hold_reason">
+                                                        <div class="card card-body mb-0">
+                                                            <h3>سبب تعليق الطلب
+                                                            </h3>
+                                                            <form method="POST" action="{% url 'hold_request' req.id %}"
+                                                                enctype="multipart/form-data">
+                                                                {% csrf_token %}
+                                                                <input type="hidden" name="req_id" value="{{req.id}}">
+
+                                                                <div class="row mb-4">
+
+                                                                    <div class="col-sm-10">
+                                                                        <div class="form-group">
+                                                                            <label for="">
+                                                                                ارفاق صورة
+                                                                            </label>
+                                                                            <input type="file" class="form-control"
+                                                                                name="holding_file">
+                                                                        </div>
+                                                                        <div class="form-group mt-2">
+                                                                            <label for="">سبب التعليق </label>
+                                                                            <textarea class="form-control"
+                                                                                name="hold_reason" id=""
+                                                                                required></textarea>
+                                                                        </div>
+
+                                                                    </div>
+                                                                </div>
+
+
+
+                                                                <div class="row ">
+                                                                    <div class="col">
+
+                                                                        <div>
+                                                                            <button type="submit"
+                                                                                class="btn btn-primary w-md">تعليق
                                                                             </button>
                                                                         </div>
                                                                     </div>

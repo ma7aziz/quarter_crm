@@ -69,14 +69,16 @@ class Service_request(models.Model):
     notes = models.CharField(max_length=300, blank=True, null=True)
     status = models.CharField(
         max_length=25, choices=REQUEST_STATUS, default='new')
-    file = models.FileField(upload_to='repair/files/', blank=True, null=True)
+    file = models.FileField(upload_to='service/files/', blank=True, null=True)
     timestamp = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     code = models.CharField(
         unique=True, max_length=40, blank=True, null=True, editable=False)
     appointment = models.ForeignKey(
-        "Appointment", on_delete=models.SET_NULL, null=True, blank=True, related_name="repair_appointment")
+        "Appointment", on_delete=models.SET_NULL, null=True, blank=True, related_name="service_appointment")
     hold = models.BooleanField(default=False)
+    hold_reason = models.ForeignKey(
+        "Hold_reason", on_delete=models.SET_NULL, null=True, blank=True)
     favourite = models.BooleanField(default=False)
     objects = RequestManager()
 
@@ -119,3 +121,17 @@ class Appointment(models.Model):
 
     def __str__(self):
         return self.service_request.customer_name
+
+
+class Hold_reason(models.Model):
+    service = models.ForeignKey(
+        Service_request, on_delete=models.CASCADE, related_name="service_on_hold")
+    file = models.FileField(upload_to="hold_files/", blank=True, null=True)
+    timestamp = models.DateTimeField(auto_now_add=True)
+    hold_by = models.ForeignKey(
+        User, on_delete=models.SET_NULL, null=True, blank=True)
+
+    reason = models.CharField(max_length=500, blank=True)
+
+    def __str__(self):
+        return f'{self.service} Hold Reason !'
