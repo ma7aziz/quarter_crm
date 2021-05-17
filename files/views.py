@@ -133,7 +133,7 @@ def export_repair_customers(request):
     response['Content-Disposition'] = 'attachment; filename="repair_customer_data.csv"'
     response.write(u'\ufeff'.encode('utf8'))
     writer = csv.writer(response)
-    writer.writerow(["id", "الاسم", "الهاتف", "العنوان ", ])
+    writer.writerow(["", "الاسم", "الهاتف", "العنوان ", ])
 
     processes = Service_request.objects.repair(
     ).values_list("id", "customer_name", "phone", "address", )
