@@ -9,7 +9,11 @@ WAITING_FOR_FIRST_TRANSFER = 5
 TRANSFER_REVIEW = 6
 WAITING_FOR_DESIGNS = 7
 DESIGN_REVIEW = 8
-EXCUTION = 9
+FIRST_EXCUTION = 9
+SECOND_TRANSFER = 10
+SECOND_TRANSFER_REVIEW = 11
+SECOND_EXCUTION = 12
+DONE = 13
 
 STATUS_CHOICES = (
     (1, "جديد"),
@@ -20,5 +24,10 @@ STATUS_CHOICES = (
     (6, "مراجعة التحويل المالي"),
     (7, "التصميم"),
     (8, "مراجعة التصاميم "),
-    (9, "التنفيذ")
+    (9, "التنفيذ"),
+    (10, "التحويل الثاني "),
+    (11, "مراجعة التحويل الثاني "),
+    (12, "التنفيذ الثاني "),
+    (13, "تمت ")
+
 )

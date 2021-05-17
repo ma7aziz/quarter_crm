@@ -154,6 +154,28 @@
 
                                 <div class="accordion" id="accordionExample">
                                     {% if request.user.role == 1 or request.user.role == 2 %}
+                                    {% if req.hold %}
+                                    <div class="card">
+                                        <div class="card-body bg-dark text-light">
+                                            <p><strong>سبب التعليق : </strong>
+                                                {{req.hold_reason.reason}}
+                                            </p>
+                                            <p><strong class="">تم التعليق بواسطة </strong> :
+                                                {{req.hold_reason.hold_by.username}}
+
+
+                                            </p>
+                                            <p><strong>تاريخ التعليق : </strong>
+                                                {{req.hold_reason.timestamp}}
+                                            </p>
+                                            {% if req.hold_reason.file %}
+                                            <p><a href="{{req.hold_reason.file.url}}" target="_blank">عرض الملفات</a>
+                                            </p>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+
+                                    {% endif%}
                                     <div class="accordion-item">
                                         <h2 class="accordion-header" id="headingOne">
                                             <button class="accordion-button" type="button" data-bs-toggle="collapse"

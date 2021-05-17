@@ -21,14 +21,14 @@ def service_request_details(request, id):
         'request_status': REQUEST_STATUS
 
     }
-    print(request.user.role, req.status)
+
     return render(request, 'repair/request_details.html', ctx)
 
 
 def appointment_details(request, id):
 
     appointment = Appointment.objects.get(pk=id)
-    print(appointment.is_today)
+
     ctx = {
         "appointment": appointment
     }
@@ -179,8 +179,12 @@ def change_status(request):
 def deactivate_request(request, id):
     req = Service_request.objects.get(pk=id)
     req.active = not req.active
+
     req.save()
     if req.active:
+        if req.hold:
+            req.hold = False
+            req.save()
         messages.success(request, "تم اعادة تفعيل الطلب  !")
     else:
         messages.success(request, "تم اغلاق الطلب  !")

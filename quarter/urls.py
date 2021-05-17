@@ -19,6 +19,8 @@ urlpatterns = [
     path('confirm_process/<int:id>',
          views.confirm_process, name="confirm_process"),
     path('first_transfer', views.first_transfer, name="first_transfer"),
-    path('attach_designs', views.attach_designs, name="attach_designs")
+    path('second_transfer', views.second_transfer, name="second_transfer"),
+    path('attach_designs', views.attach_designs, name="attach_designs"),
+    path('end_request/<int:id>', views.end_request, name="end_request")
 
 ]

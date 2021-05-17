@@ -1,3 +1,4 @@
+from datetime import datetime
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect, JsonResponse
@@ -11,7 +12,6 @@ from django.views.decorators.csrf import csrf_exempt
 
 @login_required
 def index(request):
-    print(Quarter_service.objects.all().order_by('-timestamp'))
     ctx = {
         "new_transfers": Quarter_service.objects.filter(status=6),
         "all_requests": Quarter_service.objects.all().order_by('-timestamp'),
@@ -42,7 +42,7 @@ def create_request(request):
 
 def request_details(request, id):
     req = Quarter_service.objects.get(pk=id)
-
+    print(req.status)
     return render(request, 'quarter/request_details.html', {'req': req, 'status_choices': STATUS_CHOICES})
 
 
@@ -79,6 +79,9 @@ def deactivate_request(request, id):
     req.active = not req.active
     req.save()
     if req.active:
+        if req.hold:
+            req.hold = False
+            req.save()
         messages.success(request, "تم اعادة تفعيل الطلب  !")
     else:
         messages.success(request, "تم اغلاق الطلب  !")
@@ -142,6 +145,9 @@ def confirm_process(request, id):
     elif req.status == 8:
         req.status = 9
         req.save()
+    elif req.status == 11:
+        req.status = 12
+        req.save()
 
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
@@ -164,6 +170,28 @@ def first_transfer(request):
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
+def second_transfer(request):
+    if request.method == "POST":
+        req = Quarter_service.objects.get(pk=request.POST['request'])
+        files = request.FILES['files']
+        notes = request.POST['notes']
+        transfered = request.POST['transfered_ammount']
+
+        transfer = req.money_transfer
+        transfer.transfer2_qty = int(transfered)
+        transfer.transfer2_file = files
+        transfer.transfer2_date = datetime.now()
+        transfer.transfer2_notes = notes
+
+        transfer.save()
+        req.status = 11
+        req.save()
+        messages.success(
+            request, 'تم ارسال مستندات التحويل ')
+
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
 def attach_designs(request):
     if request.method == "POST":
         req = Quarter_service.objects.get(pk=request.POST['request'])
@@ -177,6 +205,14 @@ def attach_designs(request):
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
-# Pricing Details
-# design Details
-# transfers
+def end_request(request, id):
+    req = Quarter_service.objects.get(pk=id)
+    req.status = 13
+    req.save()
+    messages.success(
+        request, 'اتمام الخدمة بنجاح  ')
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+    # Pricing Details
+    # design Details
+    # transfers

@@ -129,7 +129,7 @@ class Hold_reason(models.Model):
     service = models.ForeignKey(
         Service_request, on_delete=models.CASCADE, related_name="service_on_hold")
     file = models.FileField(upload_to="hold_files/", blank=True, null=True)
-    timestamp = models.DateTimeField(auto_now_add=True)
+    timestamp = models.DateTimeField(auto_now=True)
     hold_by = models.ForeignKey(
         User, on_delete=models.SET_NULL, null=True, blank=True)
 

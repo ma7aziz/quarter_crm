@@ -262,13 +262,16 @@
             </div>
             {% endif %}
             <!-- attach first transfer files  -->
-            {% if req.status == 5 %}
+            {% if req.status == 5 or req.status  == 9  %}
 
             <div class="accordion-item">
                 <h2 class="accordion-header" id="headingTwo">
                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                         data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
                         ارفاق ملفات التحويل
+                        {% if req.status == 9 %}
+                        الثاني
+                        {% endif %}
                     </button>
                 </h2>
 
@@ -279,8 +282,16 @@
                             {{req.pricing.price|intcomma}}
                             ريال
                         </p>
+                        {% if req.status == 9 %}
+                        <p class="text-center text-muted"><span>المبلغ المتبقي :</span>
+                            {{req.money_transfer.outstanding_ammount|intcomma}}
+                            ريال
+                        </p>
+                        {% endif %}
 
-                        <form method="POST" action="{% url 'first_transfer' %}" enctype="multipart/form-data">
+                        <form method="POST" {% if req.status == 5 %} action="{% url 'first_transfer' %}"
+                            {% elif req.status == 9 %} action="{% url 'second_transfer' %}" {% endif %}
+                            enctype="multipart/form-data">
                             {% csrf_token %}
                             <input type="hidden" name="request" value="{{req.id}}">
                             <div class="row mb-4">
@@ -323,7 +334,7 @@
             {%endif %}
 
             {% if request.user.role == 6 or request.user.role == 1 %}
-            {% if  req.status == 6 %}
+            {% if  req.status == 6 or req.status == 11  %}
             <div class="accordion-item">
                 <h2 class="accordion-header" id="headingTwo">
                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
@@ -338,21 +349,35 @@
                             <tbody>
                                 <tr>
                                     <th scope="row" style="width: 20%;"> قيمة التحويل </th>
-
+                                    {% if req.status == 6 %}
                                     <td> {{req.money_transfer.transfer1_qty | intcomma}} ريال</td>
+                                    {% elif req.status == 11 %}
+                                    <td> {{req.money_transfer.transfer2_qty | intcomma}} ريال</td>
+                                    {% endif %}
                                 </tr>
                                 <tr>
                                     <th>
                                         مستندات التحويل
                                     </th>
-                                    <td><a href="{{req.money_transfer.transfer1_file.url}}" target="__blank">عرض
-                                            الملفات</a></td>
+                                    <td>
+                                        {% if req.status == 6 %}
+                                        <a href="{{req.money_transfer.transfer1_file.url}}" target="__blank">عرض
+                                            الملفات</a>
+                                        {% elif req.status == 11 %}
+                                        <a href="{{req.money_transfer.transfer2_file.url}}" target="__blank">عرض
+                                            الملفات</a>
+                                        {% endif %}
+                                    </td>
 
                                 </tr>
                                 <tr>
                                     <th>ملاحظات</th>
                                     <td>
+                                        {% if req.status == 6 %}
                                         {{req.money_transfer.transfer1_notes}}
+                                        {% elif req.status == 11 %}
+                                        {{req.money_transfer.transfer2_notes}}
+                                        {% endif %}
                                     </td>
                                 </tr>
                             </tbody>
@@ -421,7 +446,26 @@
             </div>
             {% endif %}
 
+            {% if req.status == 12 %}
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingTwo">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                        اتمام العملية
+                    </button>
+                </h2>
+                <div id="collapseTwo" class="accordion-collapse collapse show" aria-labelledby="headingTwo"
+                    data-bs-parent="#accordionExample">
+                    <div class="accordion-body">
+                        <a href="{% url 'end_request' req.id %}" class="btn btn-lg btn-soft-success btn-rounded "
+                            style="width: 100%;"> اتمام العملية
+                        </a>
+                    </div>
 
+                </div>
+
+            </div>
+            {% endif %}
 
         </div>
 
