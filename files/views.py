@@ -17,9 +17,9 @@ def export_users_csv(request):
     """
         Export all website users data
     """
-    response = HttpResponse(content_type='text/csv, charset=utf-8-sig')
+    response = HttpResponse(content_type='text/csv , charset=utf-8')
     response['Content-Disposition'] = 'attachment; filename="users.xls"'
-
+    response.write(u'\ufeff'.encode('utf8'))
     writer = csv.writer(response)
     writer.writerow(['id', 'username',  'name', 'phone', 'email', 'role', 'last_login',
                      'completed_tasks', 'submitted_orders'])
@@ -37,9 +37,9 @@ def export_current_service(request):
     """
         Export Repair / Install Current Processes
     """
-    response = HttpResponse(content_type='text/csv, charset=utf-8-sig')
+    response = HttpResponse(content_type='text/csv, charset=utf-8')
     response['Content-Disposition'] = 'attachment; filename="current_install/repair_requests.csv"'
-
+    response.write(u'\ufeff'.encode('utf8'))
     writer = csv.writer(response)
     writer.writerow(["id", "service_type", "customer_name", "customer_type", "phone",
                     "address", "time_created", "status", "created by"])
@@ -54,9 +54,9 @@ def export_current_service(request):
 
 
 def export_all_services(request):
-    response = HttpResponse(content_type='text/csv, charset=utf-8-sig')
+    response = HttpResponse(content_type='text/csv, charset=utf-8')
     response['Content-Disposition'] = 'attachment; filename="all_install/repair_requests.csv"'
-
+    response.write(u'\ufeff'.encode('utf8'))
     writer = csv.writer(response)
     writer.writerow(["id", "service_type", "customer_name", "customer_type", "phone",
                     "address", "time_created", "status", "created by"])
@@ -74,9 +74,9 @@ def export_all_quarter_services(request):
     """
         Export current quarter proceses
     """
-    response = HttpResponse(content_type='text/csv, charset=utf-8-sig')
+    response = HttpResponse(content_type='text/csv, charset=utf-8')
     response['Content-Disposition'] = 'attachment; filename="current_quarter_services.csv"'
-
+    response.write(u'\ufeff'.encode('utf8'))
     writer = csv.writer(response)
     writer.writerow(["id",  "customer_name", "phone",
                     "address", "time_created", "created_by",  "status", "price", "outstanding_ammount"])
@@ -94,9 +94,9 @@ def export_current_quarter_services(request):
     """
         Export current quarter proceses
     """
-    response = HttpResponse(content_type='text/csv, charset=utf-8-sig')
+    response = HttpResponse(content_type='text/csv, charset=utf-8')
     response['Content-Disposition'] = 'attachment; filename="current_quarter_services.csv"'
-
+    response.write(u'\ufeff'.encode('utf8'))
     writer = csv.writer(response)
     writer.writerow(["id",  "customer_name", "phone",
                     "address", "time_created", "created_by",  "status", "price", "outstanding_ammount"])
@@ -114,9 +114,9 @@ def export_customers_data(request):
     """
         Export customer data
     """
-    response = HttpResponse(content_type='text/csv, charset=utf-8-sig')
+    response = HttpResponse(content_type='text/csv, charset=utf-8')
     response['Content-Disposition'] = 'attachment; filename="customer_data.csv"'
-
+    response.write(u'\ufeff'.encode('utf8'))
     writer = csv.writer(response)
     writer.writerow(["id", "name", "phone", "email", ])
 
@@ -129,14 +129,14 @@ def export_customers_data(request):
 
 
 def export_repair_customers(request):
-    response = HttpResponse(content_type='text/csv, charset=utf-8-sig')
+    response = HttpResponse(content_type='text/csv, charset=utf-8')
     response['Content-Disposition'] = 'attachment; filename="repair_customer_data.csv"'
-
+    response.write(u'\ufeff'.encode('utf8'))
     writer = csv.writer(response)
-    writer.writerow(["id", "customer_name", "phone", "address", 'date '])
+    writer.writerow(["id", "الاسم", "الهاتف", "العنوان ", ])
 
     processes = Service_request.objects.repair(
-    ).values_list("id", "customer_name", "phone", "address", "timestamp__date")
+    ).values_list("id", "customer_name", "phone", "address", )
 
     for process in processes:
         writer.writerow(process)
