@@ -1,12 +1,12 @@
-import datetime
-from service.models import Service_request
 from django.db import models
+import datetime
 
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import AbstractUser, AbstractBaseUser
 from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.auth.models import PermissionsMixin
 from django.utils import timezone
+
 # Create your models here.
 
 
@@ -94,12 +94,3 @@ class Qouta(models.Model):
 
     def __str__(self):
         return f'{self.max_requests}'
-
-
-def check_qouta(user_id):
-    user = User.objects.get(pk=user_id)
-    last_request = Service_request.objects.repair().filter(created_by=user).last()
-    today = datetime.date.today()
-    yesterday = today - datetime.timedelta(days=1)
-    if last_request.timestamp.date == yesterday:
-        user.current_requests = 0

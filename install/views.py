@@ -1,4 +1,4 @@
-from accounts.models import check_qouta
+from .utils import check_qouta
 import datetime
 from django.shortcuts import render
 from service.models import Service_request, Appointment
@@ -19,7 +19,7 @@ def index(request):
     elif request.user.role == 3:
         requests = Appointment.objects.filter(
             status="open", technician=request.user)
-    print(Service_request.objects.install_favourites())
+
     ctx = {
         "requests": requests,
         "on_hold": Service_request.objects.on_hold().filter(service_type="install"),
