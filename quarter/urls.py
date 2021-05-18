@@ -21,6 +21,8 @@ urlpatterns = [
     path('first_transfer', views.first_transfer, name="first_transfer"),
     path('second_transfer', views.second_transfer, name="second_transfer"),
     path('attach_designs', views.attach_designs, name="attach_designs"),
-    path('end_request/<int:id>', views.end_request, name="end_request")
+    path('attach_purchase', views.attach_purchase, name="attach_purchase"),
+    path('end_request/<int:id>', views.end_request, name="end_request"),
+    path('reject_price', views.reject_price, name="reject_price")
 
 ]

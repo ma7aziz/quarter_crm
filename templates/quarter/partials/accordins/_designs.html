@@ -1,0 +1,96 @@
+{% load humanize %}
+{%if req.status == 7 %}
+<div class="accordion-item">
+    <h2 class="accordion-header" id="headingTwo">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo"
+            aria-expanded="false" aria-controls="collapseTwo">
+            ارفاق ملفات التصميمات
+        </button>
+    </h2>
+    <div id="collapseTwo" class="accordion-collapse collapse show" aria-labelledby="headingTwo"
+        data-bs-parent="#accordionExample">
+        <div class="accordion-body">
+            <form method="POST" action="{% url 'attach_designs' %}" enctype="multipart/form-data">
+                {% csrf_token %}
+                <input type="hidden" name="request" value="{{req.id}}">
+
+                <div class="row mb-4">
+                    <label for="horizontal-email-input" class="col-sm-4 col-form-label">التصميمات
+                    </label>
+                    <div class="col-sm-8">
+                        <input type="file" name="files" class="form-control" required />
+                    </div>
+                </div>
+                <div class="row mb-4">
+                    <label for="horizontal-email-input" class="col-sm-4 col-form-label">ملاحظات</label>
+                    <div class="col-sm-8">
+                        <textarea class="form-control" name="notes"></textarea>
+                    </div>
+                </div>
+
+
+                <div class="row justify-content-center">
+                    <div class="col-sm-9">
+                        <div>
+                            <button type="submit" class="btn btn-primary w-md">ارسال</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+    </div>
+
+</div>
+{% endif %}
+{% if req.status ==  8 %}
+<div class="accordion-item">
+    <h2 class="accordion-header" id="headingTwo">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo"
+            aria-expanded="false" aria-controls="collapseTwo">
+            مراجعة التصميمات
+        </button>
+    </h2>
+
+    <div id="collapseTwo" class="accordion-collapse collapse show" aria-labelledby="headingTwo"
+        data-bs-parent="#accordionExample">
+        <div class="accordin-body">
+
+
+            <table class="table table-nowrap mb-3 table-striped " style="font-size: 18px;">
+                <tbody>
+
+                    <tr>
+                        <th scope="row"> التصميمات </th>
+                        <td><a href="{{req.designs.files.url}}" target="__blank">عرض
+                                الملفات</a>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <th scope="row">ملاحظات</th>
+                        <td>{{ req.designs.notes }}</td>
+                    </tr>
+
+                    <tr>
+                        <th scope="row">الحالة </th>
+                        <td>
+
+                        </td>
+                    </tr>
+
+
+                </tbody>
+
+            </table>
+            <div class="text-center my-3">
+
+                <a href="{%url 'confirm_process' req.id %}" class="btn btn-lg btn-success btn-rounded">اعتماد
+                    التصميمات </a>
+
+
+            </div>
+        </div>
+
+    </div>
+    {% endif %}

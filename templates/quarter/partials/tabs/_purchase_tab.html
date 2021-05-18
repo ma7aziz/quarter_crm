@@ -1,0 +1,33 @@
+{% load humanize %}
+<!-- designs  -->
+{% if req.purchase %}
+<div class="tab-pane" id="navtabs-purchase">
+    <h4>المشتريات</h4>
+    <div class="table-responsive container">
+        <table class="table table-nowrap mb-0">
+            <tbody>
+                <tr>
+
+
+
+                    <td>
+                        <a href="{{req.purchase.files.url}}" target="__blank">عرض
+                            الملفات</a>
+                    </td>
+
+                </tr>
+
+                <tr>
+                    <th scope="row">ملاحظات</th>
+                    <td>{{ req.purchase.notes }}</td>
+                </tr>
+
+
+
+            </tbody>
+
+        </table>
+
+    </div>
+</div>
+{% endif %}

@@ -2,11 +2,12 @@ from datetime import datetime
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect, JsonResponse
-from django.shortcuts import render
-from .models import Price, Quarter_service, Transfer, Design
+from django.shortcuts import render, redirect
+from .models import Price, Quarter_service, Transfer, Design, Purchase
 from core.add_customer import add_customer
 from .choices import STATUS_CHOICES
 from django.views.decorators.csrf import csrf_exempt
+
 # Create your views here.
 
 
@@ -42,7 +43,6 @@ def create_request(request):
 
 def request_details(request, id):
     req = Quarter_service.objects.get(pk=id)
-    print(req.status)
     return render(request, 'quarter/request_details.html', {'req': req, 'status_choices': STATUS_CHOICES})
 
 
@@ -50,7 +50,7 @@ def delete_request(request, id):
     req = Quarter_service.objects.get(pk=id)
     req.delete()
     messages.success(request, "تم حذف الطلب ")
-    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    return redirect('quarter_index')
 
 
 def hold_request(request, id):
@@ -104,17 +104,25 @@ def quarter_multi_delete(request):
 
 def pricing(request):
     if request.method == "POST":
+        print(request.POST)
         req = Quarter_service.objects.get(pk=request.POST['request'])
         price = request.POST['price']
         files = request.FILES['files']
         notes = request.POST['notes']
-
-        price = Price(service=req, price=price, files=files,
-                      notes=notes, created_by=request.user)
-        price.save()
-        req.pricing = price
-        req.status = 3
-        req.save()
+        if not req.pricing:
+            price = Price(service=req, price=price, files=files,
+                          notes=notes, created_by=request.user)
+            price.save()
+            req.pricing = price
+            req.status = 3
+            req.save()
+        else:
+            req.pricing.price = price
+            req.pricing.files = files
+            req.pricing.notes = notes
+            req.pricing.save()
+            req.status = 4
+            req.save()
 
         messages.success(request, "تم ارسال السعر .")
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
@@ -205,6 +213,19 @@ def attach_designs(request):
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
+def attach_purchase(request):
+    if request.method == "POST":
+        req = Quarter_service.objects.get(pk=request.POST['request'])
+        files = request.FILES['files']
+        notes = request.POST['notes']
+        purchase = Purchase(service=req, files=files,
+                            notes=notes, created_by=request.user)
+        purchase.save()
+        req.purchase = purchase
+        req.save()
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
 def end_request(request, id):
     req = Quarter_service.objects.get(pk=id)
     req.status = 13
@@ -213,6 +234,17 @@ def end_request(request, id):
         request, 'اتمام الخدمة بنجاح  ')
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
-    # Pricing Details
-    # design Details
-    # transfers
+
+def reject_price(request):
+    req = Quarter_service.objects.get(pk=request.POST['req_id'])
+    req.pricing.status = "rejected"
+    if request.POST['proposed_price']:
+        req.pricing.proposed_price = request.POST['proposed_price']
+    if request.POST['rejection_notes']:
+        req.pricing.rejection_notes = request.POST['rejection_notes']
+    req.pricing.save()
+    req.status = 3
+    req.save()
+    messages.success(
+        request, 'تم ارسال الملاحظات للادارة !')
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))

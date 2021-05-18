@@ -1,0 +1,261 @@
+{% load humanize %}
+{% if req.status == 1 %}
+<div class="accordion-item">
+    <h2 class="accordion-header" id="headingOne">
+        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne"
+            aria-expanded="true" aria-controls="collapseOne">
+            اضافة السعر المقترح
+        </button>
+    </h2>
+    <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne"
+        data-bs-parent="#accordionExample">
+        <div class="accordion-body">
+            <form method="POST" action="{% url 'pricing' %}" enctype="multipart/form-data">
+                {% csrf_token %}
+                <input type="hidden" name="request" value="{{req.id}}">
+                <div class="row mb-4">
+                    <label for="price" class="col-form-label col-4">
+                        السعر الاجمالي
+                    </label>
+                    <div class="col-8">
+                        <input type="number" name="price" class="col-8 form-control ">
+                    </div>
+                </div>
+                <div class="row mb-4">
+                    <label for="horizontal-email-input" class="col-sm-4 col-form-label">ارفق ملفات
+                        التسعير
+                    </label>
+                    <div class="col-sm-8">
+                        <input type="file" name="files" class="form-control">
+                    </div>
+                </div>
+                <div class="row mb-4">
+                    <label for="horizontal-email-input" class="col-sm-4 col-form-label">ملاحظات</label>
+                    <div class="col-sm-8">
+                        <textarea class="form-control" name="notes"></textarea>
+                    </div>
+                </div>
+
+
+                <div class="row justify-content-center">
+                    <div class="col-sm-9">
+                        <div>
+                            <button type="submit" class="btn btn-primary w-md">اضافة
+                                السعر </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+{% if req.status == 3 %}
+<div class="accordion-item">
+    <h2 class="accordion-header" id="headingOne">
+        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne"
+            aria-expanded="true" aria-controls="collapseOne">
+            مراجعة التسعير
+        </button>
+    </h2>
+    <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne"
+        data-bs-parent="#accordionExample">
+        <div class="accordion-body">
+
+            <table class="table table-nowrap mb-3 table-striped " style="font-size: 18px;">
+                <tbody>
+                    <tr>
+                        {% if req.status == 3 %}
+                        <th scope="row" style="width: 20%;"> السعر المقترح </th>
+                        {% else %}
+                        <th scope="row" style="width: 20%;"> السعر </th>
+                        {% endif %}
+                        <td>{{req.pricing.price| intcomma}} ريال </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">ملفات التسعير </th>
+                        <td><a href="{{req.pricing.files.url}}" target="__blank">عرض
+                                الملفات</a>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <th scope="row">ملاحظات</th>
+                        <td>{{ req.pricing.notes }}</td>
+                    </tr>
+
+                    <tr>
+                        <th scope="row">الحالة </th>
+                        <td>
+                            {% if req.pricing.status == "approved" %}
+                            تم قبول السعر
+                            {% elif req.pricing.status == "pending" %}
+                            التفاوض
+                            {% else %}
+                            رفض السعر / طلب تعديل
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% if req.pricing.status == "rejected" %}
+                    <tr>
+                        <th scope="row">سعر مقترح </th>
+                        <td>
+                            {{req.pricing.proposed_price}}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">ملاحظات / تعديلات</th>
+                        <td>
+                            {{req.pricing.rejection_notes}}
+                        </td>
+                    </tr>
+                    {% endif %}
+
+                </tbody>
+
+            </table>
+            {% if not req.pricing.status == "rejected"%}
+            <a href="{%url 'confirm_process' req.id %}" class="btn btn-lg btn-success btn-rounded">
+                الموافقة علي السعر <i class="far fa-check-circle "></i>
+            </a>
+            {% endif %}
+
+            <button data-bs-toggle="collapse" href="#changeprice" aria-expanded="false"
+                class="btn btn-lg btn-danger btn-rounded">
+                تعديل السعر <i class="far fa-edit"></i>
+            </button>
+            <div class="collapse" id="changeprice">
+                <div class="card card-body mb-0">
+                    <form method="POST" action="{% url 'pricing' %}" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <input type="hidden" name="request" value="{{req.id}}">
+                        <div class="row mb-4">
+                            <label for="price" class="col-form-label col-4">
+                                السعر الجديد
+                            </label>
+                            <div class="col-8">
+                                <input type="number" name="price" class="col-8 form-control ">
+                            </div>
+                        </div>
+                        <div class="row mb-4">
+                            <label class="col-sm-4 col-form-label">ارفق ملفات
+                                التسعير
+                            </label>
+                            <div class="col-sm-8">
+                                <input type="file" name="files" class="form-control">
+                            </div>
+                        </div>
+                        <div class="row mb-4">
+                            <label class="col-sm-4 col-form-label">ملاحظات</label>
+                            <div class="col-sm-8">
+                                <textarea class="form-control" name="notes"></textarea>
+                            </div>
+                        </div>
+
+
+                        <div class="row justify-content-center">
+                            <div class="col-sm-9">
+                                <div>
+                                    <button type="submit" class="btn btn-primary w-md">اضافة
+                                        السعر </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endif %}
+{% if req.status == 4 %}
+<div class="accordion-item">
+    <h2 class="accordion-header" id="headingOne">
+        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne"
+            aria-expanded="true" aria-controls="collapseOne">
+            مراجعة الاسعار مع العميل
+        </button>
+    </h2>
+    <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne"
+        data-bs-parent="#accordionExample">
+        <div class="accordion-body">
+            <p class="text-muted">بعد ابلاغ العميل بالسعر </p>
+            <table class="table table-nowrap mb-3 table-striped " style="font-size: 18px;">
+                <tbody>
+                    <tr>
+                        {% if req.status == 3 %}
+                        <th scope="row" style="width: 20%;"> السعر المقترح </th>
+                        {% else %}
+                        <th scope="row" style="width: 20%;"> السعر </th>
+                        {% endif %}
+                        <td>{{req.pricing.price| intcomma}} ريال </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">ملفات التسعير </th>
+                        <td><a href="{{req.pricing.files.url}}" target="__blank">عرض
+                                الملفات</a>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <th scope="row">ملاحظات</th>
+                        <td>{{ req.pricing.notes }}</td>
+                    </tr>
+
+
+
+                </tbody>
+
+            </table>
+            <div>
+
+                <a href="{%url 'confirm_process' req.id %}" class="btn btn-lg btn-success btn-rounded">
+                    قبول السعر و البدء في التنفيذ
+                </a>
+
+                <a data-bs-toggle="collapse" href="#rejectprice" aria-expanded="false"
+                    class="btn btn-lg btn-warning btn-rounded">
+                    اقتراح تعديل
+                </a>
+                <div class="collapse" id="rejectprice">
+                    <div class="card card-body mb-0">
+                        <form method="POST" action="{% url 'reject_price' %}" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <input type="hidden" name="req_id" value="{{req.id}}">
+                            <div class="row mb-4">
+                                <label for="price" class="col-form-label col-4">
+                                    اقتراح سعر جديد
+                                </label>
+                                <div class="col-8">
+                                    <input type="number" name="proposed_price" class="col-8 form-control ">
+                                </div>
+                            </div>
+
+                            <div class="row mb-4">
+                                <label class="col-sm-4 col-form-label">سبب الرفض / ملاحظات </label>
+                                <div class="col-sm-8">
+                                    <textarea class="form-control" name="rejection_notes"></textarea>
+                                </div>
+                            </div>
+
+
+                            <div class="row justify-content-center">
+                                <div class="col-sm-9">
+                                    <div>
+                                        <button type="submit" class="btn btn-primary w-md">اضافة
+                                            السعر </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+{% endif %}

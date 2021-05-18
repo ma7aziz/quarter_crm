@@ -1,0 +1,42 @@
+ <!-- designs  -->
+ {% if req.designs %}
+ <div class="tab-pane" id="navtabs-designs">
+     <h4>التصميم</h4>
+     <div class="table-responsive container">
+         <table class="table table-nowrap mb-0">
+             <tbody>
+                 <tr>
+                     {% if req.status == 8 %}
+                     <th scope="row" style="width: 20%;"> التصميم المقترح </th>
+                     {% else %}
+                     <th scope="row" style="width: 20%;"> التصميم </th>
+                     {% endif %}
+
+
+                     <td>
+                         <a href="{{req.designs.files.url}}" target="__blank">عرض
+                             الملفات</a>
+                     </td>
+
+                 </tr>
+
+                 <tr>
+                     <th scope="row">ملاحظات</th>
+                     <td>{{ req.designs.notes }}</td>
+                 </tr>
+
+
+
+             </tbody>
+
+         </table>
+         {% if req.status == 8 %}
+         <div>
+             <a href="{%url 'confirm_process' req.id %}" class="btn btn-lg btn-success btn-rounded">الموافقة
+                 علي التصميمات
+             </a>
+         </div>
+         {% endif %}
+     </div>
+ </div>
+ {% endif %}

@@ -1,0 +1,48 @@
+{% load humanize %}
+
+{% if req.status > 8 %}
+{% if not req.purchase %}
+<div class="accordion-item">
+    <h2 class="accordion-header" id="PurchaseHeading">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+            data-bs-target="#attachPurchase" aria-expanded="false" aria-controls="attachPurchase">
+            ارفاق ملفات المشتريات
+        </button>
+    </h2>
+    <div id="attachPurchase" class="accordion-collapse collapse " aria-labelledby="PurchaseHeading"
+        data-bs-parent="#accordionExample">
+        <div class="accordion-body">
+            <form method="POST" action="{% url 'attach_purchase' %}" enctype="multipart/form-data">
+                {% csrf_token %}
+                <input type="hidden" name="request" value="{{req.id}}">
+
+                <div class="row mb-4">
+                    <label for="horizontal-email-input" class="col-sm-4 col-form-label">الملفات
+                    </label>
+                    <div class="col-sm-8">
+                        <input type="file" name="files" class="form-control" required />
+                    </div>
+                </div>
+                <div class="row mb-4">
+                    <label for="horizontal-email-input" class="col-sm-4 col-form-label">ملاحظات</label>
+                    <div class="col-sm-8">
+                        <textarea class="form-control" name="notes"></textarea>
+                    </div>
+                </div>
+
+
+                <div class="row justify-content-center">
+                    <div class="col-sm-9">
+                        <div>
+                            <button type="submit" class="btn btn-primary w-md">ارسال</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+    </div>
+
+</div>
+{% endif %}
+{% endif %}

@@ -38,6 +38,8 @@ class Quarter_service(models.Model):
     designs = models.ForeignKey(
         "Design", on_delete=models.SET_NULL, null=True, blank=True)
 
+    purchase = models.ForeignKey(
+        "Purchase", on_delete=models.SET_NULL, null=True, blank=True)
     hold = models.BooleanField(default=False)
     objects = Quarter_service_Manager()
 
@@ -47,15 +49,22 @@ class Quarter_service(models.Model):
 
 
 class Price(models.Model):
+    PRICE_STATUS_CHOICES = [
+        (1, 'approved'),
+        (2, "pending"),
+        (3, "rejected")
+    ]
     service = models.ForeignKey(Quarter_service, on_delete=models.CASCADE)
-    price = models.CharField(max_length=6, blank=True)
+    price = models.CharField(max_length=10, blank=True)
     files = models.FileField(upload_to='pricing/', )
     notes = models.TextField(max_length=500, blank=True, null=True)
     created_by = models.ForeignKey(
         User, on_delete=models.SET_NULL, null=True, blank=True)
     timestamp = models.DateTimeField(auto_now_add=True)
-
-    ################# STATUS #############
+    status = models.CharField(
+        max_length=15, choices=PRICE_STATUS_CHOICES, default="pending")
+    rejection_notes = models.TextField(max_length=500, blank=True)
+    proposed_price = models.CharField(max_length=10, blank=True)
 
     def __str__(self):
         return self.service.name
@@ -93,6 +102,11 @@ class Transfer(models.Model):
 
 
 class Design(models.Model):
+    DESIGN_STATUS_CHOICES = [
+        (1, 'approved'),
+        (2, "pending"),
+        (3, "rejected")
+    ]
     service = models.ForeignKey(Quarter_service, on_delete=models.CASCADE)
     files = models.FileField(upload_to='designes/', blank=True,  null=True)
     notes = models.TextField(max_length=500, blank=True, null=True)
@@ -100,5 +114,22 @@ class Design(models.Model):
     created_by = models.ForeignKey(
         User, on_delete=models.SET_NULL, null=True, blank=True)
 
+    status = models.CharField(
+        max_length=15, choices=DESIGN_STATUS_CHOICES, default="pending")
+
     def __str__(self):
         return f"Designes for {self.service}"
+
+
+class Purchase(models.Model):
+    service = models.ForeignKey(
+        Quarter_service, on_delete=models.CASCADE, related_name="quarter_service")
+    files = models.FileField(upload_to="purchase/", blank=True, null=True)
+    notes = models.TextField(max_length=500, blank=True, null=True)
+    cost = models.CharField(max_length=10, blank=True, null=True)
+    timestamp = models.DateTimeField(auto_now_add=True)
+    created_by = models.ForeignKey(
+        User, on_delete=models.SET_NULL, null=True, blank=True)
+
+    def __str__(self):
+        return f'{self.service} Purchases '
