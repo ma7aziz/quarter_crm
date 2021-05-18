@@ -260,44 +260,36 @@
                                 <input name="address" type="text" class="form-control">
                             </div>
                         </div>
-                        <!-- <div class="row">
-                            <div class="mb-3">
-                                <label class="form-label" for="machine_type">نوع الجهاز
-                                </label>
-                                <input name="machine_type" type="text" class="form-control">
-                            </div>
-                        </div> -->
+
                     </div>
+
+
                     <div class="row">
+                        <div class="mb-3">
+                            <label class="form-label" for="invoice_number">رقم فاتورة الشراء
+                            </label>
 
-                        <!-- <div class="mb-3">
-                            <label class="form-label">نوع العميل </label>
-                            <select class="form-control select2" name="customer_type">
-                                <option selected disabled>أختيار</option>
-                                <option value="cash">كاش</option>
-                                <option value="warranty">ضمان</option>
-
-                            </select>
-                        </div> -->
-
-                        <div class="row">
-                            <div class="mb-3">
-                                <label class="form-label" for="invoice_number">رقم فاتورة الشراء
-                                </label>
-
-                                <input name="invoice_number" type="text" class="form-control" required />
-                            </div>
+                            <input name="invoice_number" type="text" class="form-control" required />
                         </div>
-
                     </div>
+
+
                     {% csrf_token %}
                     <div class="mb-2">
                         <label class="form-label" for="file">ارفاق ملف</label>
                         <input type="file" class="form-control" name="attach_file" />
                     </div>
-                    <div class="mb-0">
+                    <div class="mb-2">
                         <label class="form-label" for="notes">معلومات اضافية </label>
                         <textarea class="form-control" name="notes" rows="4"></textarea>
+                    </div>
+
+                    <div class="form-check ">
+                        <input class="form-check-input" type="checkbox" value="checked" name="favorite"
+                            id="flexCheckDefault">
+                        <label class="form-check-label" for="flexCheckDefault" style="font-weight: 800;">
+                            تفضيل الطلب ***
+                        </label>
                     </div>
                     <div class="mt-2">
                         <button type="submit" class="btn btn-lg btn-primary">ارسال الطلب

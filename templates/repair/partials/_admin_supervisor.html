@@ -1,4 +1,60 @@
        {% load static %}
+
+       <div class="card bg-soft border border-success">
+           <div class="card-body">
+               <div class="card-title mb-4">
+
+                   {% if 'install' in request.path %}
+                   مفضلات التركيب
+                   {% endif %}
+               </div>
+               <div class="table-responsive">
+                   <table class="table table-centered table-nowrap mb-0" dir="rtl">
+                       <thead class="table-light">
+                           <tr>
+
+                               <th>رقم الطلب </th>
+                               <th>أسم العميل</th>
+                               <th>تاريخ الطلب </th>
+                               <th>نوع العميل </th>
+                               <th>حالة الطلب </th>
+
+                           </tr>
+                       </thead>
+                       <tbody>
+                           {% for req in favorites %}
+                           <tr>
+                               <td>{{req.id}}</td>
+                               <td>{{req.customer_name}}</td>
+                               <td>
+                                   {{req.timestamp.date}}
+                               </td>
+                               <td>
+                                   {% if req.customer_type == "cash" %}
+                                   كاش
+                                   {% elif request.customer_type == "warranty" %}
+                                   ضمان
+                                   {% endif %}
+                               </td>
+
+
+                               <td>
+
+                                   <a href="{% url 'service_request_details' req.id %}"
+                                       class="btn btn-light text-primary">
+                                       {{req.get_status_display}}</a>
+
+                               </td>
+
+                           </tr>
+                           {% endfor %}
+                       </tbody>
+                   </table>
+               </div>
+           </div>
+
+       </div>
+
        <div class="card">
            <div class="card-body">
                <h4 class="card-title mb-4" dir="rtl">الطلبات </h4>
@@ -78,7 +134,7 @@
 
                                            {% for req in requests %}
 
-                                           <tr>
+                                           <tr {% if req.favourite %} class="bg-soft-warning" {% endif %}>
                                                <td>
                                                    <div class="form-check font-size-16">
                                                        <input type="checkbox" class="form-check-input req_checkbox "

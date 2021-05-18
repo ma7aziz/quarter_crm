@@ -18,8 +18,8 @@ class RequestManager(models.Manager):
     def on_hold(self):
         return self.filter(hold=True)
 
-    def favourite(self):
-        return self.filter(favourite=True)
+    def install_favourites(self):
+        return self.filter(favourite=True).filter(service_type="install").filter(hold=False).exclude(status="done").filter(active=True)
 
     def new(self):
         # new requests

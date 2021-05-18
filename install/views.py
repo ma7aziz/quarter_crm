@@ -1,3 +1,5 @@
+from accounts.models import check_qouta
+import datetime
 from django.shortcuts import render
 from service.models import Service_request, Appointment
 from django.contrib.auth.decorators import login_required
@@ -10,7 +12,6 @@ from core.add_customer import add_customer
 @login_required()
 def index(request):
     if request.user.role == 4:
-
         requests = Service_request.objects.install().filter(
             created_by=request.user).order_by('-timestamp')
     elif request.user.role == 1 or request.user.role == 2:
@@ -18,11 +19,12 @@ def index(request):
     elif request.user.role == 3:
         requests = Appointment.objects.filter(
             status="open", technician=request.user)
-        print(requests, request.user.role)
+    print(Service_request.objects.install_favourites())
     ctx = {
         "requests": requests,
         "on_hold": Service_request.objects.on_hold().filter(service_type="install"),
         "new_requests": requests.filter(status="new"),
+        "favorites": Service_request.objects.install_favourites(),
 
         "need_confirm": Service_request.objects.done().filter(service_type="install")
     }
@@ -35,6 +37,7 @@ def install_request(request):
     initiate service request  === done by sales team
     """
     if request.method == 'POST':
+        print(request.POST.getlist('favorite'))
         customer_name = request.POST['customername']
         phone = request.POST['phone']
         address = request.POST['address']
@@ -57,5 +60,18 @@ def install_request(request):
             install_request.request_number = 'inst{id}'.format(
                 id=install_request.id)
             install_request.save()
+
+        check_qouta(request.user.id)
+        if "checked" in request.POST.getlist('favorite'):
+            if user.favourite_qouta.current_requests < user.favourite_qouta.max_requests:
+                service = install_request
+                service.favourite = True
+                service.save()
+                user.favourite_qouta.current_requests += 1
+                user.favourite_qouta.save()
+                messages.success(request, "تم التسجيل و الاضافة للمفضلات ")
+            else:
+                messages.success(request, "لم يتم أضافة الطلب الي المفضلات ")
+        else:
             messages.success(request, "تم تسجيل طلبك بنجاح")
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
