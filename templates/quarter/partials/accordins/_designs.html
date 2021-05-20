@@ -1,5 +1,6 @@
 {% load humanize %}
 {%if req.status == 7 %}
+{% if request.user.role == 7 or request.user.role == 1 %}
 <div class="accordion-item">
     <h2 class="accordion-header" id="headingTwo">
         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo"
@@ -43,6 +44,7 @@
 
 </div>
 {% endif %}
+{% endif %}
 {% if req.status ==  8 %}
 <div class="accordion-item">
     <h2 class="accordion-header" id="headingTwo">
@@ -84,10 +86,10 @@
 
             </table>
             <div class="text-center my-3">
-
+                {% if request.user.role == 4 or request.user.role == 1 %}
                 <a href="{%url 'confirm_process' req.id %}" class="btn btn-lg btn-success btn-rounded">اعتماد
                     التصميمات </a>
-
+                {% endif %}
 
             </div>
         </div>

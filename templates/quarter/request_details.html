@@ -33,7 +33,7 @@
             <div class=" row" dir="rtl">
                 {% if req.hold %}
                 <h2>هذا الطلب معلق ..
-                    {% if request.user.role == 1 or request.user.role == 2%}
+                    {% if request.user.role == 1 or request.user.role == 4 %}
                     <span>
                         لاعادة التفعيل
                         <a href="{% url 'hold_quarter_request' req.id %}" class="text-success ">
@@ -185,9 +185,11 @@
                     <div class="card">
                         <div class="card-body">
                             <h3>هذا الطلب غير مفعل </h3>
+                            {% if request.user.role == 1 or request.user.role == 4 %}
                             <a href="{% url 'deactivate_quarter' req.id  %}" class="btn btn-lg btn-soft-success mt-1">
                                 اعادة
                                 تفعيل </a>
+                            {% endif %}
                         </div>
 
                     </div>
