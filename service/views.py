@@ -12,7 +12,7 @@ from django.views.decorators.csrf import csrf_exempt
 
 def service_request_details(request, id):
     req = Service_request.objects.get(pk=id)
-    technicians = User.objects.all().filter(role=3)
+    technicians = User.objects.all().filter(role=8)
     appointment = Appointment.objects.all().filter(service_request=req).first()
     ctx = {
         'req': req,
@@ -45,16 +45,16 @@ def service_appointment(request):
 
     """
     if request.method == 'POST':
-        repair_request = Service_request.objects.get(
+        service_request = Service_request.objects.get(
             pk=request.POST['request'])
         technician = User.objects.get(pk=request.POST['technician'])
         date = request.POST['appoint_date']
         appointment = Appointment(
-            date=date, technician=technician, service_request=repair_request)
+            date=date, technician=technician, service_request=service_request, service_type=service_request.service_type)
         appointment.save()
-        repair_request.status = 'under_process'
-        repair_request.appointment = appointment
-        repair_request.save()
+        service_request.status = 'under_process'
+        service_request.appointment = appointment
+        service_request.save()
         messages.success(request, "تم تحديد الموعد !")
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 

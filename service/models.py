@@ -18,7 +18,7 @@ class RequestManager(models.Manager):
     def on_hold(self):
         return self.filter(hold=True)
 
-    def install_favourite(self):
+    def install_favourites(self):
         return self.filter(favourite=True).filter(service_type="install").filter(hold=False).exclude(status="done").filter(active=True)
 
     def new(self):
@@ -101,17 +101,32 @@ class Service_request(models.Model):
         return self.customer_name
 
 
+class AppointmentManager(models.Manager):
+    def repair(self):
+        return self.filter(service_type="repair")
+
+    def install(self):
+        return self.filter(service_type="install")
+
+
 class Appointment(models.Model):
     STATUS = [
         ('open', 'open'),
         ('closed', 'closed')
     ]
+    REQUEST_TYPE = (
+        ("repair", "صيانة"),
+        ("install", "تركيب")
+    )
     service_request = models.ForeignKey(
         Service_request, on_delete=models.CASCADE, related_name="request")
     date = models.DateField()
     technician = models.ForeignKey(User, on_delete=models.CASCADE)
     timestamp = models.DateTimeField(auto_now_add=True)
+    service_type = models.CharField(max_length=20, choices=REQUEST_TYPE)
     status = models.CharField(max_length=20, choices=STATUS, default="open")
+
+    objects = AppointmentManager()
 
     @property
     def is_past_due(self):

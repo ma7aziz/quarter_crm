@@ -86,12 +86,7 @@
                             <h5 class="font-size-16">{{user.get_role_display}}</h5>
                         </div>
 
-                        <div class="mt-4">
-                            <p class="mb-1">القسم:</p>
-                            {% for s in user.section.all %}
-                            <h5 class="font-size-16">{{s}}</h5>
-                            {% endfor %}
-                        </div>
+
                         <div class="mt-4">
                             <p class="mb-1">عدد مفضلات التركيب المسموح بها </p>
                             <h5 class="font-size-16">{{user.favourite_qouta}}</h5>
@@ -467,27 +462,7 @@
 
                                 <hr>
 
-                                <div class="row">
-                                    <div class="mb-3">
-                                        <label for="">القسم</label>
-                                        <p class="text-muted">يرجي اختيار الاقسام المتاحة
-                                            للمستخدم
-                                            <br>
-                                            اضغط CTR مع تحديد الاقسام المطلوبة
-                                        </p>
-                                        <select class="form-select" name="section" multiple>
-                                            {% for section in sections %}
 
-                                            <option value="{{section.id}}" {% if section in user.section.all %} selected
-                                                {% endif %}>{{section}}</option>
-                                            {% endfor %}
-                                        </select>
-
-                                    </div>
-
-
-
-                                </div>
                                 {% else %}
                                 <input type="hidden" name="role" value="{{user.role}}">
 

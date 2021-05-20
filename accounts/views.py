@@ -30,12 +30,9 @@ def create_user(request):
             user = User(username=username, name=name,
                         phone=phone, role=role)
             user.set_password(request.POST['password1'])
-            if request.FILES['attach_file']:
+            if request.FILES:
                 user.files = request.FILES['attach_file']
             user.save()
-            for s in request.POST.getlist('section'):
-                sect = Section.objects.get(pk=s)
-                user.section.add(sect)
             qouta = Qouta(user=user, max_requests=favourite_count)
             qouta.save()
             user.favourite_qouta = qouta
@@ -75,11 +72,15 @@ def userLogin(request):
         if user is not None:
             login(request, user)
             messages.success(request, "أهلا بك مرة اخري ")
-            if user.role == 1:
+            if user.role == 1:  # admin
                 return HttpResponseRedirect('/')
-            elif user.role == 4 or user.role == 3:
+            elif user.role == 2:  # install mng
+                return HttpResponseRedirect('/install')
+            elif user.role == 3:  # repair mng
+                return HttpResponseRedirect('/repair')
+            elif user.role == 8:  # tech
                 return HttpResponseRedirect('/new_tasks')
-            elif user.role == 6:
+            else:  # quarter Staff
                 return HttpResponseRedirect('quarter')
 
         else:
@@ -130,10 +131,9 @@ def delete_user(request, username):
 
 # custome  users views
 def new_tasks(request):
-
-    if request.user.role == 3:
+    if request.user.role == 8:
         requests = Appointment.objects.filter(
-            status="open", technician=request.user)
+            status="open", technician=request.user).order_by('date')
     other_tasks = Task.objects.open().filter(employee=request.user)
 
     return render(request, 'repair/index.html', {'requests': requests, 'other_tasks': other_tasks})

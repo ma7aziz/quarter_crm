@@ -17,7 +17,7 @@ from .models import Customer
 def index(request):
 
     new_requests = Service_request.objects.new()
-    under_process = Snew_requests = Service_request.objects.under_process()
+    under_process = Service_request.objects.under_process()
     done = Service_request.objects.done()
 
     tecnicians = User.objects.all().filter(role=3)

@@ -42,25 +42,23 @@ class Section(models.Model):
 
 
 ADMIN = 1
-SUPERVISOR = 2
-TECHNICIAN = 3
-SALES = 4
-PRICING = 5
+INSTALL_SUPERVISOR = 2
+REPAIR_SUPERVISOR = 3
+QUARTER_SUPERVISOR = 4
+SALES = 5
 ACCOUNTANT = 6
-PURCHASE = 7
-DESIGN = 8
-EXCUTION = 9
+EGYPT_OFFICE = 7
+TECHNICIAN = 8
 
 ROLE = (
     (1, 'مدير الموقع'),
-    (2, 'مشرف'),
-    (3, 'فني'),
-    (4, 'مندوب بيع'),
-    (5, 'تسعير'),
+    (2, 'مدير التركيبات'),
+    (3, 'مدير الصيانة'),
+    (4, 'مشرف كوارتر '),
+    (5, 'مندوب بيع '),
     (6, 'حسابات'),
-    (7, 'مشتريات'),
-    (8, 'الرسم'),
-    (9, 'التنفيذ')
+    (7, 'مكتب مصر '),
+    (8, 'فني '),
 
 )
 
@@ -71,7 +69,6 @@ class User(AbstractUser):
                              max_length=15, blank=True)
     role = models.PositiveSmallIntegerField(
         _('الوظيفة'), choices=ROLE, default=1)
-    section = models.ManyToManyField(Section)
     completed_tasks = models.IntegerField(default=0)
     submitted_orders = models.IntegerField(default=0)
     profile_pic = models.ImageField(

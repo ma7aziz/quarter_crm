@@ -408,7 +408,7 @@
                     <div class="d-none d-lg-block d-md-none ">
                         <div class="row mb-3 " dir="rtl">
                             {% if request.user.role == 1 or request.user.role == 2 %}
-                            <div class=" col col-lg-3 col-sm-6 mb-1 text-center ">
+                            <div class=" col  mb-1 text-center ">
 
                                 <button class="btn btn-lg btn-primary btn-rounded waves-effect waves-light "
                                     data-bs-toggle="modal" data-bs-target="#newUserModal"> مستخدم
@@ -418,14 +418,14 @@
                             </div>
                             {% endif %}
 
-                            <div class="col col-lg-3 col-sm-6 mb-1 text-center">
+                            <div class="col  mb-1 text-center">
                                 <button class="btn btn-lg btn-primary btn-rounded waves-effect waves-light"
                                     data-bs-toggle="modal" data-bs-target="#newRepairRequestModal"> طلب صيانة
                                     <i class="fas fa-tools"></i>
                                 </button>
 
                             </div>
-                            <div class="col col-lg-3 col-sm-6 mb-1 text-center">
+                            <div class="col  mb-1 text-center">
                                 <button class="btn btn-lg btn-primary btn-rounded waves-effect waves-light"
                                     data-bs-toggle="modal" data-bs-target="#newInstallRequestModal"> طلب تركيب
                                     <i class="fas fa-toolbox"></i>
@@ -433,7 +433,7 @@
                                 <!-- sample modal content -->
 
                             </div>
-                            <div class="col col-lg-3 col-sm-6 mb-1 text-center">
+                            <div class="col  mb-1 text-center">
                                 <button class="btn btn-lg btn-primary btn-rounded waves-effect waves-light"
                                     data-bs-toggle="modal" data-bs-target="#newQuarterRequestModal"> طلب خدمة
                                     <i class="fab fa-quora "></i></button>
@@ -477,6 +477,17 @@
             });
         });
     </script>
+    <script src="https://unpkg.com/isotope-layout@3/dist/isotope.pkgd.min.js"></script>
+    <!-- <script>
+        var $grid = $('.data-table').isotope();
+        // filter items on button click
+        $('.filter-button-group').on('click', 'button', function () {
+            var filterValue = $(this).attr('data-filter');
+            $grid.isotope({
+                filter: filterValue
+            });
+        });
+    </script> -->
     <script src="{% static 'js/multipleDelete.js' %}"></script>
     <script src="{% static 'libs/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
     <script src="{% static 'libs/metismenu/metisMenu.min.js' %}"></script>

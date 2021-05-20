@@ -16,20 +16,27 @@ def repair_index(request):
     if request.user.role == 4:
         requests = Service_request.objects.repair().filter(
             created_by=request.user).order_by('-timestamp')
-    elif request.user.role == 1 or request.user.role == 2:
+    elif request.user.role == 1 or request.user.role == 3:
         requests = Service_request.objects.repair().order_by(
             '-timestamp')
         on_hold = Service_request.objects.on_hold().filter(service_type="repair")
     elif request.user.role == 3:
         requests = Appointment.objects.filter(
             status="open", technician=request.user)
+    appointments = Appointment.objects.repair().filter(
+        status="open").order_by("date")
 
+    # stats
+    # all requests
+    # new requests
+    # on_hold
     ctx = {
         "new_requests": Service_request.objects.repair().filter(status="new").order_by("-timestamp"),
+        "current_requests": Service_request.objects.repair().exclude(status="new"),
         "requests": requests,
         "need_confirm": Service_request.objects.done().filter(service_type="repair"),
-        'on_hold': on_hold
-
+        'on_hold': on_hold,
+        "appointments": appointments
     }
     return render(request, 'repair/index.html', ctx)
 

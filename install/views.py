@@ -19,14 +19,18 @@ def index(request):
     elif request.user.role == 3:
         requests = Appointment.objects.filter(
             status="open", technician=request.user)
+    appointments = Appointment.objects.install().filter(
+        status="open").order_by('date')
 
     ctx = {
         "requests": requests,
         "on_hold": Service_request.objects.on_hold().filter(service_type="install"),
         "new_requests": requests.filter(status="new"),
         "favorites": Service_request.objects.install_favourites(),
+        "appointments": appointments,
 
-        "need_confirm": Service_request.objects.done().filter(service_type="install")
+        "need_confirm": Service_request.objects.done().filter(service_type="install"),
+        "current_requests": Service_request.objects.install().exclude(status="new"),
     }
     return render(request, 'repair/index.html', ctx)
 
@@ -37,7 +41,7 @@ def install_request(request):
     initiate service request  === done by sales team
     """
     if request.method == 'POST':
-        print(request.POST.getlist('favorite'))
+
         customer_name = request.POST['customername']
         phone = request.POST['phone']
         address = request.POST['address']

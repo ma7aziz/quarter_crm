@@ -1,7 +1,7 @@
 {% extends '../base.html'%}
 {%load static %}
 {% block content %}
-{%if request.user.role == 1 %}
+{%if request.user.role == 1  or request.user.role == 4 %}
 {% include './partials/_admin_supervisor.html' %}
 {% elif request.user.role == 6 %}
 {% include './partials/_accountant.html' %}

@@ -89,29 +89,11 @@
 
                     <hr>
 
-                    <div class="row">
-                        <div class="mb-3">
-                            <label for="">القسم</label>
-                            <p class="text-muted">يرجي اختيار الاقسام المتاحة
-                                للمستخدم
-                                <br>
-                                اضغط CTR مع تحديد الاقسام المطلوبة
-                            </p>
-                            <select class="form-select" name="section" multiple>
-                                {% for section in sections %}
-                                <option value="{{section.id}}">{{section}}</option>
-                                {% endfor %}
-                            </select>
 
-                        </div>
-
-
-
-                    </div>
 
                     <div class="mb-3">
                         <label class="form-label" for="file">المفضلة </label>
-                        <input type="number" class="form-control" name="favourite_count" />
+                        <input type="number" class="form-control" name="favourite_count" value="1" />
                         <p class="text-muted">عدد المرات التي يمكن للمستخدم تفضيل طلب خلال اليوم </p>
                     </div>
                     {% csrf_token %}

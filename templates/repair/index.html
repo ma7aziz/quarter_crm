@@ -3,9 +3,9 @@
 <!-- sales  -->
 {% if request.user.role ==  4 %}
 {% include './partials/_sales.html'%}
-{% elif request.user.role == 1 or request.user.role ==  2 %}
+{% elif request.user.role == 1 or request.user.role ==  2 or request.user.role == 3 %}
 {% include './partials/_admin_supervisor.html' %}
-{% elif request.user.role == 3 %}
+{% elif request.user.role == 8 %}
 {% include './partials/_technician.html' %}
 {%endif %}
 {% endblock %}

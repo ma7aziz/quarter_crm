@@ -20,7 +20,7 @@
                         <th>الاسم </th>
                         <th>الجوال </th>
                         <th>الوظيفة</th>
-                        <th>القسم </th>
+
                         <th>Last Login</th>
                         <th></th>
                     </tr>
@@ -42,11 +42,7 @@
                         </td>
 
 
-                        <td>
-                            {% for sec in user.section.all %}
-                            {{sec}}
-                            {% endfor%}
-                        </td>
+
                         <td>{{user.last_login}}</td>
                         <td>
 
