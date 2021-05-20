@@ -48,7 +48,9 @@
         </div>
         {% if request.user.is_authenticated %}
 
+
         <div class="row nav-btns ">
+            {% if request.user.role == 1 %}
             <div class="col">
                 <a href="{% url 'dashboard' %}">
                     <div class="card bg-soft-warning text-white-50">
@@ -63,7 +65,8 @@
 
             </div>
 
-
+            {% endif %}
+            {% if request.user.role == 3  or request.user.role == 1 %}
             <div class="col">
                 <a href="/repair">
                     <div class="card bg-soft-primary text-white-50">
@@ -77,7 +80,8 @@
                 </a>
 
             </div>
-
+            {% endif %}
+            {% if request.user.role == 2 or request.user.role == 1 %}
             <div class="col">
                 <a href="/install">
                     <div class="card bg-soft-success text-white-50">
@@ -91,7 +95,9 @@
                 </a>
 
             </div>
+            {% endif %}
 
+            {% if request.user.role == 1 or request.user.role == 4 %}
             <div class="col">
                 <a href="/quarter">
                     <div class="card bg-soft-info text-white-50">
@@ -105,7 +111,7 @@
                 </a>
 
             </div>
-
+            {% endif %}
 
 
         </div>
