@@ -7,5 +7,6 @@ urlpatterns = [
          views.delete_user, name="delete_user"),
     path('new_tasks', views.new_tasks, name='new_tasks'),
     path('history', views.history, name='history'),
-    path('change_password', views.change_password, name="change_password")
+    path('change_password', views.change_password, name="change_password"),
+    path('edit_qouta', views.edit_qouta, name='edit_qouta')
 ]

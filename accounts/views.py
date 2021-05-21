@@ -166,3 +166,13 @@ def change_password(request):
     return render(request, 'registration/change_password.html', {
         'form': form
     })
+
+
+def edit_qouta(request):
+    if request.method == "POST":
+        user = User.objects.get(pk=request.POST['user_id'])
+        user.favourite_qouta.max_requests = request.POST['max_number']
+        user.favourite_qouta.save()
+        messages.success(
+            request, '!تم التعديل ')
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))

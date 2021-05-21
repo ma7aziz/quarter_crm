@@ -66,7 +66,7 @@
                 <hr class="my-4">
 
                 <div class="text-muted">
-                    <div class="table-responsive mt-4">
+                    <div class="mt-4">
                         <div>
                             <p class="mb-1">الاسم:</p>
                             <h5 class="font-size-16">{{user.name}}</h5>
@@ -88,20 +88,32 @@
 
 
                         <div class="mt-4">
-                            <p class="mb-1">عدد مفضلات التركيب المسموح بها </p>
-                            <h5 class="font-size-16">{{user.favourite_qouta}}</h5>
+                            <p class="mb-1 d-inline ">عدد مفضلات التركيب المسموح بها : </p>
+                            <span class=" px-1 d-inline">{{user.favourite_qouta}}</span>
+                            <button id="qoutaEdit" class="btn btn-sm btn-rounded bg-soft-info">
+                                تعديل
+                                <i class="uil uil-edit-alt font-size-20 "></i>
+                            </button>
 
                         </div>
 
-                        <div class="mt-4">
-                            <p class="mb-1">عدد طلبات التركيب المفضلة لهذا اليوم </p>
-                            <h5 class="font-size-16">{{user.favourite_qouta.current_requests}}</h5>
-
+                        <div class="collapse" id="collapseExample">
+                            <div class="card card-body">
+                                <form action="{% url 'edit_qouta' %}" method="POST">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="user_id" value="{{user.id}}">
+                                    <div class="d-flex">
+                                        <input type="number" class="form-control" name="max_number">
+                                        <input type="submit" class="btn btn-sm btn-success mx-1" value="تغيير ">
+                                    </div>
+                                </form>
+                            </div>
                         </div>
 
 
                     </div>
                 </div>
+
             </div>
         </div>
     </div>
@@ -513,4 +525,13 @@
 
 
 
+{% endblock %}
+{% block script %}
+
+<script>
+    $("#qoutaEdit").on("click", () => {
+        $('#collapseExample').toggleClass('show')
+
+    })
+</script>
 {% endblock %}
