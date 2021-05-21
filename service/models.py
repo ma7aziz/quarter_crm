@@ -123,7 +123,7 @@ class Appointment(models.Model):
     date = models.DateField()
     technician = models.ForeignKey(User, on_delete=models.CASCADE)
     timestamp = models.DateTimeField(auto_now_add=True)
-    service_type = models.CharField(max_length=20, choices=REQUEST_TYPE)
+    service_type = models.CharField(max_length=100, choices=REQUEST_TYPE)
     status = models.CharField(max_length=20, choices=STATUS, default="open")
 
     objects = AppointmentManager()
