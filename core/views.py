@@ -1,3 +1,10 @@
+
+from django.db.models.functions import TruncMonth
+from django.db.models import Count
+from django.http import JsonResponse
+from django.http import HttpResponse
+
+from collections import OrderedDict
 from django.db.models import Q
 from django.core.paginator import Paginator
 from django.shortcuts import get_object_or_404
@@ -220,3 +227,27 @@ def sales_view(request):
 
     }
     return render(request, "core/sales_view.html", ctx)
+
+
+def chart(request):
+    if request.is_ajax():
+
+        repair_count = Service_request.objects.repair().count()
+        install_count = Service_request.objects.install().count()
+        quarter_count = Quarter_service.objects.all().count()
+        labels = ['الصيانة', "التركيب ", 'كوارتر ']
+        data = [repair_count, install_count, quarter_count]
+        colors = ['red', 'green', 'blue']
+
+        return JsonResponse(data={
+            'labels': labels,
+            'data': data,
+            'colors':  colors
+        })
+    return render(request, "charts.html")
+
+
+# def monthly_requests(request):
+#     if request.is_ajax():
+#         repair_monthly = Service_request.objects.repair().annotate(
+#             month=TruncMonth('timestamp')).values('month').annotate(c=Count('id')).values('month', 'c')
