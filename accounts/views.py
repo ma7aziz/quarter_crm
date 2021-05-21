@@ -82,6 +82,8 @@ def userLogin(request):
                 return HttpResponseRedirect('/repair')
             elif user.role == 8:  # tech
                 return HttpResponseRedirect('/new_tasks')
+            elif request.user.role == 5:
+                redirect('sales_view')
             else:  # quarter Staff
                 return HttpResponseRedirect('quarter')
 

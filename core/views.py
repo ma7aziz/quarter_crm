@@ -3,7 +3,7 @@ from django.core.paginator import Paginator
 from django.shortcuts import get_object_or_404
 from operator import attrgetter
 from itertools import chain
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from accounts.models import User
 from django.contrib import messages
 from service.models import Service_request
@@ -15,23 +15,26 @@ from .models import Customer
 
 
 def index(request):
-    # new_requests = Service_request.objects.new()
-    # under_process = Service_request.objects.under_process()
-    # done = Service_request.objects.done()
-
-    # tecnicians = User.objects.all().filter(role=3)
-    # ctx = {
-
-    #     'new_request': new_requests,
-    #     'under_process': under_process,
-    #     'done': done,
-    #     'technicians': tecnicians}
+    if request.user.is_authenticated:
+        if request.user.role == 1:  # Admin
+            return render(request, 'index.html')
+        elif request.user.role == 5:
+            ####sale##
+            return redirect("sales_view")
+        elif request.user.role == 8:  # technician
+            return redirect("new_tasks")
+        elif request.user.role == 2:  # install mngr
+            return redirect("install_index")
+        elif request.user.role == 3:  # repair mngr
+            return redirect("repair_index")
+        else:
+            # quarter staff
+            return redirect("quarter_index")
 
     return render(request, 'index.html')
 
 
 def dashboard(request):
-
     # all  requests
     repair_requests = Service_request.objects.repair()
     install_requests = Service_request.objects.install()
@@ -203,4 +206,17 @@ def search(request):
 
 
 def sales_view(request):
-    pass
+
+    service_history = Service_request.objects.all().filter(created_by=request.user)
+    quarter_history = Quarter_service.objects.all().filter(created_by=request.user)
+
+    all_history = sorted(chain(service_history, quarter_history),
+                         key=attrgetter('timestamp'), reverse=True)
+
+    ctx = {
+        "service_history": service_history,
+        "quarter_history": quarter_history,
+        "all_history": all_history
+
+    }
+    return render(request, "core/sales_view.html", ctx)
