@@ -1,3 +1,5 @@
+from django.contrib.auth import update_session_auth_hash
+from django.contrib.auth.forms import PasswordChangeForm
 from django.shortcuts import render, redirect
 from .models import User, Section, Qouta
 from django.contrib.auth import authenticate, login
@@ -140,9 +142,27 @@ def new_tasks(request):
 
 
 def history(request):
-    if request.user.role == 3:
+    if request.user.role == 8:
         requests = Appointment.objects.filter(
             technician=request.user).exclude(status="open")
     other_tasks = Task.objects.filter(
         employee=request.user).exclude(status="open")
     return render(request, 'repair/index.html', {'requests': requests, 'other_tasks': other_tasks})
+
+
+def change_password(request):
+    if request.method == "POST":
+        form = PasswordChangeForm(request.user, request.POST)
+        if form.is_valid():
+            user = form.save()
+            update_session_auth_hash(request, user)  # Important!
+            messages.success(
+                request, '!تم تغيير كلمة السر بنجاح ')
+            return redirect('change_password')
+        else:
+            messages.error(request, 'Please correct the error below.')
+    else:
+        form = PasswordChangeForm(request.user)
+    return render(request, 'registration/change_password.html', {
+        'form': form
+    })

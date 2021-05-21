@@ -240,6 +240,9 @@
                             <!-- item-->
                             <a class="dropdown-item" href="{% url 'profile' request.user.username %}">
                                 الملف الشخصي</a>
+                            <a class="dropdown-item" href="{% url 'change_password' %}">
+                                تغيير كلمة السر </a>
+
                             <a class="dropdown-item" href="{% url 'logout' %}"><i
                                     class="uil uil-sign-out-alt font-size-18 align-middle me-1 text-muted"></i> <span
                                     class="align-middle">تسجيل الخروج </span></a>

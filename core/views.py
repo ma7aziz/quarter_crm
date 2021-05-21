@@ -200,3 +200,7 @@ def search(request):
     }
 
     return render(request, 'core/search_results.html', ctx)
+
+
+def sales_view(request):
+    pass

@@ -1,9 +1,15 @@
 {% extends '../base.html'%}
 {%load static %}
 {% block content %}
+<!-- admin / supervisor  -->
 {%if request.user.role == 1  or request.user.role == 4 %}
 {% include './partials/_admin_supervisor.html' %}
+<!-- accountant  -->
 {% elif request.user.role == 6 %}
+{% include './partials/_admin_supervisor.html' %}
 {% include './partials/_accountant.html' %}
+<!-- EGYPT_OFFICE -->
+{% elif request.user.role == 7 %}
+{% include './partials/_admin_supervisor.html' %}
 {% endif %}
 {% endblock %}

@@ -14,11 +14,13 @@ from django.views.decorators.csrf import csrf_exempt
 @login_required
 def index(request):
     ctx = {
-        "new_transfers": Quarter_service.objects.filter(status=6),
+        "money_transfers": Transfer.objects.all(),
+        # "new_transfers": Quarter_service.objects.filter(status=6),
         "all_requests": Quarter_service.objects.all().order_by('-timestamp'),
         "new_requests": Quarter_service.objects.all().filter(status=1).order_by('-timestamp'),
         "pricing": Quarter_service.objects.all().filter(status=3),
         "design": Quarter_service.objects.all().filter(status=8)
+
     }
     return render(request, 'quarter/index.html', ctx)
 
