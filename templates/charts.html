@@ -2,38 +2,3 @@
 {% block content %}
 <canvas id="dataChart" style="max-height: 400px "></canvas>
 {% endblock %}
-
-{% block script %}
-<script>
-    $(document).ready(function () {
-        let dataChart = $('#dataChart')
-        $.ajax({
-            url: '/chart',
-            success: function (data) {
-                let ctx = dataChart[0].getContext("2d");
-                new Chart(ctx, {
-                    type: 'bar',
-                    data: {
-                        labels: data.labels,
-                        datasets: [{
-                            label: 'عدد الطلبات ',
-                            backgroundColor: data.colors,
-                            data: data.data
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        legend: {
-                            position: 'top',
-                        },
-                        title: {
-                            display: true,
-                            text: 'Population Bar Chart'
-                        }
-                    }
-                })
-            }
-        })
-    })
-</script>
-{% endblock %}

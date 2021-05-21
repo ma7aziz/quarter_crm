@@ -237,7 +237,8 @@ def chart(request):
         quarter_count = Quarter_service.objects.all().count()
         labels = ['الصيانة', "التركيب ", 'كوارتر ']
         data = [repair_count, install_count, quarter_count]
-        colors = ['red', 'green', 'blue']
+        colors = ['rgba(0, 63, 92, 0.7)', 'rgba(255, 166, 0, 0.7)',
+                  'rgba(239, 86, 117, 0.7)']
 
         return JsonResponse(data={
             'labels': labels,
@@ -247,7 +248,23 @@ def chart(request):
     return render(request, "charts.html")
 
 
-# def monthly_requests(request):
-#     if request.is_ajax():
-#         repair_monthly = Service_request.objects.repair().annotate(
-#             month=TruncMonth('timestamp')).values('month').annotate(c=Count('id')).values('month', 'c')
+def current_requests(request):
+    if request.is_ajax():
+        repair_under_process = Service_request.objects.repair().exclude(
+            status="closed").exclude(active=False)
+        install_under_process = Service_request.objects.install().exclude(
+            status="closed").exclude(active=False)
+        quarter_under_process = Quarter_service.objects.all().exclude(
+            status=13).exclude(active=False)
+
+        labels = ['الصيانة', "التركيب ", 'كوارتر ']
+        data = [repair_under_process.count(), install_under_process.count(),
+                quarter_under_process.count()]
+        colors = ['rgba(0, 63, 92, 0.7)', 'rgba(255, 166, 0, 0.7)',
+                  'rgba(239, 86, 117, 0.7)']
+
+        return JsonResponse(data={
+            'labels': labels,
+            'data': data,
+            'colors':  colors
+        })

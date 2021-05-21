@@ -33,3 +33,71 @@
 
 
 {% endblock %}
+
+
+{% block script %}
+<script>
+    $(document).ready(function () {
+        let dataChart = $('#dataChart')
+        $.ajax({
+            url: '/chart',
+            success: function (data) {
+                let ctx = dataChart[0].getContext("2d");
+                new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: data.labels,
+                        datasets: [{
+                            label: 'جميع الطلبات المستلمة',
+                            backgroundColor: data.colors,
+                            data: data.data
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        legend: {
+                            position: 'top',
+                        },
+                        title: {
+                            display: true,
+                            text: 'Population Bar Chart'
+                        }
+                    }
+                })
+            }
+        })
+    })
+</script>
+<script>
+    $(document).ready(function () {
+        let dataChart = $('#currentProcessesChart')
+        $.ajax({
+            url: '/current_requests',
+            success: function (data) {
+                let ctx = dataChart[0].getContext("2d");
+                new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: data.labels,
+                        datasets: [{
+                            label: 'الطلبات الجاري تنفيذها',
+                            backgroundColor: data.colors,
+                            data: data.data
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        legend: {
+                            position: 'top',
+                        },
+                        title: {
+                            display: true,
+                            text: ''
+                        }
+                    }
+                })
+            }
+        })
+    })
+</script>
+{% endblock %}
