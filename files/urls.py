@@ -14,5 +14,7 @@ urlpatterns = [
     path('export_all_quarter', views.export_all_quarter_services,
          name="export_all_quarter_services"),
     path('export_repair_customers',  views.export_repair_customers,
-         name="export_repair_customers")
+         name="export_repair_customers"),
+
+    path('print_invoice',  views.print_invoice, name="print_invoice")
 ]

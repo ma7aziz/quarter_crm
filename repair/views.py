@@ -68,10 +68,10 @@ def repair_request(request):
                 repair_request.save()
             user.submitted_orders += 1
             user.save()
-            repair_request.request_number = 'rep{id}'.format(
-                id=repair_request.id)
-            repair_request.save()
-            messages.success(request, "تم تسجيل طلبك بنجاح")
+        repair_request.request_number = 'rep{id}'.format(
+            id=repair_request.id)
+        repair_request.save()
+        messages.success(request, "تم تسجيل طلبك بنجاح")
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 

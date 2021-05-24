@@ -61,9 +61,9 @@ def install_request(request):
             user.submitted_orders += 1
             user.save()
 
-            install_request.request_number = 'inst{id}'.format(
-                id=install_request.id)
-            install_request.save()
+        install_request.request_number = 'inst{id}'.format(
+            id=install_request.id)
+        install_request.save()
 
         check_qouta(request.user.id)
         if "checked" in request.POST.getlist('favorite'):

@@ -24,7 +24,11 @@
                     <div class="col-xl-7">
                         <div class="mt-4 mt-xl-3 ps-xl-4">
 
-                            <h4 class="font-size-20 mb-3">{{req.request_number}}</h4>
+                            <h3 class="font-size-22 mb-3">
+                                طلب {{req.get_service_type_display}}
+                                رقم #
+                                {{req.request_number}}
+                            </h3>
 
                             <div>
 
@@ -32,6 +36,9 @@
                         </div>
                     </div>
 
+                    <div class="col-xl-5">
+                        <a href="{% url 'print_invoice' %}" target="_blank">طباعة تقرير <i class="fas fa-print"></i></a>
+                    </div>
 
                 </div>
                 <!-- end row -->
