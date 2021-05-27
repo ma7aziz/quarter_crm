@@ -72,7 +72,7 @@
 
 
        </div> <!-- end row-->
-       {% if 'install' in request.path %}
+       <!-- {% if 'install' in request.path %}
        <div class="card bg-soft border border-success">
            <div class="card-body">
                <div class="card-title mb-4">
@@ -127,21 +127,31 @@
            </div>
 
        </div>
-       {% endif %}
+       {% endif %} -->
 
 
        <div class="card bg-soft border border-info">
            <div class="card-body">
-               <div class="card-title mb-4">
+               <div class="card-title mb-4 d-flex justify-content-between ">
+                   <div>
+                       {% if "install" in request.path %}
+                       مواعيد التركيب القادمة
+                       {% elif "repair" in request.path %}
+                       مواعيد الصيانة القادمة
+                       {% endif %}
+                   </div>
+                   <div>
+                       <span class="bg-soft-danger px-1 mx-1">
+                           مواعيد فائتة
+                       </span>
+                       <span class="bg-soft-success px-1">
+                           اليوم
+                       </span>
+                   </div>
 
-                   {% if "install" in request.path %}
-                   مواعيد التركيب القادمة
-                   {% elif "repair" in request.path %}
-                   مواعيد الصيانة القادمة
-                   {% endif %}
 
                </div>
-               <div class="table-responsive">
+               <div class="table-responsive" data-simplebar style="max-height: 430px;">
                    <table class="table table-centered table-nowrap mb-0" dir="rtl">
                        <thead class="table-light">
                            <tr>
@@ -160,7 +170,8 @@
                        </thead>
                        <tbody>
                            {% for req in  appointments %}
-                           <tr {% if req.is_today %} class="bg-soft-success" {% endif %}>
+                           <tr {% if req.is_today %} class="bg-soft-success" {% elif req.is_past_due %}
+                               class="bg-soft-danger" {% endif %}>
                                <td><a
                                        href="{% url 'service_request_details' req.service_request.id %}">{{req.service_request.request_number}}</a>
                                </td>
@@ -244,17 +255,9 @@
                                </div>
                                <input id="" type="text" class=" table_search form-control " placeholder="الـبـحـث... "
                                    name="s">
-                               <div class="my-1 filter-button-group">
-                                   <button class="btn bg-dark text-light current" data-filter="*">الجميع </button>
-                                   <button class="btn bg-dark text-light" data-filter=".category-new">جديد
-                                   </button>
-                                   <button class="btn bg-dark text-light" data-filter=".category-under_process">قيد
-                                       التنفيذ</button>
-                                   <button class="btn bg-dark text-light" data-filter=".category-done">تم </button>
-                                   <button class="btn bg-dark text-light" data-filter=".category-battaries"></button>
-                               </div>
 
-                               <div class="table-responsive mt-3 ">
+
+                               <div class="table-responsive mt-3 " data-simplebar style="max-height: 430px;">
                                    <table class="table table-centered table-nowrap mb-0 data-table" dir="rtl">
                                        <thead class="table-light">
                                            <tr>
@@ -263,8 +266,8 @@
                                                <th>أسم العميل</th>
                                                <th>تاريخ الطلب </th>
 
-                                               {% if request.service_type == "install" %}
-                                               <th>فاتورة الشراء </th>
+                                               {% if "install" in request.path %}
+                                               <th> رقم الفاتورة </th>
                                                {% else%}
                                                <th>نوع العميل </th>
                                                {% endif %}
@@ -278,8 +281,8 @@
 
                                            {% for req in requests %}
 
-                                           <tr
-                                               class="{{req.status}} {% if req.favourite %} border border-success {% endif %}">
+                                           <tr class="{{req.status}}" {% if req.favourite %}
+                                               style="background-color: #caf7e3;" {% endif %}>
                                                <td>
                                                    <div class="form-check font-size-16">
                                                        <input type="checkbox" class="form-check-input req_checkbox "
@@ -301,7 +304,7 @@
 
 
                                                <td>
-                                                   {% if req.service_type == "install"%}
+                                                   {% if "install" in request.path %}
                                                    {{req.invoice_number }}
                                                    {% else %}
                                                    {% if req.customer_type == "cash" %}

@@ -81,6 +81,12 @@
                                                 {% endif %}
 
                                             </tr>
+                                            <tr>
+                                                <th scope="row">تم ارسال الطلب بواسطة : </th>
+                                                <td><a
+                                                        href="/profile/{{req.created_by.username}}">{{req.created_by}}</a>
+                                                </td>
+                                            </tr>
                                             {% if req.customer_type == "warranty" %}
                                             <tr>
                                                 <th scope="row">رقم الفاتورة</th>

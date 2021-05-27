@@ -23,7 +23,7 @@ def index(request):
         status="open").order_by('date')
 
     ctx = {
-        "requests": requests,
+        "requests": requests.order_by('-favourite'),
         "on_hold": Service_request.objects.on_hold().filter(service_type="install"),
         "new_requests": requests.filter(status="new"),
         "favorites": Service_request.objects.install_favourites(),
