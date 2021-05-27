@@ -1,3 +1,5 @@
+from django.http import JsonResponse
+from django.core import serializers
 from .utils import check_qouta
 import datetime
 from django.shortcuts import render
@@ -13,9 +15,19 @@ from core.add_customer import add_customer
 def index(request):
     if request.user.role == 4:
         requests = Service_request.objects.install().filter(
-            created_by=request.user).order_by('-timestamp')
+            created_by=request.user).order_by('-timestamp').order_by('-favourite')
+
     elif request.user.role == 1 or request.user.role == 2:
-        requests = Service_request.objects.install().order_by('-timestamp')
+        if request.GET.get('status'):
+            if request.GET.get('status') == "all":
+                requests = Service_request.objects.install().order_by(
+                    '-timestamp').order_by('-favourite')
+            else:
+                requests = Service_request.objects.install().order_by(
+                    '-timestamp').order_by('-favourite').filter(status=request.GET['status'])
+        else:
+            requests = Service_request.objects.install().order_by(
+                '-timestamp').order_by('-favourite')
     elif request.user.role == 3:
         requests = Appointment.objects.filter(
             status="open", technician=request.user)
@@ -23,7 +35,8 @@ def index(request):
         status="open").order_by('date')
 
     ctx = {
-        "requests": requests.order_by('-favourite'),
+
+        "requests": requests,
         "on_hold": Service_request.objects.on_hold().filter(service_type="install"),
         "new_requests": requests.filter(status="new"),
         "favorites": Service_request.objects.install_favourites(),
@@ -79,3 +92,11 @@ def install_request(request):
         else:
             messages.success(request, "تم تسجيل طلبك بنجاح")
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
+def get_order_list(request):
+    if request.is_ajax():
+        status = request.GET.get("status")
+        requests = Service_request.objects.all().filter(status=status)
+        data = serializers.serialize("json", requests)
+        return JsonResponse(data, safe=False)

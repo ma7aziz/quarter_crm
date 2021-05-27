@@ -256,7 +256,23 @@
                                <input id="" type="text" class=" table_search form-control " placeholder="الـبـحـث... "
                                    name="s">
 
+                               <div class="mt-1">
+                                   <form action="" id="filter-form">
 
+                                       <label for="status">عرض حسب حالة الطلب </label>
+                                       <select name="status" id="status-list" class="form-control">
+
+                                           <option selected disabled>اختار حالة الطلب</option>
+
+                                           <option value="all">الكل</option>
+                                           <option value="new">جديد</option>
+                                           <option value="under_process">قيد التنفيذ</option>
+                                           <option value="done">تم</option>
+                                           <option value="closed">انتهي</option>
+                                       </select>
+                                   </form>
+
+                               </div>
                                <div class="table-responsive mt-3 " data-simplebar style="max-height: 430px;">
                                    <table class="table table-centered table-nowrap mb-0 data-table" dir="rtl">
                                        <thead class="table-light">
@@ -367,7 +383,7 @@
                                        <tbody>
                                            {% for req in requests %}
 
-                                           <tr>
+                                           <tr id="{{req.id}}" class="row">
                                                <td>
                                                    <div class="form-check font-size-16">
                                                        <input type="checkbox" class="form-check-input req_checkbox "
@@ -575,3 +591,38 @@
            </div>
        </div>
        {% endif %}
+
+
+       {% block script %}
+       <script src="{% static 'libs/jquery/jquery.min.js' %}"></script>
+       <!-- <script>
+           $("#status_list").change(function (event) {
+               console.log("changed")
+               let row = $('.row')
+               event.preventDefault();
+               let status = $(this).val();
+               $.ajax({
+                   url: '{% url "get_order_list" %}',
+                   data: {
+                       "status": status,
+                   },
+                   dataType: 'json',
+                   success: function (response) {
+                       $.each(response, function (i, o) {
+                           console.log(o.id)
+                       })
+
+                   },
+                   error: function (response) {
+                       alert("oh no!");
+                   }
+               });
+           });
+       </script> -->
+
+       <script>
+           $("#status-list").change(function () {
+               $("#filter-form").submit()
+           })
+       </script>
+       {% endblock %}
