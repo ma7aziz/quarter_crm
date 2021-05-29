@@ -194,7 +194,7 @@ def second_transfer(request):
         notes = request.POST['notes']
         transfered = request.POST['transfered_ammount']
 
-        transfer = req.money_transfer
+        transfer = Transfer.objects.all().filter(service=req).first()
         transfer.transfer2_qty = int(transfered)
         transfer.transfer2_file = files
         transfer.transfer2_date = datetime.now()

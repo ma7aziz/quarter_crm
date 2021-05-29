@@ -73,11 +73,13 @@
                         <tbody>
                             {% for req in money_transfers %}
                             <tr>
-                                <td><a href="{% url 'quarter_request_details' req.id %}">
+                                <td><a href="{% url 'quarter_request_details' req.service.id %}">
                                         {{req.service.request_number}}
                                     </a>
                                 </td>
-                                <td><a href="{% url 'quarter_request_details' req.id %}">{{req.service.name}}</a></td>
+                                <td><a
+                                        href="{% url 'quarter_request_details' req.service.id %}">{{req.service.name}}</a>
+                                </td>
                                 <td>
                                     {{req.service.timestamp.date}}
                                 </td>
@@ -93,7 +95,7 @@
                                 <td>
 
                                     <a class="btn btn-primary btn-sm btn-rounded waves-effect waves-light"
-                                        href="{% url 'quarter_request_details' req.id %}">
+                                        href="{% url 'quarter_request_details' req.service.id %}">
                                         التفاصيل
                                     </a>
 
