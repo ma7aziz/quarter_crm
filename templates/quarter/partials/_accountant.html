@@ -1,6 +1,6 @@
 {% load humanize %}
 <!-- التحويلات المالية الجديدة  -->
-<div class="row mt-3">
+<!-- <div class="row mt-3">
     <div class="col-lg-12 col-md-12">
         <div class="card">
             <div class="card-body">
@@ -44,11 +44,11 @@
                         </tbody>
                     </table>
                 </div>
-                <!-- end table-responsive -->
+                
             </div>
         </div>
     </div>
-</div>
+</div> -->
 <!-- جميع التحويلات المالية  -->
 <div class="row mt-3">
     <div class="col-lg-12 col-md-12">
@@ -73,8 +73,11 @@
                         <tbody>
                             {% for req in money_transfers %}
                             <tr>
-                                <td>{{req.service.request_number}}</td>
-                                <td>{{req.service.name}}</td>
+                                <td><a href="{% url 'quarter_request_details' req.id %}">
+                                        {{req.service.request_number}}
+                                    </a>
+                                </td>
+                                <td><a href="{% url 'quarter_request_details' req.id %}">{{req.service.name}}</a></td>
                                 <td>
                                     {{req.service.timestamp.date}}
                                 </td>

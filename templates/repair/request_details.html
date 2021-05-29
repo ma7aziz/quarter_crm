@@ -45,7 +45,7 @@
 
                 <div class="mt-4 row">
                     <h5 class="font-size-14 mb-3"></h5>
-                    <div class="product-desc  col-lg-6">
+                    <div class="product-desc  col">
 
                         <div class="tab-content border border-top-0 p-4">
 
@@ -159,14 +159,26 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-6 ">
+                    <div class="col ">
+
+
+                        {% if req.active %}
                         <div class="card">
                             <div class="card-body">
+                                {% if req.status == "new" and req.created_by == request.user %}
+                                {% if not request.user.role == 1 %}
+                                <div class="text-center">
 
-                                {% if req.active %}
+                                    <a href="{% url  'delete_request' req.id %}" class="btn btn-lg  btn-soft-danger">حذف
+                                        الطلب </a>
+                                </div>
 
+                                {%endif%}
+                                {%endif%}
+
+
+                                {% if request.user.role == 1 or request.user.role == 2 %}
                                 <div class="accordion" id="accordionExample">
-                                    {% if request.user.role == 1 or request.user.role == 2 %}
                                     {% if req.hold %}
                                     <div class="card">
                                         <div class="card-body bg-dark text-light">
@@ -234,12 +246,7 @@
                                                             الطلب <i class="far fa-trash-alt"></i>
                                                         </a>
 
-                                                        {% elif request.user == req.created_by and req.status == "new" %}
 
-                                                        <a href="{% url  'delete_request' req.id %}"
-                                                            class="btn btn-lg btn-soft-danger btn-rounded btn-waves">حذف
-                                                            الطلب <i class="far fa-trash-alt"></i>
-                                                        </a>
 
                                                         {% endif %}
                                                     </div>
@@ -484,15 +491,16 @@
                                     {% endif %}
 
                                 </div>
-                                {% else %}
-                                <h3>هذا الطلب غير مفعل </h3>
-                                <a href="{% url 'deactivate_request' req.id  %}"
-                                    class="btn btn-lg btn-soft-success mt-1"> اعادة تفعيل </a>
-                                {% endif %}
+
 
                             </div>
 
                         </div>
+                        {% else %}
+                        <h3>هذا الطلب غير مفعل </h3>
+                        <a href="{% url 'deactivate_request' req.id  %}" class="btn btn-lg btn-soft-success mt-1"> اعادة
+                            تفعيل </a>
+                        {% endif %}
                     </div>
                 </div>
 

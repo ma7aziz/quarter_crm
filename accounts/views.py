@@ -68,12 +68,14 @@ def edit_user(request):
 
 def userLogin(request):
     if request.method == "POST":
+
         username = request.POST['username']
         password = request.POST['password']
         user = authenticate(username=username, password=password)
         if user is not None:
             login(request, user)
             messages.success(request, "أهلا بك مرة اخري ")
+            print(user.role)
             if user.role == 1:  # admin
                 return HttpResponseRedirect('/')
             elif user.role == 2:  # install mng
@@ -82,8 +84,8 @@ def userLogin(request):
                 return HttpResponseRedirect('/repair')
             elif user.role == 8:  # tech
                 return HttpResponseRedirect('/new_tasks')
-            elif request.user.role == 5:
-                redirect('sales_view')
+            elif request.user.role == 5:  # sales
+                return redirect('sales_view')
             else:  # quarter Staff
                 return HttpResponseRedirect('quarter')
 

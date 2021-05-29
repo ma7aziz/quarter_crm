@@ -113,27 +113,27 @@ def quarter_multi_delete(request):
 
 def pricing(request):
     if request.method == "POST":
-        print(request.POST)
         req = Quarter_service.objects.get(pk=request.POST['request'])
         price = request.POST['price']
         files = request.FILES['files']
         notes = request.POST['notes']
         if not req.pricing:
+            # CREATE NEW PRICING OBJECT
             price = Price(service=req, price=price, files=files,
                           notes=notes, created_by=request.user)
             price.save()
             req.pricing = price
             req.status = 3
             req.save()
+            messages.success(request, "تم ارسال السعر .")
         else:
-            req.pricing.price = price
-            req.pricing.files = files
-            req.pricing.notes = notes
-            req.pricing.save()
-            req.status = 4
-            req.save()
-
-        messages.success(request, "تم ارسال السعر .")
+            # EDIT PRICE BY THE SAME PRICING USER
+            if request.user == req.pricing.created_by or request.user.role == 7:
+                req.pricing.price = price
+                req.pricing.files = files
+                req.pricing.notes = notes
+                req.pricing.save()
+                messages.success(request, "تم تعديل السعر .. ")
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 

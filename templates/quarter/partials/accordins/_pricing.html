@@ -86,7 +86,7 @@
 
                     <tr>
                         <th scope="row">ملاحظات</th>
-                        <td>{{ req.pricing.notes }}</td>
+                        <td>"{{ req.pricing.notes }}"</td>
                     </tr>
 
                     <tr>
@@ -95,7 +95,7 @@
                             {% if req.pricing.status == "approved" %}
                             تم قبول السعر
                             {% elif req.pricing.status == "pending" %}
-                            التفاوض
+                            مراجعة التسعير
                             {% else %}
                             رفض السعر / طلب تعديل
                             {% endif %}
