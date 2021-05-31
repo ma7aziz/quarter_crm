@@ -129,6 +129,7 @@ def pricing(request):
         else:
             # EDIT PRICE BY THE SAME PRICING USER
             if request.user == req.pricing.created_by or request.user.role == 7:
+
                 req.pricing.price = price
                 req.pricing.files = files
                 req.pricing.notes = notes

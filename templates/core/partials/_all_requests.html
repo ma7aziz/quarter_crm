@@ -79,16 +79,18 @@
                                             <a href="{% url 'service_request_details' process.id %}">
                                                 {% elif process in quarter_requests %}
                                                 <a href="{% url 'quarter_request_details' process.id %}">
-                                                    {% endif %}{{process.request_number}}
+                                                    {% endif %}
+                                                    {{process.request_number}}
                                                 </a>
                                         </td>
                                         <td>
-                                            {% if process in repair_cur or process in install_cur %}
+                                            {% if process in repair_requests or process in install_requests %}
                                             <a href="{% url 'service_request_details' process.id %}">
                                                 {% elif process in quarter_cur %}
                                                 <a href="{% url 'quarter_request_details' process.id %}">
                                                     {% endif %}
-                                                    {{process}}</a>
+                                                    {{process}}
+                                                </a>
                                         </td>
                                         <td>
                                             {% if process in repair_requests %}
