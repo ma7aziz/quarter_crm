@@ -1,8 +1,10 @@
+from django.template.loader import render_to_string
+from .forms import QuarterForm
 from datetime import datetime
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect, JsonResponse
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect,  get_object_or_404
 from .models import Price, Quarter_service, Transfer, Design, Purchase
 from core.add_customer import add_customer
 from .choices import STATUS_CHOICES
@@ -40,11 +42,18 @@ def create_request(request):
         location = request.POST['address']
         email = request.POST['email']
         notes = request.POST['notes']
+        user = request.user
         new_request = Quarter_service(
             name=name, phone=phone, location=location, email=email, notes=notes, created_by=request.user)
         new_request.customer = add_customer(phone, name, email)
         new_request.save()
+        user.submitted_orders += 1
+        user.save()
+        if request.FILES:
+            new_request.file = request.FILES['attach_file']
+            new_request.save()
         messages.success(request, "تم تسجيل طلبك بنجاح")
+
         new_request.request_number = "qua{id}".format(id=new_request.id)
         new_request.save()
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
@@ -140,7 +149,7 @@ def pricing(request):
 
 def confirm_process(request, id):
     """
-        if request is in 'pending price review status ' => first review approved ,change request status to under negotiaion 
+        if request is in 'pending price review status ' => first review approved ,change request status to under negotiaion
         if 'under negtiaion' : =>  customer approved the price , change status to 'waiting for first transfer'
         if 'waiting for accounting review' : => change to "pending for designs "
         if 'Pending Designs approval'  : => "Excution"
@@ -257,4 +266,23 @@ def reject_price(request):
     req.save()
     messages.success(
         request, 'تم ارسال الملاحظات للادارة !')
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
+def edit_request(request):
+    if request.method == "POST":
+        req = get_object_or_404(Quarter_service, pk=request.POST['req'])
+        if request.POST.get('name'):
+            req.name = request.POST['name']
+
+        elif request.POST.get('phone'):
+            req.phone = request.POST['phone']
+        elif request.POST.get('email'):
+            req.email = request.POST['email']
+        elif request.POST.get('location'):
+            req.location = request.POST['location']
+
+        req.save()
+        messages.success(
+            request, 'تم التعديل!')
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))

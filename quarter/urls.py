@@ -23,6 +23,7 @@ urlpatterns = [
     path('attach_designs', views.attach_designs, name="attach_designs"),
     path('attach_purchase', views.attach_purchase, name="attach_purchase"),
     path('end_request/<int:id>', views.end_request, name="end_request"),
-    path('reject_price', views.reject_price, name="reject_price")
+    path('reject_price', views.reject_price, name="reject_price"),
+    path('edit_request', views.edit_request, name="edit_quarter_request")
 
 ]

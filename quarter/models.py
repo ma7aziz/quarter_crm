@@ -3,6 +3,7 @@ from accounts.models import User
 from .choices import STATUS_CHOICES
 from core.models import Customer
 # Create your models here.
+from django.utils.translation import ugettext_lazy as _
 
 
 class Quarter_service_Manager(models.Manager):
@@ -18,13 +19,16 @@ class Quarter_service_Manager(models.Manager):
 
 class Quarter_service(models.Model):
     request_number = models.CharField(max_length=15, blank=True, null=True)
-    name = models.CharField(max_length=100)
-    phone = models.CharField(max_length=20)
-    email = models.CharField(max_length=100, blank=True, null=True)
-    location = models.CharField(max_length=200, blank=True, null=True)
+    name = models.CharField(_("اسم العميل "), max_length=100)
+    phone = models.CharField(_("رقم الجوال"), max_length=20)
+    email = models.CharField(_("البريد الاليكتروني"), max_length=100, blank=True,
+                             null=True)
+    location = models.CharField(_("العنوان"),
+                                max_length=200, blank=True, null=True)
     customer = models.ForeignKey(
         Customer, on_delete=models.SET_NULL, null=True, blank=True)
-    notes = models.CharField(max_length=500, blank=True, null=True)
+    notes = models.CharField(_("ملاحظات / بيانات اضافية "), max_length=500, blank=True,
+                             null=True)
     status = models.IntegerField(
         default=1, choices=STATUS_CHOICES)
     created_by = models.ForeignKey(User, on_delete=models.DO_NOTHING)
@@ -42,8 +46,9 @@ class Quarter_service(models.Model):
         "Purchase", on_delete=models.SET_NULL, null=True, blank=True)
     hold = models.BooleanField(default=False)
     objects = Quarter_service_Manager()
-
+    file = models.FileField(upload_to='service/files/', blank=True, null=True)
     # price ##outstanding
+
     def __str__(self):
         return f'{self.name}'
 

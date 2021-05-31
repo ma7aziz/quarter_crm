@@ -26,6 +26,7 @@
                         </div>
                     </div>
                 </div>
+
             </div>
             <!-- end row -->
 
@@ -43,7 +44,7 @@
                     {% endif %}
                 </h2>
                 {% endif %}
-                <div class="col col-lg-7">
+                <div class="col col-lg-7 col-md-12">
                     <ul class="nav nav-tabs" role="tablist">
                         <li class="nav-item">
                             <a class="nav-link active" data-bs-toggle="tab" href="#navtabs-details" role="tab">
@@ -107,76 +108,149 @@
                         <div class="tab-pane active" id="navtabs-details" role="tabpanel">
                             <div class="card">
                                 <div class="card-body">
-                                    <h4 class="card-title mb-4" dir="rtl">بيانات الطلب </h4>
-                                    <table class="table table-nowrap mb-3 table-striped">
-                                        <tbody>
-                                            <tr>
 
-                                                <th scope="row" style="width: 20%;">اسم العميل
-                                                    <i class="far fa-user-circle"></i> </th>
-                                                <td>{{req}}</td>
+                                    <div class="mt-4">
+                                        <div>
+                                            <h4 class="mb-1 text-muted  d-inline">اسم العميل
+                                                <i class="far fa-user-circle"></i> : </h4>
+                                            <h5 class="font-size-18 d-inline">{{req}}</h5>
 
-                                            </tr>
-                                            <tr>
-                                                <th scope="row">تاريخ الطلب
-                                                    <i class="far fa-calendar-alt"></i>
-                                                </th>
-                                                <td>{{req.timestamp.date}}</td>
-                                            </tr>
+                                            {% if request.user.role == 1 or request.user.role == 4  or request.user == req.created_by %}
+                                            <button id="editName" class="btn btn-sm btn-rounded bg-soft-info">
+                                                <i class="uil uil-edit-alt font-size-16"></i>
+                                            </button>
+                                            {% endif %}
+                                            <div class="collapse" id="nameForm">
+                                                <div class="card card-body">
+                                                    <form action="{% url 'edit_quarter_request' %}" method="POST">
+                                                        {% csrf_token %}
+                                                        <input type="hidden" name="req" value="{{req.id}}">
+                                                        <div class="d-flex">
+                                                            <input type="text" class="form-control" name="name">
+                                                            <input type="submit" class="btn btn-sm btn-success mx-1"
+                                                                value="تغيير ">
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="mt-4">
+                                            <h4 class="mb-1 text-muted d-inline">الجوال <i
+                                                    class="fas fa-mobile-alt"></i> :</h4>
+                                            <h5 class="font-size-18 d-inline">{{req.phone}}</h5>
+                                            {% if request.user.role == 1 or request.user.role == 4  or request.user == req.created_by %}
+                                            <button id="editPhone" class="btn btn-sm btn-rounded bg-soft-info">
+                                                <i class="uil uil-edit-alt font-size-16 "></i>
+                                            </button>
+                                            {% endif %}
+                                            <div class="collapse" id="phoneForm">
+                                                <div class="card card-body">
+                                                    <form action="{% url 'edit_quarter_request' %}" method="POST">
+                                                        {% csrf_token %}
+                                                        <input type="hidden" name="req" value="{{req.id}}">
+                                                        <div class="d-flex">
+                                                            <input type="number" class="form-control" name="phone">
+                                                            <input type="submit" class="btn btn-sm btn-success mx-1"
+                                                                value="تغيير ">
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="mt-4">
+                                            <h4 class="mb-1 text-muted d-inline">الموقع <i
+                                                    class="fas fa-map-marker-alt"></i> :
+                                            </h4>
+                                            <h5 class="font-size-18 d-inline">{{req.location}}</h5>
+                                            {% if request.user.role == 1 or request.user.role == 4  or request.user == req.created_by %}
+                                            <button id="editLocation" class="btn btn-sm btn-rounded bg-soft-info">
+                                                <i class="uil uil-edit-alt font-size-16 "></i>
+                                            </button>
+                                            {% endif %}
+                                            <div class="collapse" id="locationForm">
+                                                <div class="card card-body">
+                                                    <form action="{% url 'edit_quarter_request' %}" method="POST">
+                                                        {% csrf_token %}
+                                                        <input type="hidden" name="req" value="{{req.id}}">
+                                                        <div class="d-flex">
+                                                            <input type="text" class="form-control" name="location">
+                                                            <input type="submit" class="btn btn-sm btn-success mx-1"
+                                                                value="تغيير ">
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {% if req.email %}
+                                        <div class="mt-4">
+                                            <p class="mb-1 text-muted d-inline">البريد الاليكتروني <i
+                                                    class="fas fa-at"></i> :
+                                            </p>
+                                            <h5 class="font-size-18 d-inline">{{req.email}}</h5>
+                                            {% if request.user.role == 1 or request.user.role == 4  or request.user == req.created_by %}
+                                            <button id="editEmail" class="btn btn-sm btn-rounded bg-soft-info">
+                                                <i class="uil uil-edit-alt font-size-16 "></i>
+                                            </button>
+                                            {% endif %}
+                                            <div class="collapse" id="emailForm">
+                                                <div class="card card-body">
+                                                    <form action="{% url 'edit_quarter_request' %}" method="POST">
+                                                        {% csrf_token %}
+                                                        <input type="hidden" name="req" value="{{req.id}}">
+                                                        <div class="d-flex">
+                                                            <input type="email" class="form-control" name="email">
+                                                            <input type="submit" class="btn btn-sm btn-success mx-1"
+                                                                value="تغيير ">
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {% endif %}
+                                        <div class="mt-4">
+                                            <p class="mb-1 text-muted d-inline">حالة الطلب <i
+                                                    class="fas fa-info-circle"></i> :
+                                            </p>
+                                            <span
+                                                class="badge rounded-pill bg-danger font-size-18 p-2">{{req.get_status_display}}</span>
+                                        </div>
+                                        <div class="mt-4">
+                                            <p class="mb-1 text-muted d-inline"> تم ارسال الطلب بواسطة <i
+                                                    class="fas fa-info-circle"></i> :
+                                            </p>
+                                            <h5 class="d-inline">
+                                                <a href="/profile/{{req.created_by.username}}">{{req.created_by}}</a>
+
+                                            </h5>
+                                        </div>
 
 
-                                            <tr>
-                                                <th scope="row">الموقع
-                                                    <i class="fas fa-map-marker-alt"></i>
-                                                </th>
-                                                <td>{{ req.location }}</td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row">الجوال
-                                                    <i class="fas fa-mobile-alt"></i>
-                                                </th>
-                                                <td>{{ req.phone }}</td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row">البريد الالكتروني
-                                                    <i class="fas fa-at"></i>
-                                                </th>
-                                                <td>{{ req.email }}</td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row">حالة لطلب
-                                                    <i class="fas fa-info-circle"></i>
-                                                </th>
-                                                <td>
+                                        {% if req.notes %}
+                                        <div class="mt-4">
+                                            <p class="mb-1 text-muted d-inline"> ملاحظات / بيانات اضافية <i
+                                                    class="fas fa-info-circle"></i> :
+                                            </p>
+                                            <p>
+                                                {{req.notes}}
+
+                                            </p>
+
+                                        </div>
+                                        {% endif %}
+                                        {% if req.file %}
+                                        <div class="mt-4">
+
+                                            <a href="" class="font-size-18 ">عرض الملفات </a>
+                                        </div>
+                                        {% endif %}
+
+                                    </div>
 
 
-                                                    <span
-                                                        class="badge rounded-pill bg-danger font-size-16 p-2">{{req.get_status_display}}</span>
-                                                </td>
-
-                                            </tr>
-                                            <tr>
-                                                <th scope="row">تم ارسال الطلب بواسطة :
-                                                    <i class="far fa-user-circle"></i>
-                                                </th>
-                                                <td>{{ req.created_by }}</td>
-                                            </tr>
-
-
-                                            {% if req.notes %}
-                                            <tr>
-                                                <th scope="row">ملاحظات</th>
-                                                <td>{{req.notes }}</td>
-                                            </tr>
-                                            {%  endif %}
-
-
-                                        </tbody>
-
-                                    </table>
                                 </div>
                             </div>
                         </div>
+
                         <!-- pricing tab  -->
                         {% include './partials/tabs/_pricing_tab.html'%}
                         <!-- Money transfer  -->
@@ -189,7 +263,7 @@
                     </div>
                 </div>
 
-                <div class=" col col-lg-5  ">
+                <div class=" col col-lg-5  col-md-12 ">
 
                     {% if req.active %}
 
@@ -225,4 +299,29 @@
     {% endif %}
 </div>
 
+
+{% endblock %}
+
+
+
+{% block script %}
+
+<script>
+    $("#editName").on("click", () => {
+        $('#nameForm').toggleClass('show')
+
+    })
+    $("#editEmail").on("click", () => {
+        $('#emailForm').toggleClass('show')
+
+    })
+    $("#editPhone").on("click", () => {
+        $('#phoneForm').toggleClass('show')
+
+    })
+    $("#editLocation").on("click", () => {
+        $('#locationForm').toggleClass('show')
+
+    })
+</script>
 {% endblock %}
