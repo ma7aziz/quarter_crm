@@ -36,7 +36,7 @@
                     data-bs-parent="#accordionExample">
                     <div class="accordion-body">
                         <div class="row">
-                            <div class="col">
+                            <div class="col my-1">
                                 {% if req.hold %}
                                 <a href="{% url 'hold_quarter_request' req.id %}"
                                     class="btn btn-lg btn-soft-success btn-rounded btn-waves">تفعيل
@@ -82,23 +82,23 @@
                                     {% csrf_token %}
                                     <input type="hidden" name="request" value="{{req.id}}">
 
-                                    <div class="row mb-4">
-                                        <label for="horizontal-firstname-input" class="col-sm-2 col-form-label">اختار
+
+                                    <div class="my-3 ">
+                                        <label for="horizontal-firstname-input" class="col-form-label ">اختار
                                             الحالة
                                         </label>
-                                        <div class="col-sm-10">
-                                            <select name="new_status" id="" class="form-control">
-                                                <option value="">
-                                                </option>
-                                                {% for v , k in status_choices %}
-                                                <option value="{{v}}">
-                                                    {{k}}
-                                                </option>
-                                                {% endfor %}
-                                            </select>
+                                        <select name="new_status" id="" class="form-control ">
+                                            <option value="">
+                                            </option>
+                                            {% for v , k in status_choices %}
+                                            <option value="{{v}}">
+                                                {{k}}
+                                            </option>
+                                            {% endfor %}
+                                        </select>
 
-                                        </div>
                                     </div>
+
                                     <div class="row ">
                                         <div class="col">
 

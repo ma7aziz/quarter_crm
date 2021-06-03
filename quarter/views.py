@@ -195,7 +195,8 @@ def first_transfer(request):
         t.transfer1_qty = int(transfered)
         t.transfer1_file = files
         t.transfer1_notes = notes
-
+        if request.POST.get("total_price"):
+            t.total_price = int(request.POST['total_price'])
         t.save()
         req.status = 6
         req.money_transfer = t

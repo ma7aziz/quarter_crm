@@ -15,10 +15,12 @@
     <div id="collapseTwo" class="accordion-collapse collapse show" aria-labelledby="headingTwo"
         data-bs-parent="#accordionExample">
         <div class="accordion-body">
+            {% if req.pricing %}
             <p class="text-center text-muted"><span>السعر الاجمالي :</span>
                 {{req.pricing.price|intcomma}}
                 ريال
             </p>
+            {% endif %}
             {% if req.status == 9 %}
             <p class="text-center text-muted"><span>المبلغ المتبقي :</span>
                 {{req.money_transfer.outstanding_ammount|intcomma}}
@@ -30,6 +32,16 @@
                 action="{% url 'second_transfer' %}" {% endif %} enctype="multipart/form-data">
                 {% csrf_token %}
                 <input type="hidden" name="request" value="{{req.id}}">
+                {% if not req.pricing %}
+                <div class="row mb-4">
+                    <label for="price" class="col-form-label col-4">
+                        السعر الاجمالي
+                    </label>
+                    <div class="col-8">
+                        <input type="number" name="total_price" class="col-8 form-control " required />
+                    </div>
+                </div>
+                {% endif %}
                 <div class="row mb-4">
                     <label for="price" class="col-form-label col-4">
                         المبلغ المحول
