@@ -162,8 +162,11 @@ def confirm_process(request, id):
         req.status = 5
         req.save()
         ## initiate transfer object ##
-        transfer = Transfer(service=req, total_price=int(req.pricing.price))
+        transfer = Transfer(service=req)
         transfer.save()
+        if req.pricing.price:
+            transfer.total_price = int(req.pricing.price)
+            transfer.save()
         messages.success(
             request, ' تم اعتماد السعر .. سيتم البدء في التنفيذ بعد تحويل الجزء الاول من السعر المتفق عليه ')
     elif req.status == 6:
@@ -185,11 +188,17 @@ def first_transfer(request):
         transfered = request.POST['transfered_ammount']
         files = request.FILES['files']
         notes = request.POST['notes']
-        transfer = Transfer(transfer1_qty=int(transfered), service=req,
-                            transfer1_file=files, transfer1_notes=notes, total_price=int(req.pricing.price))
-        transfer.save()
+        transfer = Transfer.objects.get_or_create(service=req)
+        # transfer = Transfer(transfer1_qty=int(transfered), service=req,
+        #                     transfer1_file=files, transfer1_notes=notes, total_price=int(req.pricing.price))
+        t = transfer[0]
+        t.transfer1_qty = int(transfered)
+        t.transfer1_file = files
+        t.transfer1_notes = notes
+
+        t.save()
         req.status = 6
-        req.money_transfer = transfer
+        req.money_transfer = t
         req.save()
         messages.success(
             request, 'تم ارسال مستندات التحويل ')

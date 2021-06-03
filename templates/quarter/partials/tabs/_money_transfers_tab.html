@@ -1,6 +1,6 @@
 {% load humanize %}
 {% if request.user.role == 1 or request.user.role == 6 %}
-{% if req.money_transfer and not req.status == 6 %}
+{% if req.money_transfer %}
 <div class="tab-pane" id="navtabs-money_transfer">
     <div class="card">
         <div class="card-body">

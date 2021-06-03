@@ -77,7 +77,7 @@ class Price(models.Model):
 
 class Transfer(models.Model):
     service = models.ForeignKey(Quarter_service, on_delete=models.CASCADE)
-    total_price = models.IntegerField()
+    total_price = models.IntegerField(blank=True, null=True)
     # transfer 1
     transfer1_qty = models.IntegerField(default=0)
     transfer1_date = models.DateTimeField(blank=True, null=True)
@@ -100,8 +100,10 @@ class Transfer(models.Model):
     outstanding_ammount = models.IntegerField(null=True, blank=True)
 
     def save(self, *args, **kwargs):
-        self.outstanding_ammount = self.total_price - \
-            (self.transfer1_qty + self.transfer2_qty + self.transfer3_qty)
+        if self.total_price:
+
+            self.outstanding_ammount = self.total_price - \
+                (self.transfer1_qty + self.transfer2_qty + self.transfer3_qty)
 
         super(Transfer, self).save(*args, **kwargs)
 
