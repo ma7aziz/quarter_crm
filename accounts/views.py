@@ -1,3 +1,5 @@
+from django.core.exceptions import ValidationError
+from django.contrib.auth.password_validation import validate_password
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm
 from django.shortcuts import render, redirect
@@ -179,4 +181,25 @@ def edit_qouta(request):
         user.favourite_qouta.save()
         messages.success(
             request, '!تم التعديل ')
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
+def reset_password(request):
+    if request.method == "POST":
+        password1 = request.POST['password']
+        password2 = request.POST['password2']
+        user = User.objects.get(pk=request.POST["user"])
+        if password1 == password2:
+            try:
+                validate_password(password1)
+                user.set_password(password1)
+                user.save()
+                messages.success(request, "تم تغيير كلمة السر بنجاح ")
+            except ValidationError as e:
+                messages.error(request,
+                               "كلمة السر يجب ان تحتوي 8 حروف علي الأقل .. لابد ان تتكون من حروف و أرقام. ")
+        else:
+            messages.error(
+                request, "لم يتم تغيير كلمة السر .. برجاء المحاولة مرة أخري ")
+
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))

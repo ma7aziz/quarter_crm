@@ -98,6 +98,9 @@
 
                         </div>
                         {% endif %}
+
+
+
                         <div class="collapse" id="collapseExample">
                             <div class="card card-body">
                                 <form action="{% url 'edit_qouta' %}" method="POST">
@@ -406,8 +409,8 @@
                     </div>
                 </div>
                 <div class="tab-pane " id="edit" role="tabpanel">
-                    <div>
-                        <div data-simplebar style="max-height: 430px;">
+                    <div class="container">
+                        <div data-simplebar style="max-height: 430px; max-width:100%">
                             <form action="{% url 'edit_user' %}" method="POST" enctype="multipart/form-data"
                                 class="mb-5">
                                 <input type="hidden" name="user_id" value="{{user.id}}">
@@ -463,10 +466,6 @@
                                         <select class="form-control select2" name="role" required>
                                             <option selected value="{{user.role}}">{{user.get_role_display}}</option>
                                             {% for k , v in roles %}
-                                            <!-- <option value="1">مدير الموقع</option>
-                                                            <option value="2">مشرف</option>
-                                                            <option value="3">فني</option>
-                                                            <option value="4">منفذ بيع </option> -->
                                             <option value="{{k}}">{{v}}</option>
                                             {% endfor %}
                                         </select>
@@ -496,28 +495,43 @@
                             </form>
                         </div>
 
-                        <!-- <div class="border rounded mt-4">
-                            <form action="#">
-                                <div class="px-2 py-1 bg-light">
-
-                                    <div class="btn-group" role="group">
-                                        <button type="button"
-                                            class="btn btn-sm btn-link text-dark text-decoration-none"><i
-                                                class="uil uil-link"></i></button>
-                                        <button type="button"
-                                            class="btn btn-sm btn-link text-dark text-decoration-none"><i
-                                                class="uil uil-smile"></i></button>
-                                        <button type="button"
-                                            class="btn btn-sm btn-link text-dark text-decoration-none"><i
-                                                class="uil uil-at"></i></button>
+                        {% if request.user.role == 1 %}
+                        <div class="border rounded mt-4">
+                            <div class="p-3">
+                                <h2>تغيير كلمة السر </h2>
+                                <hr>
+                                <form action="{%url 'reset_password' %}" method="POST" class="needs-validation">
+                                    <input type="hidden" name="user" value="{{user.id}}">
+                                    {% csrf_token %}
+                                    <div>
+                                        <label for="password">كلمة السر الجديدة </label>
+                                        <input type="password" name="password" class="form-control password1">
                                     </div>
+                                    <hr>
+                                    <div class="mt-2">
+                                        <label for="password2">تأكيد كلمة السر </label>
+                                        <input type="password" name="password2" id="" class="form-control password2">
+                                        <p class="text-danger d-none pass-msg">كلمة السر غير متطابقة </p>
+                                    </div>
+                                    <div class="mt-2">
 
+                                        <button type="submit " class="btn btn-lg btn-success submit-pass "
+                                            disabled>تغيير</button>
+                                    </div>
+                                </form>
+                                <div id="pswd_info">
+                                    <h4>كلمة السر لابد ان تتكون من :</h4>
+                                    <ul class="list-unstyled">
+                                        <li id="letter">-- 8 حروف / أرقام / رموز علي الأقل . </li>
+                                        <li id="capital"> --
+                                            حرف واحد علي الأقل " abcd " .
+                                        </li>
+
+                                    </ul>
                                 </div>
-                                <textarea rows="3" class="form-control border-0 resize-none"
-                                    placeholder="Your Message..."></textarea>
-
-                            </form>
-                        </div> end .border -->
+                            </div>
+                        </div>
+                        {% endif %}
                     </div>
                 </div>
             </div>
@@ -534,6 +548,27 @@
     $("#qoutaEdit").on("click", () => {
         $('#collapseExample').toggleClass('show')
 
+    })
+</script>
+
+<script>
+    $('.password2').keyup(function (e) {
+        let password1 = $(".password1").val()
+
+        if (e.target.value == password1) {
+            $(".password1 ").addClass("is-valid")
+            $(".password1 ").removeClass("is-invalid")
+            $(".password2").addClass("is-valid")
+            $('.pass-msg').addClass('d-none')
+            $('.submit-pass').removeAttr("disabled")
+
+        } else {
+            $('.password1').removeClass("is-valid")
+            $('.password2').removeClass("is-valid")
+            $('.password1').addClass("is-invalid")
+            $('.pass-msg').removeClass('d-none')
+            $('.submit-pass').prop('disabled', true);
+        }
     })
 </script>
 {% endblock %}
