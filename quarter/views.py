@@ -122,6 +122,9 @@ def quarter_multi_delete(request):
 
 def pricing(request):
     if request.method == "POST":
+        """
+            create new pricing object 
+        """
         req = Quarter_service.objects.get(pk=request.POST['request'])
         price = request.POST['price']
         files = request.FILES['files']
@@ -138,11 +141,16 @@ def pricing(request):
         else:
             # EDIT PRICE BY THE SAME PRICING USER
             if request.user == req.pricing.created_by or request.user.role == 7:
-
                 req.pricing.price = price
                 req.pricing.files = files
                 req.pricing.notes = notes
-                req.pricing.save()
+                if req.pricing.status == "rejected":
+                    req.pricing.status = "pending"
+                    req.pricing.save()
+                    req.status == 4
+                else:
+                    req.status == 3
+                req.save()
                 messages.success(request, "تم تعديل السعر .. ")
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
@@ -232,11 +240,12 @@ def second_transfer(request):
 def attach_designs(request):
     if request.method == "POST":
         req = Quarter_service.objects.get(pk=request.POST['request'])
-        files = request.FILES['files']
-        notes = request.POST['notes']
-        design = Design(service=req, files=files, notes=notes)
-        design.save()
-        req.designs = design
+        design = Design.objects.get_or_create(service=req)
+        d = design[0]
+        d.files = request.FILES['files']
+        d.notes = request.POST['notes']
+        d.save()
+        req.designs = d
         req.status = 8
         req.save()
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))

@@ -55,7 +55,7 @@
 
 
 {% if req.status == 3 %}
-
+<!-- PRICE_REVIEW -->
 <div class="accordion-item">
     <h2 class="accordion-header" id="headingOne">
         <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne"
@@ -120,15 +120,17 @@
 
             </table>
             {% if request.user.role == 1 or request.user.role == 4 %}
-            {% if not req.pricing.status == "rejected"%}
-            <a href="{%url 'confirm_process' req.id %}" class="btn btn-lg btn-success btn-rounded">
-                الموافقة علي السعر <i class="far fa-check-circle "></i>
+
+            {% if not req.pricing.status == "rejected" %}
+            <a href="{%url 'confirm_process' req.id %}" class="btn btn-lg btn-soft-success btn-rounded">
+                الموافقة <i class="far fa-check-circle "></i>
             </a>
             {% endif %}
             {% endif %}
+
             {% if request.user.role == 1 or request.user.role == 4 or request.user.role == 7 %}
             <button data-bs-toggle="collapse" href="#changeprice" aria-expanded="false"
-                class="btn btn-lg btn-danger btn-rounded">
+                class="btn btn-lg btn-soft-danger btn-rounded">
                 تعديل السعر <i class="far fa-edit"></i>
             </button>
             {% endif %}
@@ -177,7 +179,9 @@
     </div>
 </div>
 {% endif %}
+
 {% if req.status == 4 %}
+<!-- negotiaion -->
 {%  if request.user == req.created_by %}
 <div class="accordion-item">
     <h2 class="accordion-header" id="headingOne">
