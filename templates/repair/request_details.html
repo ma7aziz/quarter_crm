@@ -12,8 +12,6 @@
         </div>
     </div>
 </div>
-
-
 <!-- end page title -->
 
 <div class="row" dir="rtl">
@@ -37,7 +35,14 @@
                     </div>
 
                     <div class="col-xl-5">
-                        <a href="{% url 'print_invoice' %}" target="_blank">طباعة تقرير <i class="fas fa-print"></i></a>
+                        {% if req.status == "new" and not req.favourite  %}
+                        <a href="{% url 'favorite' req.id %}" class="btn btn-soft-success btn-rounded">أضافة الي
+                            المفضلات <i class="far fa-star"></i> </a>
+                        {% elif req.favourite %}
+                        <a href="{% url 'favorite' req.id %}" class="btn btn-soft-danger btn-rounded">حذف من المفضلات <i
+                                class="far fa-star"></i> </a>
+                        {% endif %}
+                        <!-- <a href="{% url 'print_invoice' %}" target="_blank">طباعة تقرير <i class="fas fa-print"></i></a> -->
                     </div>
 
                 </div>
@@ -106,7 +111,7 @@
                                                 <td>{{req.machine_type}}</td>
                                             </tr>
                                             <tr>
-                                                <th scope="row">حالة لطلب </th>
+                                                <th scope="row">حالة الطلب </th>
                                                 <td>
                                                     {% if req.status == "new" %}
 
@@ -150,7 +155,13 @@
                                             </tr>
                                             {%  endif %}
 
+                                            {% if req.status == "new" %}
+                                            <tr>
+                                                <td>
 
+                                                </td>
+                                            </tr>
+                                            {% endif %}
 
                                         </tbody>
                                     </table>

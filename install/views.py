@@ -1,6 +1,6 @@
 from django.http import JsonResponse
 from django.core import serializers
-from .utils import check_qouta
+from service.utils import check_qouta
 import datetime
 from django.shortcuts import render
 from service.models import Service_request, Appointment

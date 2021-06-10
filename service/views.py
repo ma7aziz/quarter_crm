@@ -6,6 +6,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django.views.decorators.csrf import csrf_exempt
+from .utils import check_qouta
 
 # Create your views here.
 
@@ -203,3 +204,31 @@ def multiple_delete(request):
         }
 
         return JsonResponse(data)
+
+
+def favorite(request, id):
+    """
+    ALLOW USER TO ADD REQUEST TO FAVORITES 
+    """
+    req = Service_request.objects.get(pk=id)
+    user = request.user
+    if not req.favourite:
+        print("favorite")
+        check_qouta(request.user.id)
+        if user.favourite_qouta.current_requests < user.favourite_qouta.max_requests:
+            service = req
+            service.favourite = True
+            service.save()
+            user.favourite_qouta.current_requests += 1
+            user.favourite_qouta.save()
+            messages.success(request, "تم الاضافة للمفضلات ")
+        else:
+            messages.error(request, "لم يتم أضافة الطلب الي المفضلات ")
+    else:  # remove from favorites
+        service = req
+        service.favourite = False
+        service.save()
+        user.favourite_qouta.current_requests -= 1
+        user.favourite_qouta.save()
+        messages.success(request, "تم الحذف من المفضلات ")
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))

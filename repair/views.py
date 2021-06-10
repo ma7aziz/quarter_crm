@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django.shortcuts import redirect, render
 from core.add_customer import add_customer
-from install.utils import check_qouta
+from service.utils import check_qouta
 from service.models import Appointment, Service_request
 
 # Create your views here.
