@@ -1,6 +1,6 @@
 from django.http import JsonResponse
 from django.core import serializers
-from service.utils import check_qouta
+from service.utils import check_qouta, late_orders
 import datetime
 from django.shortcuts import render
 from service.models import Service_request, Appointment
@@ -13,6 +13,7 @@ from core.add_customer import add_customer
 
 @login_required()
 def index(request):
+    check_qouta(request.user.id)
     if request.user.role == 4:
         requests = Service_request.objects.install().filter(
             created_by=request.user).order_by('-timestamp').order_by('-favourite')
@@ -39,7 +40,7 @@ def index(request):
         "new_requests": requests.filter(status="new"),
         "favorites": Service_request.objects.install_favourites(),
         "appointments": appointments,
-
+        "late_orders": late_orders("install"),
         "need_confirm": Service_request.objects.done().filter(service_type="install"),
         "current_requests": Service_request.objects.install().exclude(status="new"),
     }

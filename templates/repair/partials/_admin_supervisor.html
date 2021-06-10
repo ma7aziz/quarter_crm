@@ -130,63 +130,50 @@
        {% endif %} -->
 
 
-       <div class="card bg-soft border border-info">
+
+       <div class="card bg-soft border border-danger">
            <div class="card-body">
-               <div class="card-title mb-4 d-flex justify-content-between ">
-                   <div>
-                       {% if "install" in request.path %}
-                       مواعيد التركيب القادمة
-                       {% elif "repair" in request.path %}
-                       مواعيد الصيانة القادمة
-                       {% endif %}
-                   </div>
-                   <div>
-                       <span class="bg-soft-danger px-1 mx-1">
-                           مواعيد فائتة
-                       </span>
-                       <span class="bg-soft-success px-1">
-                           اليوم
-                       </span>
-                   </div>
-
-
+               <div class="card-title mb-4">
+                   {% if 'repair' in request.path %}
+                   متأخرات الصيانة
+                   {% else %}
+                   متأخرات التركيب
+                   {% endif %}
                </div>
-               <div class="table-responsive" data-simplebar style="max-height: 430px;">
+               <div class="table-responsive">
                    <table class="table table-centered table-nowrap mb-0" dir="rtl">
                        <thead class="table-light">
                            <tr>
 
                                <th>رقم الطلب </th>
                                <th>أسم العميل</th>
-                               {% if "isntall" %}
-                               <th>تاريخ التركيب </th>
-                               {% elif "repair" %}
-                               <th>تاريخ الصيانة </th>
-                               {% endif %}
-                               <th>الفني </th>
+                               <th>تاريخ الطلب </th>
+                               <th>نوع العميل </th>
                                <th>حالة الطلب </th>
 
                            </tr>
                        </thead>
                        <tbody>
-                           {% for req in  appointments %}
-                           <tr {% if req.is_today %} class="bg-soft-success" {% elif req.is_past_due %}
-                               class="bg-soft-danger" {% endif %}>
-                               <td><a
-                                       href="{% url 'service_request_details' req.service_request.id %}">{{req.service_request.request_number}}</a>
-                               </td>
-                               <td>{{req.service_request.customer_name}}</td>
+                           {% for req in late_orders %}
+                           <tr>
+                               <td>{{req.request_number}}</td>
+                               <td>{{req.customer_name}}</td>
                                <td>
-                                   {{req.date}}
+                                   {{req.timestamp.date}}
                                </td>
                                <td>
-                                   {{req.technician}}
+                                   {% if req.customer_type == "cash" %}
+                                   كاش
+                                   {% elif request.customer_type == "warranty" %}
+                                   ضمان
+                                   {% endif %}
                                </td>
 
 
                                <td>
 
-                                   <a href="{% url 'appointment_details' req.id %}" class="btn btn-light text-primary">
+                                   <a href="{% url 'service_request_details' req.id %}"
+                                       class="btn btn-light text-primary">
                                        {{req.get_status_display}}</a>
 
                                </td>
@@ -200,6 +187,150 @@
 
        </div>
 
+
+
+       <div class="card bg-soft border border-info">
+           <div class="card-body">
+               <h4 class="card-title mb-4  ">
+
+                   {% if "install" in request.path %}
+                   مواعيد التركيب
+                   {% elif "repair" in request.path %}
+                   مواعيد الصيانة
+                   {% endif %}
+               </h4>
+
+               <ul class="nav nav-tabs" role="tablist">
+                   <!-- == new requests  -->
+                   <li class="nav-item">
+                       <a class="nav-link active" data-bs-toggle="tab" href="#navtabs-today" role="tab">
+                           <span class="d-block d-sm-none">مواعيد اليوم </span>
+                           <span class="d-none d-sm-block">
+                               مواعيد اليوم
+                           </span>
+                       </a>
+                   </li>
+                   <li class="nav-item">
+                       <a class="nav-link" data-bs-toggle="tab" href="#navtabs-past" role="tab">
+                           <span class="d-block d-sm-none">مواعيد اليوم </span>
+                           <span class="d-none d-sm-block">
+                               مواعيد فائتة
+                           </span>
+                       </a>
+                   </li>
+               </ul>
+               <div class="tab-content">
+                   <div class="tab-pane active" id="navtabs-today" role="tabpanel">
+                       <div class="table-responsive" data-simplebar style="max-height: 430px;">
+                           <table class="table table-centered table-nowrap mb-0" dir="rtl">
+                               <thead class="table-light">
+                                   <tr>
+
+                                       <th>رقم الطلب </th>
+                                       <th>أسم العميل</th>
+                                       {% if "isntall" %}
+                                       <th>تاريخ التركيب </th>
+                                       {% elif "repair" %}
+                                       <th>تاريخ الصيانة </th>
+                                       {% endif %}
+                                       <th>الفني </th>
+                                       <th>حالة الطلب </th>
+
+                                   </tr>
+                               </thead>
+                               <tbody>
+                                   {% for req in  appointments %}
+                                   {% if req.is_today %}
+                                   <tr>
+                                       <td><a
+                                               href="{% url 'service_request_details' req.service_request.id %}">{{req.service_request.request_number}}</a>
+                                       </td>
+                                       <td>{{req.service_request.customer_name}}</td>
+                                       <td>
+                                           {{req.date}}
+                                       </td>
+                                       <td>
+                                           {{req.technician}}
+                                       </td>
+
+
+                                       <td>
+
+                                           <a href="{% url 'appointment_details' req.id %}"
+                                               class="btn btn-light text-primary">
+                                               {{req.get_status_display}}</a>
+
+                                       </td>
+
+                                   </tr>
+                                   {% endif %}
+                                   {% endfor %}
+                               </tbody>
+
+                           </table>
+                           {% if req.is_today.length == 0  %}
+                           <h3 class="text-center mt-3">لايوجد مواعيد لهذا اليوم </h3>
+                           {% endif %}
+                       </div>
+                   </div>
+                   <div class="tab-pane " id="navtabs-past" role="tabpanel">
+                       <div class="table-responsive" data-simplebar style="max-height: 430px;">
+                           <table class="table table-centered table-nowrap mb-0" dir="rtl">
+                               <thead class="table-light">
+                                   <tr>
+
+                                       <th>رقم الطلب </th>
+                                       <th>أسم العميل</th>
+                                       {% if "isntall" %}
+                                       <th>تاريخ التركيب </th>
+                                       {% elif "repair" %}
+                                       <th>تاريخ الصيانة </th>
+                                       {% endif %}
+                                       <th>الفني </th>
+                                       <th>حالة الطلب </th>
+
+                                   </tr>
+                               </thead>
+                               <tbody>
+                                   {% for req in  appointments %}
+                                   {% if req.is_past_due %}
+                                   <tr class="bg-soft-danger">
+                                       <td><a
+                                               href="{% url 'service_request_details' req.service_request.id %}">{{req.service_request.request_number}}</a>
+                                       </td>
+                                       <td>{{req.service_request.customer_name}}</td>
+                                       <td>
+                                           {{req.date}}
+                                       </td>
+                                       <td>
+                                           {{req.technician}}
+                                       </td>
+
+
+                                       <td>
+
+                                           <a href="{% url 'appointment_details' req.id %}"
+                                               class="btn btn-light text-primary">
+                                               {{req.get_status_display}}</a>
+
+                                       </td>
+
+                                   </tr>
+                                   {% endif %}
+                                   {% endfor %}
+                               </tbody>
+
+                           </table>
+                           {% if req.is_today.length == 0  %}
+                           <h3 class="text-center mt-3">لايوجد مواعيد لهذا اليوم </h3>
+                           {% endif %}
+                       </div>
+                   </div>
+
+               </div>
+
+           </div>
+       </div>
        <div class="card">
            <div class="card-body">
                <h4 class="card-title mb-4" dir="rtl">الطلبات </h4>

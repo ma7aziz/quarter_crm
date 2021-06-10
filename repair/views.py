@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django.shortcuts import redirect, render
 from core.add_customer import add_customer
-from service.utils import check_qouta
+from service.utils import check_qouta, late_orders
 from service.models import Appointment, Service_request
 
 # Create your views here.
@@ -12,6 +12,7 @@ from service.models import Appointment, Service_request
 
 @login_required
 def repair_index(request):
+    check_qouta(request.user.id)
     on_hold = []
     if request.user.role == 4:
         requests = Service_request.objects.repair().filter(
@@ -42,7 +43,8 @@ def repair_index(request):
         "requests": requests,
         "need_confirm": Service_request.objects.done().filter(service_type="repair"),
         'on_hold': on_hold,
-        "appointments": appointments
+        "appointments": appointments,
+        "late_orders": late_orders("repair")
     }
     return render(request, 'repair/index.html', ctx)
 
@@ -90,8 +92,3 @@ def repair_request(request):
                 messages.success(request, "لم يتم أضافة الطلب الي المفضلات ")
         messages.success(request, "تم تسجيل طلبك بنجاح")
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-
-
-def change_status(request):
-    pass
-    # TODO
