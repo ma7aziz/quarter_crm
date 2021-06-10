@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django.shortcuts import redirect, render
 from core.add_customer import add_customer
-
+from install.utils import check_qouta
 from service.models import Appointment, Service_request
 
 # Create your views here.
@@ -19,12 +19,12 @@ def repair_index(request):
     elif request.user.role == 1 or request.user.role == 3:
         if request.GET.get('status'):
             if request.GET.get('status') == "all":
-                requests = Service_request.objects.install().order_by('-favourite', '-timestamp')
+                requests = Service_request.objects.repair().order_by('-favourite', '-timestamp')
             else:
-                requests = Service_request.objects.install().order_by(
+                requests = Service_request.objects.repair().order_by(
                     '-favourite', '-timestamp').filter(status=request.GET['status'])
         else:
-            requests = Service_request.objects.install().order_by('-favourite', '-timestamp')
+            requests = Service_request.objects.repair().order_by('-favourite', '-timestamp')
         on_hold = Service_request.objects.on_hold().filter(service_type="repair")
     elif request.user.role == 3:
         requests = Appointment.objects.filter(
@@ -77,6 +77,17 @@ def repair_request(request):
         repair_request.request_number = 'rep{id}'.format(
             id=repair_request.id)
         repair_request.save()
+        check_qouta(request.user.id)
+        if "checked" in request.POST.getlist('favorite'):
+            if user.favourite_qouta.current_requests < user.favourite_qouta.max_requests:
+                service = repair_request
+                service.favourite = True
+                service.save()
+                user.favourite_qouta.current_requests += 1
+                user.favourite_qouta.save()
+                messages.success(request, "تم التسجيل و الاضافة للمفضلات ")
+            else:
+                messages.success(request, "لم يتم أضافة الطلب الي المفضلات ")
         messages.success(request, "تم تسجيل طلبك بنجاح")
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
