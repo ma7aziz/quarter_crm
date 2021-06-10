@@ -84,6 +84,8 @@ def complete_request(request):
             if code == "0000" or code == repair_request.code:
                 repair_request.status = "done"
                 repair_request.save()
+                appointment.status = "closed"
+                appointment.save()
                 messages.success(request, "تم تنفيذ الطلب ")
             else:
                 # send error message

@@ -13,7 +13,6 @@
     </div>
 </div>
 <!-- end page title -->
-
 <div class="row" dir="rtl">
     <div class="col-lg-12">
         <div class="card">
@@ -86,11 +85,26 @@
                                                 {% endif %}
 
                                             </tr>
+                                            {%if req.invoice_number %}
                                             <tr>
-                                                <th scope="row">تم ارسال الطلب بواسطة : </th>
+                                                <th scope="row">
+                                                    رقم الفاتورة
+                                                </th>
+                                                <td>{{req.invoice_number}}</td>
+                                            </tr>
+                                            {%endif%}
+                                            <tr>
+                                                <th scope="row">البائع: </th>
                                                 <td><a
                                                         href="/profile/{{req.created_by.username}}">{{req.created_by}}</a>
                                                 </td>
+
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">رقم البائع : </th>
+                                                <td><a href="tel:{{req.created_by.phone}}">{{req.created_by.phone}}</a>
+                                                </td>
+
                                             </tr>
                                             {% if req.customer_type == "warranty" %}
                                             <tr>
@@ -172,7 +186,6 @@
                     </div>
                     <div class="col ">
 
-
                         {% if req.active %}
                         <div class="card">
                             <div class="card-body">
@@ -188,7 +201,7 @@
                                 {%endif%}
 
 
-                                {% if request.user.role == 1 or request.user.role == 2 %}
+                                {% if request.user.role == 1 or request.user.role == 2 or request.user.role == 3  %}
                                 <div class="accordion" id="accordionExample">
                                     {% if req.hold %}
                                     <div class="card">
@@ -214,14 +227,14 @@
                                     {% endif%}
                                     <div class="accordion-item">
                                         <h2 class="accordion-header" id="headingOne">
-                                            <button class="accordion-button" type="button" data-bs-toggle="collapse"
-                                                data-bs-target="#collapseActions" aria-expanded="false"
-                                                aria-controls="collapseOne">
+                                            <button class="accordion-button font-size-20 font-size-20" type="button"
+                                                data-bs-toggle="collapse" data-bs-target="#collapseEdit"
+                                                aria-expanded="true" aria-controls="collapseOne">
                                                 تعديل حالة الطلب
                                             </button>
                                         </h2>
 
-                                        <div id="collapseActions" class="accordion-collapse collapse show"
+                                        <div id="collapseEdit" class="accordion-collapse collapse "
                                             aria-labelledby="headingOne" data-bs-parent="#accordionExample">
                                             <div class="accordion-body">
                                                 <div class="row">
@@ -356,9 +369,9 @@
                                     {% if not appointment %}
                                     <div class="accordion-item">
                                         <h2 class="accordion-header" id="headingOne">
-                                            <button class="accordion-button" type="button" data-bs-toggle="collapse"
-                                                data-bs-target="#collapseOne" aria-expanded="true"
-                                                aria-controls="collapseOne">
+                                            <button class="accordion-button font-size-20 " type="button"
+                                                data-bs-toggle="collapse" data-bs-target="#collapseOne"
+                                                aria-expanded="true" aria-controls="collapseOne">
                                                 تحديد موعد
                                             </button>
                                         </h2>
@@ -412,13 +425,13 @@
                                     {% if appointment %}
                                     <div class="accordion-item">
                                         <h2 class="accordion-header" id="headingTwo">
-                                            <button class="accordion-button collapsed " type="button"
-                                                data-bs-toggle="collapse" data-bs-target="#collapseTwo"
-                                                aria-expanded="false" aria-controls="collapseTwo">
+                                            <button class="accordion-button font-size-20 collapsed " type="button"
+                                                data-bs-toggle="collapse" data-bs-target="#collapseDate"
+                                                aria-expanded="false" aria-controls="collapseDate">
                                                 موعد الصيانة
                                             </button>
                                         </h2>
-                                        <div id="collapseTwo" class="accordion-collapse collapse show"
+                                        <div id="collapseDate" class="accordion-collapse collapse show"
                                             aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
                                             <div class="accordion-body">
                                                 <table class="table table-nowrap mb-0">
@@ -497,6 +510,108 @@
                                             </div>
                                         </div>
 
+                                    </div>
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header" id="headingThree">
+                                            <button class="accordion-button font-size-20 " type="button"
+                                                data-bs-toggle="collapse" data-bs-target="#collapseConfirm"
+                                                aria-expanded="true" aria-controls="collapseConfirm">
+                                                تأكيد الصيانة
+                                            </button>
+                                        </h2>
+
+                                        <div id="collapseConfirm" class="accordion-collapse collapse show"
+                                            aria-labelledby="headingThree" data-bs-parent="#accordionExample">
+                                            <div class="accordion-body">
+                                                <form method="POST" action="{% url 'complete_request' %}">
+                                                    {% csrf_token %}
+                                                    <input type="hidden" name="appoint_id" value="{{appointment.id}}">
+                                                    <input type="hidden" name="request_id"
+                                                        value="{{appointment.service_request.id}}">
+                                                    <div class="row mb-4">
+                                                        <label for="horizontal-firstname-input"
+                                                            class="col-sm-2 col-form-label">كود التأكيد
+                                                        </label>
+
+                                                        <div class="col-sm-10">
+
+                                                            <input type="text" name="code" id="" class="form-control">
+                                                        </div>
+                                                        <p class="text-muted text-center"> تم ارسال الكود للعميل عبر
+                                                            الجوال </p>
+                                                    </div>
+
+
+
+                                                    <div class="row justify-content-center">
+                                                        <div class="col-sm-9">
+
+                                                            <div>
+                                                                <button type="submit"
+                                                                    class="btn btn-primary w-md">تأكيد</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header" id="headingFour">
+                                            <button class="accordion-button font-size-20 " type="button"
+                                                data-bs-toggle="collapse" data-bs-target="#collapseHold"
+                                                aria-expanded="true" aria-controls="collapseHold">
+                                                تعليق الطلب
+                                            </button>
+                                        </h2>
+
+                                        <div id="collapseHold" class="accordion-collapse collapse show"
+                                            aria-labelledby="headingFour" data-bs-parent="#accordionExample">
+                                            <div class="accordion-body">
+                                                <div class="card card-body mb-0">
+                                                    <h3>سبب تعليق الطلب
+                                                    </h3>
+                                                    <form method="POST"
+                                                        action="{% url 'hold_request' appointment.service_request.id %}"
+                                                        enctype="multipart/form-data">
+                                                        {% csrf_token %}
+                                                        <input type="hidden" name="req_id" value="{{req.id}}">
+
+                                                        <div class="row mb-4">
+
+                                                            <div class="col-sm-10">
+                                                                <div class="form-group">
+                                                                    <label for="">
+                                                                        ارفاق صورة
+                                                                    </label>
+                                                                    <input type="file" class="form-control"
+                                                                        name="holding_file">
+                                                                </div>
+                                                                <div class="form-group mt-2">
+                                                                    <label for="">سبب التعليق </label>
+                                                                    <textarea class="form-control" name="hold_reason"
+                                                                        id="" required></textarea>
+                                                                </div>
+
+                                                            </div>
+                                                        </div>
+
+
+
+                                                        <div class="row ">
+                                                            <div class="col">
+
+                                                                <div>
+                                                                    <button type="submit"
+                                                                        class="btn btn-primary w-md">تعليق
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                     {% endif %}
                                     {% endif %}

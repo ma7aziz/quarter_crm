@@ -64,6 +64,7 @@
                                         <th>اسم العميل </th>
                                         <th>نوع الطلب </th>
                                         <th>تاريخ الطلب</th>
+                                        <th>البائع</th>
                                         <th>حالة الطلب </th>
                                         <th class="d-none">phone</th>
 
@@ -112,6 +113,8 @@
                                         </td>
                                         <td>
                                             {{ process.timestamp.date }}
+                                        </td>
+                                        <td><a href="/profile/{{prcess.created_by.username}}">{{process.created_by}}</a>
                                         </td>
                                         <td>
                                             {% if process in repair_requests or process in install_requests %}
@@ -164,7 +167,7 @@
                                         <th>رقم الطلب </th>
                                         <th>الاسم </th>
                                         <th>الجوال </th>
-                                        <th>الموقع </th>
+                                        <th>البائع </th>
                                         <th>تاريخ الطلب </th>
                                         <th>حالة الطلب </th>
 
@@ -188,7 +191,8 @@
                                         </td>
                                         <td>{{process.phone}}</td>
                                         <td>
-                                            {{process.address}}
+                                            <a
+                                                href="/profile/{{process.created_by.username}}">{{process.created_by}}</a>
                                         </td>
                                         <td>
 
@@ -244,7 +248,7 @@
                                         <th>رقم الطلب </th>
                                         <th>الاسم </th>
                                         <th>الجوال </th>
-                                        <th>الموقع </th>
+                                        <th>البائع </th>
                                         <th>تاريخ الطلب </th>
                                         <th>حالة الطلب </th>
 
@@ -270,7 +274,8 @@
                                         </td>
                                         <td>{{process.phone}}</td>
                                         <td>
-                                            {{process.address}}
+                                            <a
+                                                href="/profile/{{process.created_by.username}}">{{process.created_by}}</a>
                                         </td>
                                         <td>
 
@@ -324,6 +329,7 @@
                                         <th>الاسم </th>
                                         <th>الجوال </th>
                                         <th>تاريخ الطلب </th>
+                                        <th>البائع</th>
                                         <th>حالة الطلب </th>
 
                                     </tr>
@@ -350,6 +356,7 @@
                                             {{process.timestamp.date}}
 
                                         </td>
+                                        <td><a href="/profile/{{process.created_by}}">{{process.created_by}}</a></td>
                                         <td>
 
                                             <a href="{% url 'quarter_request_details' process.id %}"

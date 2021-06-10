@@ -60,6 +60,7 @@
                                         <th>رقم الطلب </th>
                                         <th>أسم العميل</th>
                                         <th>تاريخ الطلب </th>
+                                        <th>البائع</th>
                                         <th>حالة الطلب</th>
                                         <th class="d-none"></th>
 
@@ -84,11 +85,15 @@
                                         <td>
                                             {{req.timestamp.date}}
                                         </td>
+                                        <td>
+                                            <a href="/profile/{{req.created_by.username}}">{{req.created_by}}</a>
+                                        </td>
                                         <td class="text-center">
                                             <a class="btn btn-soft-primary btn-sm btn-rounded  waves-effect waves-light"
                                                 href="{% url 'quarter_request_details' req.id %}">{{req.get_status_display}}
                                             </a>
                                         </td>
+
                                         <td class="d-none">
                                             {{req.phone}}
                                         </td>

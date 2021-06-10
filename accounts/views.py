@@ -142,9 +142,9 @@ def new_tasks(request):
     if request.user.role == 8:
         requests = Appointment.objects.filter(
             status="open", technician=request.user).order_by('date')
-    other_tasks = Task.objects.open().filter(employee=request.user)
-
-    return render(request, 'repair/index.html', {'requests': requests, 'other_tasks': other_tasks})
+        history = Appointment.objects.filter(
+            technician=request.user).order_by('date').exclude(status="open")
+    return render(request, 'repair/index.html', {'requests': requests, 'history': history})
 
 
 def history(request):

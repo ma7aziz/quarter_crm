@@ -18,28 +18,22 @@
                </div>
            </div> <!-- end col-->
            <div class="col-md-6 col-sm-6 col-xl-3">
-               <div class="card bg-soft-success">
+               <div class="card bg-soft-success" id="lateBtn" role="button">
                    <div class="card-body">
-                       <div class="float-end mt-2">
-                           <!-- <div id="orders-chart"> </div> -->
-                       </div>
-                       <div>
-                           <h4 class="mb-1 mt-1"><span data-plugin="counterup">{{ new_requests | length }}</span></h4>
-                           <p class="text-muted mb-0">طلبات جديدة </p>
+                       <div role="button">
+                           <h4 class="mb-1 mt-1"><span data-plugin="counterup">{{ late_orders | length }}</span></h4>
+                           <p class="text-muted mb-0">متأخرات </p>
                        </div>
                        <!-- <p class="text-muted mt-3 mb-0"><span class="text-danger me-1"><i
-                                class="mdi mdi-arrow-down-bold me-1"></i>0.82%</span> since last week
-                    </p> -->
+                                   class="mdi mdi-arrow-down-bold me-1"></i>0.82%</span> since last week
+                       </p> -->
                    </div>
                </div>
            </div> <!-- end col-->
 
            <div class="col-md-6 col-sm-6 col-xl-3">
-               <div class="card bg-soft-warning">
+               <div class="card bg-soft-warning" id="holdBtn" role="button">
                    <div class="card-body">
-                       <div class="float-end mt-2">
-                           <!-- <div id="customers-chart"> </div> -->
-                       </div>
                        <div>
                            <h4 class="mb-1 mt-1"><span data-plugin="counterup">{{ on_hold |length}}</span></h4>
                            <p class="text-muted mb-0">المعلقات </p>
@@ -131,7 +125,7 @@
 
 
 
-       <div class="card bg-soft border border-danger">
+       <div class="card bg-soft border border-danger d-none" id="lateOrders">
            <div class="card-body">
                <div class="card-title mb-4">
                    {% if 'repair' in request.path %}
@@ -140,7 +134,7 @@
                    متأخرات التركيب
                    {% endif %}
                </div>
-               <div class="table-responsive">
+               <div class="table-responsive" data-simplebar style="max-height: 430px;">
                    <table class="table table-centered table-nowrap mb-0" dir="rtl">
                        <thead class="table-light">
                            <tr>
@@ -187,7 +181,66 @@
 
        </div>
 
+       <div class="card bg-soft border border-danger d-none" id="onHold">
+           <div class="card-body">
+               <div class="card-title mb-4">
+                   {% if 'repair' in request.path %}
+                   معلقات الصيانة
+                   {% elif 'install' in request.path %}
+                   معلقات التركيب
+                   {% endif %}
+               </div>
+               <div class="table-responsive" data-simplebar style="max-height: 430px;">
+                   <table class="table table-centered table-nowrap mb-0" dir="rtl">
+                       <thead class="table-light">
+                           <tr>
 
+                               <th>رقم الطلب </th>
+                               <th>أسم العميل</th>
+                               <th>تاريخ الطلب </th>
+                               <th>نوع العميل </th>
+                               <th></th>
+
+                           </tr>
+                       </thead>
+                       <tbody>
+                           {% for req in on_hold %}
+                           <tr>
+                               <td>{{req.id}}</td>
+                               <td>{{req.customer_name}}</td>
+                               <td>
+                                   {{req.timestamp.date}}
+                               </td>
+                               <td>
+                                   {% if req.customer_type == "cash" %}
+                                   كاش
+                                   {% elif request.customer_type == "warranty" %}
+                                   ضمان
+                                   {% endif %}
+                               </td>
+
+
+                               <td>
+
+                                   <a class="btn btn-soft-info btn-rounded waves-effect waves-light"
+                                       href="{% url 'service_request_details' req.id %}">
+                                       التفاصيل <i class="uil uil-pen "></i>
+                                   </a>
+                                   <a class="btn btn-soft-success btn-rounded waves-effect waves-light"
+                                       href="{% url 'hold_request' req.id %}">
+                                       تفعيل <i class="far fa-check-circle"></i>
+                                   </a>
+
+                               </td>
+
+                           </tr>
+                           {% endfor %}
+                       </tbody>
+                   </table>
+               </div>
+           </div>
+
+       </div>
 
        <div class="card bg-soft border border-info">
            <div class="card-body">
@@ -419,6 +472,7 @@
                                                <th>نوع العميل </th>
                                                {% endif %}
                                                <th class="d-none">phone </th>
+                                               <th>البائع</th>
                                                <th>حالة الطلب </th>
 
 
@@ -462,8 +516,10 @@
                                                    {% endif %}
                                                </td>
 
-                                               <td class="d-none">{{request.phone}}</td>
-
+                                               <td class="d-none">{{req.phone}}</td>
+                                               <td><a
+                                                       href="/profile/{{req.created_by.username}}">{{req.created_by.username}}</a>
+                                               </td>
                                                <td>
                                                    <a href="{% url 'service_request_details' req.id %}"
                                                        class="btn btn-light text-primary">
@@ -652,66 +708,7 @@
            </div>
        </div>
 
-       <div class="card">
-           <div class="card-body">
-               <div class="card-title mb-4">
-                   {% if 'repair' in request.path %}
-                   معلقات الصيانة
-                   {% elif 'install' in request.path %}
-                   معلقات التركيب
-                   {% endif %}
-               </div>
-               <div class="table-responsive">
-                   <table class="table table-centered table-nowrap mb-0" dir="rtl">
-                       <thead class="table-light">
-                           <tr>
 
-                               <th>رقم الطلب </th>
-                               <th>أسم العميل</th>
-                               <th>تاريخ الطلب </th>
-                               <th>نوع العميل </th>
-                               <th></th>
-
-                           </tr>
-                       </thead>
-                       <tbody>
-                           {% for req in on_hold %}
-                           <tr>
-                               <td>{{req.id}}</td>
-                               <td>{{req.customer_name}}</td>
-                               <td>
-                                   {{req.timestamp.date}}
-                               </td>
-                               <td>
-                                   {% if req.customer_type == "cash" %}
-                                   كاش
-                                   {% elif request.customer_type == "warranty" %}
-                                   ضمان
-                                   {% endif %}
-                               </td>
-
-
-                               <td>
-
-                                   <a class="btn btn-soft-info btn-rounded waves-effect waves-light"
-                                       href="{% url 'service_request_details' req.id %}">
-                                       التفاصيل <i class="uil uil-pen "></i>
-                                   </a>
-                                   <a class="btn btn-soft-success btn-rounded waves-effect waves-light"
-                                       href="{% url 'hold_request' req.id %}">
-                                       تفعيل <i class="far fa-check-circle"></i>
-                                   </a>
-
-                               </td>
-
-                           </tr>
-                           {% endfor %}
-                       </tbody>
-                   </table>
-               </div>
-           </div>
-
-       </div>
 
        {% if "repair" in request.path %}
        <div class="card p-2">
@@ -755,5 +752,20 @@
            $("#status-list").change(function () {
                $("#filter-form").submit()
            })
+           $("#lateBtn").click(function () {
+               $("#lateOrders").toggleClass("d-none", 1000)
+               if ($("#onHold").is(":visible")) {
+                   $("#onHold").addClass("d-none")
+               }
+
+           })
+           $("#holdBtn").click(function () {
+               $("#onHold").toggleClass("d-none", 1000)
+               if ($("#lateOrders").is(":visible")) {
+                   $("#lateOrders").addClass("d-none")
+               }
+           })
        </script>
+
+
        {% endblock %}
