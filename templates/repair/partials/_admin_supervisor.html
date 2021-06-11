@@ -134,6 +134,34 @@
                    متأخرات التركيب
                    {% endif %}
                </div>
+               <div>
+                   الطلبات التي تجاوزت
+                   {% if days  == 2 %}
+                   يومين
+                   {% elif days > 2 and days < 11 %}
+                   {{days}} أيام
+                   {%else%}
+                   {{days}} يوم
+                   {% endif %}
+                   بدون تحديد موعد
+                   {% if request.user.role == 1 or request.user.role == 2 or request.user.role == 3 %}
+                   <button id="editDays" class="btn btn-sm btn-rounded bg-soft-info">
+                       <i class="uil uil-edit-alt font-size-16 "></i> تغيير عدد الأيام
+                   </button>
+                   {% endif %}
+                   <div class="collapse mt-3" id="daysForm">
+                       <div class="card card-body">
+                           <form action="{% url 'change_days' %}" method="POST">
+                               {% csrf_token %}
+                               <input type="hidden" name="req" value="{{req.id}}">
+                               <div class="d-flex">
+                                   <input type="number" class="form-control" name="days" required>
+                                   <input type="submit" class="btn btn-sm btn-success mx-1" value="تغيير ">
+                               </div>
+                           </form>
+                       </div>
+                   </div>
+               </div>
                <div class="table-responsive" data-simplebar style="max-height: 430px;">
                    <table class="table table-centered table-nowrap mb-0" dir="rtl">
                        <thead class="table-light">
@@ -177,8 +205,8 @@
                            {% endfor %}
                        </tbody>
                    </table>
-                   {% if late_orders.length == 0  %}
-                   <h3 class="text-center mt-3">لايوجد مواعيد لهذا اليوم </h3>
+                   {% if not late_orders  %}
+                   <h3 class="text-center mt-3">لايوجد متأخرات </h3>
                    {% endif %}
                </div>
            </div>
@@ -241,8 +269,8 @@
                            {% endfor %}
                        </tbody>
                    </table>
-                   {% if on_hold.length == 0  %}
-                   <h3 class="text-center mt-3">لايوجد مواعيد لهذا اليوم </h3>
+                   {% if not on_hold  %}
+                   <h3 class="text-center mt-3">لايوجد طلبات معلقة </h3>
                    {% endif %}
                </div>
            </div>
@@ -316,7 +344,7 @@
 
                                        <td>
 
-                                           <a href="{% url 'appointment_details' req.id %}"
+                                           <a href="{% url 'service_request_details' req.id  %}"
                                                class="btn btn-light text-primary">
                                                {{req.get_status_display}}</a>
 
@@ -328,7 +356,7 @@
                                </tbody>
 
                            </table>
-                           {% if req.is_today.length == 0  %}
+                           {% if not req.is_today   %}
                            <h3 class="text-center mt-3">لايوجد مواعيد لهذا اليوم </h3>
                            {% endif %}
                        </div>
@@ -369,7 +397,7 @@
 
                                        <td>
 
-                                           <a href="{% url 'appointment_details' req.id %}"
+                                           <a href="{% url 'service_request_details' req.id  %}"
                                                class="btn btn-light text-primary">
                                                {{req.get_status_display}}</a>
 
@@ -381,8 +409,8 @@
                                </tbody>
 
                            </table>
-                           {% if req.is_today.length == 0  %}
-                           <h3 class="text-center mt-3">لايوجد مواعيد لهذا اليوم </h3>
+                           {% if not req.is_past_due   %}
+                           <h3 class="text-center mt-3">لايوجد مواعيد فائتة </h3>
                            {% endif %}
                        </div>
                    </div>
@@ -771,6 +799,11 @@
                if ($("#lateOrders").is(":visible")) {
                    $("#lateOrders").addClass("d-none")
                }
+           })
+
+           $("#editDays").on("click", () => {
+               $('#daysForm').toggleClass('show')
+
            })
        </script>
 

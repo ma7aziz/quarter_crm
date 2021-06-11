@@ -243,3 +243,11 @@ def favorite(request, id):
         user.favourite_qouta.save()
         messages.success(request, "تم الحذف من المفضلات ")
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+from .models import lateDays
+def change_late_days(request):
+    latedays  =lateDays.objects.get(pk = 1 )
+    latedays.days = request.POST['days']
+    latedays.save()
+    messages.success(request, "تم التعديل ")
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))

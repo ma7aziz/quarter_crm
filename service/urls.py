@@ -18,5 +18,6 @@ urlpatterns = [
     path('change_status', views.change_status, name="change_request_status"),
     path('service_multiple_delete', views.multiple_delete,
          name="service_multiple_delete"),
-    path('favorite/<int:id>', views.favorite, name="favorite")
+    path('favorite/<int:id>', views.favorite, name="favorite"),
+    path('change_late_days' , views.change_late_days , name= "change_days")
 ]

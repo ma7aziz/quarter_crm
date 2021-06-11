@@ -12,13 +12,14 @@ def check_qouta(user_id):
         if last_request.timestamp.date == yesterday:
             user.current_requests = 0
 
-
+from .models import lateDays
 def late_orders(service_type):
+    late_days = lateDays.objects.get(pk = 1)
     orders = Service_request.objects.all().filter(
         service_type=service_type).filter(status="new").order_by('-timestamp')
     late = []
     for order in orders:
         days = order.timestamp.date() - datetime.datetime.today().date()
-        if days.days <= -3:
+        if days.days <= -int(late_days.days):
             late.append(order)
     return late

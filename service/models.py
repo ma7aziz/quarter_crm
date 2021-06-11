@@ -152,3 +152,7 @@ class Hold_reason(models.Model):
 
     def __str__(self):
         return f'{self.service} Hold Reason !'
+
+
+class lateDays(models.Model):
+    days = models.IntegerField(default=3)
