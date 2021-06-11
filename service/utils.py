@@ -20,6 +20,7 @@ def late_orders(service_type):
     late = []
     for order in orders:
         days = order.timestamp.date() - datetime.datetime.today().date()
-        if days.days <= -int(late_days.days):
+        
+        if -days.days >= late_days.days:
             late.append(order)
     return late
