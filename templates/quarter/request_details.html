@@ -50,7 +50,7 @@
                             <a class="nav-link active" data-bs-toggle="tab" href="#navtabs-details" role="tab">
 
                                 <span class="d-none d-sm-block">
-                                    بيانات الطلب
+                                    بيانات
 
                                 </span>
                             </a>
@@ -84,7 +84,7 @@
 
                                 <span class="d-none d-sm-block">
                                     <i class="fas fa-comments-dollar"></i>
-                                    التحويلات المالية
+                                    التحويلات
                                 </span>
                             </a>
                         </li>
@@ -97,6 +97,17 @@
                                 <span class="d-none d-sm-block">
                                     <i class="fas fa-comments-dollar"></i>
                                     المشتريات
+                                </span>
+                            </a>
+                        </li>
+                        {% endif %}
+                        {% if req.first_excution or req.second_excution %}
+                        <li class="nav-item">
+                            <a class="nav-link" data-bs-toggle="tab" href="#navtabs-excutionFiles" role="tab">
+
+                                <span class="d-none d-sm-block">
+                                    <i class="far fa-images"></i>
+                                    ملفات التنفيذ
                                 </span>
                             </a>
                         </li>
@@ -260,6 +271,8 @@
                         <!-- PURCHASE -->
                         {% include './partials/tabs/_purchase_tab.html' %}
 
+                        <!-- EXCUTION FILES  -->
+                        {% include './partials/tabs/_excution_files.html' %}
                     </div>
                 </div>
 

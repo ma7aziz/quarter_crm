@@ -173,9 +173,13 @@
                                </td>
 
                            </tr>
+
                            {% endfor %}
                        </tbody>
                    </table>
+                   {% if late_orders.length == 0  %}
+                   <h3 class="text-center mt-3">لايوجد مواعيد لهذا اليوم </h3>
+                   {% endif %}
                </div>
            </div>
 
@@ -237,6 +241,9 @@
                            {% endfor %}
                        </tbody>
                    </table>
+                   {% if on_hold.length == 0  %}
+                   <h3 class="text-center mt-3">لايوجد مواعيد لهذا اليوم </h3>
+                   {% endif %}
                </div>
            </div>
 

@@ -5,7 +5,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import render, redirect,  get_object_or_404
-from .models import Price, Quarter_service, Transfer, Design, Purchase
+from .models import Price, Quarter_service, Transfer, Design, Purchase , ExcutionFiles , Excution
 from core.add_customer import add_customer
 from .choices import STATUS_CHOICES
 from django.views.decorators.csrf import csrf_exempt
@@ -177,11 +177,12 @@ def confirm_process(request, id):
             transfer.save()
         messages.success(
             request, ' تم اعتماد السعر .. سيتم البدء في التنفيذ بعد تحويل الجزء الاول من السعر المتفق عليه ')
-    elif req.status == 6:
+    elif req.status == 6: 
         req.status = 7
         req.save()
+ #confirm designs => purchase 
     elif req.status == 8:
-        req.status = 9
+        req.status = 14
         req.save()
     elif req.status == 11:
         req.status = 12
@@ -260,13 +261,14 @@ def attach_purchase(request):
                             notes=notes, created_by=request.user)
         purchase.save()
         req.purchase = purchase
+        req.status = 9 
         req.save()
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
 def end_request(request, id):
     req = Quarter_service.objects.get(pk=id)
-    req.status = 13
+    req.status = 15
     req.save()
     messages.success(
         request, 'اتمام الخدمة بنجاح  ')
@@ -304,4 +306,32 @@ def edit_request(request):
         req.save()
         messages.success(
             request, 'تم التعديل!')
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
+def attach_excution_files(request):
+    req = Quarter_service.objects.get(pk = request.POST['request'] )
+    excution = Excution(service = req , notes = request.POST['notes'])
+    excution.save() 
+    if req.status == 9 :  ### first excution 
+        req.first_excution = excution
+        req.status = 10
+        req.save()
+        excution.name = f"first excution - {req.id} "
+        excution.save()
+    elif req.status == 12 :
+        req.second_excution = excution
+        req.status =13
+        req.save()
+        excution.name = f"second excution - {req.id} "
+        excution.save()
+
+    for f in request.FILES.getlist("files"):
+        file = ExcutionFiles(
+            excution = excution , file = f 
+        )
+        file.save()
+        excution.files.add(file)
+        excution.save()
+    
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))

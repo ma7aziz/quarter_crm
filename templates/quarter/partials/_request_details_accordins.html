@@ -13,13 +13,15 @@
         {%endif%}
         <div class="accordion" id="accordionExample">
 
+            {% if req.status == 9 or req.status == 12 %}
+            {% include './accordins/_excution_files.html'%}
+            {% endif %}
             <!-- PRICING  -->
             {% include './accordins/_pricing.html'%}
             <!-- attach  transfer files  -->
             {% include './accordins/_transfers.html' %}
             <!-- ATTACH DESIGNS  -->
             {% include './accordins/_designs.html' %}
-
             <!-- ATTACH PURCHASE FILES  -->
             {% include './accordins/_purchase.html' %}
 
@@ -116,7 +118,7 @@
                 </div>
             </div>
             {% endif %}
-            {% if req.status == 12 %}
+            {% if req.status == 13 %}
             <div class="accordion-item">
                 <h2 class="accordion-header" id="headingTwo">
                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
