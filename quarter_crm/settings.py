@@ -98,7 +98,7 @@ WSGI_APPLICATION = 'quarter_crm.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'quartercrm',
+        'NAME': 'quarter_crm',
         'USER': 'quartercrm',
         'PASSWORD': 'quarter123',
         'HOST': 'localhost',
