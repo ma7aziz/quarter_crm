@@ -19,5 +19,6 @@ urlpatterns = [
     path('service_multiple_delete', views.multiple_delete,
          name="service_multiple_delete"),
     path('favorite/<int:id>', views.favorite, name="favorite"),
-    path('change_late_days' , views.change_late_days , name= "change_days")
+    path('change_late_days' , views.change_late_days , name= "change_days"),
+    path("chcek_favorite" , views.check_favorite , name="check_favorite")
 ]

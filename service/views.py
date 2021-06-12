@@ -138,12 +138,14 @@ def delete_request(request, id):
     req = Service_request.objects.get(pk=id)
     req.delete()
     messages.success(request, "تم حذف الطلب ")
-    if req.service_type == "repair":
-        return redirect('/repair')
-    elif req.service_type == "install":
-        return redirect('/install')
-    elif request.user.role == 1:
-        return redirect('dashboard')
+    if request.user.role == 5 :
+        return redirect('sales_view')
+    else:
+        if req.service_type == "repair":
+            return redirect('/repair')
+        elif req.service_type == "install":
+            return redirect('/install')
+
 
 
 def hold(request, id):
@@ -251,3 +253,13 @@ def change_late_days(request):
     latedays.save()
     messages.success(request, "تم التعديل ")
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
+def check_favorite(request):
+    if request.is_ajax():
+        user = User.objects.get(pk = request.user.id )
+        remaining_favs = user.favourite_qouta.max_requests - user.favourite_qouta.current_requests
+        data = {
+            "remaining" : remaining_favs
+        }
+        return JsonResponse(data)  

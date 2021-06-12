@@ -492,17 +492,50 @@
             });
         });
     </script>
+
+    <script>
+        $("#install-form-submit").on("click", function (e) {
+            if ($("#favInstall").prop("checked") == true) {
+                e.preventDefault()
+                $.ajax({
+                    url: "{% url 'check_favorite' %}",
+                    success: function (data) {
+                        if (data.remaining > 0) {
+                            console.log(data.remaining)
+                            $("#install-form").submit()
+
+                        } else {
+                            $(".fav-info").removeClass("d-none")
+                            console.log("can't submit ")
+                        }
+                    }
+                })
+            } else {
+                console.log("not checked")
+            }
+        })
+        $("#repair-form-submit").on("click", function (e) {
+            if ($("#favRepair").prop("checked") == true) {
+                e.preventDefault()
+                $.ajax({
+                    url: "{% url 'check_favorite' %}",
+                    success: function (data) {
+                        if (data.remaining > 0) {
+                            console.log(data.remaining)
+                            $("#repair-form").submit()
+
+                        } else {
+                            $(".fav-info").removeClass("d-none")
+                            console.log("can't submit ")
+                        }
+                    }
+                })
+            } else {
+                console.log("not checked")
+            }
+        })
+    </script>
     <script src="https://unpkg.com/isotope-layout@3/dist/isotope.pkgd.min.js"></script>
-    <!-- <script>
-        var $grid = $('.data-table').isotope();
-        // filter items on button click
-        $('.filter-button-group').on('click', 'button', function () {
-            var filterValue = $(this).attr('data-filter');
-            $grid.isotope({
-                filter: filterValue
-            });
-        });
-    </script> -->
     <script src="{% static 'js/multipleDelete.js' %}"></script>
     <script src="{% static 'libs/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
     <script src="{% static 'libs/metismenu/metisMenu.min.js' %}"></script>
