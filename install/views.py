@@ -16,7 +16,7 @@ def index(request):
     check_qouta(request.user.id)
     if request.user.role == 4:
         requests = Service_request.objects.install().filter(
-            created_by=request.user).order_by('-timestamp').order_by('-favourite')
+            created_by=request.user).order_by('-timestamp', '-favourite')
 
     elif request.user.role == 1 or request.user.role == 2:
         if request.GET.get('status'):

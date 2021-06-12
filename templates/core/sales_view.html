@@ -44,7 +44,7 @@
                             </thead>
                             <tbody>
                                 {% for req in all_history %}
-                                <tr>
+                                <tr {% if req.favourite %} class="bg-soft-success" {% endif %}>
 
                                     <td><a {% if req in service_history %}
                                             href="{% url 'service_request_details' req.id  %}" {% else %}
