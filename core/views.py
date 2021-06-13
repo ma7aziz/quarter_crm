@@ -215,6 +215,7 @@ def search(request):
 def sales_view(request):
 
     service_history = Service_request.objects.all().filter(created_by=request.user).order_by('-favourite', '-timestamp')
+    print(service_history)
     quarter_history = Quarter_service.objects.all().filter(created_by=request.user).order_by('-timestamp')
 
     all_history = sorted(chain(service_history, quarter_history),

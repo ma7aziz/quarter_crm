@@ -31,7 +31,7 @@ class Quarter_service(models.Model):
                              null=True)
     status = models.IntegerField(
         default=1, choices=STATUS_CHOICES)
-    created_by = models.ForeignKey(User, on_delete=models.DO_NOTHING)
+    created_by = models.ForeignKey(User, on_delete=models.SET_NULL ,null= True , blank = True)
     timestamp = models.DateTimeField(auto_now_add=True)
     active = models.BooleanField(default=True)
 

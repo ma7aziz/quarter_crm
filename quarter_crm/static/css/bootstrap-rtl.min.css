@@ -59,10 +59,10 @@ File: Custom Bootstrap Css File
 body {
   margin: 0;
   font-family: 'El Messiri', sans-serif;
-  font-size: 1rem;
-  font-weight: 400;
+  font-size: 1.1rem;
+  font-weight: 600;
   line-height: 1.5;
-  color: #2e2e2e;
+  color: #1c1c1c;
   background-color: #f5f6f8;
   -webkit-text-size-adjust: 100%;
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);

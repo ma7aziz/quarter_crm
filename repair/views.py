@@ -25,7 +25,7 @@ def repair_index(request):
                 requests = Service_request.objects.repair().order_by(
                     '-favourite', '-timestamp').filter(status=request.GET['status'])
         else:
-            requests = Service_request.objects.repair().order_by('-favourite', '-timestamp')
+            requests = Service_request.objects.all().filter(service_type="repair").order_by('-favourite', '-timestamp')
         on_hold = Service_request.objects.on_hold().filter(service_type="repair")
     elif request.user.role == 3:
         requests = Appointment.objects.filter(

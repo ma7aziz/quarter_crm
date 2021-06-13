@@ -15,6 +15,7 @@ def service_request_details(request, id):
     req = Service_request.objects.get(pk=id)
     technicians = User.objects.all().filter(role=8)
     appointment = Appointment.objects.all().filter(service_request=req).first()
+    print(req.code)
     ctx = {
         'req': req,
         'tech': technicians,

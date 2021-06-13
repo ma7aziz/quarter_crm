@@ -19,7 +19,7 @@
                             {% for req in requests %}
                             <tr>
 
-                                <td><a href="{% url 'service_request_details' req.id %}"
+                                <td><a href="{% url 'service_request_details' req.service_request.id %}"
                                         class="text-body fw-bold">#{{req.service_request.request_number}}</a> </td>
                                 <td>{{req.service_request.customer_name}}</td>
                                 <td>
@@ -37,7 +37,7 @@
 
                                 <td>
                                     <a class="btn btn-primary btn-sm btn-rounded waves-effect waves-light"
-                                        href="{% url 'service_request_details' req.id %}">
+                                        href="{% url 'service_request_details' req.service_request.id  %}">
                                         التفاصيل
                                     </a>
                                 </td>
@@ -74,7 +74,7 @@
                             {% for req in history %}
                             <tr>
 
-                                <td><a href="{% url 'service_request_details' req.id %}"
+                                <td><a href="{% url 'service_request_details' req.service_request.id %}"
                                         class="text-body fw-bold">#{{req.service_request.request_number}}</a> </td>
                                 <td>{{req.service_request.customer_name}}</td>
                                 <td>
@@ -85,11 +85,34 @@
                                     {{req.service_request.address}}
                                 </td>
                                 <td>
-                                    {{req.service_request.get_status_display}}
+
+                                    <span class="badge 
+                                    {% if req.service_request.hold %}
+                                    bg-soft-danger
+                                    {% else %}  
+                                        {% if req.service_request.status == 'new' %}
+                                        bg-soft-info
+                                        {% elif req.service_request.status == 'under_process' %}
+                                        bg-soft-warning
+                                        {% elif req.service_request.status == 'done' %}
+                                        bg-soft-success 
+                                        
+                                        {% else %}
+                                        bg-soft-danger
+                                        {% endif %}
+                                    {% endif %}
+                                         p-2 ">
+                                        {% if req.service_request.hold %}
+                                        معلق
+                                        {% else %}
+                                        {{req.service_request.get_status_display}}
+                                        {% endif %}
+                                    </span>
+
                                 </td>
                                 <td>
-                                    <a class="btn btn-primary btn-sm btn-rounded waves-effect waves-light"
-                                        href="{% url 'service_request_details' req.id %}">
+                                    <a class="btn btn-soft-primary btn-sm btn-rounded waves-effect waves-light"
+                                        href="{% url 'service_request_details' req.service_request.id %}">
                                         التفاصيل
                                     </a>
                                 </td>

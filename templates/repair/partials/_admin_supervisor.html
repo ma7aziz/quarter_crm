@@ -556,9 +556,31 @@
                                                        href="/profile/{{req.created_by.username}}">{{req.created_by.username}}</a>
                                                </td>
                                                <td>
-                                                   <a href="{% url 'service_request_details' req.id %}"
-                                                       class="btn btn-light text-primary">
-                                                       {{req.get_status_display}}</a>
+                                                   <a href="{% url 'service_request_details' req.id %}">
+                                                       <span class="badge 
+                                                        {% if req.hold %}
+                                                        bg-soft-danger
+                                                        {% else %}  
+                                                            {% if req.status == 'new' %}
+                                                            bg-soft-info
+                                                            {% elif req.status == 'under_process' %}
+                                                            bg-soft-warning
+                                                            {% elif req.status == 'done' %}
+                                                            bg-soft-success 
+                                                            
+                                                            {% else %}
+                                                            bg-soft-danger
+                                                            {% endif %}
+                                                        {% endif %}
+                                                            p-2 ">
+                                                           {% if req.hold %}
+                                                           معلق
+                                                           {% else %}
+                                                           {{req.get_status_display}}
+                                                           {% endif %}
+                                                       </span>
+
+                                                   </a>
                                                    <!-- <a class="btn btn-soft-info btn-rounded waves-effect waves-light"
                                                        href="{% url 'service_request_details' req.id %}">
                                                        التفاصيل <i class="uil uil-pen "></i>

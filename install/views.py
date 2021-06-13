@@ -26,7 +26,8 @@ def index(request):
                 requests = Service_request.objects.install().order_by(
                     '-favourite', '-timestamp').filter(status=request.GET['status'])
         else:
-            requests = Service_request.objects.install().order_by('-favourite', '-timestamp')
+            requests = Service_request.objects.all().filter(service_type = "install").order_by('-favourite', '-timestamp')
+            # requests = Service_request.objects.install().order_by('-favourite', '-timestamp')
     elif request.user.role == 3:
         requests = Appointment.objects.filter(
             status="open", technician=request.user)

@@ -143,7 +143,7 @@ def new_tasks(request):
         requests = Appointment.objects.filter(
             status="open", technician=request.user).order_by('date')
         history = Appointment.objects.filter(
-            technician=request.user).order_by('date').exclude(status="open")
+            technician=request.user).order_by('date')
     return render(request, 'repair/index.html', {'requests': requests, 'history': history})
 
 
