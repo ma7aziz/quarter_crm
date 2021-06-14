@@ -88,17 +88,17 @@
 
                                     <span class="badge 
                                     {% if req.service_request.hold %}
-                                    bg-soft-danger
+                                    bg-danger
                                     {% else %}  
                                         {% if req.service_request.status == 'new' %}
-                                        bg-soft-info
+                                        bg-info
                                         {% elif req.service_request.status == 'under_process' %}
-                                        bg-soft-warning
+                                        bg-warning
                                         {% elif req.service_request.status == 'done' %}
-                                        bg-soft-success 
+                                        bg-success 
                                         
                                         {% else %}
-                                        bg-soft-danger
+                                        bg-danger
                                         {% endif %}
                                     {% endif %}
                                          p-2 ">

@@ -34,12 +34,14 @@
                     </div>
 
                     <div class="col-xl-5">
+                        {% if request.user.role == 1 or request.user.role == 2 or  request.user.role == 3 or request.user == req.created_by %}
                         {% if req.status == "new" and not req.favourite  %}
                         <a href="{% url 'favorite' req.id %}" class="btn btn-soft-success btn-rounded">أضافة الي
                             المفضلات <i class="far fa-star"></i> </a>
                         {% elif req.favourite %}
                         <a href="{% url 'favorite' req.id %}" class="btn btn-soft-danger btn-rounded">حذف من المفضلات <i
                                 class="far fa-star"></i> </a>
+                        {% endif %}
                         {% endif %}
                         <!-- <a href="{% url 'print_invoice' %}" target="_blank">طباعة تقرير <i class="fas fa-print"></i></a> -->
                     </div>

@@ -559,17 +559,17 @@
                                                    <a href="{% url 'service_request_details' req.id %}">
                                                        <span class="badge 
                                                         {% if req.hold %}
-                                                        bg-soft-danger
+                                                        bg-danger
                                                         {% else %}  
                                                             {% if req.status == 'new' %}
-                                                            bg-soft-info
+                                                            bg-info
                                                             {% elif req.status == 'under_process' %}
-                                                            bg-soft-warning
+                                                            bg-warning
                                                             {% elif req.status == 'done' %}
-                                                            bg-soft-success 
+                                                            bg-success 
                                                             
                                                             {% else %}
-                                                            bg-soft-danger
+                                                            bg-danger
                                                             {% endif %}
                                                         {% endif %}
                                                             p-2 ">
