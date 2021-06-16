@@ -1,7 +1,7 @@
 from accounts.models import User
 from service.models import Service_request
 import datetime
-
+import requests
 
 def check_qouta(user_id):
     user = User.objects.get(pk=user_id)
@@ -24,3 +24,23 @@ def late_orders(service_type):
         if -days.days > late_days.days:
             late.append(order)
     return late
+
+def send_new_request_message(new_request):
+    message = f"تم تسجيل طلبك بنجاح \n رقم الطلب: #{new_request.request_number} \n "
+    url = f"https://mshastra.com/sendurlcomma.aspx?user=20099824&pwd=4nnnku&senderid=SMS Alert&mobileno=+966&msgtext={message}&priority=High&CountryCode=ALL"
+    payload={}
+    headers = {}
+    response = requests.request("GET", url, headers=headers, data=payload)
+    print(response.text)        
+
+
+def send_appointment_message(req):
+    if req.service_type == "install":
+        message = f"تم تحديد موعد التركيب يوم {req.appointment.date}"
+    elif req.service_type == "repair":
+        message = f"تم تحديد موعد الصيانة يوم {req.appointment.date}"
+
+    url = f"https://mshastra.com/sendurlcomma.aspx?user=20099824&pwd=4nnnku&senderid=SMS Alert&mobileno=+966&msgtext={message}&priority=High&CountryCode=ALL"
+    payload={}
+    headers = {}
+    response = requests.request("GET", url, headers=headers, data=payload)

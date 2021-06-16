@@ -6,7 +6,7 @@
         {% if not request.user.role == 1 %}
         <div class="text-center">
 
-            <a href="{% url  'delete_request' req.id %}" class="btn btn-lg  btn-soft-danger">حذف
+            <a href="{% url  'delete_quarter_request' req.id %}" class="btn btn-lg  btn-soft-danger">حذف
                 الطلب </a>
         </div>
         {% endif %}

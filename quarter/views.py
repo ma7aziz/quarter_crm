@@ -68,7 +68,8 @@ def delete_request(request, id):
     req = Quarter_service.objects.get(pk=id)
     req.delete()
     messages.success(request, "تم حذف الطلب ")
-    return redirect('quarter_index')
+
+    return redirect('index')
 
 
 def hold_request(request, id):

@@ -380,7 +380,7 @@
                             </ul>
                         </li>
 
-                        {% elif request.user.role == 3  %}
+                        <!-- {% elif request.user.role == 3  %}
                         <li>
                             <a href="{% url 'new_tasks' %}" class=" waves-effect">
                                 <i class="fas fa-rss"></i>
@@ -397,7 +397,7 @@
 
                         </li>
 
-                        {% endif %}
+                        {% endif %} -->
 
 
 
@@ -441,7 +441,7 @@
 
                             </div>
                             {% endif %}
-
+                            {% if not request.user.role == 5 %}
                             <div class="col  mb-1 text-center">
                                 <button class="btn btn-lg btn-primary btn-rounded waves-effect waves-light"
                                     data-bs-toggle="modal" data-bs-target="#newRepairRequestModal"> طلب صيانة
@@ -449,6 +449,7 @@
                                 </button>
 
                             </div>
+                            {% endif %}
                             <div class="col  mb-1 text-center">
                                 <button class="btn btn-lg btn-primary btn-rounded waves-effect waves-light"
                                     data-bs-toggle="modal" data-bs-target="#newInstallRequestModal"> طلب تركيب
@@ -510,7 +511,6 @@
                     url: "{% url 'check_favorite' %}",
                     success: function (data) {
                         if (data.remaining > 0) {
-                            console.log(data.remaining)
                             $("#install-form").submit()
 
                         } else {
@@ -522,6 +522,7 @@
             } else {
                 console.log("not checked")
             }
+
         })
         $("#repair-form-submit").on("click", function (e) {
             if ($("#favRepair").prop("checked") == true) {
@@ -532,7 +533,6 @@
                         if (data.remaining > 0) {
                             console.log(data.remaining)
                             $("#repair-form").submit()
-
                         } else {
                             $(".fav-info").removeClass("d-none")
                             console.log("can't submit ")
@@ -550,6 +550,26 @@
         function loadfun() {
             load.style.display = 'none'
         }
+    </script>
+    <!-- validate phone number  -->
+
+    <script>
+        function validatePhone(event) {
+            let txt = event.target.value
+            console.log(txt.length)
+            if (txt.length == 10) {
+                console.log('10 digits')
+                event.target.classList.remove('is-invalid')
+                document.querySelectorAll("input[type=submit]").disabled = false;
+                return true
+            } else {
+                console.log('invalid phone number ')
+                event.target.classList.add('is-invalid')
+                return false;
+            }
+        }
+        // let input = document.getElementsByClassName("phone_number")[0];
+        // input.addEventListener("keyUp", validatePhone(input.value))
     </script>
     <script src="https://unpkg.com/isotope-layout@3/dist/isotope.pkgd.min.js"></script>
     <script src="{% static 'js/multipleDelete.js' %}"></script>

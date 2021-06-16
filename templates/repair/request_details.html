@@ -157,6 +157,13 @@
                                                 </td>
 
                                             </tr>
+                                            {% if request.user.role == 1 or request.user.role == 2 or request.user.role == 3 %}
+
+                                            <tr>
+                                                <th scope="row">كود التنفيذ</th>
+                                                <td>{{req.code}}</td>
+                                            </tr>
+                                            {% endif %}
                                             {% if req.file %}
                                             <tr>
                                                 <th scope="row">الملفات </th>

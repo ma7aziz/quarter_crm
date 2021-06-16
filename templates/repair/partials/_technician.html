@@ -1,92 +1,86 @@
-<div class="row">
-    <div class="col-lg-12">
-        <div class="card border border-success">
-            <div class="card-body">
-                <h4 class="card-title mb-4" dir="rtl">المهام الحالية </h4>
-                <div class="table-responsive">
-                    <table class="table table-centered table-nowrap mb-0" dir="rtl">
-                        <thead class="table-light">
-                            <tr>
+<div class="card border border-success">
+    <div class="card-body">
+        <h2 class=" mb-4" dir="rtl">المهام الحالية </h2>
+        <div class="table-responsive">
+            <table class="table table-centered table-nowrap mb-0" dir="rtl">
+                <thead class="table-light">
+                    <tr>
 
-                                <th>رقم الطلب </th>
-                                <th>أسم العميل</th>
-                                <th>التاريخ</th>
-                                <th>نوع الطلب </th>
-                                <th>التفاصيل</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for req in requests %}
-                            <tr>
+                        <th>رقم الطلب </th>
+                        <th>أسم العميل</th>
+                        <th>التاريخ</th>
+                        <th>نوع الطلب </th>
+                        <th>التفاصيل</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for req in requests %}
+                    <tr>
 
-                                <td><a href="{% url 'service_request_details' req.service_request.id %}"
-                                        class="text-body fw-bold">#{{req.service_request.request_number}}</a> </td>
-                                <td>{{req.service_request.customer_name}}</td>
-                                <td>
-                                    {% if req.is_today %}
-                                    <div class="badge bg-soft-success p-1" style="font-size: 16px;">اليوم </div>
+                        <td><a href="{% url 'service_request_details' req.service_request.id %}"
+                                class="text-body fw-bold">#{{req.service_request.request_number}}</a> </td>
+                        <td>{{req.service_request.customer_name}}</td>
+                        <td>
+                            {% if req.is_today %}
+                            <div class="badge bg-soft-success p-1" style="font-size: 16px;">اليوم </div>
 
-                                    {% else%}
-                                    {{req.date}}
-                                    {% endif %}
-                                </td>
+                            {% else%}
+                            {{req.date}}
+                            {% endif %}
+                        </td>
 
-                                <td>
-                                    {{req.service_request.get_service_type_display}}
-                                </td>
+                        <td>
+                            {{req.service_request.get_service_type_display}}
+                        </td>
 
-                                <td>
-                                    <a class="btn btn-primary btn-sm btn-rounded waves-effect waves-light"
-                                        href="{% url 'service_request_details' req.service_request.id  %}">
-                                        التفاصيل
-                                    </a>
-                                </td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-                <!-- end table-responsive -->
-            </div>
+                        <td>
+                            <a class="btn btn-primary btn-sm btn-rounded waves-effect waves-light"
+                                href="{% url 'service_request_details' req.service_request.id  %}">
+                                التفاصيل
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
         </div>
-
+        <!-- end table-responsive -->
     </div>
 </div>
-<div class="row">
-    <div class="col-lg-12">
-        <div class="card border border-info">
-            <div class="card-body">
-                <h4 class="card-title mb-4" dir="rtl">المهام السابقة </h4>
-                <div class="table-responsive">
-                    <table class="table table-centered table-nowrap mb-0" dir="rtl">
-                        <thead class="table-light">
-                            <tr>
 
-                                <th>رقم الطلب </th>
-                                <th>أسم العميل</th>
-                                <th>التاريخ</th>
-                                <th>الموقع</th>
-                                <th>حالة الطلب </th>
-                                <th>التفاصيل</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for req in history %}
-                            <tr>
+<div class="card border border-info">
+    <div class="card-body">
+        <h2 class=" mb-4" dir="rtl">المهام السابقة </h2>
+        <div class="table-responsive">
+            <table class="table table-centered table-nowrap mb-0" dir="rtl">
+                <thead class="table-light">
+                    <tr>
 
-                                <td><a href="{% url 'service_request_details' req.service_request.id %}"
-                                        class="text-body fw-bold">#{{req.service_request.request_number}}</a> </td>
-                                <td>{{req.service_request.customer_name}}</td>
-                                <td>
-                                    {{req.date}}
-                                </td>
+                        <th>رقم الطلب </th>
+                        <th>أسم العميل</th>
+                        <th>التاريخ</th>
+                        <th>الموقع</th>
+                        <th>حالة الطلب </th>
+                        <th>التفاصيل</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for req in history %}
+                    <tr>
 
-                                <td>
-                                    {{req.service_request.address}}
-                                </td>
-                                <td>
+                        <td><a href="{% url 'service_request_details' req.service_request.id %}"
+                                class="text-body fw-bold">#{{req.service_request.request_number}}</a> </td>
+                        <td>{{req.service_request.customer_name}}</td>
+                        <td>
+                            {{req.date}}
+                        </td>
 
-                                    <span class="badge 
+                        <td>
+                            {{req.service_request.address}}
+                        </td>
+                        <td>
+
+                            <span class="badge 
                                     {% if req.service_request.hold %}
                                     bg-danger
                                     {% else %}  
@@ -102,28 +96,25 @@
                                         {% endif %}
                                     {% endif %}
                                          p-2 ">
-                                        {% if req.service_request.hold %}
-                                        معلق
-                                        {% else %}
-                                        {{req.service_request.get_status_display}}
-                                        {% endif %}
-                                    </span>
+                                {% if req.service_request.hold %}
+                                معلق
+                                {% else %}
+                                {{req.service_request.get_status_display}}
+                                {% endif %}
+                            </span>
 
-                                </td>
-                                <td>
-                                    <a class="btn btn-soft-primary btn-sm btn-rounded waves-effect waves-light"
-                                        href="{% url 'service_request_details' req.service_request.id %}">
-                                        التفاصيل
-                                    </a>
-                                </td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-                <!-- end table-responsive -->
-            </div>
+                        </td>
+                        <td>
+                            <a class="btn btn-primary btn-sm btn-rounded waves-effect waves-light"
+                                href="{% url 'service_request_details' req.service_request.id %}">
+                                التفاصيل
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
         </div>
-
+        <!-- end table-responsive -->
     </div>
 </div>

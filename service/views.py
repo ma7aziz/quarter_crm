@@ -6,7 +6,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django.views.decorators.csrf import csrf_exempt
-from .utils import check_qouta
+from .utils import check_qouta , send_appointment_message
 
 # Create your views here.
 
@@ -58,6 +58,7 @@ def service_appointment(request):
         service_request.appointment = appointment
         service_request.save()
         messages.success(request, "تم تحديد الموعد !")
+        send_appointment_message(service_request)
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
