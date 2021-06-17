@@ -2,6 +2,8 @@ from accounts.models import User
 from service.models import Service_request
 import datetime
 import requests
+from .models import lateDays
+
 
 def check_qouta(user_id):
     user = User.objects.get(pk=user_id)
@@ -12,7 +14,6 @@ def check_qouta(user_id):
         if last_request.timestamp.date == yesterday:
             user.current_requests = 0
 
-from .models import lateDays
 def late_orders(service_type):
     late_days = lateDays.objects.get(pk = 1)
     orders = Service_request.objects.all().filter(
@@ -25,13 +26,21 @@ def late_orders(service_type):
             late.append(order)
     return late
 
-def send_new_request_message(req):
-    message = f"تم تسجيل طلبك بنجاح \n رقم الطلب: #{req.request_number} \n "
-    url =  f"https://mshastra.com/sendurlcomma.aspx?user=20099824&pwd=4nnnku&senderid=SMSAlert&mobileno={req.phone}&msgtext={message}&priority=High&CountryCode=+966"
+# def send_new_request_message(req):
+#     message = f"تم تسجيل طلبك بنجاح \n رقم الطلب: #{req.request_number}\n"
+#     url =  f"https://mshastra.com/sendurlcomma.aspx?user=20099824&pwd=4nnnku&senderid=SMSAlert&mobileno={req.phone}&msgtext={message}&priority=High&CountryCode=+966"
+#     print(url)
+#     payload={}
+#     headers = {}
+#     response = requests.request("GET", url, headers=headers, data=payload)
+
+
+def new_req_msg(req):
+    msg = "تم تسجيل طلبك بنجاح"
+    url = f"https://mshastra.com/sendurlcomma.aspx?user=20099824&pwd=4nnnku&senderid=SMSAlert&mobileno={req.phone}&msgtext={msg}&priority=High&CountryCode=+966"
     payload={}
     headers = {}
     response = requests.request("GET", url, headers=headers, data=payload)
-    print(response.text)        
 
 
 def send_appointment_message(req):

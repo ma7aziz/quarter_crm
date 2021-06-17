@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django.shortcuts import redirect, render
 from core.add_customer import add_customer
-from service.utils import check_qouta, late_orders , send_new_request_message
+from service.utils import check_qouta, late_orders , new_req_msg
 from service.models import Appointment, Service_request
 
 # Create your views here.
@@ -79,7 +79,6 @@ def repair_request(request):
         repair_request.request_number = 'rep{id}'.format(
             id=repair_request.id)
         repair_request.save()
-        send_new_request_message(repair_request)
         check_qouta(request.user.id)
         if "checked" in request.POST.getlist('favorite'):
             if user.favourite_qouta.current_requests < user.favourite_qouta.max_requests:
@@ -92,4 +91,5 @@ def repair_request(request):
             else:
                 messages.success(request, "لم يتم أضافة الطلب الي المفضلات ")
         messages.success(request, "تم تسجيل طلبك بنجاح")
+        new_req_msg(repair_request)
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))

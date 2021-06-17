@@ -1,6 +1,6 @@
 from django.http import JsonResponse
 from django.core import serializers
-from service.utils import check_qouta, late_orders , send_new_request_message
+from service.utils import check_qouta, late_orders , new_req_msg
 import datetime
 from django.shortcuts import render
 from service.models import Service_request, Appointment
@@ -66,6 +66,7 @@ def install_request(request):
                                           address=address, customer_type=customer_type, notes=request.POST['notes'])
         install_request.customer = add_customer(phone, customer_name)
         install_request.save()
+        new_req_msg(install_request)
         if request.FILES:
             install_request.file = request.FILES['attach_file']
             install_request.save()
@@ -75,7 +76,6 @@ def install_request(request):
         install_request.request_number = 'inst{id}'.format(
             id=install_request.id)
         install_request.save()
-        send_new_request_message(install_request)
         check_qouta(request.user.id)
         if "checked" in request.POST.getlist('favorite'):
             if user.favourite_qouta.current_requests < user.favourite_qouta.max_requests:
