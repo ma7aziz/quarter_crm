@@ -318,7 +318,7 @@
                         <li class="menu-title">Menu</li>
 
 
-                        {% if request.user.role == 1 or request.user.role == 2%}
+                        {% if request.user.role == 1 %}
                         <li>
                             <a href="javascript: void(0);" class="has-arrow waves-effect">
                                 <i class="uil-home-alt"></i>
@@ -356,6 +356,7 @@
                             </a>
 
                         </li>
+
                         <li>
                             <a href="javascript: void(0);" class="has-arrow waves-effect">
                                 <i class="far fa-file-excel"></i>
@@ -380,28 +381,34 @@
                             </ul>
                         </li>
 
-                        <!-- {% elif request.user.role == 3  %}
+                        {% elif request.user.role == 3 %}
                         <li>
-                            <a href="{% url 'new_tasks' %}" class=" waves-effect">
-                                <i class="fas fa-rss"></i>
-
-                                <span>المهام الجديدة</span>
+                            <a href="/repair" class="waves-effect">
+                                <i class="fas fa-tools"></i>
+                                <span>الصيانة </span>
                             </a>
                         </li>
 
+
+                        {% elif request.user.role == 2 %}
                         <li>
-                            <a href="{% url 'history' %}" class=" waves-effect">
-                                <i class="fas fa-history"></i>
-                                <span>المهام السابقة </span>
+                            <a href="/install" class=" waves-effect">
+                                <i class="fas fa-toolbox"></i>
+
+                                <span>التركيب</span>
+                            </a>
+                        </li>
+
+
+                        {% elif request.user.role == 4 %}
+                        <li>
+                            <a href="/quarter" class=" waves-effect">
+                                <i class="fab fa-quora"></i>
+                                <span>كوارتر </span>
                             </a>
 
                         </li>
-
-                        {% endif %} -->
-
-
-
-
+                        {% endif %}
 
                     </ul>
                 </div>

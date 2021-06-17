@@ -114,7 +114,8 @@
                                         <td>
                                             {{ process.timestamp.date }}
                                         </td>
-                                        <td><a href="/profile/{{prcess.created_by.username}}">{{process.created_by}}</a>
+                                        <td><a
+                                                href="/profile/{{process.created_by.username}}">{{process.created_by}}</a>
                                         </td>
                                         <td>
                                             {% if process in repair_requests or process in install_requests %}

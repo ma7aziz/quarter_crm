@@ -78,6 +78,7 @@
                                                 <th scope="row">تاريخ الطلب </th>
                                                 <td>{{req.timestamp.date}}</td>
                                             </tr>
+                                            {% if not req.service_type == "install" %}
                                             <tr>
                                                 <th scope="row">نوع الطلب </th>
                                                 {% if req.customer_type == "cash" %}
@@ -87,6 +88,7 @@
                                                 {% endif %}
 
                                             </tr>
+                                            {% endif %}
                                             {%if req.invoice_number %}
                                             <tr>
                                                 <th scope="row">
@@ -395,11 +397,12 @@
                                                             class="col-sm-2 col-form-label">اختيار الفني
                                                         </label>
                                                         <div class="col-sm-10">
-                                                            <select name="technician" id="" class="form-control">
-                                                                <option value=""></option>
-                                                                {% for techn in tech%}
-                                                                <option value="{{techn.id}}">{{techn}}</option>
-                                                                {% endfor %}
+                                                            <select name="technician" id="" class="form-control"
+                                                                required />
+                                                            <option value="">اختيار الفني</option>
+                                                            {% for techn in tech%}
+                                                            <option value="{{techn.id}}">{{techn}}</option>
+                                                            {% endfor %}
                                                             </select>
 
                                                         </div>
@@ -483,8 +486,9 @@
                                                                 class="col-sm-2 col-form-label">اختيار الفني
                                                             </label>
                                                             <div class="col-sm-10">
-                                                                <select name="technician" id="" class="form-control">
-                                                                    <option value=""></option>
+                                                                <select name="technician" id="" class="form-control"
+                                                                    required>
+                                                                    <option value="">اختيار الفني</option>
                                                                     {% for techn in tech%}
                                                                     <option value="{{techn.id}}">{{techn}}
                                                                     </option>
