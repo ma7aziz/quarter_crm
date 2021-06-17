@@ -25,9 +25,9 @@ def late_orders(service_type):
             late.append(order)
     return late
 
-def send_new_request_message(new_request):
-    message = f"تم تسجيل طلبك بنجاح \n رقم الطلب: #{new_request.request_number} \n "
-    url = f"https://mshastra.com/sendurlcomma.aspx?user=20099824&pwd=4nnnku&senderid=SMS Alert&mobileno={new_request.phone}&msgtext={message}&priority=High&CountryCode=+966"
+def send_new_request_message(req):
+    message = f"تم تسجيل طلبك بنجاح \n رقم الطلب: #{req.request_number} \n "
+    url =  f"https://mshastra.com/sendurlcomma.aspx?user=20099824&pwd=4nnnku&senderid=SMSAlert&mobileno={req.phone}&msgtext={message}&priority=High&CountryCode=+966"
     payload={}
     headers = {}
     response = requests.request("GET", url, headers=headers, data=payload)
@@ -40,7 +40,7 @@ def send_appointment_message(req):
     elif req.service_type == "repair":
         message = f"تم تحديد موعد الصيانة يوم {req.appointment.date}"
 
-    url = f"https://mshastra.com/sendurlcomma.aspx?user=20099824&pwd=4nnnku&senderid=SMS Alert&mobileno={req.phone}&msgtext={message}&priority=High&CountryCode=+966"
+    url = f"https://mshastra.com/sendurlcomma.aspx?user=20099824&pwd=4nnnku&senderid=SMSAlert&mobileno={req.phone}&msgtext={message}&priority=High&CountryCode=+966"
     payload={}
     headers = {}
     response = requests.request("GET", url, headers=headers, data=payload)
