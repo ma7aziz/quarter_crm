@@ -344,9 +344,9 @@
 
                                        <td>
 
-                                           <a href="{% url 'service_request_details' req.id  %}"
+                                           <a href="{% url 'service_request_details' req.service_request.id %}"
                                                class="btn btn-light text-primary">
-                                               {{req.get_status_display}}</a>
+                                               {{req.service_request.get_status_display}}</a>
 
                                        </td>
 

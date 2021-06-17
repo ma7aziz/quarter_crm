@@ -180,7 +180,13 @@ def hold(request, id):
         req.hold = False
         req.save()
         messages.success(request, "تم اعادة تفعيل الطلب  !")
-    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    if req.hold :
+        if req.service_type == "repair":
+                return redirect('/repair')
+        elif req.service_type == "install":
+            return redirect('/install')
+    else:
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
 def change_status(request):
