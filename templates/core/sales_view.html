@@ -1,8 +1,55 @@
 {% extends 'base.html'%}
 {% block content %}
+<div class="row">
+    <div class="col">
+        <div class="card">
+            <div class="card-body bg-soft-info text-center">
+
+
+                <h4 class="mb-1 mt-1"><span data-plugin="counterup">{{ all_history|length }}</span></h4>
+                <p class="text-muted mb-0">عدد الطلبات </p>
+
+
+            </div>
+        </div>
+    </div> <!-- end col-->
+    <div class="col">
+        <div class="card">
+            <div class="card-body bg-soft-success text-center">
+
+                <h4 class="mb-1 mt-1"><span data-plugin="counterup">{{  all_current | length }}</span></h4>
+                <p class="text-muted mb-0"> طلبات جاري تنفيذها </p>
+            </div>
+        </div>
+    </div> <!-- end col-->
+
+
+</div> <!-- end row-->
+<div class="row">
+    <div class="col text-center">
+        <div class="card">
+            <div class="card-body" style="background-color: rgba(196, 167, 167, 0.433)">
+
+                عدد المفضلات المسموح بها :
+                <span data-plugin="counterup"> {{request.user.favourite_qouta.max_requests}}</span>
+
+            </div>
+        </div>
+    </div>
+    <div class="col text-center">
+        <div class="card">
+            <div class="card-body" style="background-color: rgba(196, 167, 167, 0.433)">
+                عدد الطلبات المفضلة اليوم :
+                <span data-plugin="counterup">
+                    {{request.user.favourite_qouta.current_requests}}
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
 <div class="card">
     <div class="card-body">
-        <h4 class="card-title mb-4" dir="rtl">تاريخ الطلبات السابقة </h4>
+        <h4 class="card-title mb-4" dir="rtl">الطلبات</h4>
 
         <ul class="nav nav-tabs" role="tablist">
             <li class="nav-item">
@@ -10,6 +57,24 @@
                     <span class="d-block d-sm-none"><i class="fas fa-home"></i></span>
                     <span class="d-none d-sm-block">
                         جميع الطلبات
+
+                    </span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-bs-toggle="tab" href="#navtabs-curr" role="tab">
+                    <span class="d-block d-sm-none"><i class="fas fa-home"></i></span>
+                    <span class="d-none d-sm-block">
+                        طلبات جاري تنفيذها
+
+                    </span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-bs-toggle="tab" href="#navtabs-fav" role="tab">
+                    <span class="d-block d-sm-none"><i class="fas fa-home"></i></span>
+                    <span class="d-none d-sm-block">
+                        المفضلات
 
                     </span>
                 </a>
@@ -50,7 +115,7 @@
                                             href="{% url 'service_request_details' req.id  %}" {% else %}
                                             href="{% url 'quarter_request_details' req.id  %}" {% endif %}>
 
-                                            {{req.request_number}}
+                                            #{{req.request_number}}
                                         </a>
 
                                     </td>
@@ -65,11 +130,32 @@
                                         {% endif %}
                                     </td>
                                     <td class="text-center">
-                                        <a class="btn btn-soft-primary btn-sm btn-rounded  waves-effect waves-light"
-                                            {% if req in service_history %}
+                                        <a {% if req in service_history %}
                                             href="{% url 'service_request_details' req.id  %}" {% else %}
-                                            href="{% url 'quarter_request_details' req.id  %}"
-                                            {% endif %}>{{req.get_status_display}}
+                                            href="{% url 'quarter_request_details' req.id  %}" {% endif %}>
+
+                                            {% if req in service_history %}
+                                            {% if req.hold %}
+                                            <span class="badge bg-danger">
+                                                معلق
+                                                {% else %}
+                                                <span class="
+                                                {% if req.status == 'new' %}
+                                                bg-info
+                                                {% elif req.status == 'under_process' %}
+                                                bg-warning
+                                                {% elif req.status == 'done' %}
+                                                bg-success 
+                                                {% else %}
+                                                bg-danger
+                                                {% endif %} p-2 badge">
+
+                                                    {{req.get_status_display}}
+                                                    {% endif %}
+                                                </span>
+                                                {% else %}
+                                                <span>{{req.get_status_display}}</span>
+                                                {% endif %}
                                         </a>
                                     </td>
 
@@ -82,9 +168,178 @@
                     <!-- end table-responsive -->
                 </div>
             </div>
+            <div class="tab-pane" id="navtabs-curr" role="tabpanel">
+                <div class="card">
+                    <div class="card-body">
+
+                        <h4 class="card-title mb-4" dir="rtl">طلبات جاري تنفيذها</h4>
+
+
+                        <input type="text" class="table_search form-control" placeholder="الـبـحـث... " name="s">
+                    </div>
+                    <div class="table-responsive" data-simplebar style="max-height: 430px;">
+                        <table class="table table-centered table-nowrap mb-0 text-center data-table" dir="rtl">
+                            <thead class="table-light">
+                                <tr>
+
+                                    <th>رقم الطلب </th>
+                                    <th>أسم العميل</th>
+                                    <th>تاريخ الطلب </th>
+                                    <th>نوع الطلب </th>
+                                    <th>حالة الطلب</th>
+
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for req in all_current %}
+                                <tr {% if req.favourite %} class="bg-soft-success" {% endif %}>
+
+                                    <td><a {% if req in service_history %}
+                                            href="{% url 'service_request_details' req.id  %}" {% else %}
+                                            href="{% url 'quarter_request_details' req.id  %}" {% endif %}>
+
+                                            #{{req.request_number}}
+                                        </a>
+
+                                    </td>
+                                    <td>{{req.customer.name}}</td>
+                                    <td>
+                                        {{req.timestamp.date}}
+                                    </td>
+                                    <td>
+                                        {% if req in service_history %}
+                                        {{req.get_service_type_display}}
+                                        {% else %} كوارتر
+                                        {% endif %}
+                                    </td>
+                                    <td class="text-center">
+                                        <a {% if req in service_history %}
+                                            href="{% url 'service_request_details' req.id  %}" {% else %}
+                                            href="{% url 'quarter_request_details' req.id  %}" {% endif %}>
+
+                                            {% if req in service_history %}
+                                            {% if req.hold %}
+                                            <span class="badge bg-danger">
+                                                معلق
+                                                {% else %}
+                                                <span class="
+                                                {% if req.status == 'new' %}
+                                                bg-info
+                                                {% elif req.status == 'under_process' %}
+                                                bg-warning
+                                                {% elif req.status == 'done' %}
+                                                bg-success 
+                                                {% else %}
+                                                bg-danger
+                                                {% endif %} p-2 badge">
+
+                                                    {{req.get_status_display}}
+                                                    {% endif %}
+                                                </span>
+                                                {% else %}
+                                                <span>{{req.get_status_display}}</span>
+                                                {% endif %}
+                                        </a>
+                                    </td>
+
+
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- end table-responsive -->
+                </div>
+            </div>
+            <div class="tab-pane" id="navtabs-fav" role="tabpanel">
+                <div class="card">
+                    <div class="card-body">
+
+                        <h4 class="card-title mb-4" dir="rtl">المفضلات </h4>
+
+
+                        <input type="text" class="table_search form-control" placeholder="الـبـحـث... " name="s">
+                    </div>
+                    <div class="table-responsive" data-simplebar style="max-height: 430px;">
+                        <table class="table table-centered table-nowrap mb-0 text-center data-table" dir="rtl">
+                            <thead class="table-light">
+                                <tr>
+
+                                    <th>رقم الطلب </th>
+                                    <th>أسم العميل</th>
+                                    <th>تاريخ الطلب </th>
+                                    <th>نوع الطلب </th>
+                                    <th>حالة الطلب</th>
+
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for req in favs%}
+                                <tr {% if req.favourite %} class="bg-soft-success" {% endif %}>
+
+                                    <td><a {% if req in service_history %}
+                                            href="{% url 'service_request_details' req.id  %}" {% else %}
+                                            href="{% url 'quarter_request_details' req.id  %}" {% endif %}>
+
+                                            #{{req.request_number}}
+                                        </a>
+
+                                    </td>
+                                    <td>{{req.customer.name}}</td>
+                                    <td>
+                                        {{req.timestamp.date}}
+                                    </td>
+                                    <td>
+                                        {% if req in service_history %}
+                                        {{req.get_service_type_display}}
+                                        {% else %} كوارتر
+                                        {% endif %}
+                                    </td>
+                                    <td class="text-center">
+                                        <a {% if req in service_history %}
+                                            href="{% url 'service_request_details' req.id  %}" {% else %}
+                                            href="{% url 'quarter_request_details' req.id  %}" {% endif %}>
+
+                                            {% if req in service_history %}
+                                            {% if req.hold %}
+                                            <span class="badge bg-danger">
+                                                معلق
+                                                {% else %}
+                                                <span class="
+                                                {% if req.status == 'new' %}
+                                                bg-info
+                                                {% elif req.status == 'under_process' %}
+                                                bg-warning
+                                                {% elif req.status == 'done' %}
+                                                bg-success 
+                                                {% else %}
+                                                bg-danger
+                                                {% endif %} p-2 badge">
+
+                                                    {{req.get_status_display}}
+                                                    {% endif %}
+                                                </span>
+                                                {% else %}
+                                                <span>{{req.get_status_display}}</span>
+                                                {% endif %}
+                                        </a>
+                                    </td>
+
+
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- end table-responsive -->
+                </div>
+            </div>
+
         </div>
 
     </div>
 </div>
-</div>
+
 {% endblock %}

@@ -49,7 +49,7 @@ def create_user(request):
 
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
-
+@login_required
 def edit_user(request):
     user = User.objects.get(pk=request.POST['user_id'])
     user.name = request.POST['name']
@@ -66,7 +66,6 @@ def edit_user(request):
     user.save()
     messages.success(request, "تم تعديل البيانات بنجاح ")
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-
 
 def userLogin(request):
     if request.method == "POST":
@@ -100,7 +99,7 @@ def userLogin(request):
     else:
         return render(request, 'login.html')
 
-
+@login_required
 def profile(request, username):
     user = User.objects.get(username=username)
     submitted_orders = Service_request.objects.all().filter(created_by=user)
@@ -128,7 +127,7 @@ def profile(request, username):
     }
     return render(request, 'registration/profile.html', ctx)
 
-
+@login_required
 def delete_user(request, username):
     user = User.objects.get(username=username)
     user.delete()
@@ -138,6 +137,7 @@ def delete_user(request, username):
 
 
 # custome  users views
+@login_required
 def new_tasks(request):
     if request.user.role == 8:
         requests = Appointment.objects.filter(
@@ -146,7 +146,7 @@ def new_tasks(request):
             technician=request.user).order_by('date')
     return render(request, 'repair/index.html', {'requests': requests, 'history': history})
 
-
+@login_required
 def history(request):
     if request.user.role == 8:
         requests = Appointment.objects.filter(
@@ -155,7 +155,7 @@ def history(request):
         employee=request.user).exclude(status="open")
     return render(request, 'repair/index.html', {'requests': requests, 'other_tasks': other_tasks})
 
-
+@login_required
 def change_password(request):
     if request.method == "POST":
         form = PasswordChangeForm(request.user, request.POST)
@@ -173,7 +173,7 @@ def change_password(request):
         'form': form
     })
 
-
+@login_required
 def edit_qouta(request):
     if request.method == "POST":
         user = User.objects.get(pk=request.POST['user_id'])
@@ -183,7 +183,7 @@ def edit_qouta(request):
             request, '!تم التعديل ')
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
-
+@login_required
 def reset_password(request):
     if request.method == "POST":
         password1 = request.POST['password']

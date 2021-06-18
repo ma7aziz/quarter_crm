@@ -128,7 +128,7 @@
                         </div>
                     </div>
                     <div class="col-lg-6">
-
+                        {% if request.user.role == 1 or request.user.role == 2 or request.user.role == 3 or request.user == appointment.technician %}
                         {% if appointment.service_request.status == "under_process"%}
                         <div class="card">
                             <div class="card-body">
@@ -243,6 +243,7 @@
 
                             </div>
                         </div>
+                        {% endif %}
                         {% endif %}
                     </div>
                 </div>

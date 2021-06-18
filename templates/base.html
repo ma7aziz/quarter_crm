@@ -408,7 +408,18 @@
                             </a>
 
                         </li>
+                        {% else %}
+
+                        <li>
+                            <a href="{% url 'index' %}" class=" waves-effect">
+                                <i class="uil-home-alt"></i>
+                                <span></span>الصفحة الرئيسة
+                            </a>
+
+                        </li>
                         {% endif %}
+
+
 
                     </ul>
                 </div>

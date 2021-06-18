@@ -49,6 +49,7 @@ class Quarter_service(models.Model):
     file = models.FileField(upload_to='service/files/', blank=True, null=True)
     first_excution = models.ForeignKey('Excution', on_delete=models.SET_NULL , null = True , blank = True , related_name="first")
     second_excution = models.ForeignKey('Excution' , on_delete=models.SET_NULL , null = True , blank = True , related_name="second")
+    favourite = models.BooleanField(default=False)
     
     # price ##outstanding
 

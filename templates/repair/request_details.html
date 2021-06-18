@@ -445,8 +445,8 @@
                                         </h2>
                                         <div id="collapseDate" class="accordion-collapse collapse show"
                                             aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
-                                            <div class="accordion-body">
-                                                <table class="table table-nowrap mb-0">
+                                            <div class="accordion-body ">
+                                                <table class="table table-nowrap mb-0 ">
                                                     <tbody>
                                                         <tr>
                                                             <th scope="row" style="width: 20%;">تاريخ الصيانة
@@ -461,7 +461,7 @@
                                                     </tbody>
                                                 </table>
                                             </div>
-                                            <div class="mb-3 " style="margin-right: 10px;">
+                                            <div class="mb-3" style="margin-right: 10px;">
                                                 {%if req.status == "under_process" %}
                                                 {% if  request.user.role == 1 or request.user.role == 2  %}
 
@@ -524,6 +524,7 @@
                                         </div>
 
                                     </div>
+                                    {% if request.user.role == 1 or request.user.role == 2 or request.user.role == 3 or request.user == appointment.technician%}
                                     <div class="accordion-item">
                                         <h2 class="accordion-header" id="headingThree">
                                             <button class="accordion-button font-size-20 " type="button"
@@ -569,6 +570,7 @@
                                             </div>
                                         </div>
                                     </div>
+
                                     <div class="accordion-item">
                                         <h2 class="accordion-header" id="headingFour">
                                             <button class="accordion-button font-size-20 " type="button"
@@ -626,6 +628,7 @@
                                             </div>
                                         </div>
                                     </div>
+                                    {% endif %}
                                     {% endif %}
                                     {% endif %}
 
