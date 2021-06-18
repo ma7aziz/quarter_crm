@@ -447,6 +447,7 @@
                     </div>
                     {% endfor %}
                     {% endif%}
+                    {% if not request.user.role == 8 %}
                     <div class="d-none d-lg-block d-md-none ">
                         <div class="row mb-3 " dir="rtl">
                             {% if request.user.role == 1 or request.user.role == 2 %}
@@ -486,6 +487,7 @@
                         </div>
 
                     </div>
+                    {% endif %}
                     {% block content %}
 
                     {% endblock %}

@@ -135,16 +135,18 @@ def delete_user(request, username):
     messages.success(request, "تم حدف المستخدم !")
     return redirect('dashboard')
 
-
+from datetime import datetime, timedelta, time
 # custome  users views
 @login_required
 def new_tasks(request):
+    today = datetime.now().date()
     if request.user.role == 8:
         requests = Appointment.objects.filter(
-            status="open", technician=request.user).order_by('date')
+            status="open", technician=request.user).order_by('-date')
         history = Appointment.objects.filter(
-            technician=request.user).order_by('date')
-    return render(request, 'repair/index.html', {'requests': requests, 'history': history})
+            technician=request.user).order_by('-date')
+        today = Appointment.objects.all().filter(date = today )
+    return render(request, 'repair/index.html', {'requests': requests,  'history': history , 'today' : today})
 
 @login_required
 def history(request):
