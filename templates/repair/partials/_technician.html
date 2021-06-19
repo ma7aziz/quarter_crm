@@ -41,7 +41,7 @@
                 </thead>
                 <tbody>
                     {% for req in requests %}
-                    <tr>
+                    <tr {% if req.is_past_due %} class="bg-soft-danger" {% endif %}>
 
                         <td><a href="{% url 'service_request_details' req.service_request.id %}"
                                 class="text-body fw-bold">#{{req.service_request.request_number}}</a> </td>
