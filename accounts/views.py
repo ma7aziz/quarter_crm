@@ -13,6 +13,7 @@ from quarter.models import Quarter_service
 from operator import attrgetter
 from itertools import chain
 from core.models import Task
+from service.utils import check_qouta
 # Create your views here.
 
 
@@ -69,14 +70,13 @@ def edit_user(request):
 
 def userLogin(request):
     if request.method == "POST":
-
         username = request.POST['username']
         password = request.POST['password']
         user = authenticate(username=username, password=password)
         if user is not None:
             login(request, user)
             messages.success(request, "أهلا بك مرة اخري ")
-            print(user.role)
+            check_qouta(request.user.id)
             if user.role == 1:  # admin
                 return HttpResponseRedirect('/')
             elif user.role == 2:  # install mng
@@ -89,12 +89,9 @@ def userLogin(request):
                 return redirect('sales_view')
             else:  # quarter Staff
                 return HttpResponseRedirect('quarter')
-
         else:
-
             messages.error(
                 request, 'username or password not correct')
-            print(messages)
             return redirect('login')
     else:
         return render(request, 'login.html')

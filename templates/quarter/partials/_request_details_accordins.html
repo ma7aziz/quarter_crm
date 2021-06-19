@@ -3,13 +3,13 @@
 
     <div class="card-body">
         {% if req.status == 1 and req.created_by == request.user %}
-        {% if not request.user.role == 1 %}
+
         <div class="text-center">
 
             <a href="{% url  'delete_quarter_request' req.id %}" class="btn btn-lg  btn-soft-danger">حذف
                 الطلب </a>
         </div>
-        {% endif %}
+
         {%endif%}
         <div class="accordion" id="accordionExample">
 
@@ -118,6 +118,7 @@
                 </div>
             </div>
             {% endif %}
+            {% if request.user.role == 1 or request.user.role == 4 %}
             {% if req.status == 13 %}
             <div class="accordion-item">
                 <h2 class="accordion-header" id="headingTwo">
@@ -138,7 +139,7 @@
 
             </div>
             {% endif %}
-
+            {% endif %}
         </div>
 
 

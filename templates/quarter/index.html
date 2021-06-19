@@ -11,5 +11,8 @@
 <!-- EGYPT_OFFICE -->
 {% elif request.user.role == 7 %}
 {% include './partials/_admin_supervisor.html' %}
+<!-- EXCUTION  -->
+{% elif request.user.role == 9 %}
+{% include './partials/_excution.html' %}
 {% endif %}
 {% endblock %}

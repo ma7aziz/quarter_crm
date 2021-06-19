@@ -49,6 +49,7 @@ SALES = 5
 ACCOUNTANT = 6
 EGYPT_OFFICE = 7
 TECHNICIAN = 8
+EXCUTION = 9 
 
 ROLE = (
     (1, 'مدير الموقع'),
@@ -59,6 +60,7 @@ ROLE = (
     (6, 'حسابات'),
     (7, 'مكتب مصر '),
     (8, 'فني '),
+    (9 , "تنفيذ كوارتر")
 
 )
 

@@ -102,6 +102,7 @@
                                     <th>أسم العميل</th>
                                     <th>تاريخ الطلب </th>
                                     <th>نوع الطلب </th>
+                                    <th>رقم الفاتورة</th>
                                     <th>حالة الطلب</th>
 
 
@@ -129,6 +130,7 @@
                                         {% else %} كوارتر
                                         {% endif %}
                                     </td>
+                                    <td>{{req.invoice_number}}</td>
                                     <td class="text-center">
                                         <a {% if req in service_history %}
                                             href="{% url 'service_request_details' req.id  %}" {% else %}

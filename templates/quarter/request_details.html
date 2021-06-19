@@ -254,8 +254,10 @@
                                         {% endif %}
                                         {% if req.file %}
                                         <div class="mt-4">
-
-                                            <a href="" class="font-size-18 ">عرض الملفات </a>
+                                            <p class="mb-1 text-muted d-inline"> ملفات الطلب :
+                                            </p>
+                                            <a href="{{req.file.url}}" class="font-size-18 " target="__blank">عــرض
+                                                الملفات </a>
                                         </div>
                                         {% endif %}
 
