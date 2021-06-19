@@ -141,16 +141,19 @@ def pricing(request):
             messages.success(request, "تم ارسال السعر .")
         else:
             # EDIT PRICE BY THE SAME PRICING USER
-            if request.user == req.pricing.created_by or request.user.role == 7:
+            if request.user == req.pricing.created_by or request.user.role == 7 or request.user.role == 1 or request.user.role == 4 :
                 req.pricing.price = price
                 req.pricing.files = files
                 req.pricing.notes = notes
                 if req.pricing.status == "rejected":
-                    req.pricing.status = "pending"
-                    req.pricing.save()
-                    req.status == 4
+                    if request.user.role == 1 or request.user.role == 7 or request.user.role == 4:
+                        req.pricing.status = "pending"
+                        req.pricing.save()
+                        req.status == 4
+                        req.save()
                 else:
                     req.status == 3
+                req.pricing.save()
                 req.save()
                 messages.success(request, "تم تعديل السعر .. ")
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
@@ -170,12 +173,15 @@ def confirm_process(request, id):
     elif req.status == 4:
         req.status = 5
         req.save()
+        req.pricing.status == "approved"
+        req.pricing.save()
         ## initiate transfer object ##
         transfer = Transfer(service=req)
         transfer.save()
         if req.pricing.price:
             transfer.total_price = int(req.pricing.price)
             transfer.save()
+            
         messages.success(
             request, ' تم اعتماد السعر .. سيتم البدء في التنفيذ بعد تحويل الجزء الاول من السعر المتفق عليه ')
     elif req.status == 6: 
@@ -258,10 +264,16 @@ def attach_purchase(request):
         req = Quarter_service.objects.get(pk=request.POST['request'])
         files = request.FILES['files']
         notes = request.POST['notes']
-        purchase = Purchase(service=req, files=files,
-                            notes=notes, created_by=request.user)
-        purchase.save()
-        req.purchase = purchase
+        if req.purchase:
+            req.purchase.files = files 
+            req.purchase.notes = notes
+            req.purchase.created_by = request.user
+            req.purchase.save()
+        else:
+            purchase = Purchase(service=req, files=files,
+                                notes=notes, created_by=request.user)
+            purchase.save()
+            req.purchase = purchase
         req.status = 9 
         req.save()
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))

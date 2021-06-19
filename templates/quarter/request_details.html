@@ -276,7 +276,6 @@
                         {% include './partials/tabs/_design_tab.html' %}
                         <!-- PURCHASE -->
                         {% include './partials/tabs/_purchase_tab.html' %}
-
                         <!-- EXCUTION FILES  -->
                         {% include './partials/tabs/_excution_files.html' %}
                     </div>
@@ -285,8 +284,6 @@
                 <div class=" col col-lg-5  col-md-12 ">
 
                     {% if req.active %}
-
-
                     {% include './partials/_request_details_accordins.html'%}
                     {% else %}
                     <div class="card">
@@ -306,7 +303,7 @@
             </div>
         </div>
     </div>
-    {% if req.active %}
+    {% if req.active and not req.status == 15  %}
     {% if request.user.role == 1 or request.user.role == 2 %}
     <div class="card ">
 

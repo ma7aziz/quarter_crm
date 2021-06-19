@@ -1,7 +1,8 @@
 {% load humanize %}
 
-{% if req.status > 8 %}
-{% if not req.purchase %}
+{% if req.status == 14 %}
+{% if request.user.role == 1 or request.user.role == 4 or request.user.role == 6 %}
+
 <div class="accordion-item">
     <h2 class="accordion-header" id="PurchaseHeading">
         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
@@ -9,7 +10,7 @@
             ارفاق ملفات المشتريات
         </button>
     </h2>
-    <div id="attachPurchase" class="accordion-collapse collapse " aria-labelledby="PurchaseHeading"
+    <div id="attachPurchase" class="accordion-collapse expand " aria-labelledby="PurchaseHeading"
         data-bs-parent="#accordionExample">
         <div class="accordion-body">
             <form method="POST" action="{% url 'attach_purchase' %}" enctype="multipart/form-data">
@@ -30,14 +31,11 @@
                     </div>
                 </div>
 
-
-                <div class="row justify-content-center">
-                    <div class="col-sm-9">
-                        <div>
-                            <button type="submit" class="btn btn-primary w-md">ارسال</button>
-                        </div>
-                    </div>
+                <div class="">
+                    <button type="submit" class="btn btn-primary w-md btn-rounded ">ارسال</button>
                 </div>
+
+
             </form>
         </div>
 
