@@ -1,3 +1,4 @@
+{% load static %}
 <!-- USER MODAL content -->
 <div id="newUserModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -230,8 +231,8 @@
             <div class="modal-body">
                 <p class="text-muted text-truncate mb-0">يرجي ملئ جميع البانات التالية
                 </p>
-                <form action="{% url 'install_request' %}" method="POST" enctype="multipart/form-data"
-                    id="install-form">
+                <form action="{% url 'install_request' %}" method="POST" id="install-form"
+                    enctype="multipart/form-data">
                     <label class="form-label" for="customername">اسم العميل </label>
                     <input name="customername" type="text" class="form-control">
 
@@ -274,7 +275,7 @@
                             المسموح </p>
                     </div>
                     <div class="mt-2">
-                        <button type="submit" class="btn btn-lg btn-primary" id="Install-form-submit">ارسال الطلب
+                        <button type="submit" class="btn btn-lg btn-primary" id="install-form-submit">ارسال الطلب
                         </button>
                     </div>
                 </form>
@@ -345,3 +346,50 @@
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
+
+{% block script %}
+<script src="{% static 'libs/jquery/jquery.min.js' %}"></script>
+<script>
+    $("#install-form-submit").on("click", function (e) {
+        console.log(e)
+        if ($("#favInstall").prop("checked") == true) {
+            e.preventDefault()
+            $.ajax({
+                url: "{% url 'check_favorite' %}",
+                success: function (data) {
+                    if (data.remaining > 0) {
+                        $("#install-form").submit()
+
+                    } else {
+                        $(".fav-info").removeClass("d-none")
+                        console.log("can't submit ")
+                    }
+                }
+            })
+        } else {
+            console.log("not checked")
+        }
+
+    });
+
+    $("#repair-form-submit").on("click", function (e) {
+        if ($("#favRepair").prop("checked") == true) {
+            e.preventDefault()
+            $.ajax({
+                url: "{% url 'check_favorite' %}",
+                success: function (data) {
+                    if (data.remaining > 0) {
+                        console.log(data.remaining)
+                        $("#repair-form").submit()
+                    } else {
+                        $(".fav-info").removeClass("d-none")
+                        console.log("can't submit ")
+                    }
+                }
+            })
+        } else {
+            console.log("not checked")
+        }
+    })
+</script>
+{% endblock %}

@@ -229,7 +229,7 @@ def sales_view(request):
                          key=attrgetter('timestamp'), reverse=True)
     # Current 
     current_services = Service_request.objects.all().filter(created_by=request.user).order_by('-favourite', '-timestamp').exclude(status="done").exclude(status="closed")
-    current_quarter = Quarter_service.objects.all().filter(created_by=request.user).order_by('-favourite','-timestamp').exclude(status = 13)
+    current_quarter = Quarter_service.objects.all().filter(created_by=request.user).order_by('-favourite','-timestamp').exclude(status = 13).exclude(status = 15 )
     all_current = sorted(chain(current_services , current_quarter), key = attrgetter('timestamp') , reverse=True)
     #favorits 
     favorites = Service_request.objects.all().filter(created_by = request.user).filter(favourite = True).order_by('-timestamp')
