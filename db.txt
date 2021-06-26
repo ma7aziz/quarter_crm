@@ -1,4 +1,8 @@
-if current_requests == max_requests 
-    reject 
-elif current_requests < max_requests
-    approve 
+
+CREATE DATABASE quarter_crm;
+CREATE USER quartercrm WITH PASSWORD 'quarter123';
+ALTER ROLE quartercrm SET client_encoding TO 'utf8';
+ALTER ROLE quartercrm SET default_transaction_isolation TO 'read committed';
+ALTER ROLE quartercrm SET timezone TO 'Asia/Riyadh';
+GRANT ALL PRIVILEGES ON DATABASE quarter_crm TO quartercrm;
+
