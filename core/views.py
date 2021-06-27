@@ -20,6 +20,7 @@ from django.http import HttpResponseRedirect
 from .models import Customer
 # Create your views here.
 
+
 @login_required
 def index(request):
     if request.user.is_authenticated:
@@ -40,6 +41,7 @@ def index(request):
 
     return render(request, 'index.html')
 
+
 @login_required
 def dashboard(request):
     if request.user.role == 1:
@@ -54,7 +56,7 @@ def dashboard(request):
         service_hold = Service_request.objects.on_hold()
 
         all_on_hold = sorted(chain(quarter_hold, service_hold),
-                            key=attrgetter('timestamp'), reverse=True)
+                             key=attrgetter('timestamp'), reverse=True)
 
         # under_process
         repair_under_process = Service_request.objects.repair().exclude(status="closed")
@@ -65,7 +67,8 @@ def dashboard(request):
         ###############################
         # All under process
         all_under_process = sorted(
-            chain(repair_under_process, install_under_process, quarter_under_process),
+            chain(repair_under_process, install_under_process,
+                  quarter_under_process),
             key=attrgetter('timestamp'), reverse=True)
 
         # NEW REQUESTS
@@ -112,14 +115,13 @@ def dashboard(request):
 
         }
         return render(request, 'core/dashboard.html', ctx)
-    else : 
-        messages.error(request , "لا يمكنك الوصول لهذة الصفحة ")
+    else:
+        messages.error(request, "لا يمكنك الوصول لهذة الصفحة ")
         return redirect('index')
-        
 
 
 def all_users(request):
-    if request.user.role == 1 :
+    if request.user.role == 1:
         all_users = User.objects.all().order_by('role')
         sales = User.objects.all().filter(role=4)
         tech = User.objects.all().filter(role=3)
@@ -130,8 +132,8 @@ def all_users(request):
             "tech": tech
         }
         return render(request, "core/users.html", ctx)
-    else : 
-        messages.error(request , "لا يمكنك الوصول لهذة الصفحة ")
+    else:
+        messages.error(request, "لا يمكنك الوصول لهذة الصفحة ")
         return redirect('index')
 
 
@@ -222,27 +224,33 @@ def search(request):
 
 def sales_view(request):
     # ALL
-    service_history = Service_request.objects.all().filter(created_by=request.user).order_by('-favourite', '-timestamp')
-    quarter_history = Quarter_service.objects.all().filter(created_by=request.user).order_by('-favourite','-timestamp')
+    service_history = Service_request.objects.all().filter(
+        created_by=request.user).order_by('-favourite', '-timestamp')
+    quarter_history = Quarter_service.objects.all().filter(
+        created_by=request.user).order_by('-favourite', '-timestamp')
 
     all_history = sorted(chain(service_history, quarter_history),
-                         key=attrgetter('timestamp'), reverse=True)
-    # Current 
-    current_services = Service_request.objects.all().filter(created_by=request.user).order_by('-favourite', '-timestamp').exclude(status="done").exclude(status="closed")
-    current_quarter = Quarter_service.objects.all().filter(created_by=request.user).order_by('-favourite','-timestamp').exclude(status = 13).exclude(status = 15 )
-    all_current = sorted(chain(current_services , current_quarter), key = attrgetter('timestamp') , reverse=True)
-    #favorits 
-    favorites = Service_request.objects.all().filter(created_by = request.user).filter(favourite = True).order_by('-timestamp')
+                         key=attrgetter('favourite', 'timestamp'), reverse=True)
+    # Current
+    current_services = Service_request.objects.all().filter(created_by=request.user).order_by(
+        '-favourite', '-timestamp').exclude(status="done").exclude(status="closed").exclude(status="new")
+    current_quarter = Quarter_service.objects.all().filter(created_by=request.user).order_by(
+        '-favourite', '-timestamp').exclude(status=13).exclude(status=15).exclude(status=1)
+    all_current = sorted(chain(current_services, current_quarter),
+                         key=attrgetter('favourite', 'timestamp'), reverse=True)
+    # favorits
+    favorites = Service_request.objects.all().filter(
+        created_by=request.user).filter(favourite=True).order_by('-timestamp')
     ctx = {
         "service_history": service_history,
         "quarter_history": quarter_history,
         "all_history": all_history,
-        ########### Current
-        "current_services" : current_services,
-        "current_quarter" :current_quarter,
-        "all_current" :all_current ,
-        ###### Favorites 
-        "favs" :favorites
+        # Current
+        "current_services": current_services,
+        "current_quarter": current_quarter,
+        "all_current": all_current,
+        # Favorites
+        "favs": favorites
     }
     return render(request, "core/sales_view.html", ctx)
 
