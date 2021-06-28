@@ -78,11 +78,11 @@
                     <div class="row">
                         <div class="mb-3">
                             <label class="form-label">الوظيفة</label>
-                            <select class="form-control select2" name="role">
-                                <option selected disabled>أختيار</option>
-                                {% for k , v in roles %}
-                                <option value="{{k}}">{{v}}</option>
-                                {% endfor %}
+                            <select class="form-control select2" name="role" required />
+                            <option selected disabled>أختيار</option>
+                            {% for k , v in roles %}
+                            <option value="{{k}}">{{v}}</option>
+                            {% endfor %}
                             </select>
                         </div>
 

@@ -440,7 +440,12 @@
                                             <button class="accordion-button font-size-20 collapsed " type="button"
                                                 data-bs-toggle="collapse" data-bs-target="#collapseDate"
                                                 aria-expanded="false" aria-controls="collapseDate">
-                                                موعد الصيانة
+                                                موعد
+                                                {% if req.srvice_type == "repair" %}
+                                                الصيانة
+                                                {% else %}
+                                                التركيب
+                                                {% endif %}
                                             </button>
                                         </h2>
                                         <div id="collapseDate" class="accordion-collapse collapse show"
@@ -449,7 +454,12 @@
                                                 <table class="table table-nowrap mb-0 ">
                                                     <tbody>
                                                         <tr>
-                                                            <th scope="row" style="width: 20%;">تاريخ الصيانة
+                                                            <th scope="row" style="width: 20%;">تاريخ
+                                                                {% if req.srvice_type == "repair" %}
+                                                                الصيانة
+                                                                {% else %}
+                                                                التركيب
+                                                                {% endif %}
                                                             </th>
                                                             <td>{{appointment.date}}</td>
                                                         </tr>
@@ -458,6 +468,12 @@
                                                             </th>
                                                             <td>{{appointment.technician}}</td>
                                                         </tr>
+                                                        <tr>
+                                                            <th scope="row" style="width: 20%;"> رقم الفني
+                                                            </th>
+                                                            <td>{{appointment.technician.phone }}</td>
+                                                        </tr>
+
                                                     </tbody>
                                                 </table>
                                             </div>

@@ -49,7 +49,7 @@ SALES = 5
 ACCOUNTANT = 6
 EGYPT_OFFICE = 7
 TECHNICIAN = 8
-EXCUTION = 9 
+EXCUTION = 9
 
 ROLE = (
     (1, 'مدير الموقع'),
@@ -60,7 +60,7 @@ ROLE = (
     (6, 'حسابات'),
     (7, 'مكتب مصر '),
     (8, 'فني '),
-    (9 , "تنفيذ كوارتر")
+    (9, "تنفيذ كوارتر")
 
 )
 
@@ -92,4 +92,4 @@ class Qouta(models.Model):
     current_requests = models.SmallIntegerField(default=0)
 
     def __str__(self):
-        return f'{self.max_requests}'
+        return f'{self.user}'
