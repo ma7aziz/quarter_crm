@@ -16,13 +16,13 @@
                     </td>
 
                 </tr>
-
+                {% if req.purches.notes %}
                 <tr>
                     <th scope="row">ملاحظات</th>
                     <td>{{ req.purchase.notes }}</td>
                 </tr>
 
-
+                {% endif %}
 
             </tbody>
 

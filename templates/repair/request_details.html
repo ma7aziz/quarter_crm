@@ -71,16 +71,16 @@
                                                 {% endif %}
                                             </tr>
                                             <tr>
-                                                <th scope="row" style="width: 20%;">اسم العميل </th>
+                                                <th scope="row" class="text-muted">اسم العميل </th>
                                                 <td>{{req}}</td>
                                             </tr>
                                             <tr>
-                                                <th scope="row">تاريخ الطلب </th>
+                                                <th scope="row" class="text-muted">تاريخ الطلب </th>
                                                 <td>{{req.timestamp.date}}</td>
                                             </tr>
                                             {% if not req.service_type == "install" %}
                                             <tr>
-                                                <th scope="row">نوع الطلب </th>
+                                                <th scope="row" class="text-muted">نوع الطلب </th>
                                                 {% if req.customer_type == "cash" %}
                                                 <td>كاش</td>
                                                 {%elif req.customer_type == "warranty" %}
@@ -91,63 +91,67 @@
                                             {% endif %}
                                             {%if req.invoice_number %}
                                             <tr>
-                                                <th scope="row">
+                                                <th scope="row" class="text-muted">
                                                     رقم الفاتورة
                                                 </th>
                                                 <td>{{req.invoice_number}}</td>
                                             </tr>
                                             {%endif%}
                                             <tr>
-                                                <th scope="row">البائع: </th>
+                                                <th scope="row" class="text-muted">البائع </th>
                                                 <td><a
                                                         href="/profile/{{req.created_by.username}}">{{req.created_by}}</a>
                                                 </td>
 
                                             </tr>
                                             <tr>
-                                                <th scope="row">رقم البائع : </th>
+                                                <th scope="row" class="text-muted">رقم البائع</th>
                                                 <td><a href="tel:{{req.created_by.phone}}">{{req.created_by.phone}}</a>
                                                 </td>
 
                                             </tr>
                                             {% if req.customer_type == "warranty" %}
                                             <tr>
-                                                <th scope="row">رقم الفاتورة</th>
+                                                <th scope="row" class="text-muted">رقم الفاتورة</th>
                                                 <td>{{req.invoice_number}}</td>
                                             </tr>
                                             {% endif %}
                                             <tr>
-                                                <th scope="row">الموقع</th>
+                                                <th scope="row" class="text-muted">الموقع</th>
                                                 <td>{{ req.address }}</td>
                                             </tr>
                                             <tr>
-                                                <th scope="row">الجوال</th>
+                                                <th scope="row" class="text-muted">الجوال</th>
                                                 <td>{{ req.phone }}</td>
                                             </tr>
+                                            {% if req.machine_type %}
                                             <tr>
-                                                <th scope="row">نوع الجهاز </th>
+                                                <th scope="row" class="text-muted">نوع الجهاز </th>
                                                 <td>{{req.machine_type}}</td>
                                             </tr>
+                                            {% endif %}
                                             <tr>
-                                                <th scope="row">حالة الطلب </th>
+                                                <th scope="row" class="text-muted">حالة الطلب </th>
                                                 <td>
                                                     {% if req.status == "new" %}
 
-                                                    <span class="badge rounded-pill bg-danger font-size-16">جديد</span>
+                                                    <span
+                                                        class="badge rounded-pill bg-soft-danger font-size-16">جديد</span>
 
                                                     {% elif req.status == "under_process" %}
 
 
-                                                    <span class="badge rounded-pill bg-primary font-size-16">جاري
+                                                    <span class="badge rounded-pill bg-soft-primary font-size-16">جاري
                                                         التنفيذ</span>
 
                                                     {% elif req.status == "suspended" %}
 
-                                                    <span class="badge rounded-pill bg-warning font-size-16">جديد</span>
+                                                    <span
+                                                        class="badge rounded-pill bg-soft-warning font-size-16">جديد</span>
 
                                                     {% elif req.status == "done" %}
 
-                                                    <span class="badge rounded-pill bg-success font-size-16">تم
+                                                    <span class="badge rounded-pill bg-soft-success font-size-16">تم
                                                         التنفيذ</span>
 
                                                     {% elif req.status == "closed" %}
@@ -162,20 +166,20 @@
                                             {% if request.user.role == 1 or request.user.role == 2 or request.user.role == 3 %}
 
                                             <tr>
-                                                <th scope="row">كود التنفيذ</th>
+                                                <th scope="row" class="text-muted">كود التنفيذ</th>
                                                 <td>{{req.code}}</td>
                                             </tr>
                                             {% endif %}
                                             {% if req.file %}
                                             <tr>
-                                                <th scope="row">الملفات </th>
+                                                <th scope="row" class="text-muted">الملفات </th>
                                                 <td><a href="{{req.file.url}}" target="_blank">عرض الملفات </a></td>
                                             </tr>
                                             {% endif %}
 
                                             {% if req.notes %}
                                             <tr>
-                                                <th scope="row">ملاحظات</th>
+                                                <th scope="row" class="text-muted">ملاحظات</th>
                                                 <td>{{req.notes }}</td>
                                             </tr>
                                             {%  endif %}
@@ -379,15 +383,15 @@
                                     {% if req.status  == "new" or req.status == "under_process" %}
                                     {% if not appointment %}
                                     <div class="accordion-item">
-                                        <h2 class="accordion-header" id="headingOne">
+                                        <h2 class="accordion-header" id="headingSetAppointment">
                                             <button class="accordion-button font-size-20 " type="button"
-                                                data-bs-toggle="collapse" data-bs-target="#collapseOne"
-                                                aria-expanded="true" aria-controls="collapseOne">
+                                                data-bs-toggle="collapse" data-bs-target="#collapseAppointment"
+                                                aria-expanded="true" aria-controls="collapseAppointment">
                                                 تحديد موعد
                                             </button>
                                         </h2>
-                                        <div id="collapseOne" class="accordion-collapse collapse show"
-                                            aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                                        <div id="collapseAppointment" class="accordion-collapse collapse show"
+                                            aria-labelledby="headingSetAppointment" data-bs-parent="#accordionExample">
                                             <div class="accordion-body">
                                                 <form method="POST" action="{% url 'repair_appointment' %}">
                                                     {% csrf_token %}
@@ -451,37 +455,39 @@
                                         <div id="collapseDate" class="accordion-collapse collapse show"
                                             aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
                                             <div class="accordion-body ">
-                                                <table class="table table-nowrap mb-0 ">
+                                                <table class="table table-nowrap mb-0 table-striped">
                                                     <tbody>
                                                         <tr>
-                                                            <th scope="row" style="width: 20%;">تاريخ
+                                                            <th scope="row" style="width: 30%; color: #d20120">تاريخ
                                                                 {% if req.srvice_type == "repair" %}
                                                                 الصيانة
                                                                 {% else %}
                                                                 التركيب
                                                                 {% endif %}
                                                             </th>
-                                                            <td>{{appointment.date}}</td>
+                                                            <td class="text-center">{{appointment.date}}</td>
                                                         </tr>
                                                         <tr>
-                                                            <th scope="row" style="width: 20%;">الفني
+                                                            <th scope="row" style="width: 30%; color: #d20120">الفني
                                                             </th>
-                                                            <td>{{appointment.technician}}</td>
+                                                            <td class="text-center">{{appointment.technician}}</td>
                                                         </tr>
                                                         <tr>
-                                                            <th scope="row" style="width: 20%;"> رقم الفني
+                                                            <th scope="row" style="width: 30%; color: #d20120"> رقم
+                                                                الفني
                                                             </th>
-                                                            <td>{{appointment.technician.phone }}</td>
+                                                            <td class="text-center">{{appointment.technician.phone }}
+                                                            </td>
                                                         </tr>
 
                                                     </tbody>
                                                 </table>
                                             </div>
-                                            <div class="mb-3" style="margin-right: 10px;">
+                                            <div class="mb-3 text-start" style="margin-right: 20px;">
                                                 {%if req.status == "under_process" %}
                                                 {% if  request.user.role == 1 or request.user.role == 2  %}
 
-                                                <a class="btn btn-primary" data-bs-toggle="collapse"
+                                                <a class="btn btn-soft-warning " data-bs-toggle="collapse"
                                                     href="#changeappointment" aria-expanded="false"
                                                     aria-controls="collapseExample">
                                                     تغيير الموعد
@@ -499,9 +505,9 @@
                                                             value="{{appointment.id}}">
                                                         <div class="row mb-4">
                                                             <label for="horizontal-firstname-input"
-                                                                class="col-sm-2 col-form-label">اختيار الفني
+                                                                class="col-sm-3 col-form-label">اختيار الفني
                                                             </label>
-                                                            <div class="col-sm-10">
+                                                            <div class="col-sm-9">
                                                                 <select name="technician" id="" class="form-control"
                                                                     required>
                                                                     <option value="">اختيار الفني</option>
@@ -515,25 +521,18 @@
                                                         </div>
                                                         <div class="row mb-4">
                                                             <label for="horizontal-email-input"
-                                                                class="col-sm-2 col-form-label">تحديد
-                                                                الموعد</label>
-                                                            <div class="col-sm-10">
+                                                                class="col-sm-3 col-form-label">اختيار اليوم</label>
+                                                            <div class="col-sm-9">
                                                                 <input type="date" name="appoint_date"
                                                                     class="form-control" required>
                                                             </div>
                                                         </div>
-
-
-                                                        <div class="row ">
-                                                            <div class="col">
-
-                                                                <div>
-                                                                    <button type="submit"
-                                                                        class="btn btn-primary w-md">تحديد
-                                                                        الموعد</button>
-                                                                </div>
-                                                            </div>
+                                                        <div class="text-end">
+                                                            <button type="submit"
+                                                                class="btn btn-soft-success w-lg">تحديد
+                                                                الموعد</button>
                                                         </div>
+
                                                     </form>
                                                 </div>
                                             </div>
@@ -560,10 +559,10 @@
                                                         value="{{appointment.service_request.id}}">
                                                     <div class="row mb-4">
                                                         <label for="horizontal-firstname-input"
-                                                            class="col-sm-2 col-form-label">كود التأكيد
+                                                            class="col-sm-3 col-form-label">كود التأكيد
                                                         </label>
 
-                                                        <div class="col-sm-10">
+                                                        <div class="col-sm-9">
 
                                                             <input type="text" name="code" id="" class="form-control">
                                                         </div>
@@ -571,17 +570,11 @@
                                                             الجوال </p>
                                                     </div>
 
-
-
-                                                    <div class="row justify-content-center">
-                                                        <div class="col-sm-9">
-
-                                                            <div>
-                                                                <button type="submit"
-                                                                    class="btn btn-primary w-md">تأكيد</button>
-                                                            </div>
-                                                        </div>
+                                                    <div class="text-end">
+                                                        <button type="submit"
+                                                            class="btn btn-soft-success w-lg">تأكيد</button>
                                                     </div>
+
                                                 </form>
                                             </div>
                                         </div>
@@ -596,7 +589,7 @@
                                             </button>
                                         </h2>
 
-                                        <div id="collapseHold" class="accordion-collapse collapse show"
+                                        <div id="collapseHold" class="accordion-collapse collapse"
                                             aria-labelledby="headingFour" data-bs-parent="#accordionExample">
                                             <div class="accordion-body">
                                                 <div class="card card-body mb-0">
@@ -608,37 +601,27 @@
                                                         {% csrf_token %}
                                                         <input type="hidden" name="req_id" value="{{req.id}}">
 
-                                                        <div class="row mb-4">
 
-                                                            <div class="col-sm-10">
-                                                                <div class="form-group">
-                                                                    <label for="">
-                                                                        ارفاق صورة
-                                                                    </label>
-                                                                    <input type="file" class="form-control"
-                                                                        name="holding_file">
-                                                                </div>
-                                                                <div class="form-group mt-2">
-                                                                    <label for="">سبب التعليق </label>
-                                                                    <textarea class="form-control" name="hold_reason"
-                                                                        id="" required></textarea>
-                                                                </div>
-
-                                                            </div>
+                                                        <div class="form-group">
+                                                            <label for="">
+                                                                ارفاق صورة
+                                                            </label>
+                                                            <input type="file" class="form-control" name="holding_file">
+                                                        </div>
+                                                        <div class="form-group mt-2">
+                                                            <label for="">سبب التعليق </label>
+                                                            <textarea class="form-control" name="hold_reason" id=""
+                                                                required></textarea>
                                                         </div>
 
 
 
-                                                        <div class="row ">
-                                                            <div class="col">
-
-                                                                <div>
-                                                                    <button type="submit"
-                                                                        class="btn btn-primary w-md">تعليق
-                                                                    </button>
-                                                                </div>
-                                                            </div>
+                                                        <div class="mt-3 text-end">
+                                                            <button type="submit"
+                                                                class="btn btn-soft-warning w-lg">تعليق
+                                                            </button>
                                                         </div>
+
                                                     </form>
                                                 </div>
                                             </div>

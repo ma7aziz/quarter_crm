@@ -26,11 +26,12 @@
                                         الملفات</a>
                                 </td>
                             </tr>
+                            {% if req.money_transfer.transfer1_notes %}
                             <tr>
                                 <th scope="row">ملاحظات</th>
                                 <td>{{ req.money_transfer.transfer1_notes }}</td>
                             </tr>
-
+                            {% endif %}
                         </tbody>
 
                     </table>
@@ -58,11 +59,12 @@
                                         الملفات</a>
                                 </td>
                             </tr>
+                            {% if req.money_transfer.transfer2_notes %}
                             <tr>
                                 <th scope="row">ملاحظات</th>
                                 <td>{{ req.money_transfer.transfer2_notes }}</td>
                             </tr>
-
+                            {% endif %}
                         </tbody>
 
                     </table>

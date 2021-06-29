@@ -25,13 +25,14 @@
                                 الملفات</a>
                         </td>
                     </tr>
-
+                    {% if req.pricing.notes %}
                     <tr>
                         <th scope="row">ملاحظات</th>
                         <td>{{ req.pricing.notes }}</td>
                     </tr>
+                    {% endif %}
 
-                    <tr>
+                    <!-- <tr>
                         <th scope="row">الحالة </th>
                         <td>
                             {% if req.pricing.status == "approved" %}
@@ -42,7 +43,7 @@
                             رفض السعر / طلب تعديل
                             {% endif %}
                         </td>
-                    </tr>
+                    </tr> -->
                     {% if req.pricing.status == "rejected" %}
                     <tr>
                         <th scope="row">سعر مقترح </th>
