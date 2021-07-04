@@ -294,3 +294,16 @@ def current_requests(request):
             'data': data,
             'colors':  colors
         })
+# ===============================================================================
+############################# CUSTOME ERROR PAGES , 404 , 500 ###################
+
+
+# def handle_404(request, exception):
+#     messages.error(
+#         request, "عنوان الصفحة المطلوبة غير صحيح .. برجاء المحاولة مرة اخري ! ")
+#     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
+# def handle_500(request, exception):
+#     messages.error(request, "حدث خطأ  ما .. برجاة المحاولة مرة اخري !")
+#     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))

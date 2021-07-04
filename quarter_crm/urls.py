@@ -4,6 +4,7 @@ from django.conf.urls.static import static
 from django.conf import settings
 from accounts.views import userLogin as login
 from accounts.views import create_user as signup
+# from core.views import handle_404, handle_500
 
 
 urlpatterns = [
@@ -20,3 +21,6 @@ urlpatterns = [
     path('files/', include("files.urls"))
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+# handler404 = handle_404
+# handler500 = handle_500

@@ -1,14 +1,37 @@
+<!doctype html>
+<html lang="ar">
+{% load static %}
 
-CREATE DATABASE quarter_crm;
-CREATE USER quartercrm WITH PASSWORD 'quarter123';
-ALTER ROLE quartercrm SET client_encoding TO 'utf8';
-ALTER ROLE quartercrm SET default_transaction_isolation TO 'read committed';
-ALTER ROLE quartercrm SET timezone TO 'Asia/Riyadh';
-GRANT ALL PRIVILEGES ON DATABASE quarter_crm TO quartercrm;
+<head>
 
+    <meta charset="utf-8" />
+    <title>Quarter CRM </title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta content="Quarter CRM - الربع لخدمات و أنظمة التكييف  " name="description" />
 
+    <!-- App favicon -->
+    <link rel="shortcut icon" href="{% static 'images/favicon.png' %}">
 
+    <!-- Bootstrap Css -->
+    <link href="{% static 'css/bootstrap.min.css' %}" id="bootstrap-style" rel="stylesheet" type="text/css" />
+    <!-- Icons Css -->
+    <link href="{% static 'css/icons.min.css' %}" rel="stylesheet" type="text/css" />
+    <!-- App Css-->
+    <!-- <link href="{% static 'css/app.min.css' %}" id="app-style" rel="stylesheet" type="text/css" /> -->
 
+</head>
+<!-- background-image: linear-gradient(60deg, #29323c 0%, #485563 100%);  -->
+<style>
+    body {
+        background: #15202b
+    }
+
+    .form-control,
+    .btn {
+        border-radius: 15px;
+        font-size: 20px
+    }
+</style>
 
 <body>
 
@@ -89,3 +112,6 @@ GRANT ALL PRIVILEGES ON DATABASE quarter_crm TO quartercrm;
         <script src="{% static 'js/app.js' %}"></script>
 
 </body>
+
+
+</html>
