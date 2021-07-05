@@ -469,27 +469,33 @@
                                        المختارة
                                    </button>
                                </div>
-                               <input id="" type="text" class=" table_search form-control " placeholder="الـبـحـث... "
-                                   name="s">
+                               <div class="my-2 row">
+                                   <div class="col-8">
 
-                               <div class="mt-1">
-                                   <form action="" id="filter-form">
+                                       <input id="" type="text" class=" table_search form-control "
+                                           placeholder="الـبـحـث... " name="s">
+                                   </div>
 
-                                       <label for="status">عرض حسب حالة الطلب </label>
-                                       <select name="status" id="status-list" class="form-control">
+                                   <div class="col-4">
+                                       <form action="" id="filter-form">
 
-                                           <option selected disabled>اختار حالة الطلب</option>
+                                           <select name="status" id="status-list" class="form-control  btn"
+                                               style="font-size: 16px; font-weight: 600 ; background: #ebebeb">
 
-                                           <option value="all">الكل</option>
-                                           <option value="new">جديد</option>
-                                           <option value="under_process">قيد التنفيذ</option>
-                                           <option value="done">تم</option>
-                                           <option value="closed">انتهي</option>
-                                       </select>
-                                   </form>
+                                               <option selected disabled>عرض حسب حالة الطلب </option>
 
+                                               <option value="all">الكل</option>
+                                               <option value="new">جديد</option>
+                                               <option value="under_process">قيد التنفيذ</option>
+                                               <option value="done">تم</option>
+                                               <option value="closed">انتهي</option>
+                                           </select>
+                                       </form>
+
+                                   </div>
                                </div>
-                               <div class="table-responsive mt-3 " data-simplebar style="max-height: 430px;">
+                               <div class="table-responsive mt-3 " data-simplebar
+                                   style="max-height: 430px; min-height : 100px">
                                    <table class="table table-centered table-nowrap mb-0 data-table" dir="rtl">
                                        <thead class="table-light">
                                            <tr>
@@ -497,7 +503,7 @@
                                                        class="form-check-input"></th>
                                                <th>رقم الطلب </th>
                                                <th>أسم العميل</th>
-                                               <th>تاريخ الطلب </th>
+                                               <th>التاريخ</th>
 
                                                {% if "install" in request.path %}
                                                <th> رقم الفاتورة </th>
@@ -506,8 +512,25 @@
                                                {% endif %}
                                                <th class="d-none">phone </th>
                                                <th>البائع</th>
-                                               <th>حالة الطلب </th>
+                                               <th>
 
+                                                   <form action="" id="filter-form">
+                                                       <select name="status" id="status-list" class="form-control btn"
+                                                           style="font-size: 16px; font-weight: 600 ; background: #F5F6F8">
+                                                           <option selected disabled value="">
+                                                               حالة الطلب </option>
+                                                           <option value="all">الكل</option>
+                                                           <option value="new">جديد</option>
+                                                           <option value="under_process">قيد التنفيذ</option>
+                                                           <option value="done">تم</option>
+                                                           <option value="closed">انتهي</option>
+                                                       </select>
+                                                   </form>
+
+                                               </th>
+                                               <th>
+
+                                               </th>
 
                                            </tr>
                                        </thead>
