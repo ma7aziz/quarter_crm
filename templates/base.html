@@ -180,27 +180,27 @@
                     <div class="navbar-brand-box">
                         <a href="{% url 'index' %}" class="logo logo-dark">
                             <span class="logo-sm">
-                                QUARTER
+                                <img src="{% static 'images/favicon.png'%}" width="60" height="60" alt="">
                             </span>
                             <span class="logo-lg">
-                                QUARTER
+                                <img src="{% static 'images/favicon.png'%}" width="60" height="60" alt="">
                             </span>
                         </a>
 
                         <a href="{% url 'index' %}" class="logo logo-light">
                             <span class="logo-sm">
-                                QUARTER
+                                <img src="{% static 'images/favicon.png'%}" width="40" height="40" alt="">
                             </span>
                             <span class="logo-lg">
-                                QUARTER
+                                <img src="{% static 'images/favicon.png'%}" width="40" height="40" alt="">
                             </span>
                         </a>
                     </div>
 
-                    <button type="button"
+                    <!-- <button type="button"
                         class="btn btn-sm px-3 font-size-16 header-item waves-effect vertical-menu-btn">
                         <i class="fa fa-fw fa-bars"></i>
-                    </button>
+                    </button> -->
 
                     <!-- App Search-->
                     <form action="{% url 'search' %}" class="app-search d-none d-lg-block">
@@ -280,32 +280,27 @@
 
             <!-- LOGO -->
             <div class="navbar-brand-box">
-                <a href="{% url 'index' %}" class="logo logo-dark">
-                    <span class="logo-sm text-light">
-                        <i class="fab fa-quora fa-2x"></i>
-                        <!-- <img src="assets/images/logo-sm.png" alt="" height="22"> -->
-                    </span>
-                    <span class="logo-lg">
-                        <i class="fab fa-quora fa-2x"></i>
+                <a href="{% url 'index' %}" class="logo logo-dark text-center">
+                    <span style="font-size: 22px ; color : #fff" class="text-center">
+                        <img src="{% static 'images/favicon.png'%}" width="60" height="60" alt="">
+
+                        كوارتر
                     </span>
                 </a>
 
-                <a href="{% url 'index' %}" class="logo logo-light">
-                    <span class="logo-sm text-light">
+                <a href="{% url 'index' %}" class="logo logo-light text-center ">
 
-                        <i class="fab fa-quora fa-2x"></i>
+                    <span style="font-size: 22px ; color : #fff " class="text-center">
+                        <img src="{% static 'images/favicon.png'%}" width="60" height="60" alt="">
 
-                    </span>
-                    <span class="logo-lg text-light text-left" style="font-size: 18px; ">
-                        arter CRM<i class="fab fa-quora fa-2x"></i>
-
+                        كوارتر
                     </span>
                 </a>
             </div>
 
-            <button type="button" class="btn btn-sm px-3 font-size-16 header-item waves-effect vertical-menu-btn">
+            <!-- <button type="button" class="btn btn-sm px-3 font-size-16 header-item waves-effect vertical-menu-btn">
                 <i class="fa fa-fw fa-bars"></i>
-            </button>
+            </button> -->
 
             <div data-simplebar class="sidebar-menu-scroll">
 
