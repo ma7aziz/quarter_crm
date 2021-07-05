@@ -56,7 +56,7 @@
                             <table class="table table-centered table-nowrap mb-0 text-center data-table" dir="rtl">
                                 <thead class="table-light">
                                     <tr>
-                                        <th></th>
+                                        <th><input type="checkbox" name="" id="check_all" class="form-check-input"></th>
                                         <th>رقم الطلب </th>
                                         <th>أسم العميل</th>
                                         <th>تاريخ الطلب </th>
@@ -178,5 +178,10 @@
     $("#status-list").change(function () {
         $("#filter-form").submit()
     })
+    $("#check_all").click(function () {
+        $('input:checkbox').not(this).prop('checked', this.checked);
+        $('.quarterMultiDeleteBtn').toggleClass('d-none')
+
+    });
 </script>
 {% endblock %}

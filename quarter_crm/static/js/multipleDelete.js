@@ -14,19 +14,24 @@ $(".req_checkbox ").click(function () {
 });
 
 $(".serviceMultiDeleteBtn").click(function () {
-  let ids = [];
+  let ids_list = [];
   $(".req_checkbox:checked").each(function (i) {
-    ids.push($(this).val());
+    ids_list.push($(this).val());
   });
+  // TO REMOVE DUPLICATES FROM ids_list ARRAY
+  ids = Array.from(new Set(ids_list));
+  //
+  console.log(ids);
   $.ajax({
     type: "POST",
-    // url: "{% url 'service_multiple_delete' %}",
     url: "/service_multiple_delete",
     data: {
       ids,
     },
     success: function (response) {
       location.reload(true);
+      $(".alert").removeClass("d-none");
+      $(".alert").text("تم الحذف");
     },
   });
 });
@@ -41,19 +46,22 @@ $(".qua_checkbox ").click(function () {
 });
 
 $(".quarterMultiDeleteBtn").click(function () {
-  let ids = [];
+  let ids_list = [];
   $(".qua_checkbox:checked").each(function (i) {
-    ids.push($(this).val());
+    ids_list.push($(this).val());
   });
+  // Remove Duplicates
+  ids = Array.from(new Set(ids_list));
   $.ajax({
     type: "POST",
-    // url: "{% url 'service_multiple_delete' %}",
     url: "/quarter/quarter_multi_delete",
     data: {
       ids,
     },
     success: function (response) {
       location.reload(true);
+      $(".alert").removeClass("d-none");
+      $(".alert").text("تم الحذف");
     },
   });
 });

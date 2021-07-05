@@ -1,3 +1,4 @@
+from .models import lateDays
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from .models import Service_request, Appointment, REQUEST_STATUS, Hold_reason
@@ -6,7 +7,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django.views.decorators.csrf import csrf_exempt
-from .utils import check_qouta , send_appointment_message
+from .utils import check_qouta, send_appointment_message
 
 # Create your views here.
 
@@ -140,14 +141,13 @@ def delete_request(request, id):
     req = Service_request.objects.get(pk=id)
     req.delete()
     messages.success(request, "تم حذف الطلب ")
-    if request.user.role == 5 :
+    if request.user.role == 5:
         return redirect('sales_view')
     else:
         if req.service_type == "repair":
             return redirect('/repair')
         elif req.service_type == "install":
             return redirect('/install')
-
 
 
 def hold(request, id):
@@ -180,9 +180,9 @@ def hold(request, id):
         req.hold = False
         req.save()
         messages.success(request, "تم اعادة تفعيل الطلب  !")
-    if req.hold :
+    if req.hold:
         if req.service_type == "repair":
-                return redirect('/repair')
+            return redirect('/repair')
         elif req.service_type == "install":
             return redirect('/install')
     else:
@@ -216,6 +216,7 @@ def deactivate_request(request, id):
 @csrf_exempt
 def multiple_delete(request):
     if request.is_ajax:
+        print(request.POST)
         ids = request.POST.getlist('ids[]')
         for i in ids:
             req = Service_request.objects.get(pk=i)
@@ -254,9 +255,9 @@ def favorite(request, id):
         messages.success(request, "تم الحذف من المفضلات ")
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
-from .models import lateDays
+
 def change_late_days(request):
-    latedays  =lateDays.objects.get(pk = 1 )
+    latedays = lateDays.objects.get(pk=1)
     latedays.days = request.POST['days']
     latedays.save()
     messages.success(request, "تم التعديل ")
@@ -265,9 +266,10 @@ def change_late_days(request):
 
 def check_favorite(request):
     if request.is_ajax():
-        user = User.objects.get(pk = request.user.id )
-        remaining_favs = user.favourite_qouta.max_requests - user.favourite_qouta.current_requests
+        user = User.objects.get(pk=request.user.id)
+        remaining_favs = user.favourite_qouta.max_requests - \
+            user.favourite_qouta.current_requests
         data = {
-            "remaining" : remaining_favs
+            "remaining": remaining_favs
         }
-        return JsonResponse(data)  
+        return JsonResponse(data)

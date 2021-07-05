@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django.shortcuts import redirect, render
 from core.add_customer import add_customer
-from service.utils import check_qouta, late_orders , new_req_msg
+from service.utils import check_qouta, late_orders, new_req_msg
 from service.models import Appointment, Service_request
 
 # Create your views here.
@@ -25,7 +25,8 @@ def repair_index(request):
                 requests = Service_request.objects.repair().order_by(
                     '-favourite', '-timestamp').filter(status=request.GET['status'])
         else:
-            requests = Service_request.objects.all().filter(service_type="repair").order_by('-favourite', '-timestamp')
+            requests = Service_request.objects.all().filter(
+                service_type="repair").order_by('-favourite', '-timestamp')
         on_hold = Service_request.objects.on_hold().filter(service_type="repair")
     elif request.user.role == 3:
         requests = Appointment.objects.filter(
@@ -66,9 +67,9 @@ def repair_request(request):
             messages.error(
                 request, "يجب ادخال رقم الفاتورة لتسجيل عميل الضمان ")
         else:
-            repair_request = Servrequests = Service_request(service_type="repair", created_by=user, customer_name=customer_name, phone=phone,
-                                                            machine_type=machine_type, invoice_number=invoice_number,
-                                                            address=address, customer_type=customer_type, notes=request.POST['notes'])
+            repair_request = Service_request(service_type="repair", created_by=user, customer_name=customer_name, phone=phone,
+                                             machine_type=machine_type, invoice_number=invoice_number,
+                                             address=address, customer_type=customer_type, notes=request.POST['notes'])
             repair_request.customer = add_customer(phone, customer_name)
             repair_request.save()
             if request.FILES:
@@ -76,20 +77,20 @@ def repair_request(request):
                 repair_request.save()
             user.submitted_orders += 1
             user.save()
-        repair_request.request_number = 'rep{id}'.format(
-            id=repair_request.id)
-        repair_request.save()
-        check_qouta(request.user.id)
-        if "checked" in request.POST.getlist('favorite'):
-            if user.favourite_qouta.current_requests < user.favourite_qouta.max_requests:
-                service = repair_request
-                service.favourite = True
-                service.save()
-                user.favourite_qouta.current_requests += 1
-                user.favourite_qouta.save()
-                messages.success(request, "تم التسجيل و الاضافة للمفضلات ")
-            else:
-                messages.success(request, "لم يتم أضافة الطلب الي المفضلات ")
-        messages.success(request, "تم تسجيل طلبك بنجاح")
-        new_req_msg(repair_request)
+            repair_request.request_number = 'rep{id}'.format(
+                id=repair_request.id)
+            repair_request.save()
+            check_qouta(request.user.id)
+            if "checked" in request.POST.getlist('favorite'):
+                if user.favourite_qouta.current_requests < user.favourite_qouta.max_requests:
+                    service = repair_request
+                    service.favourite = True
+                    service.save()
+                    user.favourite_qouta.current_requests += 1
+                    user.favourite_qouta.save()
+                else:
+                    messages.success(
+                        request, "لم يتم أضافة الطلب الي المفضلات ")
+            messages.success(request, "تم تسجيل طلبك بنجاح")
+            new_req_msg(repair_request)
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
