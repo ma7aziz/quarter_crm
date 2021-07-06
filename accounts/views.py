@@ -1,3 +1,4 @@
+from datetime import datetime, timedelta, time
 from django.core.exceptions import ValidationError
 from django.contrib.auth.password_validation import validate_password
 from django.contrib.auth import update_session_auth_hash
@@ -50,6 +51,7 @@ def create_user(request):
 
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
+
 @login_required
 def edit_user(request):
     user = User.objects.get(pk=request.POST['user_id'])
@@ -67,6 +69,7 @@ def edit_user(request):
     user.save()
     messages.success(request, "تم تعديل البيانات بنجاح ")
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
 
 def userLogin(request):
     if request.method == "POST":
@@ -86,6 +89,7 @@ def userLogin(request):
             elif user.role == 8:  # tech
                 return HttpResponseRedirect('/new_tasks')
             elif request.user.role == 5:  # sales
+                check_qouta(request.user.id)
                 return redirect('sales_view')
             else:  # quarter Staff
                 return HttpResponseRedirect('quarter')
@@ -95,6 +99,7 @@ def userLogin(request):
             return redirect('login')
     else:
         return render(request, 'login.html')
+
 
 @login_required
 def profile(request, username):
@@ -124,6 +129,7 @@ def profile(request, username):
     }
     return render(request, 'registration/profile.html', ctx)
 
+
 @login_required
 def delete_user(request, username):
     user = User.objects.get(username=username)
@@ -132,8 +138,10 @@ def delete_user(request, username):
     messages.success(request, "تم حدف المستخدم !")
     return redirect('dashboard')
 
-from datetime import datetime, timedelta, time
+
 # custome  users views
+
+
 @login_required
 def new_tasks(request):
     today = datetime.now().date()
@@ -142,8 +150,9 @@ def new_tasks(request):
             status="open", technician=request.user).order_by('-date')
         history = Appointment.objects.filter(
             technician=request.user).order_by('-date')
-        today = Appointment.objects.all().filter(date = today )
-    return render(request, 'repair/index.html', {'requests': requests,  'history': history , 'today' : today})
+        today = Appointment.objects.all().filter(date=today)
+    return render(request, 'repair/index.html', {'requests': requests,  'history': history, 'today': today})
+
 
 @login_required
 def history(request):
@@ -153,6 +162,7 @@ def history(request):
     other_tasks = Task.objects.filter(
         employee=request.user).exclude(status="open")
     return render(request, 'repair/index.html', {'requests': requests, 'other_tasks': other_tasks})
+
 
 @login_required
 def change_password(request):
@@ -172,6 +182,7 @@ def change_password(request):
         'form': form
     })
 
+
 @login_required
 def edit_qouta(request):
     if request.method == "POST":
@@ -181,6 +192,7 @@ def edit_qouta(request):
         messages.success(
             request, '!تم التعديل ')
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
 
 @login_required
 def reset_password(request):

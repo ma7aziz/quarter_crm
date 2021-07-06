@@ -1,3 +1,4 @@
+from datetime import date
 from .models import lateDays
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
@@ -79,24 +80,29 @@ def complete_request(request):
     change request status from under process to done .. using a verification code .
     """
     if request.method == "POST":
-        repair_request = Service_request.objects.get(
+        req = Service_request.objects.get(
             pk=request.POST['request_id'])
         appointment = Appointment.objects.get(pk=request.POST['appoint_id'])
         code = request.POST['code']
         if request.user.role == 1 or request.user.role == 2 or request.user.role == 3:
-            if code == "0000" or code == repair_request.code:
-                repair_request.status = "done"
-                repair_request.save()
+            if code == "0000" or code == req.code:
+                req.status = "done"
+                # CHANGE HOLD STATUS IF REQUEST IS ON HOLD
+                req.hold = False
+                req.save()
                 appointment.status = "closed"
                 appointment.save()
+
                 messages.success(request, "تم تنفيذ الطلب ")
             else:
                 # send error message
                 messages.error(request, "برجاء ادخال كود صحيح ")
         else:
-            if code == repair_request.code:
-                repair_request.status = "done"
-                repair_request.save()
+            if code == req.code:
+                req.status = "done"
+                # CHANGE HOLD STATUS IF REQUEST IS ON HOLD
+                req.hold = False
+                req.save()
                 appointment.status = "closed"
                 appointment.save()
                 messages.success(request, "تم تنفيذ الطلب ")
@@ -104,7 +110,10 @@ def complete_request(request):
                 # send error message
                 messages.error(request, "برجاء ادخال كود صحيح ")
 
-    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    if req.service_type == "repair":
+        return redirect('/repair')
+    elif req.service_type == "install":
+        return redirect('/install')
 
 
 def close_request(request):
@@ -114,32 +123,37 @@ def close_request(request):
       == change status to closed
     """
     if request.method == "POST":
-        repair_request = Service_request.objects.get(
+        req = Service_request.objects.get(
             pk=request.POST['request_id'])
-        repair_request.status = "closed"
+        req.status = "closed"
 
         #  technician completed task count
-        appointment = Appointment.objects.get(service_request=repair_request)
+        appointment = Appointment.objects.get(service_request=req)
         technician = appointment.technician
         technician.completed_tasks += 1
         technician.save()
 
         # sales submitted orders count
-        sales = repair_request.created_by
+        sales = req.created_by
         sales.submitted_orders += 1
         sales.save()
 
-        repair_request.save()
+        req.save()
 
         messages.success(request, "تم تنفيذ و اغلاق الطلب بنجاح !")
-    else:
-        pass
-    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+        if req.service_type == "repair":
+            return redirect('/repair')
+        elif req.service_type == "install":
+            return redirect('/install')
 
 
 def delete_request(request, id):
     req = Service_request.objects.get(pk=id)
     req.delete()
+    if req.favourite:
+        if req.timestamp.date() == date.today():
+            req.created_by.favourite_qouta.current_requests -= 1
+            req.created_by.favourite_qouta.save()
     messages.success(request, "تم حذف الطلب ")
     if request.user.role == 5:
         return redirect('sales_view')
@@ -216,11 +230,15 @@ def deactivate_request(request, id):
 @csrf_exempt
 def multiple_delete(request):
     if request.is_ajax:
-        print(request.POST)
         ids = request.POST.getlist('ids[]')
         for i in ids:
             req = Service_request.objects.get(pk=i)
             req.delete()
+            if req.favourite:
+                if req.timestamp.date() == date.today():
+                    req.created_by.favourite_qouta.current_requests -= 1
+                    req.created_by.favourite_qouta.save()
+
         data = {
             'message':  'تم حذف الطلبات المختارة '
         }

@@ -457,7 +457,7 @@
 
                             </div>
                             {% endif %}
-                            {% if not request.user.role == 5 %}
+                            {% if  request.user.role == 1 or request.user.role == 3 %}
                             <div class="col  mb-1 text-center">
                                 <button class="btn btn-lg btn-primary btn-rounded waves-effect waves-light"
                                     data-bs-toggle="modal" data-bs-target="#newRepairRequestModal"> طلب صيانة
@@ -466,6 +466,7 @@
 
                             </div>
                             {% endif %}
+                            {% if request.user.role == 1 or request.user.role == 2 or request.user.role == 5 %}
                             <div class="col  mb-1 text-center">
                                 <button class="btn btn-lg btn-primary btn-rounded waves-effect waves-light"
                                     data-bs-toggle="modal" data-bs-target="#newInstallRequestModal"> طلب تركيب
@@ -474,6 +475,8 @@
                                 <!-- sample modal content -->
 
                             </div>
+                            {% endif %}
+
                             <div class="col  mb-1 text-center">
                                 <button class="btn btn-lg btn-primary btn-rounded waves-effect waves-light"
                                     data-bs-toggle="modal" data-bs-target="#newQuarterRequestModal"> طلب خدمة

@@ -18,12 +18,14 @@ from quarter.models import Quarter_service
 from core.models import Task
 from django.http import HttpResponseRedirect
 from .models import Customer
+from service.utils import check_qouta
 # Create your views here.
 
 
 @login_required
 def index(request):
     if request.user.is_authenticated:
+        check_qouta(request.user.id)
         if request.user.role == 1:  # Admin
             return render(request, 'index.html')
         elif request.user.role == 5:
@@ -224,6 +226,7 @@ def search(request):
 
 def sales_view(request):
     # ALL
+    check_qouta(request.user.id)
     service_history = Service_request.objects.all().filter(
         created_by=request.user).order_by('-favourite', '-timestamp')
     quarter_history = Quarter_service.objects.all().filter(

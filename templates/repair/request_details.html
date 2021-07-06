@@ -204,7 +204,7 @@
                         {% if req.active %}
                         <div class="card">
                             <div class="card-body">
-                                {% if req.status == "new" and req.created_by == request.user %}
+                                {% if req.status == "new" and req.created_by == request.user and not req.hold  %}
                                 {% if not request.user.role == 1 %}
                                 <div class="text-center">
 
@@ -216,9 +216,10 @@
                                 {%endif%}
 
 
-                                {% if request.user.role == 1 or request.user.role == 2 or request.user.role == 3  %}
+
                                 <div class="accordion" id="accordionExample">
                                     {% if req.hold %}
+
                                     <div class="card">
                                         <div class="card-body bg-dark text-light">
                                             <p><strong>سبب التعليق : </strong>
@@ -240,6 +241,7 @@
                                     </div>
 
                                     {% endif%}
+                                    {% if request.user.role == 1 or request.user.role == 2 or request.user.role == 3  %}
                                     <div class="accordion-item">
                                         <h2 class="accordion-header" id="headingOne">
                                             <button class="accordion-button font-size-20 font-size-20" type="button"

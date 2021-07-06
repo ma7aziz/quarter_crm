@@ -510,27 +510,13 @@
                                                {% else%}
                                                <th>نوع العميل </th>
                                                {% endif %}
-                                               <th class="d-none">phone </th>
                                                <th>البائع</th>
                                                <th>
-
-                                                   <form action="" id="filter-form">
-                                                       <select name="status" id="status-list" class="form-control btn"
-                                                           style="font-size: 16px; font-weight: 600 ; background: #F5F6F8">
-                                                           <option selected disabled value="">
-                                                               حالة الطلب </option>
-                                                           <option value="all">الكل</option>
-                                                           <option value="new">جديد</option>
-                                                           <option value="under_process">قيد التنفيذ</option>
-                                                           <option value="done">تم</option>
-                                                           <option value="closed">انتهي</option>
-                                                       </select>
-                                                   </form>
+                                                   حالة الطلب
 
                                                </th>
-                                               <th>
+                                               <th class="d-none">phone </th>
 
-                                               </th>
 
                                            </tr>
                                        </thead>
@@ -572,7 +558,6 @@
                                                    {% endif %}
                                                </td>
 
-                                               <td class="d-none">{{req.phone}}</td>
                                                <td><a
                                                        href="/profile/{{req.created_by.username}}">{{req.created_by.username}}</a>
                                                </td>
@@ -611,7 +596,7 @@
                                                        تعليق <i class="far fa-pause-circle"></i>
                                                    </a> -->
                                                </td>
-
+                                               <td class="d-none">{{req.phone}}</td>
                                            </tr>
                                            {% endfor %}
                                        </tbody>

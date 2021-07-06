@@ -290,9 +290,15 @@
                         <div class="card-body text-center">
                             <h3>هذا الطلب غير مفعل </h3>
                             {% if request.user.role == 1 or request.user.role == 4 %}
+                            {% if req.hold %}
+                            <a href="{% url 'hold_quarter_request' req.id  %}" class="btn btn-lg btn-soft-success mt-1">
+                                اعادة
+                                تفعيل </a>
+                            {% elif not req.active %}
                             <a href="{% url 'deactivate_quarter' req.id  %}" class="btn btn-lg btn-soft-success mt-1">
                                 اعادة
                                 تفعيل </a>
+                            {% endif %}
                             {% endif %}
                         </div>
 

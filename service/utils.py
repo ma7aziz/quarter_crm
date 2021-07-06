@@ -7,21 +7,27 @@ from .models import lateDays
 
 def check_qouta(user_id):
     user = User.objects.get(pk=user_id)
-    last_request = Service_request.objects.repair().filter(created_by=user).last()
+    last_request = Service_request.objects.all().filter(
+        created_by=user).filter(favourite=True).last()
     today = datetime.date.today()
     yesterday = today - datetime.timedelta(days=1)
     if last_request:
         if last_request.timestamp.date == yesterday:
-            user.current_requests = 0
+            user.favourite_qouta.current_requests = 0
+            user.favourite_qouta.save()
+    else:
+        user.favourite_qouta.current_requests = 0
+        user.favourite_qouta.save()
+
 
 def late_orders(service_type):
-    late_days = lateDays.objects.get(pk = 1)
+    late_days = lateDays.objects.get(pk=1)
     orders = Service_request.objects.all().filter(
         service_type=service_type).filter(status="new").order_by('-timestamp')
     late = []
     for order in orders:
         days = order.timestamp.date() - datetime.datetime.today().date()
-        
+
         if -days.days > late_days.days:
             late.append(order)
     return late
@@ -38,7 +44,7 @@ def late_orders(service_type):
 def new_req_msg(req):
     msg = "تم تسجيل طلبك بنجاح"
     url = f"https://mshastra.com/sendurlcomma.aspx?user=20099824&pwd=4nnnku&senderid=SMSAlert&mobileno={req.phone}&msgtext={msg}&priority=High&CountryCode=+966"
-    payload={}
+    payload = {}
     headers = {}
     response = requests.request("GET", url, headers=headers, data=payload)
 
@@ -50,6 +56,6 @@ def send_appointment_message(req):
         message = f"تم تحديد موعد الصيانة يوم {req.appointment.date}"
 
     url = f"https://mshastra.com/sendurlcomma.aspx?user=20099824&pwd=4nnnku&senderid=SMSAlert&mobileno={req.phone}&msgtext={message}&priority=High&CountryCode=+966"
-    payload={}
+    payload = {}
     headers = {}
     response = requests.request("GET", url, headers=headers, data=payload)
