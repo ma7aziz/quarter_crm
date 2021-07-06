@@ -32,10 +32,28 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = load_dotenv("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = ['quarter-crm.mahmoud-abdelaziz.com', 'crm.quarter-ac.com']
-# ALLOWED_HOSTS = ['*']
+if DEBUG:
+    ALLOWED_HOSTS = ['*']
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
+else:
+    ALLOWED_HOSTS = ['quarter-crm.mahmoud-abdelaziz.com', 'crm.quarter-ac.com']
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': 'quarter_crm',
+            'USER': 'quartercrm',
+            'PASSWORD': 'quarter123',
+            'HOST': 'localhost',
+            'PORT': '',
+        }
+    }
 
 
 # Application definition
@@ -95,24 +113,6 @@ WSGI_APPLICATION = 'quarter_crm.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
-
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'quarter_crm',
-        'USER': 'quartercrm',
-        'PASSWORD': 'quarter123',
-        'HOST': 'localhost',
-        'PORT': '',
-    }
-}
 
 
 # Password validation
