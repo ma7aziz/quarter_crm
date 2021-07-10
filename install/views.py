@@ -1,6 +1,6 @@
 from django.http import JsonResponse
 from django.core import serializers
-from service.utils import check_qouta, late_orders , new_req_msg
+from service.utils import check_qouta, late_orders, new_req_msg
 import datetime
 from django.shortcuts import render
 from service.models import Service_request, Appointment
@@ -26,7 +26,8 @@ def index(request):
                 requests = Service_request.objects.install().order_by(
                     '-favourite', '-timestamp').filter(status=request.GET['status'])
         else:
-            requests = Service_request.objects.all().filter(service_type = "install").order_by('-favourite', '-timestamp')
+            requests = Service_request.objects.all().filter(
+                service_type="install").order_by('-favourite', '-timestamp')
             # requests = Service_request.objects.install().order_by('-favourite', '-timestamp')
     elif request.user.role == 3:
         requests = Appointment.objects.filter(
@@ -66,7 +67,7 @@ def install_request(request):
                                           address=address, customer_type=customer_type, notes=request.POST['notes'])
         install_request.customer = add_customer(phone, customer_name)
         install_request.save()
-        new_req_msg(install_request)
+
         if request.FILES:
             install_request.file = request.FILES['attach_file']
             install_request.save()
@@ -89,6 +90,7 @@ def install_request(request):
                 messages.success(request, "لم يتم أضافة الطلب الي المفضلات ")
         else:
             messages.success(request, "تم تسجيل طلبك بنجاح")
+        new_req_msg(install_request)
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 

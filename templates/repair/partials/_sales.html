@@ -126,6 +126,7 @@
                         </thead>
                         <tbody>
                             {% for req in requests %}
+                            {% if req.status == "new" or request.status =="under_process" %}
                             <tr>
                                 <td>
                                     <div class="form-check font-size-16">
@@ -157,6 +158,42 @@
                                     </a>
                                 </td>
                             </tr>
+                            {% endif %}
+                            {% endfor %}
+                            {% for req in requests %}
+                            {% if req.status == "done" or request.status =="closed" %}
+                            <tr>
+                                <td>
+                                    <div class="form-check font-size-16">
+                                        <input type="checkbox" class="form-check-input" id="customCheck2">
+                                        <label class="form-check-label" for="customCheck2">&nbsp;</label>
+                                    </div>
+                                </td>
+                                <td><a href="javascript: void(0);" class="text-body fw-bold">#REP{{req.id}}</a> </td>
+                                <td>{{req.customer_name}}</td>
+                                <td>
+                                    {{req.timestamp.date}}
+                                </td>
+                                <td>
+                                    {% if req.customer_type == "cash" %}
+                                    كاش
+                                    {% elif req.customer_type == "warranty" %}
+                                    ضمان
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <span class="badge rounded-pill bg-soft-success font-size-12">{{req.status}}</span>
+                                </td>
+
+                                <td>
+                                    <!-- Button trigger modal -->
+                                    <a href="{% url 'service_request_details' req.id %}"
+                                        class="btn btn-primary btn-sm btn-rounded waves-effect waves-light">
+                                        View Details
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endif %}
                             {% endfor %}
                         </tbody>
                     </table>
