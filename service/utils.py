@@ -12,7 +12,7 @@ def check_qouta(user_id):
     today = datetime.date.today()
     yesterday = today - datetime.timedelta(days=1)
     if last_request:
-        if last_request.timestamp.date == yesterday:
+        if last_request.timestamp.date() < today:
             user.favourite_qouta.current_requests = 0
             user.favourite_qouta.save()
     else:

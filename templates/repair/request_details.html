@@ -76,7 +76,7 @@
                                             </tr>
                                             <tr>
                                                 <th scope="row" class="text-muted">تاريخ الطلب </th>
-                                                <td>{{req.timestamp.date}}</td>
+                                                <td>{{req.timestamp}}</td>
                                             </tr>
                                             {% if not req.service_type == "install" %}
                                             <tr>
@@ -184,10 +184,12 @@
                                             </tr>
                                             {%  endif %}
 
-                                            {% if req.status == "new" %}
+                                            {% if req.status == "done"  or req.status == "closed" %}
                                             <tr>
+                                                <th scope="row" class="text-muted">الفني المسئول عن التنفيذ</th>
                                                 <td>
-
+                                                    <a
+                                                        href="/profile/{{req.appointment.technician}}">{{req.appointment.technician}}</a>
                                                 </td>
                                             </tr>
                                             {% endif %}

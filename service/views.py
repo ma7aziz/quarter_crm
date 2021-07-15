@@ -17,7 +17,6 @@ def service_request_details(request, id):
     req = Service_request.objects.get(pk=id)
     technicians = User.objects.all().filter(role=8)
     appointment = Appointment.objects.all().filter(service_request=req).first()
-    print(req.code)
     ctx = {
         'req': req,
         'tech': technicians,
@@ -253,7 +252,6 @@ def favorite(request, id):
     req = Service_request.objects.get(pk=id)
     user = request.user
     if not req.favourite:
-        print("favorite")
         check_qouta(request.user.id)
         if user.favourite_qouta.current_requests < user.favourite_qouta.max_requests:
             service = req
