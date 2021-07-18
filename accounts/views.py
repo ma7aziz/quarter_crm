@@ -116,7 +116,7 @@ def profile(request, username):
         current_tasks = Appointment.objects.all().filter(
             technician=user).filter(status="open")
     other_tasks = Task.objects.open().filter(employee=user).order_by("due_date")
-
+    check_qouta(user.id)
     ctx = {
         'user': user,
         'submitted_orders': submitted_orders,

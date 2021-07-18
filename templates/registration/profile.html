@@ -87,16 +87,23 @@
                         </div>
 
 
-                        {% if request.user.role == 1 or request.user.role == 2 %}
+                        {% if request.user.role == 1 or request.user.role == 2 or request.user.role == 3  %}
                         <div class="mt-4">
                             <p class="mb-1 d-inline ">عدد مفضلات التركيب/ الصيانة المسموح بها : </p>
-                            <span class=" px-1 d-inline">{{user.favourite_qouta}}</span>
+                            <span class=" px-1 d-inline">{{user.favourite_qouta.max_requests}}</span>
                             <button id="qoutaEdit" class="btn btn-sm btn-rounded bg-soft-info">
                                 تعديل
                                 <i class="uil uil-edit-alt font-size-20 "></i>
                             </button>
 
                         </div>
+                        <div class="mt-4">
+                            <p class="mb-1 d-inline ">عدد مفضلات التركيب/ الصيانة لليوم : </p>
+                            <span class=" px-1 d-inline">{{user.favourite_qouta.current_requests}}</span>
+
+
+                        </div>
+
                         {% endif %}
 
 

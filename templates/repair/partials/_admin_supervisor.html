@@ -170,7 +170,8 @@
                                <th>رقم الطلب </th>
                                <th>أسم العميل</th>
                                <th>تاريخ الطلب </th>
-                               <th>نوع العميل </th>
+
+                               <th>رقم الفاتورة </th>
                                <th>حالة الطلب </th>
 
                            </tr>
@@ -184,11 +185,7 @@
                                    {{req.timestamp.date}}
                                </td>
                                <td>
-                                   {% if req.customer_type == "cash" %}
-                                   كاش
-                                   {% elif request.customer_type == "warranty" %}
-                                   ضمان
-                                   {% endif %}
+                                   {{req.invoice_number}}
                                </td>
 
 
