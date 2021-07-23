@@ -61,8 +61,8 @@ def dashboard(request):
                              key=attrgetter('timestamp'), reverse=True)
 
         # under_process
-        repair_under_process = Service_request.objects.repair().exclude(status="closed")
-        install_under_process = Service_request.objects.install().exclude(status="closed")
+        repair_under_process = Service_request.objects.repair().exclude(status="closed").exclude(status="done")
+        install_under_process = Service_request.objects.install().exclude(status="closed").exclude(status="done")
 
         ########################################################### NEED TO CHANGE LATER ###########
         quarter_under_process = Quarter_service.objects.all()

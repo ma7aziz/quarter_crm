@@ -319,6 +319,7 @@
                                        <th>تاريخ الصيانة </th>
                                        {% endif %}
                                        <th>الفني </th>
+                                       <th>رقم الفاتورة </th>
                                        <th>حالة الطلب </th>
 
                                    </tr>
@@ -338,7 +339,9 @@
                                            {{req.technician}}
                                        </td>
 
-
+                                       <td>
+                                           {{req.service_request.invoice_number}}
+                                       </td>
                                        <td>
 
                                            <a href="{% url 'service_request_details' req.service_request.id %}"

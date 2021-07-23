@@ -40,7 +40,7 @@ def repair_index(request):
     # on_hold
     ctx = {
         "new_requests": Service_request.objects.repair().filter(status="new").order_by("-timestamp"),
-        "current_requests": Service_request.objects.repair().exclude(status="new"),
+        "current_requests": Service_request.objects.repair().filter(status="under_process"),
         "requests": requests,
         "need_confirm": Service_request.objects.done().filter(service_type="repair"),
         'on_hold': on_hold,
