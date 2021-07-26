@@ -170,7 +170,7 @@ def hold(request, id):
         if req.hold_reason:
             req.hold_reason.reason = reason
             req.hold_by = request.user
-            if request.FILES["holding_file"]:
+            if request.FILES:
                 req.hold_reason.file = request.FILES["holding_file"]
 
             req.hold_reason.save()
@@ -181,7 +181,7 @@ def hold(request, id):
         else:
             hold_reason = Hold_reason(
                 service=req, reason=reason, hold_by=request.user)
-            if request.FILES["holding_file"]:
+            if request.FILES:
                 hold_reason.file = request.FILES["holding_file"]
             hold_reason.save()
             req.hold_reason = hold_reason

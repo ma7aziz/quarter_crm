@@ -62,7 +62,7 @@
                                             <tr>
                                                 {% if req.hold %}
                                                 <h3>هذا الطلب معلق ..
-                                                    {% if request.user.role == 1 or request.user.role == 2 %}
+                                                    {% if request.user.role == 1 or request.user.role == 2 or request.user == req.created_by %}
                                                     <a href="{% url 'hold_request' req.id  %}" class="text-success">اضغط
                                                         هنا </a>
                                                     لأعادة التفعيل
@@ -133,6 +133,10 @@
                                             <tr>
                                                 <th scope="row" class="text-muted">حالة الطلب </th>
                                                 <td>
+                                                    {% if req.hold %}
+                                                    <span
+                                                        class="badge rounded-pill bg-soft-danger font-size-16">معلق</span>
+                                                    {% else %}
                                                     {% if req.status == "new" %}
 
                                                     <span
@@ -159,6 +163,7 @@
                                                     <span
                                                         class="badge rounded-pill bg-success font-size-16">انتهي</span>
 
+                                                    {% endif %}
                                                     {% endif %}
                                                 </td>
 
@@ -238,6 +243,15 @@
                                             {% if req.hold_reason.file %}
                                             <p><a href="{{req.hold_reason.file.url}}" target="_blank">عرض الملفات</a>
                                             </p>
+
+                                            {% endif %}
+                                            {% if request.user.role == 1 or request.user.role == 2 or request.user.role == 3 or request.user == req.created_by %}
+                                            <div>
+                                                <a href="{% url 'hold_request' req.id  %}"
+                                                    class="btn btn-lg btn-rounded btn-light">
+                                                    اعادة تفعيل
+                                                </a>
+                                            </div>
                                             {% endif %}
                                         </div>
                                     </div>
