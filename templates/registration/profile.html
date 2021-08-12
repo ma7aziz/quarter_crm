@@ -115,6 +115,7 @@
                                 </form>
                             </div>
                         </div>
+                        {% if request.user.role == 1 %}
                         <div class="mt-4">
                             <p class="mb-1 d-inline "> الخدمات المتاحة للمستخدم : </p>
                             <div class="row ">
@@ -148,6 +149,7 @@
                                 </form>
                             </div>
                         </div>
+                        {% endif %}
                     </div>
                 </div>
 
