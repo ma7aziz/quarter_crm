@@ -26,6 +26,7 @@ def index(request):
 @login_required
 def create_user(request):
     if request.method == "POST":
+        print(request.POST)
         username = request.POST['username']
         name = request.POST['name']
         phone = request.POST['phone']
@@ -43,6 +44,15 @@ def create_user(request):
             qouta.save()
             user.favourite_qouta = qouta
             user.save()
+            if "checked" in request.POST.getlist('install'):
+                user.install = True
+                user.save()
+            if "checked" in request.POST.getlist('repair'):
+                user.repair = True
+                user.save()
+            if "checked" in request.POST.getlist('quarter'):
+                user.quarter = True
+                user.save()
 
             messages.success(request, "تم انشاء حساب المستخدم")
         else:
@@ -213,4 +223,29 @@ def reset_password(request):
             messages.error(
                 request, "لم يتم تغيير كلمة السر .. برجاء المحاولة مرة أخري ")
 
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
+@login_required
+def edit_services_allowed(request):
+    # chanegd services allowed to specific user
+    print(request.POST)
+    user = User.objects.get(pk=request.POST['user_id'])
+    if "checked" in request.POST.getlist('install'):
+        user.install = True
+    else:
+        user.install = False
+    if "checked" in request.POST.getlist('repair'):
+        user.repair = True
+    else:
+        user.repair = False
+
+    if "checked" in request.POST.getlist('quarter'):
+        user.quarter = True
+    else:
+        user.quarter = False
+    user.save()
+
+    messages.success(
+        request, " تم حفظ التعديلات بنجاح ")
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))

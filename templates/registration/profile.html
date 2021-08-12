@@ -101,13 +101,8 @@
                             <p class="mb-1 d-inline ">عدد مفضلات التركيب/ الصيانة لليوم : </p>
                             <span class=" px-1 d-inline">{{user.favourite_qouta.current_requests}}</span>
 
-
                         </div>
-
                         {% endif %}
-
-
-
                         <div class="collapse" id="collapseExample">
                             <div class="card card-body">
                                 <form action="{% url 'edit_qouta' %}" method="POST">
@@ -120,8 +115,39 @@
                                 </form>
                             </div>
                         </div>
+                        <div class="mt-4">
+                            <p class="mb-1 d-inline "> الخدمات المتاحة للمستخدم : </p>
+                            <div class="row ">
+                                <form action="{% url 'edit_services_allowed' %}" method="POST"
+                                    class="row text-center text-dark">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="user_id" value="{{user.id}}">
+                                    <div class="col">
+                                        <input type="checkbox" name="install" value="checked" id="install_check"
+                                            {% if user.install %} checked {% endif %}>
+                                        التركيب
+                                    </div>
 
 
+                                    <div class="col">
+                                        <input type="checkbox" name="repair" value="checked" id="repair_check"
+                                            {% if user.repair %} checked {% endif %}>
+                                        الصيانة
+                                    </div>
+
+                                    <div class="col">
+                                        <input type="checkbox" name="quarter" value="checked" id="quarter_check"
+                                            {% if user.quarter %} checked {% endif %}>
+                                        كوارتر
+                                    </div>
+                                    <div class="col">
+                                        <button class="btn btn-sm btn-success d-none" id="role_change" type="submit">
+                                            حفظ
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -577,5 +603,19 @@
             $('.submit-pass').prop('disabled', true);
         }
     })
+
+    /// show save btn on checkbox change
+    ///   if ($('#install_check').change || $('#repair_check').change || $('#quarter_check').change()) {
+    //    console.log('changed')
+    // }
+    $("#install_check").change(() => {
+        $("#role_change").removeClass('d-none')
+    });
+    $("#repair_check").change(() => {
+        $("#role_change").removeClass('d-none')
+    });
+    $("#quarter_check").change(() => {
+        $("#role_change").removeClass('d-none')
+    });
 </script>
 {% endblock %}

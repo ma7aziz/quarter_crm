@@ -78,7 +78,7 @@
                     <div class="row">
                         <div class="mb-3">
                             <label class="form-label">الوظيفة</label>
-                            <select class="form-control select2" name="role" required />
+                            <select class="form-control select2" id="user_role" name="role" required />
                             <option selected disabled>أختيار</option>
                             {% for k , v in roles %}
                             <option value="{{k}}">{{v}}</option>
@@ -87,7 +87,31 @@
                         </div>
 
                     </div>
+                    <div class="mb-3 row">
+                        <p>اختر الخدمات التي يمكن للمستخدم أضافتها </p>
+                        <div class="col">
+                            <input class="form-check-input" type="checkbox" value="checked" name="install"
+                                id="install_check">
+                            <label class="form-check-label" for="flexCheckDefault" style="">
+                                تركيب
+                            </label>
+                        </div>
+                        <div class="col">
+                            <input class="form-check-input" type="checkbox" value="checked" name="repair"
+                                id="repair_check">
+                            <label class="form-check-label" for="flexCheckDefault" style="">
+                                صيانة
+                            </label>
+                        </div>
+                        <div class="col">
+                            <input class="form-check-input" type="checkbox" value="checked" name="quarter"
+                                id="quarter_check">
+                            <label class="form-check-label" for="flexCheckDefault" style="">
+                                كوارتر
+                            </label>
+                        </div>
 
+                    </div>
                     <hr>
 
 
@@ -99,6 +123,7 @@
                     </div>
                     {% csrf_token %}
                     <hr>
+
 
                     <div class="mb-3">
                         <label class="form-label" for="file">ارفاق ملف</label>
@@ -392,5 +417,37 @@
             console.log("not checked")
         }
     })
+
+    // user services chenge on user role select 
+    $("#user_role").change(() => {
+
+        let role = $("#user_role").val()
+        if (role === "1") {
+            $("#install_check").attr('checked', true);
+            $("#repair_check").attr('checked', true);
+            $("#quarter_check").attr('checked', true);
+
+        } else if (role === "2") {
+            //install manager //
+            $("#install_check").attr('checked', true);
+            $("#repair_check").attr('checked', false);
+            $("#quarter_check").attr('checked', false);
+        } else if (role === "3") {
+            //install manager //
+            $("#install_check").attr('checked', false);
+            $("#repair_check").attr('checked', true);
+            $("#quarter_check").attr('checked', false);
+        } else if (role === "4") {
+            //quarter manager //
+            $("#install_check").attr('checked', false);
+            $("#repair_check").attr('checked', false);
+            $("#quarter_check").attr('checked', true);
+        } else {
+            $("#install_check").attr('checked', false);
+            $("#repair_check").attr('checked', false);
+            $("#quarter_check").attr('checked', false);
+        }
+    })
 </script>
+
 {% endblock %}

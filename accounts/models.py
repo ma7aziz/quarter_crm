@@ -77,6 +77,12 @@ class User(AbstractUser):
         upload_to="user_data/profile_pics", blank=True, null=True)
     files = models.FileField(
         upload_to="user_data/files", blank=True, null=True)
+    # can add quarter
+    quarter = models.BooleanField(default=False)
+    # can add repair
+    repair = models.BooleanField(default=False)
+    # can add install
+    install = models.BooleanField(default=True)
     favourite_qouta = models.ForeignKey(
         'Qouta', on_delete=models.SET_NULL, null=True, blank=True, related_name='favourite_count')
 
