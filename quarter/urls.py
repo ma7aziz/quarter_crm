@@ -25,6 +25,8 @@ urlpatterns = [
     path('end_request/<int:id>', views.end_request, name="end_request"),
     path('reject_price', views.reject_price, name="reject_price"),
     path('edit_request', views.edit_request, name="edit_quarter_request"),
-    path('attach_excution_files' , views.attach_excution_files ,  name="attach_excution_files")
+    path('attach_excution_files', views.attach_excution_files,
+         name="attach_excution_files"),
+    path('assign_saes', views.assign_sales, name="assign_sales")
 
 ]

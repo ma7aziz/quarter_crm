@@ -126,7 +126,7 @@
                                                 <i class="far fa-user-circle"></i> : </h4>
                                             <h5 class="font-size-18 d-inline">{{req}}</h5>
 
-                                            {% if request.user.role == 1 or request.user.role == 4  or request.user == req.created_by %}
+                                            {% if request.user.role == 1 or request.user.role == 4  or request.user == req.created_by or request.user == req.sales %}
                                             <button id="editName" class="btn btn-sm btn-rounded bg-soft-info">
                                                 <i class="uil uil-edit-alt font-size-16"></i>
                                             </button>
@@ -150,7 +150,7 @@
                                             <h4 class="mb-1 text-muted d-inline">الجوال <i
                                                     class="fas fa-mobile-alt"></i> :</h4>
                                             <h5 class="font-size-18 d-inline">{{req.phone}}</h5>
-                                            {% if request.user.role == 1 or request.user.role == 4  or request.user == req.created_by %}
+                                            {% if request.user.role == 1 or request.user.role == 4  or request.user == req.created_by or request.user == req.sales %}
                                             <button id="editPhone" class="btn btn-sm btn-rounded bg-soft-info">
                                                 <i class="uil uil-edit-alt font-size-16 "></i>
                                             </button>
@@ -175,7 +175,7 @@
                                                     class="fas fa-map-marker-alt"></i> :
                                             </h4>
                                             <h5 class="font-size-18 d-inline">{{req.location}}</h5>
-                                            {% if request.user.role == 1 or request.user.role == 4  or request.user == req.created_by %}
+                                            {% if request.user.role == 1 or request.user.role == 4  or request.user == req.created_by or request.user == req.sales  %}
                                             <button id="editLocation" class="btn btn-sm btn-rounded bg-soft-info">
                                                 <i class="uil uil-edit-alt font-size-16 "></i>
                                             </button>
@@ -201,7 +201,7 @@
                                                     class="fas fa-at"></i> :
                                             </p>
                                             <h5 class="font-size-18 d-inline">{{req.email}}</h5>
-                                            {% if request.user.role == 1 or request.user.role == 4  or request.user == req.created_by %}
+                                            {% if request.user.role == 1 or request.user.role == 4  or request.user == req.created_by or request.user == req.sales  %}
                                             <button id="editEmail" class="btn btn-sm btn-rounded bg-soft-info">
                                                 <i class="uil uil-edit-alt font-size-16 "></i>
                                             </button>
@@ -229,6 +229,17 @@
                                             <span
                                                 class="badge rounded-pill bg-danger font-size-18 p-2">{{req.get_status_display}}</span>
                                         </div>
+                                        {% if req.sales %}
+                                        <div class="mt-4">
+                                            <p class="mb-1 text-muted d-inline">مندوب التواصل <i
+                                                    class="fas fa-info-circle"></i> :
+                                            </p>
+                                            <h5 class="d-inline">
+                                                <a href="/profile/{{req.sales.username}}">{{req.sales}}</a>
+
+                                            </h5>
+                                        </div>
+                                        {% endif %}
                                         <div class="mt-4">
                                             <p class="mb-1 text-muted d-inline"> تم ارسال الطلب بواسطة <i
                                                     class="fas fa-info-circle"></i> :
@@ -289,12 +300,12 @@
                     <div class="card">
                         <div class="card-body text-center">
                             <h3>هذا الطلب غير مفعل </h3>
-                            {% if request.user.role == 1 or request.user.role == 4 %}
+                            {% if request.user.role == 1 or request.user.role == 4  or request.user == req.sales  %}
                             {% if req.hold %}
                             <a href="{% url 'hold_quarter_request' req.id  %}" class="btn btn-lg btn-soft-success mt-1">
                                 اعادة
                                 تفعيل </a>
-                            {% elif not req.active %}
+                            {% elif not req.active  %}
                             <a href="{% url 'deactivate_quarter' req.id  %}" class="btn btn-lg btn-soft-success mt-1">
                                 اعادة
                                 تفعيل </a>

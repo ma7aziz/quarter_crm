@@ -182,7 +182,7 @@
 
 {% if req.status == 4 %}
 <!-- negotiaion -->
-{%  if request.user == req.created_by %}
+{%  if request.user == req.created_by  or request.user == req.sales%}
 <div class="accordion-item">
     <h2 class="accordion-header" id="headingOne">
         <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne"

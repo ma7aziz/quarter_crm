@@ -18,7 +18,7 @@ from quarter.models import Quarter_service
 from core.models import Task
 from django.http import HttpResponseRedirect
 from .models import Customer
-from service.utils import check_qouta
+from service.utils import check_qouta, get_data
 # Create your views here.
 
 
@@ -28,7 +28,7 @@ def index(request):
         check_qouta(request.user.id)
         if request.user.role == 1:  # Admin
             return render(request, 'index.html')
-        elif request.user.role == 5:
+        elif request.user.role == 5 or request.user.role == 10:
             ####sale##
             return redirect("sales_view")
         elif request.user.role == 8:  # technician
@@ -37,6 +37,7 @@ def index(request):
             return redirect("install_index")
         elif request.user.role == 3:  # repair mngr
             return redirect("repair_index")
+
         else:
             # quarter staff
             return redirect("quarter_index")
@@ -47,6 +48,7 @@ def index(request):
 @login_required
 def dashboard(request):
     if request.user.role == 1:
+        # get_data()
         repair_requests = Service_request.objects.repair()
         install_requests = Service_request.objects.install()
         quarter_requests = Quarter_service.objects.all()
@@ -61,8 +63,10 @@ def dashboard(request):
                              key=attrgetter('timestamp'), reverse=True)
 
         # under_process
-        repair_under_process = Service_request.objects.repair().exclude(status="closed").exclude(status="done")
-        install_under_process = Service_request.objects.install().exclude(status="closed").exclude(status="done")
+        repair_under_process = Service_request.objects.repair().exclude(
+            status="closed").exclude(status="done")
+        install_under_process = Service_request.objects.install().exclude(
+            status="closed").exclude(status="done")
 
         ########################################################### NEED TO CHANGE LATER ###########
         quarter_under_process = Quarter_service.objects.all()
@@ -225,42 +229,59 @@ def search(request):
 
 
 def sales_view(request):
-    # ALL
-    check_qouta(request.user.id)
-    service_history = Service_request.objects.all().filter(
-        created_by=request.user).order_by('-favourite', '-timestamp')
-    quarter_history = Quarter_service.objects.all().filter(
-        created_by=request.user).order_by('-favourite', '-timestamp')
+    if request.user.role == 10:  # QUARTER SALES VIEW
+        current_assigned_requests = Quarter_service.objects.all().filter(
+            sales=request.user).exclude(status=15).exclude(status=13)
+        quarter_current = Quarter_service.objects.all().filter(
+            created_by=request.user).order_by('-timestamp').exclude(status=15).exclude(status=13)
+        all_current_requests = sorted(chain(current_assigned_requests, quarter_current), key=attrgetter(
+            'timestamp'), reverse=True)
 
-    all_history = sorted(chain(service_history, quarter_history),
-                         key=attrgetter('favourite', 'timestamp'), reverse=True)
-    # Current
-    current_services = Service_request.objects.all().filter(created_by=request.user).order_by(
-        '-favourite', '-timestamp').exclude(status="done").exclude(status="closed").exclude(status="new")
-    current_quarter = Quarter_service.objects.all().filter(created_by=request.user).order_by(
-        '-favourite', '-timestamp').exclude(status=13).exclude(status=15).exclude(status=1)
-    all_current = sorted(chain(current_services, current_quarter),
-                         key=attrgetter('favourite', 'timestamp'), reverse=True)
-    # favorits
-    favorites = Service_request.objects.all().filter(
-        created_by=request.user).filter(favourite=True).order_by('-timestamp')
-    ctx = {
-        "service_history": service_history,
-        "quarter_history": quarter_history,
-        "all_history": all_history,
+        all_requests = sorted(chain(Quarter_service.objects.all().filter(
+            created_by=request.user).order_by('-timestamp'), Quarter_service.objects.all().filter(
+            sales=request.user)), key=attrgetter(
+            'timestamp'), reverse=True)
+        ctx = {
+            "assigned_requests": current_assigned_requests,
+            "quarter_history": quarter_current,
+            "all_current_requests": all_current_requests,
+            "all_requests": all_requests
+        }
+    else:
+        check_qouta(request.user.id)
+        service_history = Service_request.objects.all().filter(
+            created_by=request.user).order_by('-favourite', '-timestamp')
+        quarter_history = Quarter_service.objects.all().filter(
+            created_by=request.user).order_by('-favourite', '-timestamp')
+
+        all_history = sorted(chain(service_history, quarter_history),
+                             key=attrgetter('favourite', 'timestamp'), reverse=True)
         # Current
-        "current_services": current_services,
-        "current_quarter": current_quarter,
-        "all_current": all_current,
-        # Favorites
-        "favs": favorites
-    }
+        current_services = Service_request.objects.all().filter(created_by=request.user).order_by(
+            '-favourite', '-timestamp').exclude(status="done").exclude(status="closed").exclude(status="new")
+        current_quarter = Quarter_service.objects.all().filter(created_by=request.user).order_by(
+            '-favourite', '-timestamp').exclude(status=13).exclude(status=15).exclude(status=1)
+        all_current = sorted(chain(current_services, current_quarter),
+                             key=attrgetter('favourite', 'timestamp'), reverse=True)
+        # favorits
+        favorites = Service_request.objects.all().filter(
+            created_by=request.user).filter(favourite=True).order_by('-timestamp')
+        ctx = {
+            "service_history": service_history,
+            "quarter_history": quarter_history,
+            "all_history": all_history,
+            # Current
+            "current_services": current_services,
+            "current_quarter": current_quarter,
+            "all_current": all_current,
+            # Favorites
+            "favs": favorites
+        }
     return render(request, "core/sales_view.html", ctx)
 
 
 def chart(request):
     if request.is_ajax():
-
         repair_count = Service_request.objects.repair().count()
         install_count = Service_request.objects.install().count()
         quarter_count = Quarter_service.objects.all().count()

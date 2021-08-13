@@ -4,6 +4,8 @@ import datetime
 import requests
 from .models import lateDays
 
+import json
+
 
 def check_qouta(user_id):
     user = User.objects.get(pk=user_id)
@@ -59,3 +61,11 @@ def send_appointment_message(req):
     payload = {}
     headers = {}
     response = requests.request("GET", url, headers=headers, data=payload)
+
+
+def get_data():
+    pass
+    # response = requests.get('http://localhost:8000/api/requests')
+    # data = response.json()
+    # for r in data:
+    #     print(r["id"], r['time'])

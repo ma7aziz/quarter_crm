@@ -5,10 +5,11 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import render, redirect,  get_object_or_404
-from .models import Price, Quarter_service, Transfer, Design, Purchase , ExcutionFiles , Excution
+from .models import Price, Quarter_service, Transfer, Design, Purchase, ExcutionFiles, Excution
 from core.add_customer import add_customer
 from .choices import STATUS_CHOICES
 from django.views.decorators.csrf import csrf_exempt
+from accounts.models import User
 
 # Create your views here.
 
@@ -60,8 +61,10 @@ def create_request(request):
 
 
 def request_details(request, id):
+
     req = Quarter_service.objects.get(pk=id)
-    return render(request, 'quarter/request_details.html', {'req': req, 'status_choices': STATUS_CHOICES})
+    sales = User.objects.all().filter(role=10)
+    return render(request, 'quarter/request_details.html', {'req': req, 'status_choices': STATUS_CHOICES, 'sales': sales})
 
 
 def delete_request(request, id):
@@ -107,6 +110,16 @@ def deactivate_request(request, id):
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
+def assign_sales(request):
+    if request.method == "POST":
+        req = Quarter_service.objects.get(pk=request.POST['req_id'])
+        sales = User.objects.get(pk=request.POST['sales_id'])
+        req.sales = sales
+        req.save()
+        messages.success(request, "تم تعيين المندوب !")
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
 @csrf_exempt
 def quarter_multi_delete(request):
     if request.is_ajax:
@@ -141,7 +154,7 @@ def pricing(request):
             messages.success(request, "تم ارسال السعر .")
         else:
             # EDIT PRICE BY THE SAME PRICING USER
-            if request.user == req.pricing.created_by or request.user.role == 7 or request.user.role == 1 or request.user.role == 4 :
+            if request.user == req.pricing.created_by or request.user.role == 7 or request.user.role == 1 or request.user.role == 4:
                 req.pricing.price = price
                 req.pricing.files = files
                 req.pricing.notes = notes
@@ -181,13 +194,13 @@ def confirm_process(request, id):
         if req.pricing.price:
             transfer.total_price = int(req.pricing.price)
             transfer.save()
-            
+
         messages.success(
             request, ' تم اعتماد السعر .. سيتم البدء في التنفيذ بعد تحويل الجزء الاول من السعر المتفق عليه ')
-    elif req.status == 6: 
+    elif req.status == 6:
         req.status = 7
         req.save()
- #confirm designs => purchase 
+ # confirm designs => purchase
     elif req.status == 8:
         req.status = 14
         req.save()
@@ -265,7 +278,7 @@ def attach_purchase(request):
         files = request.FILES['files']
         notes = request.POST['notes']
         if req.purchase:
-            req.purchase.files = files 
+            req.purchase.files = files
             req.purchase.notes = notes
             req.purchase.created_by = request.user
             req.purchase.save()
@@ -274,7 +287,7 @@ def attach_purchase(request):
                                 notes=notes, created_by=request.user)
             purchase.save()
             req.purchase = purchase
-        req.status = 9 
+        req.status = 9
         req.save()
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
@@ -323,28 +336,28 @@ def edit_request(request):
 
 
 def attach_excution_files(request):
-    req = Quarter_service.objects.get(pk = request.POST['request'] )
-    excution = Excution(service = req , notes = request.POST['notes'])
-    excution.save() 
-    if req.status == 9 :  ### first excution 
+    req = Quarter_service.objects.get(pk=request.POST['request'])
+    excution = Excution(service=req, notes=request.POST['notes'])
+    excution.save()
+    if req.status == 9:  # first excution
         req.first_excution = excution
         req.status = 10
         req.save()
         excution.name = f"first excution - {req.id} "
         excution.save()
-    elif req.status == 12 :
+    elif req.status == 12:
         req.second_excution = excution
-        req.status =13
+        req.status = 13
         req.save()
         excution.name = f"second excution - {req.id} "
         excution.save()
 
     for f in request.FILES.getlist("files"):
         file = ExcutionFiles(
-            excution = excution , file = f 
+            excution=excution, file=f
         )
         file.save()
         excution.files.add(file)
         excution.save()
-    
+
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))

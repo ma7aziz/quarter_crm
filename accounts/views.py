@@ -26,7 +26,6 @@ def index(request):
 @login_required
 def create_user(request):
     if request.method == "POST":
-        print(request.POST)
         username = request.POST['username']
         name = request.POST['name']
         phone = request.POST['phone']
@@ -90,6 +89,7 @@ def userLogin(request):
             login(request, user)
             messages.success(request, "أهلا بك مرة اخري ")
             check_qouta(request.user.id)
+
             if user.role == 1:  # admin
                 return HttpResponseRedirect('/')
             elif user.role == 2:  # install mng
@@ -98,9 +98,11 @@ def userLogin(request):
                 return HttpResponseRedirect('/repair')
             elif user.role == 8:  # tech
                 return HttpResponseRedirect('/new_tasks')
-            elif request.user.role == 5:  # sales
+            elif request.user.role == 5:  # sales || quareter sales
                 check_qouta(request.user.id)
                 return redirect('sales_view')
+            elif request.user.role == 10:
+                return redirect('/sales_view')
             else:  # quarter Staff
                 return HttpResponseRedirect('quarter')
         else:

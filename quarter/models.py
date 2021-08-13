@@ -31,7 +31,8 @@ class Quarter_service(models.Model):
                              null=True)
     status = models.IntegerField(
         default=1, choices=STATUS_CHOICES)
-    created_by = models.ForeignKey(User, on_delete=models.SET_NULL ,null= True , blank = True)
+    created_by = models.ForeignKey(
+        User, on_delete=models.SET_NULL, null=True, blank=True)
     timestamp = models.DateTimeField(auto_now_add=True)
     active = models.BooleanField(default=True)
 
@@ -47,10 +48,14 @@ class Quarter_service(models.Model):
     hold = models.BooleanField(default=False)
     objects = Quarter_service_Manager()
     file = models.FileField(upload_to='service/files/', blank=True, null=True)
-    first_excution = models.ForeignKey('Excution', on_delete=models.SET_NULL , null = True , blank = True , related_name="first")
-    second_excution = models.ForeignKey('Excution' , on_delete=models.SET_NULL , null = True , blank = True , related_name="second")
+    first_excution = models.ForeignKey(
+        'Excution', on_delete=models.SET_NULL, null=True, blank=True, related_name="first")
+    second_excution = models.ForeignKey(
+        'Excution', on_delete=models.SET_NULL, null=True, blank=True, related_name="second")
     favourite = models.BooleanField(default=False)
-    
+    sales = models.ForeignKey(
+        User, on_delete=models.SET_NULL, null=True, blank=True, related_name='sales')
+
     # price ##outstanding
 
     def __str__(self):
@@ -145,17 +150,20 @@ class Purchase(models.Model):
     def __str__(self):
         return f'{self.service} Purchases '
 
+
 class Excution(models.Model):
-    service = models.ForeignKey(Quarter_service , on_delete=models.CASCADE)
+    service = models.ForeignKey(Quarter_service, on_delete=models.CASCADE)
     timestamp = models.DateTimeField(auto_now_add=True)
-    notes = models.CharField(max_length = 500 , blank = True , null = True)
-    name = models.CharField(max_length = 100 , blank = True , null = True)
-    files = models.ManyToManyField("ExcutionFiles"  , blank = True , related_name="docs")
+    notes = models.CharField(max_length=500, blank=True, null=True)
+    name = models.CharField(max_length=100, blank=True, null=True)
+    files = models.ManyToManyField(
+        "ExcutionFiles", blank=True, related_name="docs")
 
     def __str__(self):
         return self.name
 
-class ExcutionFiles(models.Model):
-    excution = models.ForeignKey(Excution , on_delete=models.CASCADE , related_name="q_service")
-    file = models.FileField(upload_to="excution/" , blank = True , null = True)
 
+class ExcutionFiles(models.Model):
+    excution = models.ForeignKey(
+        Excution, on_delete=models.CASCADE, related_name="q_service")
+    file = models.FileField(upload_to="excution/", blank=True, null=True)

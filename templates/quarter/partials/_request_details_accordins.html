@@ -12,7 +12,7 @@
 
         {%endif%}
         <div class="accordion" id="accordionExample">
-
+            {% include './accordins/_assign_sales.html'%}
             {% if req.status == 9 or req.status == 12 %}
             {% include './accordins/_excution_files.html'%}
             {% endif %}
