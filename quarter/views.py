@@ -137,7 +137,7 @@ def quarter_multi_delete(request):
 def pricing(request):
     if request.method == "POST":
         """
-            create new pricing object 
+            create new pricing object
         """
         req = Quarter_service.objects.get(pk=request.POST['request'])
         price = request.POST['price']
@@ -328,7 +328,9 @@ def edit_request(request):
             req.email = request.POST['email']
         elif request.POST.get('location'):
             req.location = request.POST['location']
-
+        elif request.FILES:
+            req.file = request.FILES['file']
+            req.save()
         req.save()
         messages.success(
             request, 'تم التعديل!')

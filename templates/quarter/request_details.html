@@ -270,7 +270,30 @@
                                             <a href="{{req.file.url}}" class="font-size-18 " target="__blank">عــرض
                                                 الملفات </a>
                                         </div>
+                                        {% else %}
+                                        <div class="mt-4">
+                                            <p class="mb-1 text-muted d-inline"> ملفات الطلب :
+                                            </p>
+                                            <button id="uploadFile" class="btn btn-sm btn-rounded bg-soft-info">
+                                                اضافة ملف
+                                            </button>
+                                        </div>
+                                        <div class="collapse" id="fileForm">
+                                            <div class="card card-body">
+                                                <form action="{% url 'edit_quarter_request' %}" method="POST"
+                                                    enctype="multipart/form-data">
+                                                    {% csrf_token %}
+                                                    <input type="hidden" name="req" value="{{req.id}}">
+                                                    <div class="d-flex">
+                                                        <input type="file" class="form-control" name="file" required />
+                                                        <input type="submit" class="btn btn-sm btn-success mx-1"
+                                                            value="ارسال">
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
                                         {% endif %}
+
 
                                     </div>
 
@@ -354,6 +377,10 @@
     })
     $("#editLocation").on("click", () => {
         $('#locationForm').toggleClass('show')
+
+    })
+    $("#uploadFile").on("click", () => {
+        $('#fileForm').toggleClass('show')
 
     })
 </script>
