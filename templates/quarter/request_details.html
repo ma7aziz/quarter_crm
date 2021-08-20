@@ -128,6 +128,7 @@
 
                                             {% if request.user.role == 1 or request.user.role == 4  or request.user == req.created_by or request.user == req.sales %}
                                             <button id="editName" class="btn btn-sm btn-rounded bg-soft-info">
+                                                تعديل
                                                 <i class="uil uil-edit-alt font-size-16"></i>
                                             </button>
                                             {% endif %}
@@ -152,6 +153,7 @@
                                             <h5 class="font-size-18 d-inline">{{req.phone}}</h5>
                                             {% if request.user.role == 1 or request.user.role == 4  or request.user == req.created_by or request.user == req.sales %}
                                             <button id="editPhone" class="btn btn-sm btn-rounded bg-soft-info">
+                                                تعديل
                                                 <i class="uil uil-edit-alt font-size-16 "></i>
                                             </button>
                                             {% endif %}
@@ -177,6 +179,7 @@
                                             <h5 class="font-size-18 d-inline">{{req.location}}</h5>
                                             {% if request.user.role == 1 or request.user.role == 4  or request.user == req.created_by or request.user == req.sales  %}
                                             <button id="editLocation" class="btn btn-sm btn-rounded bg-soft-info">
+                                                تعديل
                                                 <i class="uil uil-edit-alt font-size-16 "></i>
                                             </button>
                                             {% endif %}
@@ -203,6 +206,7 @@
                                             <h5 class="font-size-18 d-inline">{{req.email}}</h5>
                                             {% if request.user.role == 1 or request.user.role == 4  or request.user == req.created_by or request.user == req.sales  %}
                                             <button id="editEmail" class="btn btn-sm btn-rounded bg-soft-info">
+                                                تعديل
                                                 <i class="uil uil-edit-alt font-size-16 "></i>
                                             </button>
                                             {% endif %}

@@ -230,6 +230,8 @@ def search(request):
 
 def sales_view(request):
     if request.user.role == 10:  # QUARTER SALES VIEW
+        new_requests = Quarter_service.objects.all().filter(status=1).filter(sales=None)
+        print(new_requests)
         current_assigned_requests = Quarter_service.objects.all().filter(
             sales=request.user).exclude(status=15).exclude(status=13)
         quarter_current = Quarter_service.objects.all().filter(
@@ -242,6 +244,7 @@ def sales_view(request):
             sales=request.user)), key=attrgetter(
             'timestamp'), reverse=True)
         ctx = {
+            "new_requests": new_requests,
             "assigned_requests": current_assigned_requests,
             "quarter_history": quarter_current,
             "all_current_requests": all_current_requests,

@@ -27,6 +27,8 @@ urlpatterns = [
     path('edit_request', views.edit_request, name="edit_quarter_request"),
     path('attach_excution_files', views.attach_excution_files,
          name="attach_excution_files"),
-    path('assign_saes', views.assign_sales, name="assign_sales")
+    path('assign_saes', views.assign_sales, name="assign_sales"),
+    path("contact_customer/<int:id>",
+         views.contact_customer, name="contact_customer")
 
 ]

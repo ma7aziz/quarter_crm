@@ -117,6 +117,20 @@ def assign_sales(request):
         req.sales = sales
         req.save()
         messages.success(request, "تم تعيين المندوب !")
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
+def contact_customer(request, id):
+    if request.user.role == 10:
+        req = Quarter_service.objects.get(pk=id)
+        if not req.sales:
+            req.sales = request.user
+            req.save()
+            return redirect("quarter_request_details", id=req.id)
+        else:
+            messages.error(request, "قام زميل أخر بالتواصل مع العميل ")
+            return redirect("sales_view")
+    else:
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
