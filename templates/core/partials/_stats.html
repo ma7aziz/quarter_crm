@@ -9,9 +9,61 @@
                     <h4 class="mb-1 mt-1"><span data-plugin="counterup">{{ all_requests|length }}</span></h4>
                     <p class="text-muted mb-0">عدد الطلبات المستلمة </p>
                 </div>
-                <!-- <p class="text-muted mt-3 mb-0"><span class="text-success me-1"><i
-                            class="mdi mdi-arrow-up-bold me-1"></i>2.65%</span> since last week
-                </p> -->
+                <p class="text-muted mt-3 mb-0"><span class="text-success me-1"><i
+                            class="mdi mdi-arrow-up-bold me-1"></i>{{all_this_month}} طلب</span> هذا الشهر
+                </p>
+            </div>
+        </div>
+    </div> <!-- end col-->
+
+    <div class="col-sm-6 col-md-6 col-xl-3">
+
+        <div class="card">
+            <div class="card-body">
+                <div class="float-end mt-2">
+                    <!-- <div id="growth-chart"></div> -->
+                </div>
+                <div>
+                    <h4 class="mb-1 mt-1"><span data-plugin="counterup">{{install_requests | length }}</span></h4>
+                    <p class="text-muted mb-0">طلبات التركيب</p>
+                </div>
+                <p class="text-muted mt-3 mb-0"><span class="text-success me-1"><i
+                            class="mdi mdi-arrow-up-bold me-1"></i>{{install_month | length }} طلب</span> هذا الشهر
+                </p>
+            </div>
+        </div>
+    </div> <!-- end col-->
+    <div class="col-sm-6 col-md-6 col-xl-3">
+
+        <div class="card">
+            <div class="card-body">
+                <div class="float-end mt-2">
+                    <!-- <div id="growth-chart"></div> -->
+                </div>
+                <div>
+                    <h4 class="mb-1 mt-1"><span data-plugin="counterup">{{repair_requests | length }}</span></h4>
+                    <p class="text-muted mb-0">طلبات الصيانة</p>
+                </div>
+                <p class="text-muted mt-3 mb-0"><span class="text-success me-1"><i
+                            class="mdi mdi-arrow-up-bold me-1"></i>{{repair_month | length }} طلب</span> هذا الشهر
+                </p>
+            </div>
+        </div>
+    </div> <!-- end col-->
+    <div class="col-sm-6 col-md-6 col-xl-3">
+
+        <div class="card">
+            <div class="card-body">
+                <div class="float-end mt-2">
+                    <!-- <div id="growth-chart"></div> -->
+                </div>
+                <div>
+                    <h4 class="mb-1 mt-1"><span data-plugin="counterup">{{quarter_requests | length }}</span></h4>
+                    <p class="text-muted mb-0">طلبات كوارتر </p>
+                </div>
+                <p class="text-muted mt-3 mb-0"><span class="text-success me-1"><i
+                            class="mdi mdi-arrow-up-bold me-1"></i>{{quarter_month | length }} طلب</span> هذا الشهر
+                </p>
             </div>
         </div>
     </div> <!-- end col-->
@@ -44,57 +96,6 @@
                 </div>
                 <!-- <p class="text-muted mt-3 mb-0"><span class="text-danger me-1"><i
                             class="mdi mdi-arrow-down-bold me-1"></i>6.24%</span> since last week
-                </p> -->
-            </div>
-        </div>
-    </div> <!-- end col-->
-    <div class="col-sm-6 col-md-6 col-xl-3">
-
-        <div class="card">
-            <div class="card-body">
-                <div class="float-end mt-2">
-                    <!-- <div id="growth-chart"></div> -->
-                </div>
-                <div>
-                    <h4 class="mb-1 mt-1"><span data-plugin="counterup">{{install_requests | length }}</span></h4>
-                    <p class="text-muted mb-0">طلبات التركيب</p>
-                </div>
-                <!-- <p class="text-muted mt-3 mb-0"><span class="text-success me-1"><i
-                            class="mdi mdi-arrow-up-bold me-1"></i>10.51%</span> since last week
-                </p> -->
-            </div>
-        </div>
-    </div> <!-- end col-->
-    <div class="col-sm-6 col-md-6 col-xl-3">
-
-        <div class="card">
-            <div class="card-body">
-                <div class="float-end mt-2">
-                    <!-- <div id="growth-chart"></div> -->
-                </div>
-                <div>
-                    <h4 class="mb-1 mt-1"><span data-plugin="counterup">{{repair_requests | length }}</span></h4>
-                    <p class="text-muted mb-0">طلبات الصيانة</p>
-                </div>
-                <!-- <p class="text-muted mt-3 mb-0"><span class="text-success me-1"><i
-                            class="mdi mdi-arrow-up-bold me-1"></i>10.51%</span> since last week
-                </p> -->
-            </div>
-        </div>
-    </div> <!-- end col-->
-    <div class="col-sm-6 col-md-6 col-xl-3">
-
-        <div class="card">
-            <div class="card-body">
-                <div class="float-end mt-2">
-                    <!-- <div id="growth-chart"></div> -->
-                </div>
-                <div>
-                    <h4 class="mb-1 mt-1"><span data-plugin="counterup">{{quarter_requests | length }}</span></h4>
-                    <p class="text-muted mb-0">طلبات كوارتر </p>
-                </div>
-                <!-- <p class="text-muted mt-3 mb-0"><span class="text-success me-1"><i
-                            class="mdi mdi-arrow-up-bold me-1"></i>10.51%</span> since last week
                 </p> -->
             </div>
         </div>

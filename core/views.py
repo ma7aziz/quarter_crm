@@ -1,4 +1,5 @@
 
+import datetime
 from django.db.models.functions import TruncMonth
 from django.db.models import Count
 from django.http import JsonResponse
@@ -55,14 +56,13 @@ def dashboard(request):
         all_requests = sorted(
             chain(repair_requests, install_requests, quarter_requests), key=attrgetter('timestamp'), reverse=True)
 
-        # ON HOLD
+        # ON HOLD #####
         quarter_hold = Quarter_service.objects.on_hold()
         service_hold = Service_request.objects.on_hold()
-
         all_on_hold = sorted(chain(quarter_hold, service_hold),
                              key=attrgetter('timestamp'), reverse=True)
 
-        # under_process
+        # under_process #####
         repair_under_process = Service_request.objects.repair().exclude(
             status="closed").exclude(status="done")
         install_under_process = Service_request.objects.install().exclude(
@@ -92,6 +92,14 @@ def dashboard(request):
 
         users = User.objects.all().order_by("role")
 
+        ####### THIS MONTH ORDERS #######
+        today = datetime.date.today()
+        repair_month = repair_requests.filter(
+            timestamp__year=today.year,  timestamp__month=today.month)
+        install_month = install_requests.filter(
+            timestamp__year=today.year, timestamp__month=today.month)
+        quarter_month = quarter_requests.filter(
+            timestamp__year=today.year, timestamp__month=today.month)
         ctx = {
             "all_users": users,
             'users': users[:10],
@@ -117,7 +125,12 @@ def dashboard(request):
             # TASKS
             "tasks": current_tasks,
             "active_tasks": active_tasks,
-            "completed_tasks": completed_tasks
+            "completed_tasks": completed_tasks,
+            # this month requests
+            "repair_month": repair_month,
+            "install_month": install_month,
+            "quarter_month": quarter_month,
+            "all_this_month": int(quarter_month.count() + install_month.count() + repair_month.count())
 
         }
         return render(request, 'core/dashboard.html', ctx)
