@@ -51,7 +51,7 @@ def export_current_service(request):
     response.write(u'\ufeff'.encode('utf8'))
     writer = csv.writer(response)
     writer.writerow(["id", "service_type", "customer_name", "customer_type", "phone",
-                    "address", "time_created", "status", "created by"])
+                     "address", "time_created", "status", "created by"])
 
     processes = Service_request.objects.all().exclude(status="new").values_list("id", "service_type", "customer_name", "customer_type", "phone",
                                                                                 "address", "timestamp__date", "status", "created_by__username")
@@ -68,7 +68,7 @@ def export_all_services(request):
     response.write(u'\ufeff'.encode('utf8'))
     writer = csv.writer(response)
     writer.writerow(["id", "service_type", "customer_name", "customer_type", "phone",
-                    "address", "time_created", "status", "created by"])
+                     "address", "time_created", "status", "created by"])
 
     processes = Service_request.objects.all().values_list("id", "service_type", "customer_name", "customer_type", "phone",
                                                                                 "address", "timestamp__date", "status", "created_by__username")
@@ -88,7 +88,7 @@ def export_all_quarter_services(request):
     response.write(u'\ufeff'.encode('utf8'))
     writer = csv.writer(response)
     writer.writerow(["id",  "customer_name", "phone",
-                    "address", "time_created", "created_by",  "status", "price", "outstanding_ammount"])
+                     "address", "time_created", "created_by",  "status", "price", "outstanding_ammount"])
 
     processes = Quarter_service.objects.all().values_list("id", "name", "phone",
                                                           "location", "timestamp__date", "created_by__name",  "status", "pricing__price", "transfer__outstanding_ammount")
@@ -108,7 +108,7 @@ def export_current_quarter_services(request):
     response.write(u'\ufeff'.encode('utf8'))
     writer = csv.writer(response)
     writer.writerow(["id",  "customer_name", "phone",
-                    "address", "time_created", "created_by",  "status", "price", "outstanding_ammount"])
+                     "address", "time_created", "created_by",  "status", "price", "outstanding_ammount"])
 
     processes = Quarter_service.objects.all().exclude(status=1).values_list("id", "name", "phone",
                                                                             "location", "timestamp__date", "created_by__name",  "status", "pricing__price", "transfer__outstanding_ammount")
@@ -142,10 +142,10 @@ def export_repair_customers(request):
     response['Content-Disposition'] = 'attachment; filename="repair_customer_data.xls"'
     response.write(u'\ufeff'.encode('utf8'))
     writer = csv.writer(response)
-    writer.writerow([,"الاسم", "الهاتف" ])
+    writer.writerow(["الاسم", "الهاتف"])
 
     processes = Service_request.objects.repair(
-    ).values_list( "customer_name", "phone", )
+    ).values_list("customer_name", "phone", )
 
     for process in processes:
         writer.writerow(process)

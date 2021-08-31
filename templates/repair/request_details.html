@@ -26,10 +26,6 @@
                                 رقم #
                                 {{req.request_number}}
                             </h3>
-
-                            <div>
-
-                            </div>
                         </div>
                     </div>
 
@@ -49,7 +45,7 @@
                 </div>
                 <!-- end row -->
 
-                <div class="mt-4 row">
+                <div class="mt-lg-4 mt-1 row">
                     <h5 class="font-size-14 mb-3"></h5>
                     <div class="product-desc  col">
 
@@ -122,7 +118,7 @@
                                             </tr>
                                             <tr>
                                                 <th scope="row" class="text-muted">الجوال</th>
-                                                <td>{{ req.phone }}</td>
+                                                <td><a href="tel:{{req.phone}}">{{ req.phone }}</a></td>
                                             </tr>
                                             {% if req.machine_type %}
                                             <tr>

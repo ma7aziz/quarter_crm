@@ -145,8 +145,8 @@
                    {% endif %}
                    بدون تحديد موعد
                    {% if request.user.role == 1 or request.user.role == 2 or request.user.role == 3 %}
-                   <button id="editDays" class="btn btn-sm btn-rounded bg-soft-info">
-                       <i class="uil uil-edit-alt font-size-16 "></i> تغيير عدد الأيام
+                   <button id="editDays" class="btn btn-sm btn-rounded bg-soft-info mb-1">
+                       <i class="uil uil-edit-alt font-size-16  "></i> تغيير عدد الأيام
                    </button>
                    {% endif %}
                    <div class="collapse mt-3" id="daysForm">
@@ -169,10 +169,10 @@
 
                                <th>رقم الطلب </th>
                                <th>أسم العميل</th>
-                               <th>تاريخ الطلب </th>
+                               <th class="d-none d-md-block">تاريخ الطلب </th>
 
-                               <th>رقم الفاتورة </th>
-                               <th>حالة الطلب </th>
+                               <th class="d-none d-md-block">رقم الفاتورة </th>
+                               <th class="">حالة الطلب </th>
 
                            </tr>
                        </thead>
@@ -181,10 +181,10 @@
                            <tr>
                                <td>{{req.request_number}}</td>
                                <td>{{req.customer_name}}</td>
-                               <td>
+                               <td class="d-none d-md-block">
                                    {{req.timestamp.date}}
                                </td>
-                               <td>
+                               <td class="d-none d-md-block">
                                    {{req.invoice_number}}
                                </td>
 
@@ -226,8 +226,8 @@
 
                                <th>رقم الطلب </th>
                                <th>أسم العميل</th>
-                               <th>تاريخ الطلب </th>
-                               <th>نوع العميل </th>
+                               <th class="d-none d-md-block">تاريخ الطلب </th>
+                               <th class="d-none d-md-block">نوع العميل </th>
                                <th></th>
 
                            </tr>
@@ -237,10 +237,10 @@
                            <tr>
                                <td>{{req.id}}</td>
                                <td>{{req.customer_name}}</td>
-                               <td>
+                               <td class="d-none d-md-block">
                                    {{req.timestamp.date}}
                                </td>
-                               <td>
+                               <td class="d-none d-md-block">
                                    {% if req.customer_type == "cash" %}
                                    كاش
                                    {% elif request.customer_type == "warranty" %}
@@ -255,7 +255,7 @@
                                        href="{% url 'service_request_details' req.id %}">
                                        التفاصيل <i class="uil uil-pen "></i>
                                    </a>
-                                   <a class="btn btn-soft-success btn-rounded waves-effect waves-light"
+                                   <a class="btn btn-soft-success btn-rounded waves-effect waves-light d-none d-md-block"
                                        href="{% url 'hold_request' req.id %}">
                                        تفعيل <i class="far fa-check-circle"></i>
                                    </a>
@@ -297,7 +297,7 @@
                    </li>
                    <li class="nav-item">
                        <a class="nav-link" data-bs-toggle="tab" href="#navtabs-past" role="tab">
-                           <span class="d-block d-sm-none">مواعيد اليوم </span>
+                           <span class="d-block d-sm-none"> مواعيد فائتة </span>
                            <span class="d-none d-sm-block">
                                مواعيد فائتة
                            </span>
@@ -470,13 +470,12 @@
                                    </button>
                                </div>
                                <div class="my-2 row">
-                                   <div class="col-8">
-
+                                   <div class="col-sm-12 col-lg-8 mb-1">
                                        <input id="" type="text" class=" table_search form-control "
                                            placeholder="الـبـحـث... " name="s">
                                    </div>
 
-                                   <div class="col-4">
+                                   <div class="col-sm-12 col-lg-4">
                                        <form action="" id="filter-form">
 
                                            <select name="status" id="status-list" class="form-control  btn"
@@ -499,18 +498,18 @@
                                    <table class="table table-centered table-nowrap mb-0 data-table" dir="rtl">
                                        <thead class="table-light">
                                            <tr>
-                                               <th><input type="checkbox" name="" id="check_all"
-                                                       class="form-check-input"></th>
+                                               <th class="d-none d-lg-table-cell"><input type="checkbox" name=""
+                                                       id="check_all" class="form-check-input"></th>
                                                <th>رقم الطلب </th>
                                                <th>أسم العميل</th>
-                                               <th>التاريخ</th>
+                                               <th class="d-none d-lg-table-cell">التاريخ</th>
 
                                                {% if "install" in request.path %}
-                                               <th> رقم الفاتورة </th>
+                                               <th class="d-none d-lg-table-cell"> رقم الفاتورة </th>
                                                {% else%}
-                                               <th>نوع العميل </th>
+                                               <th class="d-none d-lg-table-cell">نوع العميل </th>
                                                {% endif %}
-                                               <th>البائع</th>
+                                               <th class="d-none d-lg-table-cell">البائع</th>
                                                <th>
                                                    حالة الطلب
 
@@ -526,7 +525,7 @@
                                            {% if  req.status ==  "new"  or req.status == "under_process" %}
                                            <tr class="{{req.status}}" {% if req.favourite %}
                                                style="background-color: #caf7e3;" {% endif %}>
-                                               <td>
+                                               <td class="d-none d-lg-table-cell">
                                                    <div class="form-check font-size-16">
                                                        <input type="checkbox" class="form-check-input req_checkbox "
                                                            id="customCheck2" name="req_id[]" value="{{req.id}}">
@@ -541,12 +540,12 @@
 
                                                </td>
                                                <td>{{req.customer_name}}</td>
-                                               <td>
+                                               <td class="d-none d-lg-table-cell">
                                                    {{req.timestamp.date}}
                                                </td>
 
 
-                                               <td>
+                                               <td class="d-none d-lg-table-cell">
                                                    {% if "install" in request.path %}
                                                    {{req.invoice_number }}
                                                    {% else %}
@@ -558,7 +557,7 @@
                                                    {% endif %}
                                                </td>
 
-                                               <td><a
+                                               <td class="d-none d-lg-table-cell"><a
                                                        href="/profile/{{req.created_by.username}}">{{req.created_by.username}}</a>
                                                </td>
                                                <td>
@@ -603,7 +602,7 @@
                                            {%for req in requests %}
                                            {% if req.status == "done"  or req.status == "closed"  %}
                                            <tr class="{{req.status}} text-muted">
-                                               <td>
+                                               <td class="d-none d-lg-table-cell">
                                                    <div class="form-check font-size-16">
                                                        <input type="checkbox" class="form-check-input req_checkbox "
                                                            id="customCheck2" name="req_id[]" value="{{req.id}}">
@@ -618,12 +617,12 @@
 
                                                </td>
                                                <td>{{req.customer_name}}</td>
-                                               <td>
+                                               <td class="d-none d-lg-table-cell">
                                                    {{req.timestamp.date}}
                                                </td>
 
 
-                                               <td>
+                                               <td class="d-none d-lg-table-cell">
                                                    {% if "install" in request.path %}
                                                    {{req.invoice_number }}
                                                    {% else %}
@@ -635,7 +634,7 @@
                                                    {% endif %}
                                                </td>
 
-                                               <td><a
+                                               <td class="d-none d-lg-table-cell"><a
                                                        href="/profile/{{req.created_by.username}}">{{req.created_by.username}}</a>
                                                </td>
                                                <td>

@@ -62,9 +62,9 @@
 
                                         <th>رقم الطلب </th>
                                         <th>اسم العميل </th>
-                                        <th>نوع الطلب </th>
-                                        <th>تاريخ الطلب</th>
-                                        <th>البائع</th>
+                                        <th class="d-none d-lg-table-cell">نوع الطلب </th>
+                                        <th class="d-none d-lg-table-cell">تاريخ الطلب</th>
+                                        <th class="d-none d-lg-table-cell">البائع</th>
                                         <th>حالة الطلب </th>
                                         <th class="d-none">phone</th>
 
@@ -93,7 +93,7 @@
                                                     {{process}}
                                                 </a>
                                         </td>
-                                        <td>
+                                        <td class="d-none d-lg-table-cell">
                                             {% if process in repair_requests %}
                                             <span class="badge bg-soft-danger p-2">
                                                 صيانة
@@ -111,10 +111,10 @@
                                             </span>
                                             {% endif %}
                                         </td>
-                                        <td>
+                                        <td class="d-none d-lg-table-cell">
                                             {{ process.timestamp.date }}
                                         </td>
-                                        <td><a
+                                        <td class="d-none d-lg-table-cell"><a
                                                 href="/profile/{{process.created_by.username}}">{{process.created_by}}</a>
                                         </td>
                                         <td>
@@ -167,9 +167,9 @@
                                         <th></th>
                                         <th>رقم الطلب </th>
                                         <th>الاسم </th>
-                                        <th>الجوال </th>
-                                        <th>البائع </th>
-                                        <th>تاريخ الطلب </th>
+                                        <th class="d-none d-lg-table-cell">الجوال </th>
+                                        <th class="d-none d-lg-table-cell">البائع </th>
+                                        <th class="d-none d-lg-table-cell">تاريخ الطلب </th>
                                         <th>حالة الطلب </th>
 
                                     </tr>
@@ -190,12 +190,12 @@
                                         </td>
                                         <td><a href="{% url 'service_request_details' process.id %}">{{process}}</a>
                                         </td>
-                                        <td>{{process.phone}}</td>
-                                        <td>
+                                        <td class="d-none d-lg-table-cell">{{process.phone}}</td>
+                                        <td class="d-none d-lg-table-cell">
                                             <a
                                                 href="/profile/{{process.created_by.username}}">{{process.created_by}}</a>
                                         </td>
-                                        <td>
+                                        <td class="d-none d-lg-table-cell">
 
                                             {{process.timestamp.date}}
 
@@ -248,9 +248,9 @@
                                         <th></th>
                                         <th>رقم الطلب </th>
                                         <th>الاسم </th>
-                                        <th>الجوال </th>
-                                        <th>البائع </th>
-                                        <th>تاريخ الطلب </th>
+                                        <th class="d-none d-lg-table-cell">الجوال </th>
+                                        <th class="d-none d-lg-table-cell">البائع </th>
+                                        <th class="d-none d-lg-table-cell">تاريخ الطلب </th>
                                         <th>حالة الطلب </th>
 
                                     </tr>
@@ -273,12 +273,12 @@
                                         </td>
                                         <td><a href="{% url 'service_request_details' process.id %}">{{process}}</a>
                                         </td>
-                                        <td>{{process.phone}}</td>
-                                        <td>
+                                        <td class="d-none d-lg-table-cell">{{process.phone}}</td>
+                                        <td class="d-none d-lg-table-cell">
                                             <a
                                                 href="/profile/{{process.created_by.username}}">{{process.created_by}}</a>
                                         </td>
-                                        <td>
+                                        <td class="d-none d-lg-table-cell">
 
                                             {{process.timestamp.date}}
 
@@ -328,9 +328,9 @@
                                         <th></th>
                                         <th>رقم الطلب </th>
                                         <th>الاسم </th>
-                                        <th>الجوال </th>
-                                        <th>تاريخ الطلب </th>
-                                        <th>البائع</th>
+                                        <th class="d-none d-lg-table-cell">الجوال </th>
+                                        <th class="d-none d-lg-table-cell">تاريخ الطلب </th>
+                                        <th class="d-none d-lg-table-cell">البائع</th>
                                         <th>حالة الطلب </th>
 
                                     </tr>
@@ -351,13 +351,14 @@
                                         </td>
                                         <td><a href="{% url 'quarter_request_details' process.id %}">{{process}}</a>
                                         </td>
-                                        <td>{{process.phone}}</td>
-                                        <td>
+                                        <td class="d-none d-lg-table-cell">{{process.phone}}</td>
+                                        <td class="d-none d-lg-table-cell">
 
                                             {{process.timestamp.date}}
 
                                         </td>
-                                        <td><a href="/profile/{{process.created_by}}">{{process.created_by}}</a></td>
+                                        <td class="d-none d-lg-table-cell"><a
+                                                href="/profile/{{process.created_by}}">{{process.created_by}}</a></td>
                                         <td>
 
                                             <a href="{% url 'quarter_request_details' process.id %}"
@@ -397,9 +398,9 @@
                                     <tr>
                                         <th>رقم الطلب </th>
                                         <th>الاسم </th>
-                                        <th>الجوال </th>
-                                        <th>نوع الطلب </th>
-                                        <th>تاريخ الطلب </th>
+                                        <th class="d-none d-lg-table-cell">الجوال </th>
+                                        <th class="d-none d-lg-table-cell"> نوع الطلب </th>
+                                        <th class="d-none d-lg-table-cell">تاريخ الطلب </th>
                                         <th></th>
                                     </tr>
                                 </thead>
@@ -426,9 +427,9 @@
                                             </a>
                                             {%  endif %}
                                         </td>
-                                        <td>{{process.phone}}</td>
+                                        <td class="d-none d-lg-table-cell">{{process.phone}}</td>
 
-                                        <td>
+                                        <td class="d-none d-lg-table-cell">
 
                                             {% if process in service_hold %}
 
@@ -447,7 +448,7 @@
                                         </td>
 
 
-                                        <td>
+                                        <td class="d-none d-lg-table-cell">
 
                                             {{process.timestamp.date}}
 
@@ -455,17 +456,17 @@
                                         <td>
 
 
-                                            <a href="{% url  'delete_quarter_request' process.id %}"
-                                                class=" btn btn-soft-danger btn-rounded waves-effect waves-light">
-                                                <i class="uil uil-trash-alt "></i> حذف
-                                            </a>
-                                            <a href="{% url 'quarter_request_details' process.id %}"
+
+                                            <a {% if process in quarter_hold %}
+                                                href="{% url 'quarter_request_details' process.id %}" {% else  %}
+                                                href="{% url 'service_request_details' process.id  %}" {% endif %}
                                                 class=" btn btn-soft-primary btn-rounded waves-effect waves-light">
                                                 <i class="uil uil-pen "></i>
                                                 التفاصيل
                                             </a>
 
-                                            <button class="btn btn-soft-success btn-rounded waves-effect waves-light">
+                                            <button
+                                                class="btn btn-soft-success btn-rounded waves-effect waves-light d-none d-lg-table-cell">
                                                 {% if process in service_hold %}
                                                 <a href="{% url 'hold_request' process.id %}" class="text-success">
                                                     {% elif process in quarter_hold %}

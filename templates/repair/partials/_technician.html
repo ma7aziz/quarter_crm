@@ -33,9 +33,9 @@
                     <tr>
 
                         <th>رقم الطلب </th>
-                        <th>أسم العميل</th>
+                        <th class="d-none d-lg-table-cell ">أسم العميل</th>
                         <th>التاريخ</th>
-                        <th>نوع الطلب </th>
+                        <th class="d-none d-lg-table-cell ">نوع الطلب </th>
                         <th>التفاصيل</th>
                     </tr>
                 </thead>
@@ -45,7 +45,7 @@
 
                         <td><a href="{% url 'service_request_details' req.service_request.id %}"
                                 class="text-body fw-bold">#{{req.service_request.request_number}}</a> </td>
-                        <td>{{req.service_request.customer_name}}</td>
+                        <td class="d-none d-lg-table-cell ">{{req.service_request.customer_name}}</td>
                         <td>
                             {% if req.is_today %}
                             <div class="badge bg-soft-success p-1" style="font-size: 16px;">اليوم </div>
@@ -55,7 +55,7 @@
                             {% endif %}
                         </td>
 
-                        <td>
+                        <td class="d-none d-lg-table-cell ">
                             {{req.service_request.get_service_type_display}}
                         </td>
 
@@ -84,8 +84,8 @@
 
                         <th>رقم الطلب </th>
                         <th>أسم العميل</th>
-                        <th>التاريخ</th>
-                        <th>الموقع</th>
+                        <th class="d-none d-lg-table-cell ">التاريخ</th>
+                        <th class="d-none d-lg-table-cell ">الموقع</th>
                         <th>حالة الطلب </th>
                         <th>التفاصيل</th>
                     </tr>
@@ -96,12 +96,13 @@
 
                         <td><a href="{% url 'service_request_details' req.service_request.id %}"
                                 class="text-body fw-bold">#{{req.service_request.request_number}}</a> </td>
-                        <td>{{req.service_request.customer_name}}</td>
-                        <td>
+                        <td> <a href="{% url 'service_request_details' req.service_request.id %}">
+                                {{req.service_request.customer_name}}</a></td>
+                        <td class="d-none d-lg-table-cell ">
                             {{req.date}}
                         </td>
 
-                        <td>
+                        <td class="d-none d-lg-table-cell ">
                             {{req.service_request.address}}
                         </td>
                         <td>

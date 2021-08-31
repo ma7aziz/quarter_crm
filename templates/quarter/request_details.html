@@ -21,9 +21,7 @@
 
                         <h4 class="font-size-20 mb-3">#{{req.request_number}}</h4>
 
-                        <div>
 
-                        </div>
                     </div>
                 </div>
 
@@ -49,9 +47,8 @@
                         <li class="nav-item">
                             <a class="nav-link active" data-bs-toggle="tab" href="#navtabs-details" role="tab">
 
-                                <span class="d-none d-sm-block">
+                                <span class="">
                                     بيانات
-
                                 </span>
                             </a>
                         </li>
@@ -60,7 +57,9 @@
                             <a class="nav-link" data-bs-toggle="tab" href="#navtabs-pricing" role="tab">
 
 
-                                <span class="d-none d-sm-block"> <i class="fas fa-dollar-sign"></i> التسعير
+                                <span class="">
+                                    <i class="fas fa-dollar-sign"></i>
+                                    التسعير
                                 </span>
                             </a>
                         </li>
@@ -69,9 +68,9 @@
                         <li class="nav-item">
                             <a class="nav-link" data-bs-toggle="tab" href="#navtabs-designs" role="tab">
 
-                                <span class="d-none d-sm-block">
+                                <i class="fas fa-drafting-compass"></i>
+                                <span class="">
 
-                                    <i class="fas fa-drafting-compass"></i>
                                     التصميمات
                                 </span>
                             </a>
@@ -82,7 +81,7 @@
                         <li class="nav-item">
                             <a class="nav-link" data-bs-toggle="tab" href="#navtabs-money_transfer" role="tab">
 
-                                <span class="d-none d-sm-block">
+                                <span class="">
                                     <i class="fas fa-comments-dollar"></i>
                                     التحويلات
                                 </span>
@@ -105,7 +104,7 @@
                         <li class="nav-item">
                             <a class="nav-link" data-bs-toggle="tab" href="#navtabs-excutionFiles" role="tab">
 
-                                <span class="d-none d-sm-block">
+                                <span class="">
                                     <i class="far fa-images"></i>
                                     ملفات التنفيذ
                                 </span>
@@ -114,7 +113,7 @@
                         {% endif %}
                     </ul>
 
-                    <div class="tab-content border border-top-0 p-4 ">
+                    <div class="tab-content border border-top-0 p-1 ">
                         <!-- Request Details -->
                         <div class="tab-pane active" id="navtabs-details" role="tabpanel">
                             <div class="card">
@@ -122,13 +121,16 @@
 
                                     <div class="mt-4">
                                         <div>
-                                            <h4 class="mb-1 text-muted  d-inline">اسم العميل
+                                            <h4 class="mb-1 text-muted d-block ">اسم العميل
                                                 <i class="far fa-user-circle"></i> : </h4>
                                             <h5 class="font-size-18 d-inline">{{req}}</h5>
 
                                             {% if request.user.role == 1 or request.user.role == 4  or request.user == req.created_by or request.user == req.sales %}
                                             <button id="editName" class="btn btn-sm btn-rounded bg-soft-info">
-                                                تعديل
+                                                <span class="d-none d-lg-block ">
+                                                    تعديل
+
+                                                </span>
                                                 <i class="uil uil-edit-alt font-size-16"></i>
                                             </button>
                                             {% endif %}
@@ -148,12 +150,14 @@
                                             </div>
                                         </div>
                                         <div class="mt-4">
-                                            <h4 class="mb-1 text-muted d-inline">الجوال <i
-                                                    class="fas fa-mobile-alt"></i> :</h4>
+                                            <h4 class="mb-1 text-muted">الجوال <i class="fas fa-mobile-alt"></i> :</h4>
                                             <h5 class="font-size-18 d-inline">{{req.phone}}</h5>
                                             {% if request.user.role == 1 or request.user.role == 4  or request.user == req.created_by or request.user == req.sales %}
-                                            <button id="editPhone" class="btn btn-sm btn-rounded bg-soft-info">
-                                                تعديل
+                                            <button id="editPhone" class="btn btn-sm btn-rounded bg-soft-info ">
+                                                <span class="d-none d-lg-block ">
+                                                    تعديل
+
+                                                </span>
                                                 <i class="uil uil-edit-alt font-size-16 "></i>
                                             </button>
                                             {% endif %}
@@ -179,7 +183,10 @@
                                             <h5 class="font-size-18 d-inline">{{req.location}}</h5>
                                             {% if request.user.role == 1 or request.user.role == 4  or request.user == req.created_by or request.user == req.sales  %}
                                             <button id="editLocation" class="btn btn-sm btn-rounded bg-soft-info">
-                                                تعديل
+                                                <span class="d-none d-lg-block ">
+                                                    تعديل
+
+                                                </span>
                                                 <i class="uil uil-edit-alt font-size-16 "></i>
                                             </button>
                                             {% endif %}
@@ -206,7 +213,10 @@
                                             <h5 class="font-size-18 d-inline">{{req.email}}</h5>
                                             {% if request.user.role == 1 or request.user.role == 4  or request.user == req.created_by or request.user == req.sales  %}
                                             <button id="editEmail" class="btn btn-sm btn-rounded bg-soft-info">
-                                                تعديل
+                                                <span class="d-none d-lg-block ">
+                                                    تعديل
+
+                                                </span>
                                                 <i class="uil uil-edit-alt font-size-16 "></i>
                                             </button>
                                             {% endif %}

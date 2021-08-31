@@ -86,7 +86,7 @@
         <ul class="nav nav-tabs" role="tablist">
             <li class="nav-item">
                 <a class="nav-link active" data-bs-toggle="tab" href="#navtabs-all" role="tab">
-                    <span class="d-block d-sm-none"><i class="fas fa-home"></i></span>
+                    <span class="d-block d-sm-none">جميع الطلبات </span>
                     <span class="d-none d-sm-block">
                         جميع الطلبات
 
@@ -95,7 +95,7 @@
             </li>
             <li class="nav-item">
                 <a class="nav-link" data-bs-toggle="tab" href="#navtabs-curr" role="tab">
-                    <span class="d-block d-sm-none"><i class="fas fa-home"></i></span>
+                    <span class="d-block d-sm-none">جاري تنفيذها</span>
                     <span class="d-none d-sm-block">
                         طلبات جاري تنفيذها
 
@@ -105,7 +105,7 @@
             {% if request.user.role == 5 %}
             <li class="nav-item">
                 <a class="nav-link" data-bs-toggle="tab" href="#navtabs-fav" role="tab">
-                    <span class="d-block d-sm-none"><i class="fas fa-home"></i></span>
+                    <span class="d-block d-sm-none">مفضلات</span>
                     <span class="d-none d-sm-block">
                         المفضلات
 
@@ -131,9 +131,9 @@
 
                                     <th>رقم الطلب </th>
                                     <th>أسم العميل</th>
-                                    <th>تاريخ الطلب </th>
-                                    <th>نوع الطلب </th>
-                                    <th>رقم الفاتورة</th>
+                                    <th class="d-none d-lg-table-cell">تاريخ الطلب </th>
+                                    <th class="d-none d-lg-table-cell">نوع الطلب </th>
+                                    <th class="d-none d-lg-table-cell">رقم الفاتورة</th>
                                     <th>حالة الطلب</th>
                                 </tr>
                             </thead>
@@ -150,16 +150,16 @@
 
                                     </td>
                                     <td>{{req.customer.name}}</td>
-                                    <td>
+                                    <td class="d-none d-lg-table-cell">
                                         {{req.timestamp.date}}
                                     </td>
-                                    <td>
+                                    <td class="d-none d-lg-table-cell">
                                         {% if req in service_history %}
                                         {{req.get_service_type_display}}
                                         {% else %} كوارتر
                                         {% endif %}
                                     </td>
-                                    <td>{{req.invoice_number}}</td>
+                                    <td class="d-none d-lg-table-cell">{{req.invoice_number}}</td>
                                     <td class="text-center">
                                         <a {% if req in service_history %}
                                             href="{% url 'service_request_details' req.id  %}" {% else %}
@@ -387,8 +387,8 @@
 
                                     <th>رقم الطلب </th>
                                     <th>أسم العميل</th>
-                                    <th>رقم العميل</th>
-                                    <th>اضافة بواسطة </th>
+                                    <th class="d-none d-lg-table-cell">رقم العميل</th>
+                                    <th class="d-none d-lg-table-cell">اضافة بواسطة </th>
                                     <th></th>
                                 </tr>
                             </thead>
@@ -403,9 +403,9 @@
 
                                     </td>
                                     <td>{{req.name}}</td>
-                                    <td>{{req.phone}}</td>
+                                    <td class="d-none d-lg-table-cell">{{req.phone}}</td>
 
-                                    <td class="text-center">
+                                    <td class="text-center d-none d-lg-table-cell">
                                         <a href="tel:{{req.created_by.phone}}">{{req.created_by}}</a>
                                     </td>
                                     <td>
@@ -435,8 +435,8 @@
         <ul class="nav nav-tabs" role="tablist">
             <li class="nav-item">
                 <a class="nav-link active" data-bs-toggle="tab" href="#navtabs-all" role="tab">
-                    <span class="d-block d-sm-none"><i class="fas fa-home"></i></span>
-                    <span class="d-none d-sm-block">
+
+                    <span class="">
                         طلبات جاري تنفيذها
 
                     </span>
@@ -444,8 +444,8 @@
             </li>
             <li class="nav-item">
                 <a class="nav-link" data-bs-toggle="tab" href="#navtabs-curr" role="tab">
-                    <span class="d-block d-sm-none"><i class="fas fa-home"></i></span>
-                    <span class="d-none d-sm-block">
+
+                    <span class="">
                         طلبات سابقة
                     </span>
                 </a>
@@ -469,8 +469,8 @@
 
                                     <th>رقم الطلب </th>
                                     <th>أسم العميل</th>
-                                    <th>رقم العميل</th>
-                                    <th>تاريخ الطلب </th>
+                                    <th class="d-none d-lg-table-cell">رقم العميل</th>
+                                    <th class="d-none d-lg-table-cell">تاريخ الطلب </th>
 
                                     <th>حالة الطلب</th>
                                 </tr>
@@ -486,8 +486,8 @@
 
                                     </td>
                                     <td>{{req.name}}</td>
-                                    <td>{{req.phone}}</td>
-                                    <td>
+                                    <td class="d-none d-lg-table-cell">{{req.phone}}</td>
+                                    <td class="d-none d-lg-table-cell">
                                         {{req.timestamp.date}}
                                     </td>
 
@@ -529,8 +529,8 @@
 
                                     <th>رقم الطلب </th>
                                     <th>أسم العميل</th>
-                                    <th>رقم العميل</th>
-                                    <th>تاريخ الطلب </th>
+                                    <th class="d-none d-lg-table-cell">رقم العميل</th>
+                                    <th class="d-none d-lg-table-cell">تاريخ الطلب </th>
 
                                     <th>حالة الطلب</th>
                                 </tr>
@@ -547,8 +547,8 @@
 
                                     </td>
                                     <td>{{req.name}}</td>
-                                    <td>{{req.phone}}</td>
-                                    <td>
+                                    <td class="d-none d-lg-table-cell">{{req.phone}}</td>
+                                    <td class="d-none d-lg-table-cell">
                                         {{req.timestamp.date}}
                                     </td>
 

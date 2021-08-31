@@ -6,12 +6,14 @@
                 <h4 class="card-title mb-4" dir="rtl">بيانات المستخدمين </h4>
             </div>
             <div class="col-5">
-                <a href="{% url 'export_users' %}" class="btn btn-small btn-success uppercase">Export to Excel File </a>
+                <a href="{% url 'export_users' %}"
+                    class="btn btn-small btn-success uppercase d-none d-lg-table-cell ">Export
+                    to Excel File </a>
             </div>
 
         </div>
 
-        <div class="table-responsive text-center" data-simplebar style="max-height: 430px;">
+        <div class="table-responsive text-center pb-2" data-simplebar style="max-height: 430px;">
             <table class="table table-centered table-striped table-nowrap mb-0" dir="rtl">
                 <thead class="table-dark">
                     <tr>
@@ -20,8 +22,7 @@
                         <th>الاسم </th>
                         <th>الجوال </th>
                         <th>الوظيفة</th>
-
-                        <th>Last Login</th>
+                        <th class="d-none d-lg-table-cell">Last Login</th>
                         <th></th>
                     </tr>
                 </thead>
@@ -35,7 +36,7 @@
                         </td>
                         <td>{{user.name}}</td>
                         <td>
-                            {{user.phone}}
+                            <a href="tel:{{user.phone}}">{{user.phone}}</a>
                         </td>
                         <td>
                             {{ user.get_role_display}}
@@ -43,10 +44,11 @@
 
 
 
-                        <td>{{user.last_login}}</td>
+                        <td class="d-none d-lg-table-cell">{{user.last_login}}</td>
                         <td>
 
-                            <button class=" btn btn-soft-primary btn-rounded waves-effect waves-light ">
+                            <button
+                                class=" btn btn-soft-primary btn-rounded waves-effect waves-light d-none d-lg-table-cell ">
                                 <a href="{% url 'profile' user.username %}"><i class="uil uil-pen "></i> التفاصيل</a>
                             </button>
 
@@ -60,7 +62,7 @@
                     {% endfor %}
                 </tbody>
             </table>
-            <a href="{% url 'all_users' %}" class=" btn btn-rounded btn-soft-success btn-lg mt-2">
+            <a href="{% url 'all_users' %}" class=" btn btn-rounded btn-soft-success btn-lg mt-2 mb-4">
                 جميع المستخدمين
             </a>
         </div>
