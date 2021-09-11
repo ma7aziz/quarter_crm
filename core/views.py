@@ -19,7 +19,7 @@ from quarter.models import Quarter_service
 from core.models import Task
 from django.http import HttpResponseRedirect
 from .models import Customer
-from service.utils import check_qouta, get_data
+from service.utils import check_qouta, get_data, set_archived
 # Create your views here.
 
 
@@ -49,6 +49,7 @@ def index(request):
 @login_required
 def dashboard(request):
     if request.user.role == 1:
+        set_archived()
         # get_data()
         repair_requests = Service_request.objects.repair()
         install_requests = Service_request.objects.install()

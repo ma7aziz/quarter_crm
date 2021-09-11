@@ -82,6 +82,7 @@ class Service_request(models.Model):
         "Hold_reason", on_delete=models.SET_NULL, null=True, blank=True)
     favourite = models.BooleanField(default=False)
     active = models.BooleanField(default=True)
+    archived = models.BooleanField(default=False)
     objects = RequestManager()
 
     def save(self, *args, **kwargs):

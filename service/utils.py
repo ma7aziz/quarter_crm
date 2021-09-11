@@ -69,3 +69,14 @@ def get_data():
     # data = response.json()
     # for r in data:
     #     print(r["id"], r['time'])
+
+
+def set_archived():
+    orders = Service_request.objects.all().exclude(archived=True).exclude(status="new").exclude(
+        status="under_process").exclude(hold=True).order_by('-timestamp')
+    for order in orders:
+        days = order.timestamp.date() - datetime.datetime.today().date()
+        print(days)
+        if -days.days > 60:
+            order.archived = True
+            order.save()
