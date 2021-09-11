@@ -50,7 +50,6 @@ def index(request):
 def dashboard(request):
     if request.user.role == 1:
         set_archived()
-        # get_data()
         repair_requests = Service_request.objects.repair()
         install_requests = Service_request.objects.install()
         quarter_requests = Quarter_service.objects.all()
@@ -64,9 +63,9 @@ def dashboard(request):
                              key=attrgetter('timestamp'), reverse=True)
 
         # under_process #####
-        repair_under_process = Service_request.objects.repair().exclude(
+        repair_under_process = repair_requests.exclude(
             status="closed").exclude(status="done")
-        install_under_process = Service_request.objects.install().exclude(
+        install_under_process = install_requests.exclude(
             status="closed").exclude(status="done")
 
         ########################################################### NEED TO CHANGE LATER ###########
@@ -79,20 +78,19 @@ def dashboard(request):
             key=attrgetter('timestamp'), reverse=True)
 
         # NEW REQUESTS
-        new_repair = Service_request.objects.repair().filter(status="new")
-        new_install = Service_request.objects.install().filter(status="new")
+        new_repair = repair_requests.filter(status="new")
+        new_install = install_requests.filter(status="new")
         new_quarter = Quarter_service.objects.all().filter(status=1)
         all_new = sorted(
             chain(new_repair, new_install, new_quarter), key=attrgetter('timestamp'), reverse=True
         )
         # special tasks
-        tasks = Task.objects.all()
-        current_tasks = Task.objects.all().exclude(status="closed")
-        active_tasks = Task.objects.all().filter(status="open")
-        completed_tasks = Task.objects.all().filter(status="completed")
+        # tasks = Task.objects.all()
+        # current_tasks = Task.objects.all().exclude(status="closed")
+        # active_tasks = Task.objects.all().filter(status="open")
+        # completed_tasks = Task.objects.all().filter(status="completed")
 
         users = User.objects.all().order_by("role")
-
         ####### THIS MONTH ORDERS #######
         today = datetime.date.today()
         repair_month = repair_requests.filter(
@@ -124,9 +122,9 @@ def dashboard(request):
             "new_repair": new_repair,
             "new_quarter": new_quarter,
             # TASKS
-            "tasks": current_tasks,
-            "active_tasks": active_tasks,
-            "completed_tasks": completed_tasks,
+            # "tasks": current_tasks,
+            # "active_tasks": active_tasks,
+            # "completed_tasks": completed_tasks,
             # this month requests
             "repair_month": repair_month,
             "install_month": install_month,
