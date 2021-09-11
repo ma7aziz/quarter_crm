@@ -70,8 +70,8 @@ body {
 
 @media screen and (max-width : 600px) {
   body {
-    font-size: .8rem;
-    font-weight: 400
+    font-size: .6rem;
+    font-weight: 500
   }
 
   .page-content {
