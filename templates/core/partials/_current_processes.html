@@ -81,7 +81,7 @@
                                                 {% elif process in quarter_cur %}
                                                 <a href="{% url 'quarter_request_details' process.id %}">
                                                     {% endif %}
-                                                    {{process}}</a>
+                                                    {{process|truncatechars:20}}</a>
                                         </td>
                                         <td>
                                             {% if process in repair_cur %}
@@ -175,7 +175,8 @@
                                                     {{process.request_number}}
                                                 </a>
                                         </td>
-                                        <td><a href="{% url 'service_request_details' process.id %}">{{process}}</a>
+                                        <td><a
+                                                href="{% url 'service_request_details' process.id %}">{{process|truncatechars:20}}</a>
                                         </td>
                                         <td>{{process.phone}}</td>
                                         <td>
@@ -252,7 +253,8 @@
                                                     {{process.request_number}}
                                                 </a>
                                         </td>
-                                        <td><a href="{% url 'service_request_details' process.id %}">{{process}}</a>
+                                        <td><a
+                                                href="{% url 'service_request_details' process.id %}">{{process|truncatechars:20}}</a>
                                         </td>
                                         <td>{{process.phone}}</td>
                                         <td>
@@ -326,7 +328,8 @@
                                                     {{process.request_number}}
                                                 </a>
                                         </td>
-                                        <td><a href="{% url 'quarter_request_details' process.id %}">{{process}}</a>
+                                        <td><a
+                                                href="{% url 'quarter_request_details' process.id %}">{{process|truncatechars:20}}</a>
                                         </td>
                                         <td>{{process.phone}}</td>
                                         <td>

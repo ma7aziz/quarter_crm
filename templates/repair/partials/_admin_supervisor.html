@@ -180,7 +180,7 @@
                            {% for req in late_orders %}
                            <tr>
                                <td>{{req.request_number}}</td>
-                               <td>{{req.customer_name}}</td>
+                               <td>{{req.customer_name|truncatechars:20}}</td>
                                <td class="d-none d-md-block">
                                    {{req.timestamp.date}}
                                </td>
@@ -236,7 +236,7 @@
                            {% for req in on_hold %}
                            <tr>
                                <td>{{req.id}}</td>
-                               <td>{{req.customer_name}}</td>
+                               <td>{{req.customer_name|truncatechars:20}}</td>
                                <td class="d-none d-md-block">
                                    {{req.timestamp.date}}
                                </td>
@@ -331,7 +331,7 @@
                                        <td><a
                                                href="{% url 'service_request_details' req.service_request.id %}">{{req.service_request.request_number}}</a>
                                        </td>
-                                       <td>{{req.service_request.customer_name}}</td>
+                                       <td>{{req.service_request.customer_name|truncatechars:20}}</td>
                                        <td>
                                            {{req.date}}
                                        </td>
@@ -383,7 +383,7 @@
                                        <td><a
                                                href="{% url 'service_request_details' req.service_request.id %}">{{req.service_request.request_number}}</a>
                                        </td>
-                                       <td>{{req.service_request.customer_name}}</td>
+                                       <td>{{req.service_request.customer_name|truncatechars:20}}</td>
                                        <td>
                                            {{req.date}}
                                        </td>
@@ -539,7 +539,7 @@
                                                    </a>
 
                                                </td>
-                                               <td>{{req.customer_name}}</td>
+                                               <td>{{req.customer_name|truncatechars:20}}</td>
                                                <td class="d-none d-lg-table-cell">
                                                    {{req.timestamp.date}}
                                                </td>
@@ -616,7 +616,7 @@
                                                    </a>
 
                                                </td>
-                                               <td>{{req.customer_name}}</td>
+                                               <td>{{req.customer_name|truncatechars:20}}</td>
                                                <td class="d-none d-lg-table-cell">
                                                    {{req.timestamp.date}}
                                                </td>
@@ -722,7 +722,7 @@
 
                                                        {{req.request_number}}
                                                    </a></td>
-                                               <td>{{req.customer_name}}</td>
+                                               <td>{{req.customer_name|truncatechars:20}}</td>
                                                <td>
                                                    {{req.timestamp.date}}
                                                </td>
@@ -795,7 +795,7 @@
                                                        {{req.request_number}}
                                                    </a>
                                                </td>
-                                               <td>{{req.customer_name}}</td>
+                                               <td>{{req.customer_name|truncatechars:20}}</td>
                                                <td>
                                                    {{req.timestamp.date}}
                                                </td>

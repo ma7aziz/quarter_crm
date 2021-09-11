@@ -135,7 +135,7 @@
                                     </div>
                                 </td>
                                 <td><a href="javascript: void(0);" class="text-body fw-bold">#REP{{req.id}}</a> </td>
-                                <td>{{req.customer_name}}</td>
+                                <td>{{req.customer_name|truncatechars:20}}</td>
                                 <td>
                                     {{req.timestamp.date}}
                                 </td>
@@ -170,7 +170,7 @@
                                     </div>
                                 </td>
                                 <td><a href="javascript: void(0);" class="text-body fw-bold">#REP{{req.id}}</a> </td>
-                                <td>{{req.customer_name}}</td>
+                                <td>{{req.customer_name|truncatechars:20}}</td>
                                 <td>
                                     {{req.timestamp.date}}
                                 </td>

@@ -90,7 +90,7 @@
                                                 {% elif process in quarter_cur %}
                                                 <a href="{% url 'quarter_request_details' process.id %}">
                                                     {% endif %}
-                                                    {{process}}
+                                                    {{process|truncatechars:20}}
                                                 </a>
                                         </td>
                                         <td class="d-none d-lg-table-cell">
@@ -188,7 +188,8 @@
                                         <td><a href="{% url 'service_request_details' process.id %}">{{process.request_number}}
                                             </a>
                                         </td>
-                                        <td><a href="{% url 'service_request_details' process.id %}">{{process}}</a>
+                                        <td><a
+                                                href="{% url 'service_request_details' process.id %}">{{process|truncatechars:20}}</a>
                                         </td>
                                         <td class="d-none d-lg-table-cell">{{process.phone}}</td>
                                         <td class="d-none d-lg-table-cell">
@@ -271,7 +272,8 @@
                                         <td><a href="{% url 'service_request_details' process.id %}">{{process.request_number}}
                                             </a>
                                         </td>
-                                        <td><a href="{% url 'service_request_details' process.id %}">{{process}}</a>
+                                        <td><a
+                                                href="{% url 'service_request_details' process.id %}">{{process|truncatechars:20}}</a>
                                         </td>
                                         <td class="d-none d-lg-table-cell">{{process.phone}}</td>
                                         <td class="d-none d-lg-table-cell">
@@ -349,7 +351,8 @@
                                         <td><a href="{% url 'quarter_request_details' process.id %}">{{process.request_number}}
                                             </a>
                                         </td>
-                                        <td><a href="{% url 'quarter_request_details' process.id %}">{{process}}</a>
+                                        <td><a
+                                                href="{% url 'quarter_request_details' process.id %}">{{process|truncatechars:20}}</a>
                                         </td>
                                         <td class="d-none d-lg-table-cell">{{process.phone}}</td>
                                         <td class="d-none d-lg-table-cell">
@@ -420,10 +423,10 @@
                                         </td>
                                         <td>
                                             {% if process in quarter_hold %}
-                                            <a href="{% url 'quarter_request_details' process.id %}">{{process}}
+                                            <a href="{% url 'quarter_request_details' process.id %}">{{process|truncatechars:20}}
                                             </a>
                                             {% else %}
-                                            <a href="{% url 'service_request_details' process.id %}">{{process}}
+                                            <a href="{% url 'service_request_details' process.id %}">{{process|truncatechars:20}}
                                             </a>
                                             {%  endif %}
                                         </td>

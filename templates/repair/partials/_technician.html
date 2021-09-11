@@ -45,7 +45,7 @@
 
                         <td><a href="{% url 'service_request_details' req.service_request.id %}"
                                 class="text-body fw-bold">#{{req.service_request.request_number}}</a> </td>
-                        <td class="d-none d-lg-table-cell ">{{req.service_request.customer_name}}</td>
+                        <td class="d-none d-lg-table-cell ">{{req.service_request.customer_name|truncatechars:20}}</td>
                         <td>
                             {% if req.is_today %}
                             <div class="badge bg-soft-success p-1" style="font-size: 16px;">اليوم </div>
@@ -97,7 +97,7 @@
                         <td><a href="{% url 'service_request_details' req.service_request.id %}"
                                 class="text-body fw-bold">#{{req.service_request.request_number}}</a> </td>
                         <td> <a href="{% url 'service_request_details' req.service_request.id %}">
-                                {{req.service_request.customer_name}}</a></td>
+                                {{req.service_request.customer_name|truncatechars:20}}</a></td>
                         <td class="d-none d-lg-table-cell ">
                             {{req.date}}
                         </td>
