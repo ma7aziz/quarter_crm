@@ -49,15 +49,15 @@ def index(request):
 @login_required
 def dashboard(request):
     if request.user.role == 1:
-        set_archived()
         repair_requests = Service_request.objects.repair()
         install_requests = Service_request.objects.install()
         quarter_requests = Quarter_service.objects.all()
         all_requests = sorted(
-            chain(repair_requests, install_requests, quarter_requests), key=attrgetter('timestamp'), reverse=True)
+            chain(repair_requests.exclude(archived=True), install_requests.exclude(archived=True), quarter_requests), key=attrgetter('timestamp'), reverse=True)
 
         # ON HOLD #####
-        quarter_hold = Quarter_service.objects.on_hold()
+        quarter_hold = quarter_requests.filter(hold=True)
+
         service_hold = Service_request.objects.on_hold()
         all_on_hold = sorted(chain(quarter_hold, service_hold),
                              key=attrgetter('timestamp'), reverse=True)
@@ -69,7 +69,7 @@ def dashboard(request):
             status="closed").exclude(status="done")
 
         ########################################################### NEED TO CHANGE LATER ###########
-        quarter_under_process = Quarter_service.objects.all()
+        quarter_under_process = quarter_requests
         ###############################
         # All under process
         all_under_process = sorted(
@@ -78,12 +78,13 @@ def dashboard(request):
             key=attrgetter('timestamp'), reverse=True)
 
         # NEW REQUESTS
-        new_repair = repair_requests.filter(status="new")
-        new_install = install_requests.filter(status="new")
-        new_quarter = Quarter_service.objects.all().filter(status=1)
-        all_new = sorted(
-            chain(new_repair, new_install, new_quarter), key=attrgetter('timestamp'), reverse=True
-        )
+        new_repair = repair_requests.filter(status="new").count()
+        new_install = install_requests.filter(status="new").count()
+        new_quarter = Quarter_service.objects.all().filter(status=1).count()
+        # all_new = sorted(
+        #     chain(new_repair, new_install, new_quarter), key=attrgetter('timestamp'), reverse=True
+        # )
+        all_new = new_install + new_quarter + new_repair
         # special tasks
         # tasks = Task.objects.all()
         # current_tasks = Task.objects.all().exclude(status="closed")
@@ -94,19 +95,26 @@ def dashboard(request):
         ####### THIS MONTH ORDERS #######
         today = datetime.date.today()
         repair_month = repair_requests.filter(
-            timestamp__year=today.year,  timestamp__month=today.month)
+            timestamp__year=today.year,  timestamp__month=today.month).count()
         install_month = install_requests.filter(
-            timestamp__year=today.year, timestamp__month=today.month)
+            timestamp__year=today.year, timestamp__month=today.month).count()
         quarter_month = quarter_requests.filter(
-            timestamp__year=today.year, timestamp__month=today.month)
+            timestamp__year=today.year, timestamp__month=today.month).count()
         ctx = {
             "all_users": users,
             'users': users[:10],
             # all requests
+
             "quarter_requests": quarter_requests,
-            "repair_requests": repair_requests,
-            "install_requests": install_requests,
+            "repair_requests": repair_requests.exclude(archived=True).order_by("-timestamp"),
+            "install_requests": install_requests.exclude(archived=True).order_by("-timestamp"),
             "all_requests": all_requests,
+
+            # COUNT
+            "quarter_count": quarter_requests.count(),
+            "repair_count": repair_requests.count(),
+            "install_count": install_requests.count(),
+
             # ON HOLD
             'quarter_hold': quarter_hold,
             'service_hold': service_hold,
@@ -118,9 +126,9 @@ def dashboard(request):
             'quarter_cur': quarter_under_process,
             # NEW REQUESTS
             "all_new": all_new,
-            "new_install": new_install,
-            "new_repair": new_repair,
-            "new_quarter": new_quarter,
+            # "new_install": new_install,
+            # "new_repair": new_repair,
+            # "new_quarter": new_quarter,
             # TASKS
             # "tasks": current_tasks,
             # "active_tasks": active_tasks,
@@ -129,7 +137,7 @@ def dashboard(request):
             "repair_month": repair_month,
             "install_month": install_month,
             "quarter_month": quarter_month,
-            "all_this_month": int(quarter_month.count() + install_month.count() + repair_month.count())
+            "all_this_month": int(quarter_month + install_month + repair_month)
 
         }
         return render(request, 'core/dashboard.html', ctx)
@@ -153,6 +161,20 @@ def all_users(request):
     else:
         messages.error(request, "لا يمكنك الوصول لهذة الصفحة ")
         return redirect('index')
+
+
+def archive(request):
+    qs = Service_request.objects.all().filter(archived=True).order_by("-timestamp")
+
+    paginator = Paginator(qs, 40)
+
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    ctx = {
+        "page_obj": page_obj
+    }
+    return render(request, "core/archive.html", ctx)
 
 
 def create_task(request):

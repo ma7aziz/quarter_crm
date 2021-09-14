@@ -76,7 +76,6 @@ def set_archived():
         status="under_process").exclude(hold=True).order_by('-timestamp')
     for order in orders:
         days = order.timestamp.date() - datetime.datetime.today().date()
-        print(days)
         if -days.days > 30:
             order.archived = True
             order.save()

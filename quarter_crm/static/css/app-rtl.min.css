@@ -631,6 +631,14 @@ body[data-layout="horizontal"] .footer {
   }
 }
 
+@media (max-width: 574px) {
+  .main-content {
+    position: absolute;
+    top: 90px;
+  }
+
+}
+
 @media (min-width: 769px) {
   .vertical-collpsed {
     min-height: 1450px;

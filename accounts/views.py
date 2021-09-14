@@ -14,7 +14,7 @@ from quarter.models import Quarter_service
 from operator import attrgetter
 from itertools import chain
 from core.models import Task
-from service.utils import check_qouta
+from service.utils import check_qouta, set_archived
 # Create your views here.
 
 
@@ -91,6 +91,7 @@ def userLogin(request):
             check_qouta(request.user.id)
 
             if user.role == 1:  # admin
+                set_archived()
                 return HttpResponseRedirect('/')
             elif user.role == 2:  # install mng
                 return HttpResponseRedirect('/install')

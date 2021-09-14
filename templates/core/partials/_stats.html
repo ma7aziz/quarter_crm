@@ -1,4 +1,6 @@
 <div class="row ">
+
+
     <div class="col-sm-6 col-md-6 col-xl-3">
         <div class="card">
             <div class="card-body">
@@ -24,11 +26,11 @@
                     <!-- <div id="growth-chart"></div> -->
                 </div>
                 <div>
-                    <h4 class="mb-1 mt-1"><span data-plugin="counterup">{{install_requests | length }}</span></h4>
+                    <h4 class="mb-1 mt-1"><span data-plugin="counterup">{{install_count}}</span></h4>
                     <p class="text-muted mb-0">طلبات التركيب</p>
                 </div>
                 <p class="text-muted mt-3 mb-0"><span class="text-success me-1"><i
-                            class="mdi mdi-arrow-up-bold me-1"></i>{{install_month | length }} طلب</span> هذا الشهر
+                            class="mdi mdi-arrow-up-bold me-1"></i>{{install_month }} طلب</span> هذا الشهر
                 </p>
             </div>
         </div>
@@ -41,11 +43,11 @@
                     <!-- <div id="growth-chart"></div> -->
                 </div>
                 <div>
-                    <h4 class="mb-1 mt-1"><span data-plugin="counterup">{{repair_requests | length }}</span></h4>
+                    <h4 class="mb-1 mt-1"><span data-plugin="counterup">{{repair_count}}</span></h4>
                     <p class="text-muted mb-0">طلبات الصيانة</p>
                 </div>
                 <p class="text-muted mt-3 mb-0"><span class="text-success me-1"><i
-                            class="mdi mdi-arrow-up-bold me-1"></i>{{repair_month | length }} طلب</span> هذا الشهر
+                            class="mdi mdi-arrow-up-bold me-1"></i>{{repair_month }} طلب</span> هذا الشهر
                 </p>
             </div>
         </div>
@@ -58,11 +60,11 @@
                     <!-- <div id="growth-chart"></div> -->
                 </div>
                 <div>
-                    <h4 class="mb-1 mt-1"><span data-plugin="counterup">{{quarter_requests | length }}</span></h4>
+                    <h4 class="mb-1 mt-1"><span data-plugin="counterup">{{quarter_count }}</span></h4>
                     <p class="text-muted mb-0">طلبات كوارتر </p>
                 </div>
                 <p class="text-muted mt-3 mb-0"><span class="text-success me-1"><i
-                            class="mdi mdi-arrow-up-bold me-1"></i>{{quarter_month | length }} طلب</span> هذا الشهر
+                            class="mdi mdi-arrow-up-bold me-1"></i>{{quarter_month}} طلب</span> هذا الشهر
                 </p>
             </div>
         </div>
@@ -74,7 +76,7 @@
                     <!-- <div id="orders-chart"> </div> -->
                 </div>
                 <div>
-                    <h4 class="mb-1 mt-1"><span data-plugin="counterup">{{ all_new | length }}</span></h4>
+                    <h4 class="mb-1 mt-1"><span data-plugin="counterup">{{all_new}}</span></h4>
                     <p class="text-muted mb-0">طلبات جديدة </p>
                 </div>
                 <!-- <p class="text-muted mt-3 mb-0"><span class="text-danger me-1"><i

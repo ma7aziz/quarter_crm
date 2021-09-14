@@ -32,6 +32,19 @@
         integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w=="
         crossorigin="anonymous" />
 
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-CCYPFP58TK"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+        gtag('js', new Date());
+
+        gtag('config', 'G-CCYPFP58TK');
+    </script>
+
 </head>
 <style>
     /* Chrome, Safari, Edge, Opera */
@@ -321,6 +334,7 @@
                                 <li><a href="{% url 'dashboard' %}">الرئيسية </a></li>
                                 <li><a href="{% url 'all_users' %}">بيانات المستخدمين</a></li>
                                 <li><a href="{% url 'customers_data' %}">العملاء</a></li>
+                                <li><a href="{% url 'archive' %}">أرشيف الطلبات السابقة </a></li>
 
                             </ul>
                         </li>

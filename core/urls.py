@@ -13,6 +13,7 @@ urlpatterns = [
     path('search', views.search, name="search"),
     path('sales_view', views.sales_view, name="sales_view"),
     path('chart', views.chart, name="chart"),
-    path('current_requests', views.current_requests, name="current_requests")
+    path('current_requests', views.current_requests, name="current_requests"),
+    path('archive', views.archive, name="archive")
 
 ]
