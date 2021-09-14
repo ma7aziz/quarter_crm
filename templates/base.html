@@ -460,7 +460,7 @@
                     {% if not request.user.role == 8 %}
                     <div class="d-none d-lg-block d-md-none ">
                         <div class="row mb-3 " dir="rtl">
-                            {% if request.user.role == 1 or request.user.role == 2 %}
+                            {% if request.user.role == 1  %}
                             <div class=" col  mb-1 text-center ">
 
                                 <button class="btn btn-lg btn-primary btn-rounded waves-effect waves-light "
@@ -504,13 +504,108 @@
                     {% block content %}
 
                     {% endblock %}
+
                     {% include './core/partials/_task_modal.html'%}
                     {% include './core/partials/_new_requests_modals.html' %}
 
                     {% include './core/partials/_action_btn.html' %}
                 </div>
+                <footer class="bg-light text-lg-start">
+                    <!-- Grid container -->
+                    <div class="container p-4">
+                        <!--Grid row-->
+                        <h5 class="text-uppercase"></h5>
+
+                        <ul class="list-unstyled mb-0 d-flex justify-content-between">
+                            {% if request.user.role == 1 %}
+                            <li>
+                                <a href="/dashboard" class="text-dark waves-effect"><i
+                                        class="uil-home-alt text-success"></i>
+                                    <span>Dashboard</span></a>
+                            </li>
+                            <li>
+                                <a href="/repair" class="waves-effect text-dark ">
+                                    <i class="fas fa-tools text-success"></i>
+                                    <span>الصيانة </span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="/install" class=" waves-effect text-dark ">
+                                    <i class="fas fa-toolbox text-success"></i>
+
+                                    <span>التركيب</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="/quarter" class=" waves-effect text-dark ">
+                                    <i class="fab fa-quora text-success"></i>
+                                    <span>كوارتر </span>
+                                </a>
+                            </li>
+                            {% elif request.user.role == 3 %}
+                            <li>
+                                <a href="/repair" class="waves-effect text-dark ">
+                                    <i class="fas fa-tools text-success"></i>
+                                    <span>الصيانة </span>
+                                </a>
+                            </li>
+
+
+                            {% elif request.user.role == 2 %}
+                            <li>
+                                <a href="/install" class=" waves-effect text-dark ">
+                                    <i class="fas fa-toolbox text-success"></i>
+
+                                    <span>التركيب</span>
+                                </a>
+                            </li>
+
+
+                            {% elif request.user.role == 4 %}
+                            <li>
+                                <a href="/quarter" class=" waves-effect text-dark ">
+                                    <i class="fab fa-quora text-success"></i>
+                                    <span>كوارتر </span>
+                                </a>
+
+                            </li>
+                            {% else %}
+
+                            <li>
+                                <a href="{% url 'index' %}" class=" waves-effect text-dark ">
+                                    <i class="uil-home-alt text-success"></i>
+                                    <span>
+
+                                        الصفحة الرئيسة
+                                    </span>
+                                </a>
+
+                            </li>
+                            {% endif %}
+                            <li>
+                                <a href="{% url 'logout' %}" class="text-dark">
+                                    <i class="fas fa-sign-out-alt text-success"></i>
+                                    <span>
+                                        الخروج
+                                    </span>
+                                </a>
+                            </li>
+                        </ul>
+
+                        <!--Grid row-->
+                    </div>
+                    <!-- Grid container -->
+
+                    <!-- Copyright -->
+                    <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2);">
+                        © 2021 Copyright:
+                        <a class="text-dark" href="">Quarter-ac.com</a>
+                    </div>
+                    <!-- Copyright -->
+                </footer>
             </div>
         </div>
+
 
     </div>
 

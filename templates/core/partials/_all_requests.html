@@ -164,7 +164,7 @@
                             <table class="table table-centered table-striped table-nowrap mb-0  data-table " dir="rtl">
                                 <thead class="table-dark">
                                     <tr>
-                                        <th></th>
+                                        <th class="d-none d-lg-table-cell"></th>
                                         <th>رقم الطلب </th>
                                         <th>الاسم </th>
                                         <th class="d-none d-lg-table-cell">الجوال </th>
@@ -178,7 +178,7 @@
                                     {% for process  in repair_requests %}
 
                                     <tr>
-                                        <td>
+                                        <td class="d-none d-lg-table-cell">
                                             <div class="form-check font-size-16">
                                                 <input type="checkbox" class="form-check-input req_checkbox "
                                                     id="customCheck2" name="req_id[]" value="{{process.id}}">
@@ -246,7 +246,7 @@
                             <table class="table table-centered table-striped table-nowrap mb-0  data-table " dir="rtl">
                                 <thead class="table-dark">
                                     <tr>
-                                        <th></th>
+                                        <th class="d-none d-lg-table-cell"></th>
                                         <th>رقم الطلب </th>
                                         <th>الاسم </th>
                                         <th class="d-none d-lg-table-cell">الجوال </th>
@@ -262,7 +262,7 @@
 
                                     {% for process  in install_requests %}
                                     <tr>
-                                        <td>
+                                        <td class="d-none d-lg-table-cell">
                                             <div class="form-check font-size-16">
                                                 <input type="checkbox" class="form-check-input req_checkbox "
                                                     id="customCheck2" name="req_id[]" value="{{process.id}}">
@@ -327,7 +327,7 @@
                             <table class="table table-centered table-striped table-nowrap mb-0  data-table " dir="rtl">
                                 <thead class="table-dark">
                                     <tr>
-                                        <th></th>
+                                        <th class="d-none d-lg-table-cell"></th>
                                         <th>رقم الطلب </th>
                                         <th>الاسم </th>
                                         <th class="d-none d-lg-table-cell">الجوال </th>
@@ -341,7 +341,7 @@
                                 <tbody>
                                     {% for process  in quarter_requests %}
                                     <tr>
-                                        <td>
+                                        <td class="d-none d-lg-table-cell">
                                             <div class="form-check font-size-16">
                                                 <input type="checkbox" class="form-check-input qua_checkbox "
                                                     id="customCheck2" name="req_id[]" value="{{process.id}}">

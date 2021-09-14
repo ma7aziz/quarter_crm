@@ -631,10 +631,11 @@ body[data-layout="horizontal"] .footer {
   }
 }
 
-@media (max-width: 574px) {
+@media (max-width: 602px) {
   .main-content {
     position: absolute;
     top: 90px;
+    width: 100%
   }
 
 }

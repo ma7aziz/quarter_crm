@@ -1,3 +1,4 @@
+{% load static %}
 <div class="row">
     <div class="col">
         <div class="card">
@@ -22,7 +23,7 @@
     </div> <!-- end col-->
 
 
-</div> <!-- end row-->
+</div>
 
 <div class="card border border-success">
     <div class="card-body">
@@ -87,7 +88,7 @@
                         <th class="d-none d-lg-table-cell ">التاريخ</th>
                         <th class="d-none d-lg-table-cell ">الموقع</th>
                         <th>حالة الطلب </th>
-                        <th>التفاصيل</th>
+                        <th class="d-none d-lg-table-cell ">التفاصيل</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -131,7 +132,7 @@
                             </span>
 
                         </td>
-                        <td>
+                        <td class="d-none d-lg-table-cell ">
                             <a class="btn btn-primary btn-sm btn-rounded waves-effect waves-light"
                                 href="{% url 'service_request_details' req.service_request.id %}">
                                 التفاصيل
