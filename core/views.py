@@ -114,6 +114,7 @@ def dashboard(request):
             "quarter_count": quarter_requests.count(),
             "repair_count": repair_requests.count(),
             "install_count": install_requests.count(),
+            "all_count": quarter_requests.count() + repair_requests.count() + install_requests.count(),
 
             # ON HOLD
             'quarter_hold': quarter_hold,
