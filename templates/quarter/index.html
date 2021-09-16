@@ -1,5 +1,7 @@
 {% extends '../base.html'%}
 {%load static %}
+{% block title %} كوارتر {% endblock %}
+
 {% block content %}
 <!-- admin / supervisor  -->
 {%if request.user.role == 1  or request.user.role == 4 %}
