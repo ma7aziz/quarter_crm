@@ -40,3 +40,13 @@ class Customer(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class Upload(models.Model):
+    name = models.CharField(max_length= 100 )
+    file = models.FileField(upload_to="uploads")
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+
+    def __str__(self):
+        return self.name
