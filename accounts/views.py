@@ -78,8 +78,8 @@ def edit_user(request):
         user.files = request.FILES['attach_file']
     user.save()
     messages.success(request, "تم تعديل البيانات بنجاح ")
-    # return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-    # return redirect("accounts:profile", username=user.username)
+
+    # use reverse to use latest updated username for url
     return redirect(reverse("profile", kwargs={"username": user.username}))
 
 

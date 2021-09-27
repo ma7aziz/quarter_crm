@@ -20,6 +20,7 @@
 
     <!-- Bootstrap Css -->
     <link href="{% static 'css/bootstrap-rtl.min.css' %}" rel="stylesheet" type="text/css" />
+
     <!-- Icons Css -->
     <link href="{% static 'css/icons.min.css' %}" rel="stylesheet" type="text/css" />
     <!-- App Css-->
@@ -31,7 +32,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
         integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w=="
         crossorigin="anonymous" />
-
+    {% block link %}
+    <!-- add external links  -->
+    {% endblock %}
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-CCYPFP58TK"></script>
     <script>
@@ -180,7 +183,7 @@
         z-index: 99999999;
     }
 </style>
-
+{% block style %}{% endblock %}
 
 
 <body data-sidebar="dark" dir="rtl" onload="loadfun()">
