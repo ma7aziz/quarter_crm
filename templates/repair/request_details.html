@@ -51,234 +51,382 @@
 </style>
 {% endblock %}
 {% block content %}
-
-<div class="row " dir="rtl">
-    <div class="col-12 ">
-        <div class="page-title-box d-flex align-items-center justify-content-between">
-            <h3 class="mb-0 ">تفاصيل الطلب</h3>
-
-
-
-        </div>
-    </div>
+<div class="page-title-box d-flex align-items-center justify-content-between">
+    <h3 class="mb-0 ">تفاصيل الطلب</h3>
 </div>
 <!-- end page title -->
-<div class="row" dir="rtl">
-    <div class="col-lg-12">
-        <div class="card">
-            <div class="card-body">
-                <div class="row" dir="rtl">
-                    <div class="col-xl-7">
-                        <div class="mt-4 mt-xl-3 ps-xl-4">
+<div class="card">
+    <div class="card-body">
+        <div class="d-flex justify-content-between align-content-center mt-2" dir="rtl">
+            <h3 class="font-size-22 mb-3">
+                طلب {{req.get_service_type_display}}
+                رقم #
+                {{req.request_number}}
+            </h3>
+            <div>
+                {% if request.user.role == 1 or request.user.role == 2 or  request.user.role == 3 or request.user == req.created_by %}
+                {% if req.status == "new" and not req.favourite  %}
+                <a href="{% url 'favorite' req.id %}" class="btn btn-soft-success btn-rounded">أضافة الي
+                    المفضلات <i class="far fa-star"></i> </a>
+                {% elif req.favourite %}
+                <a href="{% url 'favorite' req.id %}" class="btn btn-soft-danger btn-rounded">حذف من المفضلات <i
+                        class="far fa-star"></i> </a>
+                {% endif %}
+                {% endif %}
+                <!-- <a href="{% url 'print_invoice' %}" target="_blank">طباعة تقرير <i class="fas fa-print"></i></a> -->
+            </div>
+        </div>
+        <!-- end row -->
 
-                            <h3 class="font-size-22 mb-3">
-                                طلب {{req.get_service_type_display}}
-                                رقم #
-                                {{req.request_number}}
-                            </h3>
+        <div class="mt-lg-4 mt-1 row">
+            <div class="col col-md-7 product-desc">
+
+                <div class="tab-content border border-top-0 p-4">
+                    <div class="tab-pane fade show active" id="specifi" role="tabpanel">
+                        <div class="table-responsive">
+                            <table class="table table-nowrap mb-0">
+                                <tbody>
+                                    <tr>
+                                        {% if req.hold %}
+                                        <h3>هذا الطلب معلق ..
+                                            {% if request.user.role == 1 or request.user.role == 2 or request.user == req.created_by %}
+                                            <a href="{% url 'hold_request' req.id  %}" class="text-success">اضغط
+                                                هنا </a>
+                                            لأعادة التفعيل
+                                            {% endif %}
+                                        </h3>
+                                        {% endif %}
+                                    </tr>
+                                    <tr>
+                                        <th scope="row" class="text-muted">اسم العميل </th>
+                                        <td>{{req}}</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row" class="text-muted">تاريخ الطلب </th>
+                                        <td>{{req.timestamp}}</td>
+                                    </tr>
+                                    {% if not req.service_type == "install" %}
+                                    <tr>
+                                        <th scope="row" class="text-muted">نوع الطلب </th>
+                                        {% if req.customer_type == "cash" %}
+                                        <td>كاش</td>
+                                        {%elif req.customer_type == "warranty" %}
+                                        <td>ضمان</td>
+                                        {% endif %}
+
+                                    </tr>
+                                    {% endif %}
+                                    {%if req.invoice_number %}
+                                    <tr>
+                                        <th scope="row" class="text-muted">
+                                            رقم الفاتورة
+                                        </th>
+                                        <td>{{req.invoice_number}}</td>
+                                    </tr>
+                                    {%endif%}
+                                    <tr>
+                                        <th scope="row" class="text-muted">البائع </th>
+                                        <td><a href="/profile/{{req.created_by.username}}">{{req.created_by}}</a>
+                                        </td>
+
+                                    </tr>
+                                    <tr>
+                                        <th scope="row" class="text-muted">رقم البائع</th>
+                                        <td><a href="tel:{{req.created_by.phone}}">{{req.created_by.phone}}</a>
+                                        </td>
+
+                                    </tr>
+                                    {% if req.customer_type == "warranty" %}
+                                    <tr>
+                                        <th scope="row" class="text-muted">رقم الفاتورة</th>
+                                        <td>{{req.invoice_number}}</td>
+                                    </tr>
+                                    {% endif %}
+                                    <tr>
+                                        <th scope="row" class="text-muted">الموقع</th>
+                                        <td>{{ req.address }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row" class="text-muted">الجوال</th>
+                                        <td><a href="tel:{{req.phone}}">{{ req.phone }}</a></td>
+                                    </tr>
+                                    {% if req.machine_type %}
+                                    <tr>
+                                        <th scope="row" class="text-muted">نوع الجهاز </th>
+                                        <td>{{req.machine_type}}</td>
+                                    </tr>
+                                    {% endif %}
+                                    <tr>
+                                        <th scope="row" class="text-muted">حالة الطلب </th>
+                                        <td>
+                                            {% if req.hold %}
+                                            <span class="badge rounded-pill bg-soft-danger font-size-16">معلق</span>
+                                            {% else %}
+                                            {% if req.status == "new" %}
+
+                                            <span class="badge rounded-pill bg-soft-danger font-size-16">جديد</span>
+
+                                            {% elif req.status == "under_process" %}
+
+
+                                            <span class="badge rounded-pill bg-soft-primary font-size-16">جاري
+                                                التنفيذ</span>
+
+                                            {% elif req.status == "suspended" %}
+
+                                            <span class="badge rounded-pill bg-soft-warning font-size-16">جديد</span>
+
+                                            {% elif req.status == "done" %}
+
+                                            <span class="badge rounded-pill bg-soft-success font-size-16">تم
+                                                التنفيذ</span>
+
+                                            {% elif req.status == "closed" %}
+
+                                            <span class="badge rounded-pill bg-success font-size-16">انتهي</span>
+
+                                            {% endif %}
+                                            {% endif %}
+                                        </td>
+
+                                    </tr>
+                                    {% if request.user.role == 1 or request.user.role == 2 or request.user.role == 3 %}
+
+                                    <tr>
+                                        <th scope="row" class="text-muted">كود التنفيذ</th>
+                                        <td>{{req.code}}</td>
+                                    </tr>
+                                    {% endif %}
+                                    {% if req.file %}
+                                    <tr>
+                                        <th scope="row" class="text-muted">الملفات </th>
+                                        <td><a href="{{req.file.url}}" target="_blank">عرض الملفات </a></td>
+                                    </tr>
+                                    {% endif %}
+
+                                    {% if req.notes %}
+                                    <tr>
+                                        <th scope="row" class="text-muted">ملاحظات</th>
+                                        <td>{{req.notes }}</td>
+                                    </tr>
+                                    {%  endif %}
+
+                                    {% if req.status == "done"  or req.status == "closed" %}
+                                    <tr>
+                                        <th scope="row" class="text-muted">الفني المسئول عن التنفيذ</th>
+                                        <td>
+                                            <a
+                                                href="/profile/{{req.appointment.technician}}">{{req.appointment.technician}}</a>
+                                        </td>
+                                    </tr>
+                                    {% endif %}
+
+
+                                </tbody>
+                            </table>
+                            {% if req.excution_files.all %}
+                            <div class="card">
+                                <div class="card-body">
+                                    <h4 class="card-title">
+                                        <i class="far fa-images"></i>
+                                        ملفات التنفيذ
+                                    </h4>
+
+
+
+                                    <div class="container">
+                                        <div class="row photos">
+                                            {% for img in req.excution_files.all %}
+                                            <div class="col-sm-6 col-md-4 col-lg-3 item"><a href="{{ img.file.url }}"
+                                                    data-lightbox="photos"><img class="img-fluid"
+                                                        src="{{ img.file.url }}"></a></div>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endif %}
                         </div>
-                    </div>
 
-                    <div class="col-xl-5">
-                        {% if request.user.role == 1 or request.user.role == 2 or  request.user.role == 3 or request.user == req.created_by %}
-                        {% if req.status == "new" and not req.favourite  %}
-                        <a href="{% url 'favorite' req.id %}" class="btn btn-soft-success btn-rounded">أضافة الي
-                            المفضلات <i class="far fa-star"></i> </a>
-                        {% elif req.favourite %}
-                        <a href="{% url 'favorite' req.id %}" class="btn btn-soft-danger btn-rounded">حذف من المفضلات <i
-                                class="far fa-star"></i> </a>
-                        {% endif %}
-                        {% endif %}
-                        <!-- <a href="{% url 'print_invoice' %}" target="_blank">طباعة تقرير <i class="fas fa-print"></i></a> -->
                     </div>
-
                 </div>
-                <!-- end row -->
+            </div>
+            <div class="col col-md-5 ">
+                {% if req.active %}
+                <div class="card">
+                    <div class="card-body">
+                        {% if req.status == "new" and req.created_by == request.user and not req.hold  %}
+                        {% if not request.user.role == 1 %}
+                        <div class="text-center">
 
-                <div class="mt-lg-4 mt-1 row">
-                    <div class="col col-md-8 product-desc">
+                            <a href="{% url  'delete_request' req.id %}" class="btn btn-lg  btn-soft-danger">حذف
+                                الطلب </a>
+                        </div>
 
-                        <div class="tab-content border border-top-0 p-4">
-                            <div class="tab-pane fade show active" id="specifi" role="tabpanel">
-                                <div class="table-responsive">
-                                    <table class="table table-nowrap mb-0">
-                                        <tbody>
-                                            <tr>
+                        {%endif%}
+                        {%endif%}
+
+
+
+                        <div class="accordion" id="accordionExample">
+                            {% if req.hold %}
+                            <div class="card">
+                                <div class="card-body bg-dark text-light">
+                                    <p><strong>سبب التعليق : </strong>
+                                        {{req.hold_reason.reason}}
+                                    </p>
+                                    <p><strong class="">تم التعليق بواسطة </strong> :
+                                        {{req.hold_reason.hold_by.username}}
+
+
+                                    </p>
+                                    <p><strong>تاريخ التعليق : </strong>
+                                        {{req.hold_reason.timestamp}}
+                                    </p>
+                                    {% if req.hold_reason.file %}
+                                    <p><a href="{{req.hold_reason.file.url}}" target="_blank">عرض الملفات</a>
+                                    </p>
+
+                                    {% endif %}
+                                    {% if request.user.role == 1 or request.user.role == 2 or request.user.role == 3 or request.user == req.created_by %}
+                                    <div>
+                                        <a href="{% url 'hold_request' req.id  %}"
+                                            class="btn btn-lg btn-rounded btn-light">
+                                            اعادة تفعيل
+                                        </a>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            {% endif%}
+                            {% if request.user.role == 1 or request.user.role == 2 or request.user.role == 3  %}
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="headingOne">
+                                    <button class="accordion-button font-size-20 font-size-20" type="button"
+                                        data-bs-toggle="collapse" data-bs-target="#collapseEdit" aria-expanded="true"
+                                        aria-controls="collapseOne">
+                                        تعديل حالة الطلب
+                                    </button>
+                                </h2>
+
+                                <div id="collapseEdit" class="accordion-collapse collapse " aria-labelledby="headingOne"
+                                    data-bs-parent="#accordionExample">
+                                    <div class="accordion-body">
+                                        <div class="row">
+                                            <div class="col">
                                                 {% if req.hold %}
-                                                <h3>هذا الطلب معلق ..
-                                                    {% if request.user.role == 1 or request.user.role == 2 or request.user == req.created_by %}
-                                                    <a href="{% url 'hold_request' req.id  %}" class="text-success">اضغط
-                                                        هنا </a>
-                                                    لأعادة التفعيل
-                                                    {% endif %}
-                                                </h3>
+                                                <a href="{% url 'hold_request' req.id %}"
+                                                    class="btn btn-lg btn-soft-success btn-rounded btn-waves">تفعيل
+                                                    الطلب <i class="far fa-check-circle"></i>
+                                                </a>
+                                                {% else %}
+                                                <a data-bs-toggle="collapse" href="#hold_reason" aria-expanded="false"
+                                                    class="btn btn-lg btn-soft-warning btn-rounded btn-waves">تعليق
+                                                    الطلب <i class="far fa-pause-circle"></i>
+                                                </a>
                                                 {% endif %}
-                                            </tr>
-                                            <tr>
-                                                <th scope="row" class="text-muted">اسم العميل </th>
-                                                <td>{{req}}</td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row" class="text-muted">تاريخ الطلب </th>
-                                                <td>{{req.timestamp}}</td>
-                                            </tr>
-                                            {% if not req.service_type == "install" %}
-                                            <tr>
-                                                <th scope="row" class="text-muted">نوع الطلب </th>
-                                                {% if req.customer_type == "cash" %}
-                                                <td>كاش</td>
-                                                {%elif req.customer_type == "warranty" %}
-                                                <td>ضمان</td>
+                                            </div>
+                                            {% if not req.hold %}
+                                            <div class="col">
+                                                <a data-bs-toggle="collapse" href="#changestatus" aria-expanded="false"
+                                                    class="btn btn-lg btn-soft-primary btn-rounded btn-waves">
+                                                    تغيير الحالة <i class="far fa-edit"></i>
+                                                </a>
+                                            </div>
+
+                                            {% endif %}
+                                            <div class="col">
+                                                {% if request.user.role == 1 or request.user.role == 2 %}
+
+                                                <a href="{% url  'delete_request' req.id %}"
+                                                    class="btn btn-lg btn-soft-danger btn-rounded btn-waves">حذف
+                                                    الطلب <i class="far fa-trash-alt"></i>
+                                                </a>
+
+
+
                                                 {% endif %}
+                                            </div>
+                                            <div class="collapse" id="changestatus">
+                                                <div class="card card-body mb-0">
+                                                    <form method="POST" action="{% url 'change_request_status' %}">
+                                                        {% csrf_token %}
+                                                        <input type="hidden" name="request" value="{{req.id}}">
 
-                                            </tr>
-                                            {% endif %}
-                                            {%if req.invoice_number %}
-                                            <tr>
-                                                <th scope="row" class="text-muted">
-                                                    رقم الفاتورة
-                                                </th>
-                                                <td>{{req.invoice_number}}</td>
-                                            </tr>
-                                            {%endif%}
-                                            <tr>
-                                                <th scope="row" class="text-muted">البائع </th>
-                                                <td><a
-                                                        href="/profile/{{req.created_by.username}}">{{req.created_by}}</a>
-                                                </td>
+                                                        <div class="row mb-4">
+                                                            <label for="horizontal-firstname-input"
+                                                                class="col-sm-2 col-form-label">اختار الحالة
+                                                            </label>
+                                                            <div class="col-sm-10">
+                                                                <select name="new_status" id="" class="form-control">
+                                                                    <option value="">
+                                                                    </option>
+                                                                    {% for v , k in request_status %}
+                                                                    <option value="{{v}}">
+                                                                        {{k}}
+                                                                    </option>
+                                                                    {% endfor %}
+                                                                </select>
 
-                                            </tr>
-                                            <tr>
-                                                <th scope="row" class="text-muted">رقم البائع</th>
-                                                <td><a href="tel:{{req.created_by.phone}}">{{req.created_by.phone}}</a>
-                                                </td>
-
-                                            </tr>
-                                            {% if req.customer_type == "warranty" %}
-                                            <tr>
-                                                <th scope="row" class="text-muted">رقم الفاتورة</th>
-                                                <td>{{req.invoice_number}}</td>
-                                            </tr>
-                                            {% endif %}
-                                            <tr>
-                                                <th scope="row" class="text-muted">الموقع</th>
-                                                <td>{{ req.address }}</td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row" class="text-muted">الجوال</th>
-                                                <td><a href="tel:{{req.phone}}">{{ req.phone }}</a></td>
-                                            </tr>
-                                            {% if req.machine_type %}
-                                            <tr>
-                                                <th scope="row" class="text-muted">نوع الجهاز </th>
-                                                <td>{{req.machine_type}}</td>
-                                            </tr>
-                                            {% endif %}
-                                            <tr>
-                                                <th scope="row" class="text-muted">حالة الطلب </th>
-                                                <td>
-                                                    {% if req.hold %}
-                                                    <span
-                                                        class="badge rounded-pill bg-soft-danger font-size-16">معلق</span>
-                                                    {% else %}
-                                                    {% if req.status == "new" %}
-
-                                                    <span
-                                                        class="badge rounded-pill bg-soft-danger font-size-16">جديد</span>
-
-                                                    {% elif req.status == "under_process" %}
+                                                            </div>
+                                                        </div>
 
 
-                                                    <span class="badge rounded-pill bg-soft-primary font-size-16">جاري
-                                                        التنفيذ</span>
 
-                                                    {% elif req.status == "suspended" %}
+                                                        <div class="row ">
+                                                            <div class="col">
 
-                                                    <span
-                                                        class="badge rounded-pill bg-soft-warning font-size-16">جديد</span>
+                                                                <div>
+                                                                    <button type="submit"
+                                                                        class="btn btn-primary w-md">تحديث
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                            <div class="collapse" id="hold_reason">
+                                                <div class="card card-body mb-0">
+                                                    <h3>سبب تعليق الطلب
+                                                    </h3>
+                                                    <form method="POST" action="{% url 'hold_request' req.id %}"
+                                                        enctype="multipart/form-data">
+                                                        {% csrf_token %}
+                                                        <input type="hidden" name="req_id" value="{{req.id}}">
 
-                                                    {% elif req.status == "done" %}
+                                                        <div class="row mb-4">
 
-                                                    <span class="badge rounded-pill bg-soft-success font-size-16">تم
-                                                        التنفيذ</span>
+                                                            <div class="col-sm-10">
+                                                                <div class="form-group">
+                                                                    <label for="">
+                                                                        ارفاق صورة
+                                                                    </label>
+                                                                    <input type="file" class="form-control"
+                                                                        name="holding_file">
+                                                                </div>
+                                                                <div class="form-group mt-2">
+                                                                    <label for="">سبب التعليق </label>
+                                                                    <textarea class="form-control" name="hold_reason"
+                                                                        id="" required></textarea>
+                                                                </div>
 
-                                                    {% elif req.status == "closed" %}
-
-                                                    <span
-                                                        class="badge rounded-pill bg-success font-size-16">انتهي</span>
-
-                                                    {% endif %}
-                                                    {% endif %}
-                                                </td>
-
-                                            </tr>
-                                            {% if request.user.role == 1 or request.user.role == 2 or request.user.role == 3 %}
-
-                                            <tr>
-                                                <th scope="row" class="text-muted">كود التنفيذ</th>
-                                                <td>{{req.code}}</td>
-                                            </tr>
-                                            {% endif %}
-                                            {% if req.file %}
-                                            <tr>
-                                                <th scope="row" class="text-muted">الملفات </th>
-                                                <td><a href="{{req.file.url}}" target="_blank">عرض الملفات </a></td>
-                                            </tr>
-                                            {% endif %}
-
-                                            {% if req.notes %}
-                                            <tr>
-                                                <th scope="row" class="text-muted">ملاحظات</th>
-                                                <td>{{req.notes }}</td>
-                                            </tr>
-                                            {%  endif %}
-
-                                            {% if req.status == "done"  or req.status == "closed" %}
-                                            <tr>
-                                                <th scope="row" class="text-muted">الفني المسئول عن التنفيذ</th>
-                                                <td>
-                                                    <a
-                                                        href="/profile/{{req.appointment.technician}}">{{req.appointment.technician}}</a>
-                                                </td>
-                                            </tr>
-                                            {% endif %}
+                                                            </div>
+                                                        </div>
 
 
-                                        </tbody>
-                                    </table>
-                                    {% if req.excution_files %}
-                                    <div class="card">
-                                        <div class="card-body">
-                                            <h4 class="card-title">
-                                                <i class="far fa-images"></i>
-                                                ملفات التنفيذ
-                                            </h4>
 
-                                            <!-- <div class="mt-3 pt-3 container">
-                                                <ul>
+                                                        <div class="row ">
+                                                            <div class="col">
 
-                                                    {% for img in req.excution_files.all %}
-
-                                                    <li><a href="{{img.file.url}}">صورة رقم {{forloop.counter}}</a></li>
-                                                    {% endfor %}
-                                                </ul>
-
-
-                                            </div> -->
-
-                                            <div class="container">
-                                                <!-- <div class="intro">
-                                                    <h2 class="text-center">Lightbox Gallery</h2>
-                                                    <p class="text-center">Nunc luctus in metus eget fringilla. Aliquam
-                                                        sed justo ligula. Vestibulum nibh erat, pellentesque ut laoreet
-                                                        vitae. </p>
-                                                </div> -->
-                                                <div class="row photos">
-                                                    {% for img in req.excution_files.all %}
-                                                    <div class="col-sm-6 col-md-4 col-lg-3 item"><a
-                                                            href="{{ img.file.url }}" data-lightbox="photos"><img
-                                                                class="img-fluid" src="{{ img.file.url }}"></a></div>
-                                                    {% endfor %}
+                                                                <div>
+                                                                    <button type="submit"
+                                                                        class="btn btn-primary w-md">تعليق
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </form>
                                                 </div>
                                             </div>
                                         </div>
@@ -286,403 +434,155 @@
 
                                     </div>
                                 </div>
-
-                                {% endif %}
                             </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col col-md-4 ">
-                    {% if req.active %}
-                    <div class="card">
-                        <div class="card-body">
-                            {% if req.status == "new" and req.created_by == request.user and not req.hold  %}
-                            {% if not request.user.role == 1 %}
-                            <div class="text-center">
+                            {% if req.status  == "new" or req.status == "under_process" %}
+                            {% if not appointment %}
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="headingSetAppointment">
+                                    <button class="accordion-button font-size-20 " type="button"
+                                        data-bs-toggle="collapse" data-bs-target="#collapseAppointment"
+                                        aria-expanded="true" aria-controls="collapseAppointment">
+                                        تحديد موعد
+                                    </button>
+                                </h2>
+                                <div id="collapseAppointment" class="accordion-collapse collapse show"
+                                    aria-labelledby="headingSetAppointment" data-bs-parent="#accordionExample">
+                                    <div class="accordion-body">
+                                        <form method="POST" action="{% url 'repair_appointment' %}">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="request" value="{{req.id}}">
+                                            <div class="row mb-4">
+                                                <label for="horizontal-firstname-input"
+                                                    class="col-sm-2 col-form-label">اختيار الفني
+                                                </label>
+                                                <div class="col-sm-10">
+                                                    <select name="technician" id="" class="form-control" required />
+                                                    <option value="">اختيار الفني</option>
+                                                    {% for techn in tech%}
+                                                    <option value="{{techn.id}}">{{techn}}</option>
+                                                    {% endfor %}
+                                                    </select>
 
-                                <a href="{% url  'delete_request' req.id %}" class="btn btn-lg  btn-soft-danger">حذف
-                                    الطلب </a>
-                            </div>
-
-                            {%endif%}
-                            {%endif%}
-
-
-
-                            <div class="accordion" id="accordionExample">
-                                {% if req.hold %}
-                                <div class="card">
-                                    <div class="card-body bg-dark text-light">
-                                        <p><strong>سبب التعليق : </strong>
-                                            {{req.hold_reason.reason}}
-                                        </p>
-                                        <p><strong class="">تم التعليق بواسطة </strong> :
-                                            {{req.hold_reason.hold_by.username}}
-
-
-                                        </p>
-                                        <p><strong>تاريخ التعليق : </strong>
-                                            {{req.hold_reason.timestamp}}
-                                        </p>
-                                        {% if req.hold_reason.file %}
-                                        <p><a href="{{req.hold_reason.file.url}}" target="_blank">عرض الملفات</a>
-                                        </p>
-
-                                        {% endif %}
-                                        {% if request.user.role == 1 or request.user.role == 2 or request.user.role == 3 or request.user == req.created_by %}
-                                        <div>
-                                            <a href="{% url 'hold_request' req.id  %}"
-                                                class="btn btn-lg btn-rounded btn-light">
-                                                اعادة تفعيل
-                                            </a>
-                                        </div>
-                                        {% endif %}
-                                    </div>
-                                </div>
-                                {% endif%}
-                                {% if request.user.role == 1 or request.user.role == 2 or request.user.role == 3  %}
-                                <div class="accordion-item">
-                                    <h2 class="accordion-header" id="headingOne">
-                                        <button class="accordion-button font-size-20 font-size-20" type="button"
-                                            data-bs-toggle="collapse" data-bs-target="#collapseEdit"
-                                            aria-expanded="true" aria-controls="collapseOne">
-                                            تعديل حالة الطلب
-                                        </button>
-                                    </h2>
-
-                                    <div id="collapseEdit" class="accordion-collapse collapse "
-                                        aria-labelledby="headingOne" data-bs-parent="#accordionExample">
-                                        <div class="accordion-body">
-                                            <div class="row">
-                                                <div class="col">
-                                                    {% if req.hold %}
-                                                    <a href="{% url 'hold_request' req.id %}"
-                                                        class="btn btn-lg btn-soft-success btn-rounded btn-waves">تفعيل
-                                                        الطلب <i class="far fa-check-circle"></i>
-                                                    </a>
-                                                    {% else %}
-                                                    <a data-bs-toggle="collapse" href="#hold_reason"
-                                                        aria-expanded="false"
-                                                        class="btn btn-lg btn-soft-warning btn-rounded btn-waves">تعليق
-                                                        الطلب <i class="far fa-pause-circle"></i>
-                                                    </a>
-                                                    {% endif %}
                                                 </div>
-                                                {% if not req.hold %}
-                                                <div class="col">
-                                                    <a data-bs-toggle="collapse" href="#changestatus"
-                                                        aria-expanded="false"
-                                                        class="btn btn-lg btn-soft-primary btn-rounded btn-waves">
-                                                        تغيير الحالة <i class="far fa-edit"></i>
-                                                    </a>
-                                                </div>
-
-                                                {% endif %}
-                                                <div class="col">
-                                                    {% if request.user.role == 1 or request.user.role == 2 %}
-
-                                                    <a href="{% url  'delete_request' req.id %}"
-                                                        class="btn btn-lg btn-soft-danger btn-rounded btn-waves">حذف
-                                                        الطلب <i class="far fa-trash-alt"></i>
-                                                    </a>
-
-
-
-                                                    {% endif %}
-                                                </div>
-                                                <div class="collapse" id="changestatus">
-                                                    <div class="card card-body mb-0">
-                                                        <form method="POST" action="{% url 'change_request_status' %}">
-                                                            {% csrf_token %}
-                                                            <input type="hidden" name="request" value="{{req.id}}">
-
-                                                            <div class="row mb-4">
-                                                                <label for="horizontal-firstname-input"
-                                                                    class="col-sm-2 col-form-label">اختار الحالة
-                                                                </label>
-                                                                <div class="col-sm-10">
-                                                                    <select name="new_status" id=""
-                                                                        class="form-control">
-                                                                        <option value="">
-                                                                        </option>
-                                                                        {% for v , k in request_status %}
-                                                                        <option value="{{v}}">
-                                                                            {{k}}
-                                                                        </option>
-                                                                        {% endfor %}
-                                                                    </select>
-
-                                                                </div>
-                                                            </div>
-
-
-
-                                                            <div class="row ">
-                                                                <div class="col">
-
-                                                                    <div>
-                                                                        <button type="submit"
-                                                                            class="btn btn-primary w-md">تحديث
-                                                                        </button>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </form>
-                                                    </div>
-                                                </div>
-                                                <div class="collapse" id="hold_reason">
-                                                    <div class="card card-body mb-0">
-                                                        <h3>سبب تعليق الطلب
-                                                        </h3>
-                                                        <form method="POST" action="{% url 'hold_request' req.id %}"
-                                                            enctype="multipart/form-data">
-                                                            {% csrf_token %}
-                                                            <input type="hidden" name="req_id" value="{{req.id}}">
-
-                                                            <div class="row mb-4">
-
-                                                                <div class="col-sm-10">
-                                                                    <div class="form-group">
-                                                                        <label for="">
-                                                                            ارفاق صورة
-                                                                        </label>
-                                                                        <input type="file" class="form-control"
-                                                                            name="holding_file">
-                                                                    </div>
-                                                                    <div class="form-group mt-2">
-                                                                        <label for="">سبب التعليق </label>
-                                                                        <textarea class="form-control"
-                                                                            name="hold_reason" id=""
-                                                                            required></textarea>
-                                                                    </div>
-
-                                                                </div>
-                                                            </div>
-
-
-
-                                                            <div class="row ">
-                                                                <div class="col">
-
-                                                                    <div>
-                                                                        <button type="submit"
-                                                                            class="btn btn-primary w-md">تعليق
-                                                                        </button>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </form>
-                                                    </div>
+                                            </div>
+                                            <div class="row mb-4">
+                                                <label for="horizontal-email-input"
+                                                    class="col-sm-2 col-form-label">تحديد
+                                                    الموعد</label>
+                                                <div class="col-sm-10">
+                                                    <input type="date" name="appoint_date" class="form-control"
+                                                        id="horizontal-email-input" required>
                                                 </div>
                                             </div>
 
 
-                                        </div>
+                                            <div class="row justify-content-center">
+                                                <div class="col-sm-9">
+
+                                                    <div>
+                                                        <button type="submit" class="btn btn-primary w-md">تحديد
+                                                            الموعد</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </form>
                                     </div>
                                 </div>
-                                {% if req.status  == "new" or req.status == "under_process" %}
-                                {% if not appointment %}
-                                <div class="accordion-item">
-                                    <h2 class="accordion-header" id="headingSetAppointment">
-                                        <button class="accordion-button font-size-20 " type="button"
-                                            data-bs-toggle="collapse" data-bs-target="#collapseAppointment"
-                                            aria-expanded="true" aria-controls="collapseAppointment">
-                                            تحديد موعد
-                                        </button>
-                                    </h2>
-                                    <div id="collapseAppointment" class="accordion-collapse collapse show"
-                                        aria-labelledby="headingSetAppointment" data-bs-parent="#accordionExample">
-                                        <div class="accordion-body">
-                                            <form method="POST" action="{% url 'repair_appointment' %}">
+                            </div>
+                            {% endif%}
+                            {% endif %}
+                            {% endif %}
+                            {% if req.status == "under_process"  %}
+                            {% if appointment %}
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="headingTwo">
+                                    <button class="accordion-button font-size-20 collapsed " type="button"
+                                        data-bs-toggle="collapse" data-bs-target="#collapseDate" aria-expanded="false"
+                                        aria-controls="collapseDate">
+                                        موعد
+                                        {% if req.srvice_type == "repair" %}
+                                        الصيانة
+                                        {% else %}
+                                        التركيب
+                                        {% endif %}
+                                    </button>
+                                </h2>
+                                <div id="collapseDate" class="accordion-collapse collapse show"
+                                    aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+                                    <div class="accordion-body ">
+                                        <table class="table table-nowrap mb-0 table-striped">
+                                            <tbody>
+                                                <tr>
+                                                    <th scope="row" style="width: 30%; color: #d20120">تاريخ
+                                                        {% if req.srvice_type == "repair" %}
+                                                        الصيانة
+                                                        {% else %}
+                                                        التركيب
+                                                        {% endif %}
+                                                    </th>
+                                                    <td class="text-center">{{appointment.date}}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th scope="row" style="width: 30%; color: #d20120">الفني
+                                                    </th>
+                                                    <td class="text-center">{{appointment.technician}}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th scope="row" style="width: 30%; color: #d20120"> رقم
+                                                        الفني
+                                                    </th>
+                                                    <td class="text-center">{{appointment.technician.phone }}
+                                                    </td>
+                                                </tr>
+
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="mb-3 text-start" style="margin-right: 20px;">
+                                        {%if req.status == "under_process" %}
+                                        {% if  request.user.role == 1 or request.user.role == 2  %}
+
+                                        <a class="btn btn-soft-warning " data-bs-toggle="collapse"
+                                            href="#changeappointment" aria-expanded="false"
+                                            aria-controls="collapseExample">
+                                            تغيير الموعد
+                                        </a>
+                                        {% endif %}
+                                        {% endif %}
+
+                                    </div>
+                                    <div class="collapse" id="changeappointment">
+                                        <div class="card card-body mb-0">
+                                            <form method="POST" action="{% url 'change_repair_appointment' %}">
                                                 {% csrf_token %}
                                                 <input type="hidden" name="request" value="{{req.id}}">
+                                                <input type="hidden" name="appoint_id" value="{{appointment.id}}">
                                                 <div class="row mb-4">
                                                     <label for="horizontal-firstname-input"
-                                                        class="col-sm-2 col-form-label">اختيار الفني
+                                                        class="col-sm-3 col-form-label">اختيار الفني
                                                     </label>
-                                                    <div class="col-sm-10">
-                                                        <select name="technician" id="" class="form-control" required />
-                                                        <option value="">اختيار الفني</option>
-                                                        {% for techn in tech%}
-                                                        <option value="{{techn.id}}">{{techn}}</option>
-                                                        {% endfor %}
+                                                    <div class="col-sm-9">
+                                                        <select name="technician" id="" class="form-control" required>
+                                                            <option value="">اختيار الفني</option>
+                                                            {% for techn in tech%}
+                                                            <option value="{{techn.id}}">{{techn}}
+                                                            </option>
+                                                            {% endfor %}
                                                         </select>
 
                                                     </div>
                                                 </div>
                                                 <div class="row mb-4">
                                                     <label for="horizontal-email-input"
-                                                        class="col-sm-2 col-form-label">تحديد الموعد</label>
-                                                    <div class="col-sm-10">
+                                                        class="col-sm-3 col-form-label">اختيار اليوم</label>
+                                                    <div class="col-sm-9">
                                                         <input type="date" name="appoint_date" class="form-control"
-                                                            id="horizontal-email-input" required>
-                                                    </div>
-                                                </div>
-
-
-                                                <div class="row justify-content-center">
-                                                    <div class="col-sm-9">
-
-                                                        <div>
-                                                            <button type="submit" class="btn btn-primary w-md">تحديد
-                                                                الموعد</button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
-                                {% endif%}
-                                {% endif %}
-                                {% endif %}
-                                {% if req.status == "under_process"  %}
-                                {% if appointment %}
-                                <div class="accordion-item">
-                                    <h2 class="accordion-header" id="headingTwo">
-                                        <button class="accordion-button font-size-20 collapsed " type="button"
-                                            data-bs-toggle="collapse" data-bs-target="#collapseDate"
-                                            aria-expanded="false" aria-controls="collapseDate">
-                                            موعد
-                                            {% if req.srvice_type == "repair" %}
-                                            الصيانة
-                                            {% else %}
-                                            التركيب
-                                            {% endif %}
-                                        </button>
-                                    </h2>
-                                    <div id="collapseDate" class="accordion-collapse collapse show"
-                                        aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
-                                        <div class="accordion-body ">
-                                            <table class="table table-nowrap mb-0 table-striped">
-                                                <tbody>
-                                                    <tr>
-                                                        <th scope="row" style="width: 30%; color: #d20120">تاريخ
-                                                            {% if req.srvice_type == "repair" %}
-                                                            الصيانة
-                                                            {% else %}
-                                                            التركيب
-                                                            {% endif %}
-                                                        </th>
-                                                        <td class="text-center">{{appointment.date}}</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th scope="row" style="width: 30%; color: #d20120">الفني
-                                                        </th>
-                                                        <td class="text-center">{{appointment.technician}}</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th scope="row" style="width: 30%; color: #d20120"> رقم
-                                                            الفني
-                                                        </th>
-                                                        <td class="text-center">{{appointment.technician.phone }}
-                                                        </td>
-                                                    </tr>
-
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                        <div class="mb-3 text-start" style="margin-right: 20px;">
-                                            {%if req.status == "under_process" %}
-                                            {% if  request.user.role == 1 or request.user.role == 2  %}
-
-                                            <a class="btn btn-soft-warning " data-bs-toggle="collapse"
-                                                href="#changeappointment" aria-expanded="false"
-                                                aria-controls="collapseExample">
-                                                تغيير الموعد
-                                            </a>
-                                            {% endif %}
-                                            {% endif %}
-
-                                        </div>
-                                        <div class="collapse" id="changeappointment">
-                                            <div class="card card-body mb-0">
-                                                <form method="POST" action="{% url 'change_repair_appointment' %}">
-                                                    {% csrf_token %}
-                                                    <input type="hidden" name="request" value="{{req.id}}">
-                                                    <input type="hidden" name="appoint_id" value="{{appointment.id}}">
-                                                    <div class="row mb-4">
-                                                        <label for="horizontal-firstname-input"
-                                                            class="col-sm-3 col-form-label">اختيار الفني
-                                                        </label>
-                                                        <div class="col-sm-9">
-                                                            <select name="technician" id="" class="form-control"
-                                                                required>
-                                                                <option value="">اختيار الفني</option>
-                                                                {% for techn in tech%}
-                                                                <option value="{{techn.id}}">{{techn}}
-                                                                </option>
-                                                                {% endfor %}
-                                                            </select>
-
-                                                        </div>
-                                                    </div>
-                                                    <div class="row mb-4">
-                                                        <label for="horizontal-email-input"
-                                                            class="col-sm-3 col-form-label">اختيار اليوم</label>
-                                                        <div class="col-sm-9">
-                                                            <input type="date" name="appoint_date" class="form-control"
-                                                                required>
-                                                        </div>
-                                                    </div>
-                                                    <div class="text-end">
-                                                        <button type="submit" class="btn btn-soft-success w-lg">تحديد
-                                                            الموعد</button>
-                                                    </div>
-
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                </div>
-                                {% if request.user.role == 1 or request.user.role == 2 or request.user.role == 3 or request.user == appointment.technician%}
-                                <div class="accordion-item">
-                                    <h2 class="accordion-header" id="headingThree">
-                                        <button class="accordion-button font-size-20 " type="button"
-                                            data-bs-toggle="collapse" data-bs-target="#collapseConfirm"
-                                            aria-expanded="true" aria-controls="collapseConfirm">
-                                            تأكيد الصيانة
-                                        </button>
-                                    </h2>
-
-                                    <div id="collapseConfirm" class="accordion-collapse collapse show"
-                                        aria-labelledby="headingThree" data-bs-parent="#accordionExample">
-                                        <div class="accordion-body">
-                                            <form method="POST" action="{% url 'complete_request' %}"
-                                                enctype="multipart/form-data">
-                                                {% csrf_token %}
-                                                <input type="hidden" name="appoint_id" value="{{appointment.id}}">
-                                                <input type="hidden" name="request_id"
-                                                    value="{{appointment.service_request.id}}">
-                                                <div class="row mb-4">
-                                                    <label for="horizontal-firstname-input"
-                                                        class="col-sm-3 col-form-label">كود التأكيد
-                                                    </label>
-
-                                                    <div class="col-sm-9">
-                                                        <input type="text" name="code" id="" class="form-control"
                                                             required>
                                                     </div>
-
-                                                    <p class="text-muted text-center"> تم ارسال الكود للعميل عبر
-                                                        الجوال </p>
                                                 </div>
-                                                <div class="row mb-4">
-                                                    <label for="" class="col-sm-3 col-form-label">ارفاق صور التنفيذ
-                                                    </label>
-
-                                                    <div class="col-sm-9">
-                                                        <input type="file" name="files" id="" class="form-control"
-                                                            multiple>
-                                                    </div>
-
-
-                                                </div>
-
                                                 <div class="text-end">
-                                                    <button type="submit"
-                                                        class="btn btn-soft-success w-lg">تأكيد</button>
+                                                    <button type="submit" class="btn btn-soft-success w-lg">تحديد
+                                                        الموعد</button>
                                                 </div>
 
                                             </form>
@@ -690,74 +590,126 @@
                                     </div>
                                 </div>
 
-                                <div class="accordion-item">
-                                    <h2 class="accordion-header" id="headingFour">
-                                        <button class="accordion-button font-size-20 " type="button"
-                                            data-bs-toggle="collapse" data-bs-target="#collapseHold"
-                                            aria-expanded="true" aria-controls="collapseHold">
-                                            تعليق الطلب
-                                        </button>
-                                    </h2>
+                            </div>
+                            {% if request.user.role == 1 or request.user.role == 2 or request.user.role == 3 or request.user == appointment.technician%}
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="headingThree">
+                                    <button class="accordion-button font-size-20 " type="button"
+                                        data-bs-toggle="collapse" data-bs-target="#collapseConfirm" aria-expanded="true"
+                                        aria-controls="collapseConfirm">
+                                        تأكيد الصيانة
+                                    </button>
+                                </h2>
 
-                                    <div id="collapseHold" class="accordion-collapse collapse"
-                                        aria-labelledby="headingFour" data-bs-parent="#accordionExample">
-                                        <div class="accordion-body">
-                                            <div class="card card-body mb-0">
-                                                <h3>سبب تعليق الطلب
-                                                </h3>
-                                                <form method="POST"
-                                                    action="{% url 'hold_request' appointment.service_request.id %}"
-                                                    enctype="multipart/form-data">
-                                                    {% csrf_token %}
-                                                    <input type="hidden" name="req_id" value="{{req.id}}">
+                                <div id="collapseConfirm" class="accordion-collapse collapse show"
+                                    aria-labelledby="headingThree" data-bs-parent="#accordionExample">
+                                    <div class="accordion-body">
+                                        <form method="POST" action="{% url 'complete_request' %}"
+                                            enctype="multipart/form-data">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="appoint_id" value="{{appointment.id}}">
+                                            <input type="hidden" name="request_id"
+                                                value="{{appointment.service_request.id}}">
+                                            <div class="row mb-4">
+                                                <label for="horizontal-firstname-input"
+                                                    class="col-sm-3 col-form-label">كود
+                                                    التأكيد
+                                                </label>
 
+                                                <div class="col-sm-9">
+                                                    <input type="text" name="code" id="" class="form-control" required>
+                                                </div>
 
-                                                    <div class="form-group">
-                                                        <label for="">
-                                                            ارفاق صورة
-                                                        </label>
-                                                        <input type="file" class="form-control" name="holding_file">
-                                                    </div>
-                                                    <div class="form-group mt-2">
-                                                        <label for="">سبب التعليق </label>
-                                                        <textarea class="form-control" name="hold_reason" id=""
-                                                            required></textarea>
-                                                    </div>
-
-
-
-                                                    <div class="mt-3 text-end">
-                                                        <button type="submit" class="btn btn-soft-warning w-lg">تعليق
-                                                        </button>
-                                                    </div>
-
-                                                </form>
+                                                <p class="text-muted text-center"> تم ارسال الكود للعميل عبر
+                                                    الجوال </p>
                                             </div>
+                                            <div class="row mb-4">
+                                                <label for="" class="col-sm-3 col-form-label">ارفاق صور التنفيذ
+                                                </label>
+
+                                                <div class="col-sm-9">
+                                                    <input type="file" name="files" id="" class="form-control" multiple>
+                                                </div>
+
+
+                                            </div>
+
+                                            <div class="text-end">
+                                                <button type="submit" class="btn btn-soft-success w-lg">تأكيد</button>
+                                            </div>
+
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="headingFour">
+                                    <button class="accordion-button font-size-20 " type="button"
+                                        data-bs-toggle="collapse" data-bs-target="#collapseHold" aria-expanded="true"
+                                        aria-controls="collapseHold">
+                                        تعليق الطلب
+                                    </button>
+                                </h2>
+
+                                <div id="collapseHold" class="accordion-collapse collapse" aria-labelledby="headingFour"
+                                    data-bs-parent="#accordionExample">
+                                    <div class="accordion-body">
+                                        <div class="card card-body mb-0">
+                                            <h3>سبب تعليق الطلب
+                                            </h3>
+                                            <form method="POST"
+                                                action="{% url 'hold_request' appointment.service_request.id %}"
+                                                enctype="multipart/form-data">
+                                                {% csrf_token %}
+                                                <input type="hidden" name="req_id" value="{{req.id}}">
+
+
+                                                <div class="form-group">
+                                                    <label for="">
+                                                        ارفاق صورة
+                                                    </label>
+                                                    <input type="file" class="form-control" name="holding_file">
+                                                </div>
+                                                <div class="form-group mt-2">
+                                                    <label for="">سبب التعليق </label>
+                                                    <textarea class="form-control" name="hold_reason" id=""
+                                                        required></textarea>
+                                                </div>
+
+
+
+                                                <div class="mt-3 text-end">
+                                                    <button type="submit" class="btn btn-soft-warning w-lg">تعليق
+                                                    </button>
+                                                </div>
+
+                                            </form>
                                         </div>
                                     </div>
                                 </div>
-                                {% endif %}
-                                {% endif %}
-                                {% endif %}
-
                             </div>
-
+                            {% endif %}
+                            {% endif %}
+                            {% endif %}
 
                         </div>
 
-                    </div>
-                    {% else %}
-                    <h3>هذا الطلب غير مفعل </h3>
-                    <a href="{% url 'deactivate_request' req.id  %}" class="btn btn-lg btn-soft-success mt-1"> اعادة
-                        تفعيل </a>
-                    {% endif %}
-                </div>
-            </div>
 
+                    </div>
+
+                </div>
+                {% else %}
+                <h3>هذا الطلب غير مفعل </h3>
+                <a href="{% url 'deactivate_request' req.id  %}" class="btn btn-lg btn-soft-success mt-1"> اعادة
+                    تفعيل </a>
+                {% endif %}
+            </div>
         </div>
     </div>
+
 </div>
-</div>
+
 <!-- end row -->
 {% if req.active %}
 {% if request.user.role == 1 or request.user.role == 2 %}
