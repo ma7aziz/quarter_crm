@@ -15,6 +15,7 @@ from operator import attrgetter
 from itertools import chain
 from core.models import Task
 from service.utils import check_qouta, set_archived
+from django.urls import reverse
 # Create your views here.
 
 
@@ -77,7 +78,9 @@ def edit_user(request):
         user.files = request.FILES['attach_file']
     user.save()
     messages.success(request, "تم تعديل البيانات بنجاح ")
-    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    # return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    # return redirect("accounts:profile", username=user.username)
+    return redirect(reverse("profile", kwargs={"username": user.username}))
 
 
 def userLogin(request):

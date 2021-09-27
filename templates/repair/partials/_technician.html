@@ -33,8 +33,8 @@
                 <thead class="table-light">
                     <tr>
 
-                        <th>رقم الطلب </th>
-                        <th class="d-none d-lg-table-cell ">أسم العميل</th>
+                        <th class="d-none d-lg-table-cell ">رقم الطلب </th>
+                        <th class="">أسم العميل</th>
                         <th>التاريخ</th>
                         <th class="d-none d-lg-table-cell ">نوع الطلب </th>
                         <th>التفاصيل</th>
@@ -44,9 +44,11 @@
                     {% for req in requests %}
                     <tr {% if req.is_past_due %} class="bg-soft-danger" {% endif %}>
 
-                        <td><a href="{% url 'service_request_details' req.service_request.id %}"
-                                class="text-body fw-bold">#{{req.service_request.request_number}}</a> </td>
-                        <td class="d-none d-lg-table-cell ">{{req.service_request.customer_name|truncatechars:20}}</td>
+                        <td class="d-none d-lg-table-cell"><a
+                                href="{% url 'service_request_details' req.service_request.id %}"
+                                class="text-body fw-bold ">#{{req.service_request.request_number}}</a>
+                        </td>
+                        <td>{{req.service_request.customer_name|truncatechars:20}}</td>
                         <td>
                             {% if req.is_today %}
                             <div class="badge bg-soft-success p-1" style="font-size: 16px;">اليوم </div>
@@ -82,7 +84,6 @@
             <table class="table table-centered table-nowrap mb-0" dir="rtl">
                 <thead class="table-light">
                     <tr>
-
                         <th>رقم الطلب </th>
                         <th>أسم العميل</th>
                         <th class="d-none d-lg-table-cell ">التاريخ</th>

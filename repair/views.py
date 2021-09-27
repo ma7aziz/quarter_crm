@@ -53,7 +53,7 @@ def repair_index(request):
 @login_required
 def repair_request(request):
     """
-    initiate service request  === done by sales team 
+    initiate service request
     """
     if request.method == 'POST':
         customer_name = request.POST['customername']

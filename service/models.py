@@ -83,6 +83,8 @@ class Service_request(models.Model):
     favourite = models.BooleanField(default=False)
     active = models.BooleanField(default=True)
     archived = models.BooleanField(default=False)
+    excution_files = models.ManyToManyField(
+        "ExcutionFile", blank=True, related_name="service_files")
     objects = RequestManager()
 
     def save(self, *args, **kwargs):
@@ -100,6 +102,14 @@ class Service_request(models.Model):
 
     def __str__(self):
         return self.customer_name
+
+
+class ExcutionFile(models.Model):
+    service = models.ForeignKey(Service_request, on_delete=models.CASCADE)
+    file = models.FileField(upload_to="service/files/excution_files")
+
+    def __str__(self):
+        return f'excution file for request {self.service.id}'
 
 
 class AppointmentManager(models.Manager):

@@ -2,7 +2,7 @@ from datetime import date
 from .models import lateDays
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
-from .models import Service_request, Appointment, REQUEST_STATUS, Hold_reason
+from .models import Service_request, Appointment, REQUEST_STATUS, Hold_reason, ExcutionFile
 from accounts.models import User
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -13,6 +13,7 @@ from .utils import check_qouta, send_appointment_message
 # Create your views here.
 
 
+@login_required
 def service_request_details(request, id):
     req = Service_request.objects.get(pk=id)
     technicians = User.objects.all().filter(role=8)
@@ -28,6 +29,7 @@ def service_request_details(request, id):
     return render(request, 'repair/request_details.html', ctx)
 
 
+@login_required
 def appointment_details(request, id):
 
     appointment = Appointment.objects.get(pk=id)
@@ -35,10 +37,10 @@ def appointment_details(request, id):
     ctx = {
         "appointment": appointment
     }
-    print(appointment.service_request.code)
     return render(request, 'repair/appointment_details.html', ctx)
 
 
+@login_required
 def service_appointment(request):
     """
     set NEW appointment && asign technician for repair service
@@ -63,6 +65,7 @@ def service_appointment(request):
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
+@login_required
 def change_appointment(request):
     appointment = Appointment.objects.get(pk=request.POST["appoint_id"])
     technician = User.objects.get(pk=request.POST['technician'])
@@ -74,6 +77,7 @@ def change_appointment(request):
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
+@login_required
 def complete_request(request):
     """
     change request status from under process to done .. using a verification code .
@@ -91,11 +95,12 @@ def complete_request(request):
                 req.save()
                 appointment.status = "closed"
                 appointment.save()
-
                 messages.success(request, "تم تنفيذ الطلب ")
             else:
                 # send error message
                 messages.error(request, "برجاء ادخال كود صحيح ")
+                return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
         else:
             if code == req.code:
                 req.status = "done"
@@ -108,11 +113,23 @@ def complete_request(request):
             else:
                 # send error message
                 messages.error(request, "برجاء ادخال كود صحيح ")
+                return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
-    if req.service_type == "repair":
-        return redirect('/repair')
-    elif req.service_type == "install":
-        return redirect('/install')
+    # add excution files if exist
+    if request.FILES['files']:
+        for f in request.FILES.getlist("files"):
+            new_file = ExcutionFile(service=req, file=f)
+            new_file.save()
+            req.excution_files.add(new_file)
+            req.save()
+
+    if request.user.role == 1:
+        if req.service_type == "repair":
+            return redirect('/repair')
+        elif req.service_type == "install":
+            return redirect('/install')
+    else:
+        return redirect('/')
 
 
 def close_request(request):

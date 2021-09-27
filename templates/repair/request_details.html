@@ -566,7 +566,8 @@
                                         <div id="collapseConfirm" class="accordion-collapse collapse show"
                                             aria-labelledby="headingThree" data-bs-parent="#accordionExample">
                                             <div class="accordion-body">
-                                                <form method="POST" action="{% url 'complete_request' %}">
+                                                <form method="POST" action="{% url 'complete_request' %}"
+                                                    enctype="multipart/form-data">
                                                     {% csrf_token %}
                                                     <input type="hidden" name="appoint_id" value="{{appointment.id}}">
                                                     <input type="hidden" name="request_id"
@@ -577,11 +578,23 @@
                                                         </label>
 
                                                         <div class="col-sm-9">
-
-                                                            <input type="text" name="code" id="" class="form-control">
+                                                            <input type="text" name="code" id="" class="form-control"
+                                                                required>
                                                         </div>
+
                                                         <p class="text-muted text-center"> تم ارسال الكود للعميل عبر
                                                             الجوال </p>
+                                                    </div>
+                                                    <div class="row mb-4">
+                                                        <label for="" class="col-sm-3 col-form-label">ارفاق صور التنفيذ
+                                                        </label>
+
+                                                        <div class="col-sm-9">
+                                                            <input type="file" name="files" id="" class="form-control"
+                                                                multiple>
+                                                        </div>
+
+
                                                     </div>
 
                                                     <div class="text-end">
