@@ -33,11 +33,7 @@ def repair_index(request):
             status="open", technician=request.user)
     appointments = Appointment.objects.repair().filter(
         status="open").order_by("date")
-
-    # stats
-    # all requests
-    # new requests
-    # on_hold
+    print(Service_request.objects.install().exclude(status="new").exclude(status="under_process"))
     ctx = {
         "new_requests": Service_request.objects.repair().filter(status="new").order_by("-timestamp"),
         "current_requests": Service_request.objects.repair().filter(status="under_process"),
@@ -45,7 +41,8 @@ def repair_index(request):
         "need_confirm": Service_request.objects.done().filter(service_type="repair"),
         'on_hold': on_hold,
         "appointments": appointments,
-        "late_orders": late_orders("repair")
+        "late_orders": late_orders("repair"), 
+        "finished_requests": Service_request.objects.repair().exclude(status="new").exclude(status="under_process"),
     }
     return render(request, 'repair/index.html', ctx)
 

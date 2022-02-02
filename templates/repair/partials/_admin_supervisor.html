@@ -1,9 +1,9 @@
        {% load static %}
-
+       <!-- STATS -->
        <div class="row">
-           <div class="col-sm-6 col-md-6 col-xl-3">
+           <div class="col-sm-12 col-md-12 col-xl-6">
                <div class="card bg-soft-info">
-                   <div class="card-body">
+                   <div class="card-body text-center">
                        <div class="float-end mt-2">
                            <div></div>
                        </div>
@@ -17,9 +17,46 @@
                    </div>
                </div>
            </div> <!-- end col-->
-           <div class="col-md-6 col-sm-6 col-xl-3">
-               <div class="card bg-soft-success" id="lateBtn" role="button">
-                   <div class="card-body">
+           <div class="col-sm-6 col-md-6 col-xl-6">
+            <div class="card bg-soft-success">
+                <div class="card-body text-center">
+                    <div class="float-end mt-2">
+                        <div></div>
+                    </div>
+                    <div>
+                        <h4 class="mb-1 mt-1"><span data-plugin="counterup">
+                            
+                            {{finished_requests| length}}
+                        </span></h4>
+                        <p class="text-muted mb-0">طلبات تم تنفيذها </p>
+                    </div>
+                    <!-- <p class="text-muted mt-3 mb-0"><span class="text-success me-1"><i
+                             class="mdi mdi-arrow-up-bold me-1"></i>2.65%</span> since last week
+                 </p> -->
+                </div>
+            </div>
+        </div> <!-- end col-->
+        <div class="col-md-6 col-sm-6 col-xl-4">
+
+            <div class="card bg-soft-warning">
+                <div class="card-body text-center">
+                    <div class="float-end mt-2">
+                        <!-- <div id="growth-chart"></div> -->
+                    </div>
+                    <div>
+                        <h4 class="mb-1 mt-1"><span data-plugin="counterup">{{current_requests | length }}</span>
+                        </h4>
+                        <p class="text-muted mb-0">طلبات جاري تنفيذها </p>
+                    </div>
+                    <!-- <p class="text-muted mt-3 mb-0"><span class="text-success me-1"><i
+                             class="mdi mdi-arrow-up-bold me-1"></i>10.51%</span> since last week
+                 </p> -->
+                </div>
+            </div>
+        </div> <!-- end col-->
+           <div class="col-md-6 col-sm-6 col-xl-4">
+               <div class="card bg-soft-danger" id="lateBtn" role="button">
+                   <div class="card-body text-center">
                        <div role="button">
                            <h4 class="mb-1 mt-1"><span data-plugin="counterup">{{ late_orders | length }}</span></h4>
                            <p class="text-muted mb-0">متأخرات </p>
@@ -31,9 +68,9 @@
                </div>
            </div> <!-- end col-->
 
-           <div class="col-md-6 col-sm-6 col-xl-3">
-               <div class="card bg-soft-warning" id="holdBtn" role="button">
-                   <div class="card-body">
+           <div class="col-md-6 col-sm-6 col-xl-4">
+               <div class="card bg-soft-danger" id="holdBtn" role="button">
+                   <div class="card-body text-center">
                        <div>
                            <h4 class="mb-1 mt-1"><span data-plugin="counterup">{{ on_hold |length}}</span></h4>
                            <p class="text-muted mb-0">المعلقات </p>
@@ -45,86 +82,11 @@
                </div>
            </div> <!-- end col-->
 
-           <div class="col-md-6 col-sm-6 col-xl-3">
-
-               <div class="card bg-soft-danger">
-                   <div class="card-body">
-                       <div class="float-end mt-2">
-                           <!-- <div id="growth-chart"></div> -->
-                       </div>
-                       <div>
-                           <h4 class="mb-1 mt-1"><span data-plugin="counterup">{{current_requests | length }}</span>
-                           </h4>
-                           <p class="text-muted mb-0">طلبات جاري تنفيذها </p>
-                       </div>
-                       <!-- <p class="text-muted mt-3 mb-0"><span class="text-success me-1"><i
-                                class="mdi mdi-arrow-up-bold me-1"></i>10.51%</span> since last week
-                    </p> -->
-                   </div>
-               </div>
-           </div> <!-- end col-->
+         
 
 
        </div> <!-- end row-->
-       <!-- {% if 'install' in request.path %}
-       <div class="card bg-soft border border-success">
-           <div class="card-body">
-               <div class="card-title mb-4">
-
-
-                   مفضلات التركيب
-
-               </div>
-               <div class="table-responsive">
-                   <table class="table table-centered table-nowrap mb-0" dir="rtl">
-                       <thead class="table-light">
-                           <tr>
-
-                               <th>رقم الطلب </th>
-                               <th>أسم العميل</th>
-                               <th>تاريخ الطلب </th>
-                               <th>نوع العميل </th>
-                               <th>حالة الطلب </th>
-
-                           </tr>
-                       </thead>
-                       <tbody>
-                           {% for req in favorites %}
-                           <tr>
-                               <td>{{req.id}}</td>
-                               <td>{{req.customer_name}}</td>
-                               <td>
-                                   {{req.timestamp.date}}
-                               </td>
-                               <td>
-                                   {% if req.customer_type == "cash" %}
-                                   كاش
-                                   {% elif request.customer_type == "warranty" %}
-                                   ضمان
-                                   {% endif %}
-                               </td>
-
-
-                               <td>
-
-                                   <a href="{% url 'service_request_details' req.id %}"
-                                       class="btn btn-light text-primary">
-                                       {{req.get_status_display}}</a>
-
-                               </td>
-
-                           </tr>
-                           {% endfor %}
-                       </tbody>
-                   </table>
-               </div>
-           </div>
-
-       </div>
-       {% endif %} -->
-
-
-
+       <!-- END STATS -->
        <div class="card bg-soft border border-danger d-none" id="lateOrders">
            <div class="card-body">
                <div class="card-title mb-4">

@@ -44,6 +44,8 @@ def index(request):
         "late_orders": late_orders("install"),
         "need_confirm": Service_request.objects.done().filter(service_type="install"),
         "current_requests": Service_request.objects.install().filter(status="under_process"),
+        "finished_requests": Service_request.objects.install().exclude(status="new").exclude(status="under_process"),
+
     }
     return render(request, 'repair/index.html', ctx)
 
