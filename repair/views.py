@@ -53,6 +53,7 @@ def repair_request(request):
     initiate service request
     """
     if request.method == 'POST':
+        print(request.POST)
         customer_name = request.POST['customername']
         phone = request.POST['phone']
         address = request.POST['address']
@@ -77,6 +78,10 @@ def repair_request(request):
             repair_request.request_number = 'rep{id}'.format(
                 id=repair_request.id)
             repair_request.save()
+            if "company" in request.POST:
+                company = User.objects.get(pk = request.POST["company"])
+                repair_request.company = company
+                repair_request.save()
             check_qouta(request.user.id)
             if "checked" in request.POST.getlist('favorite'):
                 if user.favourite_qouta.current_requests < user.favourite_qouta.max_requests:

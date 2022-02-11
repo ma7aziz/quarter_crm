@@ -92,7 +92,6 @@ def userLogin(request):
             login(request, user)
             messages.success(request, "أهلا بك مرة اخري ")
             check_qouta(request.user.id)
-
             if user.role == 1:  # admin
                 set_archived()
                 return HttpResponseRedirect('/')
@@ -102,8 +101,8 @@ def userLogin(request):
                 return HttpResponseRedirect('/repair')
             elif user.role == 8:  # tech
                 return HttpResponseRedirect('/new_tasks')
-            elif request.user.role == 5:  # sales || quareter sales
-                check_qouta(request.user.id)
+            elif request.user.role == 5 or request.user.role == 11 :  # sales || quareter sales //COMPANIES
+                # check_qouta(request.user.id)
                 return redirect('sales_view')
             elif request.user.role == 10:
                 return redirect('/sales_view')

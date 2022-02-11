@@ -1,4 +1,5 @@
 from datetime import date
+from pyexpat import model
 from django.db import models
 from accounts.models import User
 from core.models import Customer
@@ -80,6 +81,9 @@ class Service_request(models.Model):
     hold = models.BooleanField(default=False)
     hold_reason = models.ForeignKey(
         "Hold_reason", on_delete=models.SET_NULL, null=True, blank=True)
+    
+    company = models.ForeignKey(User, on_delete=models.SET_NULL ,blank=True ,null=True, related_name="service_company" )
+
     favourite = models.BooleanField(default=False)
     active = models.BooleanField(default=True)
     archived = models.BooleanField(default=False)

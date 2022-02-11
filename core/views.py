@@ -29,7 +29,7 @@ def index(request):
         check_qouta(request.user.id)
         if request.user.role == 1:  # Admin
             return render(request, 'index.html')
-        elif request.user.role == 5 or request.user.role == 10:
+        elif request.user.role == 5 or request.user.role == 10 or request.user.role == 11: 
             ####sale##
             return redirect("sales_view")
         elif request.user.role == 8:  # technician
@@ -266,7 +266,7 @@ def search(request):
 def sales_view(request):
     if request.user.role == 10:  # QUARTER SALES VIEW
         new_requests = Quarter_service.objects.all().filter(status=1).filter(sales=None)
-        print(new_requests)
+
         current_assigned_requests = Quarter_service.objects.all().filter(
             sales=request.user).exclude(status=15).exclude(status=13)
         quarter_current = Quarter_service.objects.all().filter(
@@ -304,6 +304,9 @@ def sales_view(request):
         # favorits
         favorites = Service_request.objects.all().filter(
             created_by=request.user).filter(favourite=True).order_by('-timestamp')
+        company_requests = ""
+        if request.user.role == 11 :
+            company_requests = Service_request.objects.all().filter(company = request.user)
         ctx = {
             "service_history": service_history,
             "quarter_history": quarter_history,
@@ -313,8 +316,10 @@ def sales_view(request):
             "current_quarter": current_quarter,
             "all_current": all_current,
             # Favorites
-            "favs": favorites
-        }
+            "favs": favorites,
+            ##COMPANY ROLE 11 
+            "company_requests":company_requests
+        }   
     return render(request, "core/sales_view.html", ctx)
 
 

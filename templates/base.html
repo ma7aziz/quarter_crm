@@ -474,7 +474,7 @@
 
                             </div>
                             {% endif %}
-                            {% if request.user.repair %}
+                            {% if request.user.repair  or request.user.role == 1 %}
                             <div class="col  mb-1 text-center">
                                 <button class="btn btn-lg btn-primary btn-rounded waves-effect waves-light"
                                     data-bs-toggle="modal" data-bs-target="#newRepairRequestModal"> طلب صيانة
@@ -483,7 +483,7 @@
 
                             </div>
                             {% endif %}
-                            {% if request.user.install %}
+                            {% if request.user.install or request.user.role == 1  %}
                             <div class="col  mb-1 text-center">
                                 <button class="btn btn-lg btn-primary btn-rounded waves-effect waves-light"
                                     data-bs-toggle="modal" data-bs-target="#newInstallRequestModal"> طلب تركيب
@@ -492,7 +492,7 @@
 
                             </div>
                             {% endif %}
-                            {% if request.user.quarter %}
+                            {% if request.user.quarter or request.user.role == 1  %}
                             <div class="col  mb-1 text-center">
                                 <button class="btn btn-lg btn-primary btn-rounded waves-effect waves-light"
                                     data-bs-toggle="modal" data-bs-target="#newQuarterRequestModal"> طلب خدمة

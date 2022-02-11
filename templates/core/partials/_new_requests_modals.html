@@ -214,6 +214,18 @@
                         </div>
 
                     </div>
+                    <div class="row">
+                        <div class="mb-3">
+                            <label class="form-label">الشركة</label>
+                            <select class="form-control select2" name="company" />
+                            <option selected disabled value=""> أختيار الشركة المسئولةعن التنفيذ 
+                            </option>
+                            {%for company in companies %}
+                            <option value="{{company.id}}">{{company}}</option>
+                            {% endfor %}
+                            </select>
+                        </div>
+                    </div>
                     {% csrf_token %}
                     <div class="mb-2">
                         <label class="form-label" for="file">ارفاق ملف</label>
