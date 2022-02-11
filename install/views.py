@@ -3,7 +3,7 @@ from django.core import serializers
 from service.utils import check_qouta, late_orders, new_req_msg
 import datetime
 from django.shortcuts import render
-from service.models import Service_request, Appointment
+from service.models import Service_request, Appointment , RequestFile
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.http import HttpResponseRedirect
@@ -70,11 +70,12 @@ def install_request(request):
         install_request.customer = add_customer(phone, customer_name)
         install_request.save()
 
-        if request.FILES:
-            install_request.file = request.FILES['attach_file']
-            install_request.save()
-            user.submitted_orders += 1
-            user.save()
+        if request.FILES['attach_file']:
+                for f in request.FILES.getlist("attach_file"):
+                    new_file = RequestFile(service=install_request, file=f)
+                    new_file.save()
+                    install_request.request_files.add(new_file)
+                    install_request.save()
 
         install_request.request_number = 'inst{id}'.format(
             id=install_request.id)

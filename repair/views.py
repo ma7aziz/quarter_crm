@@ -5,7 +5,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import redirect, render
 from core.add_customer import add_customer
 from service.utils import check_qouta, late_orders, new_req_msg
-from service.models import Appointment, Service_request
+from service.models import Appointment, Service_request , RequestFile
 
 # Create your views here.
 
@@ -70,9 +70,13 @@ def repair_request(request):
                                              address=address, customer_type=customer_type, notes=request.POST['notes'])
             repair_request.customer = add_customer(phone, customer_name)
             repair_request.save()
-            if request.FILES:
-                repair_request.file = request.FILES['attach_file']
-                repair_request.save()
+
+            if request.FILES['attach_file']:
+                for f in request.FILES.getlist("attach_file"):
+                    new_file = RequestFile(service=repair_request, file=f)
+                    new_file.save()
+                    repair_request.request_files.add(new_file)
+                    repair_request.save()
             user.submitted_orders += 1
             user.save()
             repair_request.request_number = 'rep{id}'.format(

@@ -72,6 +72,8 @@ class Service_request(models.Model):
     status = models.CharField(
         max_length=25, choices=REQUEST_STATUS, default='new')
     file = models.FileField(upload_to='service/files/', blank=True, null=True)
+    request_files = models.ManyToManyField("RequestFile" , blank=True , null=True 
+                    , related_name="request_files")
     timestamp = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     code = models.CharField(
@@ -115,6 +117,12 @@ class ExcutionFile(models.Model):
     def __str__(self):
         return f'excution file for request {self.service.id}'
 
+class RequestFile(models.Model):
+    service = models.ForeignKey(Service_request , on_delete=models.CASCADE)
+    file = models.FileField(upload_to="service/files/request_files")
+
+    def __str__(self):
+        return f"Request files for request no #{self.service.id}"
 
 class AppointmentManager(models.Manager):
     def repair(self):

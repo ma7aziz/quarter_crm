@@ -208,6 +208,15 @@
                                         <th scope="row" class="text-muted">الملفات </th>
                                         <td><a href="{{req.file.url}}" target="_blank">عرض الملفات </a></td>
                                     </tr>
+                                    {% elif req.request_files %}
+                                    <tr>
+                                        <th scope="row" class="text-muted">ملفات الطلب </th>
+                                        <td>
+                                        {% for f in req.request_files.all %}
+                                                <a href="" target="_blank">ملف {{forloop.counter }}</a> ||
+                                                {% endfor %}
+                                            </td>
+                                        </tr>
                                     {% endif %}
 
                                     {% if req.notes %}
