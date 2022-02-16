@@ -70,7 +70,7 @@ def install_request(request):
         install_request.customer = add_customer(phone, customer_name)
         install_request.save()
 
-        if request.FILES['attach_file']:
+        if request.FILES.getlist('attach_file'):
                 for f in request.FILES.getlist("attach_file"):
                     new_file = RequestFile(service=install_request, file=f)
                     new_file.save()

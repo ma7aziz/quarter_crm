@@ -116,7 +116,7 @@ def complete_request(request):
                 return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
     # add excution files if exist
-    if request.FILES['files']:
+    if request.FILES.getlist('files'):
         for f in request.FILES.getlist("files"):
             new_file = ExcutionFile(service=req, file=f)
             new_file.save()

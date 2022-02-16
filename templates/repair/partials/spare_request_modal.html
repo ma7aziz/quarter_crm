@@ -1,0 +1,44 @@
+<!-- REPAIR MODAL -->
+<div id="SparePartModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title mt-0">طلب قطع غيار لطلب الصيانة رقم {{req.id}}
+                    <i class="fas fa-tools"></i>
+                </h5>
+
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                </button>
+            </div>
+            <div class="modal-body">
+                
+                <form action="{% url 'spare_part_request' %}" method="POST" enctype="multipart/form-data" id="repair-form">
+                    <label class="form-label" for="part_name">اسم القطعة المطلوبة <span class="text-danger">**</span> </label>
+                    <input id="part_name" name="part_name" type="text" class="form-control" required>
+                    <input type="hidden" name="service" value={{req.id}}>
+                    <div class="row">
+                        <div class="mb-3 mt-3">
+                            <label class="form-label" for="machine_type">التفاصيل
+                            </label>
+                            <textarea  class="form-control" name="details" id="" cols="30" rows="6"></textarea>
+                            <!-- <input id="machine_type" name="machine_type" type="text" class="form-control" required> -->
+                        </div>
+                    </div>
+
+                    {% csrf_token %}
+                    <div class="mb-2">
+                        <label class="form-label" for="file">ارفاق ملفات</label>
+                        <input type="file" class="form-control" id="file" name="attach_file"  multiple/>
+                    </div>
+            
+                    <div class="mt-2">
+                        <button type="submit" class="btn btn-lg btn-primary form-submit" id="repair-form-submit">ارسال
+                            الطلب
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

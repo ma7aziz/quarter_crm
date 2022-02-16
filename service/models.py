@@ -72,7 +72,7 @@ class Service_request(models.Model):
     status = models.CharField(
         max_length=25, choices=REQUEST_STATUS, default='new')
     file = models.FileField(upload_to='service/files/', blank=True, null=True)
-    request_files = models.ManyToManyField("RequestFile" , blank=True , null=True 
+    request_files = models.ManyToManyField("RequestFile" , blank=True 
                     , related_name="request_files")
     timestamp = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
@@ -83,14 +83,13 @@ class Service_request(models.Model):
     hold = models.BooleanField(default=False)
     hold_reason = models.ForeignKey(
         "Hold_reason", on_delete=models.SET_NULL, null=True, blank=True)
-    
     company = models.ForeignKey(User, on_delete=models.SET_NULL ,blank=True ,null=True, related_name="service_company" )
-
     favourite = models.BooleanField(default=False)
     active = models.BooleanField(default=True)
     archived = models.BooleanField(default=False)
     excution_files = models.ManyToManyField(
         "ExcutionFile", blank=True, related_name="service_files")
+    spare_part_request = models.ManyToManyField("repair.SparePartRequst" , blank=True , related_name="spare_parts")
     objects = RequestManager()
 
     def save(self, *args, **kwargs):

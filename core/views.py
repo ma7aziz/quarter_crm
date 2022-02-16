@@ -20,6 +20,7 @@ from core.models import Task
 from django.http import HttpResponseRedirect
 from .models import Customer
 from service.utils import check_qouta, get_data, set_archived
+from repair.models import SparePartRequst, SparePartsRequestFile
 # Create your views here.
 
 
@@ -305,8 +306,10 @@ def sales_view(request):
         favorites = Service_request.objects.all().filter(
             created_by=request.user).filter(favourite=True).order_by('-timestamp')
         company_requests = ""
+        spare_parts_requests=""
         if request.user.role == 11 :
             company_requests = Service_request.objects.all().filter(company = request.user)
+            spare_part_requests = SparePartRequst.objects.all().filter(company = request.user).order_by("-status").order_by("-timestamp")
         ctx = {
             "service_history": service_history,
             "quarter_history": quarter_history,
@@ -318,7 +321,9 @@ def sales_view(request):
             # Favorites
             "favs": favorites,
             ##COMPANY ROLE 11 
-            "company_requests":company_requests
+            "company_requests":company_requests,
+            "open_spare_part_requests": spare_part_requests.filter(status = "open"),
+            
         }   
     return render(request, "core/sales_view.html", ctx)
 

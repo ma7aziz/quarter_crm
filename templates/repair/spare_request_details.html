@@ -1,0 +1,94 @@
+{% extends '../base.html' %}
+{% block link %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+{% endblock%}
+{% block title %} تفاصيل طلب قطع غيار {% endblock %}
+{%block content %}
+<div class="page-title-box d-flex align-items-center justify-content-between">
+    <h3 class="mb-0 ">تفاصيل الطلب</h3>
+    
+     <a  href="{%url 'service_request_details' req.service_request.id %}" class="btn btn-sm btn-rounded btn-soft-info ">عودة الي طلب الصيانة  <i class="fas fa-angle-double-left"></i></a>
+</div>
+
+
+<div class="card">
+    <div class="card-body">
+        <div class="d-flex justify-content-between align-content-center mt-2" dir="rtl">
+            <h3 class="font-size-22 mb-3">
+                طلب قطع غيار 
+            </h3>
+
+            <div>
+
+                <a href="{%url 'change_spare_request_status' req.id %}" 
+                    class="btn btn-lg btn-rounded btn-soft-success">
+                    {% if req.status == "open" %}
+                        انهاء الطلب <i class="fas fa-check"></i>
+                    {% else %}
+                    اعادة تفعيل الطلب <i class="fas fa-check"></i>
+                    {% endif %}
+                </a> 
+                <a href="{% url 'delete_spare_request' req.id %}" class="btn btn-md btn-rounded btn-soft-danger"> حذف الطلب <i class="far fa-trash-alt"></i></a>
+
+            </div>
+        </div>
+        <div class="tab-content border border-top-0 p-4">
+            <div class="tab-pane fade show active" id="specifi" role="tabpanel">
+                <div class="table-responsive">
+                    <table class="table table-nowrap mb-0">
+                        <tbody>
+                            <tr>
+                                <th scope="row" class="text-muted">قطع الغيار المطلوبة
+                                    
+                                </th>
+                                <td>{{req.part_name}}</td>
+                            </tr>
+                            {% if req.details %}
+                            <tr>
+                                <th scope="row" class="text-muted">التفاصيل</th>
+                                <td>{{req.details }}</td>
+                            </tr>
+                            {%  endif %}
+
+                            <tr>
+                                <th scope="row" class="text-muted">رقم طلب الصيانة</th>
+                                <td> <a href="{%url 'service_request_details' req.service_request.id %}">{{req.service_request.id}}</a></td>
+                            </tr>
+                            <tr>
+                                <th scope="row" class="text-muted">اسم العميل</th>
+                                <td>{{req.service_request}}</td>
+                            </tr>
+                            
+                            <tr>
+                                <th scope="row" class="text-muted">تاريخ الطلب </th>
+                                <td>{{req.timestamp}}</td>
+                            </tr>
+                            
+                            <tr>
+                                <th scope="row" class="text-muted">حالة الطلب </th>
+                                <td>
+                                    {{req.status}}
+                                </td>
+
+                            </tr>
+                            
+                            {% if req.files.count %}
+                                    <tr>
+                                        <th scope="row" class="text-muted">ملفات الطلب </th>
+                                        <td>
+                                        {% for f in req.files.all %}
+                                                <a href="{{f.file.url}}" target="_blank">ملف {{forloop.counter }}</a> ||
+                                                {% endfor %}
+                                            </td>
+                                        </tr>
+                            {% endif %}
+                        </tbody>
+                    </table>
+                    
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+{%endblock%}

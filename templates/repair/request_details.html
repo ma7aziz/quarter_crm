@@ -53,6 +53,8 @@
 {% block content %}
 <div class="page-title-box d-flex align-items-center justify-content-between">
     <h3 class="mb-0 ">تفاصيل الطلب</h3>
+    <a  {% if req.get_service_type_display == "صيانة"%} href="/repair"  {%else %}  href="/install"  {% endif%} class="btn btn-sm btn-rounded btn-soft-info ">الطلبات  <i class="fas fa-angle-double-left"></i></a>
+
 </div>
 <!-- end page title -->
 <div class="card">
@@ -73,11 +75,16 @@
                         class="far fa-star"></i> </a>
                 {% endif %}
                 {% endif %}
+                {% if request.user.role == 1 or request.user.role == 2 %}
+                <button class="btn btn-lg btn-soft-warning btn-rounded waves-effect waves-light"
+                data-bs-toggle="modal" data-bs-target="#SparePartModal"> طلب قطع غيار 
+                <i class="fas fa-tools"></i></button>
+                {% endif %}
                 <!-- <a href="{% url 'print_invoice' %}" target="_blank">طباعة تقرير <i class="fas fa-print"></i></a> -->
             </div>
         </div>
         <!-- end row -->
-
+        {% include "./partials/spare_request_modal.html"%}
         <div class="mt-lg-4 mt-1 row">
             <div class="col col-md-7 product-desc">
 
@@ -314,10 +321,37 @@
                                 </div>
                             </div>
                             {% endif%}
+                            {% if req.spare_part_request.count %}
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="headingOne">
+                                    <button class="accordion-button font-size-20 font-size-20 bg-soft-info" type="button"
+                                        data-bs-toggle="collapse" data-bs-target="#collapseEdit1" aria-expanded="true"
+                                        aria-controls="collapseOne">
+                                        طلبات قطع الغيار ({{req.spare_part_request.count }})
+                                    </button>
+                                </h2>
+
+                                <div id="collapseEdit1" class="accordion-collapse show" aria-labelledby="headingOne"
+                                    data-bs-parent="#accordionExample">
+                                    <div class="accordion-body">
+                                        <ul class="list-group text-center">
+                                      {% for request in req.spare_part_request.all %}
+                                            <li class="list-group-item">
+                                                <a href="{% url 'spare_request_details' request.id %}">
+                                                {{request.part_name}}
+                                            </a>
+                                        </li>
+                                            
+                                            {% endfor %}
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endif %}
                             {% if request.user.role == 1 or request.user.role == 2 or request.user.role == 3  %}
                             <div class="accordion-item">
                                 <h2 class="accordion-header" id="headingOne">
-                                    <button class="accordion-button font-size-20 font-size-20" type="button"
+                                    <button class="accordion-button font-size-20 font-size-20 bg-soft-info" type="button"
                                         data-bs-toggle="collapse" data-bs-target="#collapseEdit" aria-expanded="true"
                                         aria-controls="collapseOne">
                                         تعديل حالة الطلب
@@ -454,7 +488,7 @@
                             {% if not appointment %}
                             <div class="accordion-item">
                                 <h2 class="accordion-header" id="headingSetAppointment">
-                                    <button class="accordion-button font-size-20 " type="button"
+                                    <button class="accordion-button font-size-20 bg-soft-info " type="button"
                                         data-bs-toggle="collapse" data-bs-target="#collapseAppointment"
                                         aria-expanded="true" aria-controls="collapseAppointment">
                                         تحديد موعد
@@ -511,7 +545,7 @@
                             {% if appointment %}
                             <div class="accordion-item">
                                 <h2 class="accordion-header" id="headingTwo">
-                                    <button class="accordion-button font-size-20 collapsed " type="button"
+                                    <button class="accordion-button font-size-20 collapsed bg-soft-info " type="button"
                                         data-bs-toggle="collapse" data-bs-target="#collapseDate" aria-expanded="false"
                                         aria-controls="collapseDate">
                                         موعد
@@ -609,7 +643,7 @@
                             {% if request.user.role == 1 or request.user.role == 2 or request.user.role == 3 or request.user == appointment.technician%}
                             <div class="accordion-item">
                                 <h2 class="accordion-header" id="headingThree">
-                                    <button class="accordion-button font-size-20 " type="button"
+                                    <button class="accordion-button font-size-20 bg-soft-info " type="button"
                                         data-bs-toggle="collapse" data-bs-target="#collapseConfirm" aria-expanded="true"
                                         aria-controls="collapseConfirm">
                                         تأكيد الصيانة
@@ -660,7 +694,7 @@
 
                             <div class="accordion-item">
                                 <h2 class="accordion-header" id="headingFour">
-                                    <button class="accordion-button font-size-20 " type="button"
+                                    <button class="accordion-button font-size-20 bg-soft-info " type="button"
                                         data-bs-toggle="collapse" data-bs-target="#collapseHold" aria-expanded="true"
                                         aria-controls="collapseHold">
                                         تعليق الطلب
