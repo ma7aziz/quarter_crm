@@ -157,4 +157,4 @@ def delete_spare_request(request , id):
        spare_request.delete() 
     else:
         messages.error(request , "عفوا .. لايمكنك اجراء هذه العملية !!")
-    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))  
+    return redirect(f"/service_request_detils/{spare_request.service_request.id}")
