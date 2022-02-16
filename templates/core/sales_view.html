@@ -709,7 +709,7 @@
                                 {% for req in open_spare_part_requests %}
                                 <tr {% if req.service_request.favourite %} class="bg-soft-success" {% endif %}>
 
-                                    <td><a href="{% url 'service_request_details' req.id  %}">#{{req.service_request.request_number}}</a>
+                                    <td><a href="{% url 'service_request_details' req.service_request.id   %}">#{{req.service_request.request_number}}</a>
                                     </td>
                                     <td>{{req.service_request.customer.name}}</td>
                                     <td class="d-none d-lg-table-cell">
