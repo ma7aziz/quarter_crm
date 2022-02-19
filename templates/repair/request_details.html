@@ -75,11 +75,12 @@
                         class="far fa-star"></i> </a>
                 {% endif %}
                 {% endif %}
-                {% if request.user.role == 1 or request.user.role == 2 %}
+                {% if req.service_type == "repair" %}
+                {% if request.user.role == 1 or request.user.role == 2 or request.user.role == 3 %}
                 <button class="btn btn-lg btn-soft-warning btn-rounded waves-effect waves-light"
                 data-bs-toggle="modal" data-bs-target="#SparePartModal"> طلب قطع غيار 
                 <i class="fas fa-tools"></i></button>
-                {% endif %}
+                {% endif %}{% endif %}
                 <!-- <a href="{% url 'print_invoice' %}" target="_blank">طباعة تقرير <i class="fas fa-print"></i></a> -->
             </div>
         </div>

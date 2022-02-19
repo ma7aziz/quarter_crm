@@ -136,7 +136,7 @@ def spare_request_details(request , id ):
 
 
 def change_spare_request_status(request , id):
-    if request.user.role == 1 or request.user.role == 2:
+    if request.user.role == 1 or request.user.role == 2 or request.user.role == 3 :
         spare_request = get_object_or_404(SparePartRequst , pk=id )
         if spare_request.status == "open":
             spare_request.status = "closed" 
@@ -152,7 +152,7 @@ def change_spare_request_status(request , id):
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     
 def delete_spare_request(request , id):
-    if request.user.role == 1 or request.user.role == 2:
+    if request.user.role == 1 or request.user.role == 2 or request.user.role == 3:
        spare_request = get_object_or_404(SparePartRequst , pk=id )
        spare_request.delete() 
     else:
