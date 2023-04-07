@@ -19,6 +19,8 @@ from .forms import CustomerForm
 from .models import LateDays
 from .utils import generate_report
 
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
 
 class Index(generic.View):
     def get(self, request):

@@ -15,6 +15,8 @@ from django.db import models as md
 from core.decorators import allowed_roles
 from django.utils.decorators import method_decorator
 from .utils import get_late_count
+from django.views.decorators.cache import cache_page
+
 
 # Create your views here.
 @method_decorator(allowed_roles(['admin']), name='dispatch')
