@@ -1,0 +1,90 @@
+<div class="modal fade" id="sp_modal" tabindex="-1" role="dialog" >
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">تفاصيل طلب قطع غيار </h4>
+            </div>
+            <div class="modal-body">
+                <ul class="list-group " id="sp_details">
+                    
+
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">اغلاق</button>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+{% load static %} 
+{% block script %}
+<script src="{% static 'asset/libs/jquery/dist/jquery.min.js' %}"></script>
+<!-- Bootstrap tether Core JavaScript -->
+<script src="{% static 'asset/libs/bootstrap/dist/js/bootstrap.bundle.min.js' %}"></script>
+<script>
+    $(document).ready(function(){
+        var modalShown = false;
+
+        $('#sp_modal').on('show.bs.modal', function (event) {
+            
+            if (!modalShown) {
+                modalShown = true
+            event.stopPropagation()
+            var button = $(event.relatedTarget);
+            var id = button.data('id');
+            var modal = $(this);
+
+            $.ajax({
+                url: '/api/sp_request/' + id,
+                method: 'GET',
+                success: function (data) {
+                    let service_date = data.service.created_at
+                    let service_date_obj = new Date(service_date);
+                    let company_username = data.service.company ? data.service.company.username : "";
+                    $('#sp_details').append(`
+                        <li class="list-group-item">طلب الصيانة : <span id="repair_service"><a href='/service/${data.service.id}/details'>${data.service.ref_number}</a></span></li>
+                    <li class="list-group-item">تاريخ طلب الصيانة: <span id="repair_service_date">${service_date_obj.toLocaleString()}</span></li>
+                    <li class="list-group-item">طلب الصيانة بواسطة : <span id="repair_service_by">${data.service.created_by.username}</span></li>
+                    <li class="list-group-item">الشركة: <span id="company">${company_username}</span></li>
+                    <li class="list-group-item"> القطع المطلوبة : <span id="requested_parts">${data.requested_parts}</span></li>
+                    <li class="list-group-item"> التفاصيل: <span id="requested_parts_details">${data.details}</span></li>
+                    <li class="list-group-item"> حالة الطلب :  <span id="status"></span></li>`
+                    )
+                    let statusEl = modal.find('#status')
+                    if (data.status == 'recieved') {
+                        statusEl.addClass('text-success')
+                        statusEl.text('تم الاستلام')
+                        let recieve_date = data.recievied_at
+                        var recieve_date_obj = new Date(recieve_date);
+                        $('#sp_details').append(
+                            `
+                            <li class='list-group-item'> تاريخ الاستلام : ${recieve_date}</li>  
+                            <li class='list-group-item'> المستلم: ${data.recievied_by.username} </li>  
+                            `
+
+                        )
+
+                    } else {
+                        statusEl.addClass('text-warning')
+                        statusEl.text('لم يتم الاستلام ')
+                    }
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.log(errorThrown);
+                }
+            });
+        }
+        });
+        $('#sp_modal').on('hidden.bs.modal', function (event) {
+            // clear the data in the modal
+            $('#sp_details').empty();
+            modalShown = false;
+        });
+    })
+
+</script>
+{% endblock %}

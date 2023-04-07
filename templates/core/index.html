@@ -1,0 +1,217 @@
+{% extends 'base.html' %}
+{%block title %}
+الرئيسية
+{% endblock%}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-3 col-md-6 pointer"
+    hx-trigger="click" 
+    hx-swap="innerHTML"
+    hx-target="#data"
+    hx-get="/index_data?service=all">
+        <div class="card">
+            <div class="card-body">
+                
+                <div class="text-center">
+                    <h6 class="text-muted mt-2 mb-2">اجمالي الطلبات المستلمة </h6>
+                    <h2>{{total_count}}</h2>
+                    <h5 class="text-success">{{new_count}} طلبات جديدة </h5>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-6 pointer" hx-trigger="click" 
+    hx-swap="innerHTML"
+    hx-target="#data"
+    hx-get="/index_data?service=install"
+    >
+        
+        <div class="card">
+            <div class="card-body">
+
+                    <div class="text-center">
+                        <h6 class="text-muted mt-2 mb-2">طلبات التركيب</h6>
+                        <h2>{{install_count}}</h2>
+                        <h5 class="text-success">{{install_new_count}} طلبات جديدة </h5>
+                    </div>
+ 
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-6 pointer"
+    hx-trigger="click" 
+    hx-swap="innerHTML"
+    hx-target="#data"
+    hx-get="/index_data?service=repair">
+        <div class="card">
+            <div class="card-body">
+         
+                    <div class="text-center">
+                        <h6 class="text-muted mt-2 mb-2">طلبات الصيانة</h6>
+                        <h2>{{repair_count}}</h2>
+                        <h5 class="text-success">{{repair_new_count}} طلبات جديدة </h5>
+                    </div>
+ 
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-6 pointer"
+    hx-trigger="click" 
+    hx-swap="innerHTML"
+    hx-target="#data"
+    hx-get="/index_data?service=quarter">
+        <div class="card">
+            <div class="card-body">
+         
+                    <div class="text-center">
+                        <h6 class="text-muted mt-2 mb-2">مشاريع كوارتر </h6>
+                        <h2>{{quarter_count}}</h2>
+                        <h5 class="text-success">{{quarter_new_count}} مشاريع جديدة </h5>
+                    </div>
+ 
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6 col-md-6 pointer"
+    hx-trigger="click" 
+    hx-swap="innerHTML"
+    hx-target="#data"
+    hx-get="/index_data?service=hold">
+        <div class="card">
+            <div class="card-body ">
+                    <div class="text-center">
+                        <h6 class="text-muted mt-1 mb-1">الطلبات المعلقة</h6>
+                        <h2>{{on_hold_count}}</h2>
+                    </div>
+ 
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6 col-md-6 pointer"
+    hx-trigger="click" 
+    hx-swap="innerHTML"
+    hx-target="#data"
+    hx-get="/index_data?service=late">
+        <div class="card">
+            <div class="card-body">
+                    <div class="text-center">
+                        <h6 class="text-muted mt-1 mb-1">الطلبات المتأخرة</h6>
+                        <h2>{{late_count}}</h2>
+                    </div>
+ 
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- <div  id="data">
+
+</div> -->
+<div class="card card-body" id="data">
+        <h3>الطلبات الجديدة</h3>
+    <div class="table-responsive">
+        <table class="table search-table " id="serviceTable">
+            <thead class="header-item bg-dark text-light text-center">
+                <th>#</th>
+                <th>رقم الطلب </th>
+                <th>نوع الطلب</th>
+                <th>اسم العميل</th>
+                <th>الجوال</th>
+                <th>رقم الفاتورة </th>
+                <th>البائع</th>
+                <th>التاريخ</th>
+                <th>حالة الطلب</th>
+
+            </thead>
+            <tbody>
+                <!-- row -->
+                {% for service in new_requests %}
+
+                <tr class="search-items text-center {% if service.late %} bg-light-danger {% endif %}">
+
+                    <td>{{forloop.counter}} </td>
+                    <td>
+                        <a href="{% url 'service:service_details' service.id %}">{{service.ref_number}}</a>
+                    </td>
+                    <td>
+                        <span class="badge rounded-pill 
+                        {% if service.service_type == 'install' %}
+                        bg-primary
+                        {% elif service.service_type == 'repair' %}
+                        bg-secondary
+                        {% endif %}
+                        ">
+                            {{service.get_service_type_display}}
+                        </span>
+                    </td>
+
+                    <td> {{service.customer}}
+                    </td>
+                    <td>{{service.phone_number}}</td>
+                    <td>{% if service.invoice_number %} {{service.invoice_number}} {% endif %} </td>
+                    <td><a href="{% url 'users:user_details' service.created_by.id %}">{{service.created_by}}</a></td>
+                    <td>{{service.created_at.date|date:"F j"}}</td>
+                    <td>
+                        
+                        <a href="{% url 'service:service_details' service.id %}">
+                        {% if service.hold %}
+                        <span class="badge round-pill bg-danger">معلق</span>
+                        {% else %}
+                        <span class="badge rounded-pill 
+
+                    {% if service.status  == 'new' %}
+                       bg-warning
+                    {% elif service.status == 'under_process' %}
+                        bg-primary
+                    {% elif  service.status == 'done' or service.status  == 'closed' %}
+                        bg-success
+                    {% endif %} 
+   
+                       ">
+                           
+                       {{service.get_status_display}}
+                        </span>
+                        {% endif %}
+                        </a>
+                    </td>
+                
+                </tr>
+                {% endfor %}
+
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+{% endblock %}
+{% block script %}
+  
+<script>
+    $(document).ready(function () {
+        $('#serviceTable').DataTable({
+            pageLength: 50,
+            ordering: false,
+            scrollY: 350,
+            "language": {
+                "paginate": {
+                    "next": "الصفحة التالية",
+                    "previous": "الصفحة السابقة"
+                },
+                "emptyTable": "لا يوجد بيانات للعرض ",
+                "info": "عرض _START_ الي _END_ من _TOTAL_ طلبات",
+                "infoEmpty": "Showing 0 to 0 of 0 entries",
+                "infoFiltered": "(تم البحث في  _MAX_ طلب)",
+                "search": "البحث:",
+                "zeroRecords": "لا يوجد بيانات مطابقة للبحث",
+                "lengthMenu": "عرض _MENU_ طلب في الصفحة ",
+
+            },
+            "pagingType": "numbers"
+
+        })
+    })
+</script>
+{% endblock script %}

@@ -1,169 +1,76 @@
 from django.db import models
-from accounts.models import User
-from .choices import STATUS_CHOICES
-from core.models import Customer
+from users.models import User
+from .choices import PORJECT_STATUS_CHOICES , NEGOTIATION_STATUS_CHOICES
+from datetime import datetime
+from django.db.models import Max
+import uuid
+import os 
 # Create your models here.
-from django.utils.translation import ugettext_lazy as _
+    
+def get_file_path(instance, filename):
+    """Generate a unique filename for the uploaded file."""
+    ext = filename.split('.')[-1]
+    filename = f"{uuid.uuid4()}.{ext}"
+    return os.path.join('files/quarter', filename)
 
 
-class Quarter_service_Manager(models.Manager):
-    def all(self):
-        return self.filter(hold=False)
 
-    def new(self):
-        return self.filter(status="new")
+def generate_ref_number():
+    prefix = 'Q'
+    year = str(datetime.now().year)[-2:]
 
-    def on_hold(self):
-        return self.filter(hold=True)
+    last_ref_number =   QuarterProject.objects.filter(
+        ref_number__startswith=f'{prefix}{year}'
+    ).aggregate(Max('ref_number'))['ref_number__max']
+
+    if not last_ref_number:
+        return f'{prefix}{year}001'
+
+    last_number = int(last_ref_number[-3:])
+    new_number = f'{last_number+1:03d}'
+    return f'{prefix}{year}{new_number}'
 
 
-class Quarter_service(models.Model):
-    request_number = models.CharField(max_length=15, blank=True, null=True)
-    name = models.CharField(_("اسم العميل "), max_length=100)
-    phone = models.CharField(_("رقم الجوال"), max_length=20)
-    email = models.CharField(_("البريد الاليكتروني"), max_length=100, blank=True,
-                             null=True)
-    location = models.CharField(_("العنوان"),
-                                max_length=200, blank=True, null=True)
-    customer = models.ForeignKey(
-        Customer, on_delete=models.SET_NULL, null=True, blank=True)
-    notes = models.CharField(_("ملاحظات / بيانات اضافية "), max_length=500, blank=True,
-                             null=True)
-    status = models.IntegerField(
-        default=1, choices=STATUS_CHOICES)
-    created_by = models.ForeignKey(
-        User, on_delete=models.SET_NULL, null=True, blank=True)
-    timestamp = models.DateTimeField(auto_now_add=True)
-    active = models.BooleanField(default=True)
 
-    pricing = models.ForeignKey(
-        "Price", on_delete=models.SET_NULL, null=True, blank=True)
-    money_transfer = models.ForeignKey(
-        "Transfer", on_delete=models.SET_NULL, null=True, blank=True)
-    designs = models.ForeignKey(
-        "Design", on_delete=models.SET_NULL, null=True, blank=True)
+class QuarterProject(models.Model):
+    ref_number = models.CharField(max_length=12 , default=generate_ref_number, unique=True)
+    name = models.CharField(max_length=255 )
+    phone_number = models.CharField(max_length=15)
+    address =models.CharField(max_length=255 , blank=True , null = True )
+    status = models.CharField(max_length=20 , default='new' , choices = PORJECT_STATUS_CHOICES)
+    created_by = models.ForeignKey(User , on_delete=models.SET_NULL , null = True )
+    created_at = models.DateTimeField(auto_now_add=True )
+    last_update = models.DateTimeField(auto_now=True )
+    closed_date = models.DateTimeField(null = True , blank = True )
+    rep = models.ForeignKey(User , on_delete=models.SET_NULL , null=True , blank=True , related_name='project_rep')
+    
 
-    purchase = models.ForeignKey(
-        "Purchase", on_delete=models.SET_NULL, null=True, blank=True)
-    hold = models.BooleanField(default=False)
-    objects = Quarter_service_Manager()
-    file = models.FileField(upload_to='service/files/', blank=True, null=True)
-    first_excution = models.ForeignKey(
-        'Excution', on_delete=models.SET_NULL, null=True, blank=True, related_name="first")
-    second_excution = models.ForeignKey(
-        'Excution', on_delete=models.SET_NULL, null=True, blank=True, related_name="second")
-    favourite = models.BooleanField(default=False)
-    sales = models.ForeignKey(
-        User, on_delete=models.SET_NULL, null=True, blank=True, related_name='sales')
-
-    # price ##outstanding
-
+    def __str__(self) :
+        return self.ref_number
+    
+    class Meta:
+        ordering = ['-created_at']
+    
+class Negotiation(models.Model):
+    project = models.ForeignKey(QuarterProject , on_delete=models.CASCADE)
+    created_by = models.ForeignKey(User ,on_delete=models.SET_NULL , null = True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    status = models.CharField(max_length=10 , choices=NEGOTIATION_STATUS_CHOICES , default='current')
+    
+    
+class ProjectFiles(models.Model):
+    project = models.ForeignKey(QuarterProject , on_delete=models.CASCADE)
+    created_by = models.ForeignKey(User , on_delete=models.SET_NULL , null = True )
+    created_at = models.DateTimeField(auto_now_add=True)
+    files = models.ManyToManyField('File')
+    
+    class Meta:
+        verbose_name_plural = 'Project Files'
+        
     def __str__(self):
-        return f'{self.name}'
+        return f'{self.project} Excution files . '
 
 
-class Price(models.Model):
-    PRICE_STATUS_CHOICES = [
-        (1, 'approved'),
-        (2, "pending"),
-        (3, "rejected")
-    ]
-    service = models.ForeignKey(Quarter_service, on_delete=models.CASCADE)
-    price = models.CharField(max_length=10, blank=True)
-    files = models.FileField(upload_to='pricing/', )
-    notes = models.TextField(max_length=500, blank=True, null=True)
-    created_by = models.ForeignKey(
-        User, on_delete=models.SET_NULL, null=True, blank=True)
-    timestamp = models.DateTimeField(auto_now_add=True)
-    status = models.CharField(
-        max_length=15, choices=PRICE_STATUS_CHOICES, default="pending")
-    rejection_notes = models.TextField(max_length=500, blank=True)
-    proposed_price = models.CharField(max_length=10, blank=True)
-
-    def __str__(self):
-        return self.service.name
-
-
-class Transfer(models.Model):
-    service = models.ForeignKey(Quarter_service, on_delete=models.CASCADE)
-    total_price = models.IntegerField(blank=True, null=True)
-    # transfer 1
-    transfer1_qty = models.IntegerField(default=0)
-    transfer1_date = models.DateTimeField(blank=True, null=True)
-    transfer1_file = models.FileField(
-        upload_to='transfer/', blank=True, null=True)
-    transfer1_notes = models.TextField(max_length=500, blank=True)
-    # transfer 2
-    transfer2_qty = models.IntegerField(default=0)
-    transfer2_date = models.DateTimeField(blank=True, null=True)
-    transfer2_file = models.FileField(
-        upload_to='transfer/', blank=True, null=True)
-    transfer2_notes = models.TextField(max_length=500, blank=True)
-    # transfer 3
-    transfer3_qty = models.IntegerField(default=0)
-    transfer3_date = models.DateTimeField(blank=True, null=True)
-    transfer3_file = models.FileField(
-        upload_to='transfer/', blank=True, null=True)
-    transfer3_notes = models.TextField(max_length=500, blank=True)
-
-    outstanding_ammount = models.IntegerField(null=True, blank=True)
-
-    def save(self, *args, **kwargs):
-        if self.total_price:
-
-            self.outstanding_ammount = self.total_price - \
-                (self.transfer1_qty + self.transfer2_qty + self.transfer3_qty)
-
-        super(Transfer, self).save(*args, **kwargs)
-
-
-class Design(models.Model):
-    DESIGN_STATUS_CHOICES = [
-        (1, 'approved'),
-        (2, "pending"),
-        (3, "rejected")
-    ]
-    service = models.ForeignKey(Quarter_service, on_delete=models.CASCADE)
-    files = models.FileField(upload_to='designes/', blank=True,  null=True)
-    notes = models.TextField(max_length=500, blank=True, null=True)
-    timestamp = models.DateTimeField(auto_now_add=True)
-    created_by = models.ForeignKey(
-        User, on_delete=models.SET_NULL, null=True, blank=True)
-
-    status = models.CharField(
-        max_length=15, choices=DESIGN_STATUS_CHOICES, default="pending")
-
-    def __str__(self):
-        return f"Designes for {self.service}"
-
-
-class Purchase(models.Model):
-    service = models.ForeignKey(
-        Quarter_service, on_delete=models.CASCADE, related_name="quarter_service")
-    files = models.FileField(upload_to="purchase/", blank=True, null=True)
-    notes = models.TextField(max_length=500, blank=True, null=True)
-    cost = models.CharField(max_length=10, blank=True, null=True)
-    timestamp = models.DateTimeField(auto_now_add=True)
-    created_by = models.ForeignKey(
-        User, on_delete=models.SET_NULL, null=True, blank=True)
-
-    def __str__(self):
-        return f'{self.service} Purchases '
-
-
-class Excution(models.Model):
-    service = models.ForeignKey(Quarter_service, on_delete=models.CASCADE)
-    timestamp = models.DateTimeField(auto_now_add=True)
-    notes = models.CharField(max_length=500, blank=True, null=True)
-    name = models.CharField(max_length=100, blank=True, null=True)
-    files = models.ManyToManyField(
-        "ExcutionFiles", blank=True, related_name="docs")
-
-    def __str__(self):
-        return self.name
-
-
-class ExcutionFiles(models.Model):
-    excution = models.ForeignKey(
-        Excution, on_delete=models.CASCADE, related_name="q_service")
-    file = models.FileField(upload_to="excution/", blank=True, null=True)
+class File(models.Model):
+    file = models.FileField(upload_to=get_file_path)
+    

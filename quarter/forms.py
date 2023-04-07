@@ -1,8 +1,12 @@
-from django import forms
-from .models import Quarter_service
+from django.forms import ModelForm
+from .models import QuarterProject
 
-
-class QuarterForm(forms.ModelForm):
+class QuarterProjectForm(ModelForm):
     class Meta:
-        model = Quarter_service
-        fields = ('name', 'phone', "email", "location", "notes", )
+        model = QuarterProject
+        fields = ['name', 'phone_number', 'address']
+        labels = {
+            'name': 'اسم العميل',
+            'phone_number': 'الجوال',
+            'address': 'الموقع',
+        }

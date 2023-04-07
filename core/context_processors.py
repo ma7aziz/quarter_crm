@@ -1,15 +1,15 @@
-from accounts.models import Section, ROLE, User
-from service.models import lateDays
 
-def add_variable_to_context(request):
-    sections = Section.objects.all()
-    users = User.objects.all()
-    late_days  = lateDays.objects.get(pk = 1)
-    ctx = {
-        "sections": sections,
-        'roles': ROLE,
-        'users': users , 
-        'days' :late_days.days
-    }
+from users.models import User
 
+def context(request):
+    ctx = {}
+    if request.user.is_authenticated : 
+        if  request.user.role == 'company':
+            companies = request.user
+        else :
+            companies =  User.objects.filter(role='company')
+        ctx = {
+            'companies': companies
+        }
+    
     return ctx

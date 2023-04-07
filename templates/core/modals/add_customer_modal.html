@@ -1,0 +1,40 @@
+<!-- create customer modal  -->
+{% load widget_tweaks %}
+<div class="modal custom-modal fade" id="addCustomerModal" role="dialog" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body">
+                    <div class="text-center">
+                        <h3>اضافة عميل جديد </h3>
+                    </div>
+                    <div class="mx-3">
+                        <form action="{% url 'core:add_customer' %}" method="POST" id="edit_user_form">
+                            <input type="hidden" name="user" value="{{user.id}}">
+                            {% csrf_token%}
+                            <div class="row">
+
+                               {% for field in customer_form %}
+                               <div class="col-12 my-1">
+                                   {{field.label_tag}}
+                                   {{field|attr:'class:form-control'}}
+
+                               </div>
+                               {% endfor %}
+                            </div>
+                            <div class="modal-btn my-3">
+                    
+                                <div class="">
+                                    <button type="submit" id="updateUserBtn" class="btn btn-danger continue-btn w-100 my-1" >حفظ</button>
+                                    <a href="javascript:void(0);" data-bs-dismiss="modal"
+                                        class="btn btn-primary cancel-btn w-100">الغاء</a>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                
+                
+            </div>
+        </div>
+    </div>
+</div>
+

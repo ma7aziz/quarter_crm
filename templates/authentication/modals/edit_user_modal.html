@@ -1,0 +1,92 @@
+{% load static %}
+
+<!-- Edit user modal  -->
+<div class="modal custom-modal fade" id="edit_user_modal" role="dialog" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="text-center">
+                    <h3>تعديل بيانات المستخدم </h3>
+                </div>
+                <div class="">
+                    <form action="{% url 'users:edit_user_details' %}" method="POST" id="edit_user_form">
+                        <input type="hidden" name="user" value="{{user.id}}">
+                        {% csrf_token%}
+                        <div class="row">
+                            <div class="col-12 my-1">
+                                <label for="" class="text-primary">الاسم :</label>
+                                <input type="text" class="form-control" name="name" value="{{user.name}}" required>
+                            </div>
+                            <div class="col-12 my-1">
+                                <label for="" class="text-primary">اسم المستخدم :</label>
+                                <input type="text" class="form-control" name="username" value="{{user.username}}"
+                                    required>
+                                <div class="invalid-feedback" id="username-validation">
+                                    اسم المستخدم مطلوب
+                                </div>
+                            </div>
+                            <div class="col-12 my-1">
+                                <label for="" class="text-primary">رقم الهاتف :</label>
+                                <input type="text" class="form-control" name="phone_number"
+                                    value="{{user.phone_number}}" required>
+                            </div>
+                            <div class="col-12 my-1">
+                                <label for="" class="text-primary">الوظيفة:</label>
+                                <select name="role" id="" class="form-control" required>
+
+                                    {% for k , v in user_roles %}
+
+                                    <option value="{{k}}" {% if k == user.role %} selected {% endif %}>{{v}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                            <div class="col-12 my-1">
+                                <label for="">عدد مفضلات التركيب/ الصيانة المسموح بها :</label>
+                                <input type="number" name="favourite_qouta" value="{{user.favourite_qouta}}"
+                                    class="form-control" required>
+                            </div>
+                        </div>
+                        <div class="form-group my-3">
+                            الخدمات المسموحة :
+                            <div class="form-check ">
+                                <input class="form-check-input" name="install" type="checkbox" {% if user.install %} checked {% endif%} >
+                                <label class="form-check-label fw-bold text-primary mx-1" for="flexCheckDefault">
+                                    التركيب
+                                </label>
+
+                            </div>
+                            <div class="form-check ">
+                                <input class="form-check-input" name="repair" type="checkbox" {% if user.repair %} checked {% endif %}>
+                                <label class="form-check-label fw-bold text-primary mx-1" for="flexCheckDefault"
+                                    >
+
+                                    الصيانة
+                                </label>
+
+                            </div>
+                            <input class="form-check-input" name="quarter" type="checkbox" {% if user.quarter %} checked {% endif%}>
+                            <label class="form-check-label fw-bold text-primary mx-1" for="flexCheckDefault"
+                                >
+                                كوارتر
+                            </label>
+
+                        </div>
+                </div>
+                <div class="modal-btn my-3">
+
+                    <div class="">
+                        <button type="submit" id="updateUserBtn"
+                            class="btn btn-danger continue-btn w-100 my-1">حفظ</button>
+                        <a href="javascript:void(0);" data-bs-dismiss="modal"
+                            class="btn btn-primary cancel-btn w-100">الغاء</a>
+                    </div>
+                </div>
+                </form>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+</div>

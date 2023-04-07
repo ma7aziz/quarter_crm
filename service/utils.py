@@ -1,81 +1,50 @@
-from accounts.models import User
-from service.models import Service_request
-import datetime
-import requests
-from .models import lateDays
+from datetime import datetime, timedelta
 
-import json
+from django.db.models import Count, DateField, Max, Q ,Sum
+from django.db.models.functions import Cast
+from django.utils import timezone
+
+from core.models import LateDays
+
+from . import models
 
 
-def check_qouta(user_id):
-    user = User.objects.get(pk=user_id)
-    last_request = Service_request.objects.all().filter(
-        created_by=user).filter(favourite=True).last()
-    today = datetime.date.today()
-    yesterday = today - datetime.timedelta(days=1)
-    if last_request:
-        if last_request.timestamp.date() < today:
-            user.favourite_qouta.current_requests = 0
-            user.favourite_qouta.save()
+def generate_ref_number(service_type):
+
+    prefix = 'N' if service_type == 'install' else 'R'
+    year = str(datetime.now().year)[-2:]
+
+    last_ref_number = models.Service.objects.filter(
+        ref_number__startswith=f'{prefix}{year}'
+    ).aggregate(Max('ref_number'))['ref_number__max']
+
+    if not last_ref_number:
+        return f'{prefix}{year}001'
+
+    last_number = int(last_ref_number[-3:])
+    new_number = f'{last_number+1:03d}'
+    return f'{prefix}{year}{new_number}'
+
+
+def get_late_count(service):
+
+    days = LateDays.objects.last().days
+    threshold_date = timezone.now() - timedelta(days=days - 1)
+    if service == 'install':
+        late_orders_count = models.Service.objects.install().annotate(
+            created_date=Cast('created_at', DateField())
+        ).filter(
+            Q(status='new') & Q(created_date__lte=threshold_date)
+        ).count()
+    elif service == 'repair':
+        late_orders_count = models.Service.objects.repair().annotate(
+            created_date=Cast('created_at', DateField())
+        ).filter(
+            Q(status='new') & Q(created_date__lte=threshold_date)
+        ).count()
     else:
-        user.favourite_qouta.current_requests = 0
-        user.favourite_qouta.save()
+        late_orders = models.Service.objects.filter(
+            created_at__lte=threshold_date, status='new')
+        late_orders_count = late_orders.aggregate(count=Count('id'))['count']
 
-
-def late_orders(service_type):
-    late_days = lateDays.objects.get(pk=1)
-    orders = Service_request.objects.all().filter(
-        service_type=service_type).filter(status="new").order_by('-timestamp')
-    late = []
-    for order in orders:
-        days = order.timestamp.date() - datetime.datetime.today().date()
-
-        if -days.days > late_days.days:
-            late.append(order)
-    return late
-
-# def send_new_request_message(req):
-#     message = f"تم تسجيل طلبك بنجاح \n رقم الطلب: #{req.request_number}\n"
-#     url =  f"https://mshastra.com/sendurlcomma.aspx?user=20099824&pwd=4nnnku&senderid=SMSAlert&mobileno={req.phone}&msgtext={message}&priority=High&CountryCode=+966"
-#     print(url)
-#     payload={}
-#     headers = {}
-#     response = requests.request("GET", url, headers=headers, data=payload)
-
-
-def new_req_msg(req):
-    msg = "تم تسجيل طلبك بنجاح"
-    url = f"https://mshastra.com/sendurlcomma.aspx?user=20099824&pwd=4nnnku&senderid=SMSAlert&mobileno={req.phone}&msgtext={msg}&priority=High&CountryCode=+966"
-    payload = {}
-    headers = {}
-    response = requests.request("GET", url, headers=headers, data=payload)
-
-
-def send_appointment_message(req):
-    if req.service_type == "install":
-        message = f"تم تحديد موعد التركيب يوم {req.appointment.date}"
-    elif req.service_type == "repair":
-        message = f"تم تحديد موعد الصيانة يوم {req.appointment.date}"
-
-    url = f"https://mshastra.com/sendurlcomma.aspx?user=20099824&pwd=4nnnku&senderid=SMSAlert&mobileno={req.phone}&msgtext={message}&priority=High&CountryCode=+966"
-    payload = {}
-    headers = {}
-    response = requests.request("GET", url, headers=headers, data=payload)
-
-
-def get_data():
-    pass
-    # response = requests.get('http://localhost:8000/api/requests')
-    # data = response.json()
-    # for r in data:
-    #     print(r["id"], r['time'])
-
-
-def set_archived():
-    orders = Service_request.objects.all().exclude(archived=True).exclude(status="new").exclude(
-        status="under_process").exclude(hold=True).order_by('-timestamp')
-    for order in orders:
-        days = order.timestamp.date() - datetime.datetime.today().date()
-        if -days.days > 30:
-            order.archived = True
-            order.save()
+    return late_orders_count

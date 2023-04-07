@@ -1,0 +1,105 @@
+<div class="card">
+    <div class="card-body">
+        <h3>طلبات معلقة</h3>
+            <div class="table-responsive">
+                <table class="table search-table " id="onHold">
+                    <thead class="header-item bg-dark text-light text-center">
+                        <th>#</th>
+                        <th>رقم الطلب </th>
+                        <th>نوع الطلب </th>
+                        <th>اسم العميل </th>
+                        <th>الجوال</th>
+                        <th>البائع</th>
+                        <th>رقم الفاتورة</th>
+                        <th>التاريخ</th>
+                        <th>حالة الطلب </th>
+                        
+                    </thead>
+                    <tbody>
+                        <!-- row -->
+                        {% for service in services %}
+                        <tr class="search-items text-center {% if service.late %} bg-light-danger {% elif service.favourite and service.late == False  %} bg-light-success {% endif %}">
+                            <td>{{forloop.counter}} </td>
+                            <td>
+                                <a href="{% url 'service:service_details' service.id %}">{{service.ref_number}}</a>
+                            </td>
+                            <td>
+                                <span class="badge rounded-pill 
+                                {% if service.service_type == 'install' %}
+                                bg-primary
+                                {% elif service.service_type == 'repair' %}
+                                bg-secondary
+                                {% endif %}
+                                ">
+                                    {{service.get_service_type_display}}
+                                </span>
+                            </td>
+        
+        
+                            <td> {{service.customer}}</td>
+                            <td>{{service.phone_number}}</td>
+                            <td><a href="{% url 'users:user_details' service.created_by.id %}">{{service.created_by}}</a></td>
+                            <td>{% if service.invoice_number%} {{service.invoice_number }} {% else%} - {% endif %}</td>
+                            <td>{{service.created_at.date|date:"F j"}}</td>
+
+                            <td>
+                                <a href="{% url 'service:service_details' service.id %}">
+        
+                                {% if service.hold %}
+                                <span class="badge round-pill bg-danger">معلق</span>
+                                {% else %}
+                                <span class="badge rounded-pill 
+        
+                            {% if service.status  == 'new' %}
+                               bg-warning
+                            {% elif service.status == 'under_process' %}
+                                bg-primary
+                            {% elif  service.status == 'done' or service.status  == 'closed' %}
+                                bg-success
+                            {% endif %} 
+           
+                               ">
+                                   
+                               {{service.get_status_display}}
+                                </span>
+                                {% endif %}
+                                </a>
+                            </td>
+                         
+                        </tr>
+                        {% endfor %}
+                        <!-- /.row -->
+        
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+
+{% block script %}
+<script>
+    $(document).ready(function () {
+        $('#onHold').DataTable({
+            pageLength: 50,
+            ordering: false,
+            "language": {
+                "paginate": {
+                    "next": "الصفحة التالية",
+                    "previous": "الصفحة السابقة"
+                },
+                "emptyTable": "لا يوجد بيانات للعرض ",
+                "info": "عرض _START_ الي _END_ من _TOTAL_ طلبات",
+                "infoEmpty": "Showing 0 to 0 of 0 entries",
+                "infoFiltered": "(تم البحث في  _MAX_ طلب)",
+                "search": "البحث:",
+                "zeroRecords": "لا يوجد بيانات مطابقة للبحث",
+                "lengthMenu": "عرض _MENU_ طلب في الصفحة ",
+
+            },
+            "pagingType": "numbers"
+
+        })
+    })
+</script>
+{% endblock script %}

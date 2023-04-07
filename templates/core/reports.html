@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+{% block title %} التقارير {% endblock %}
+{% load static %}
+{% block content %}
+<div class="row page-titles">
+    <div class="col-md-5 col-12 align-self-center">
+        <h3 class="text-themecolor mb-0">التقارير</h3>
+    </div>
+    <div class="col-md-7 col-12 align-self-center d-none d-md-flex justify-content-end">
+        <ol class="breadcrumb mb-0 p-0 bg-transparent">
+            <li class="breadcrumb-item active"><a href="">التقارير</a></li>
+            <li class="breadcrumb-item  d-flex align-items-center">Dashboard</li>
+        </ol>
+    </div>
+</div>
+
+<div class="card card-body">
+    <form action="">
+    <div class="row align-items-end">
+
+            <div class="col-lg-5 col-md-12">
+                <label for="">من</label>
+                <input type="date" class="form-control" name="start_date" id="startDate" value="{{report.start_date|date:'Y-m-d'}}">
+            </div>
+    
+            <div class="col-lg-5 col-md-12">
+                <label for="">الي</label>
+                <input type="date" class="form-control" name="end_data" id="endDate" value="{{report.end_date|date:'Y-m-d'}}">
+            </div>
+            <div class="col-lg-2">
+                <button class="btn btn-success w-100"
+                >
+                    عرض
+                </button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div class="card card-body">
+    <div class="row">
+        <div class="col-lg-6">
+
+            <canvas id="service-chart" ></canvas>
+        </div>
+        <div class="col-lg-6">
+
+            <canvas id="user-performance" ></canvas> 
+        </div>
+        <div class="col-12">
+
+            <canvas id="daily-sales" height="70vh" ></canvas>
+        </div>
+    </div>
+</div>
+
+<div id="stats">
+
+{% include './partials/htmx/stats.html'%}
+</div>
+
+{% endblock %}
+
+{% block script %}
+
+<script src="{% static 'asset/libs/chart.js/dist/Chart.min.js' %}"></script>
+<script src="{% static 'asset/libs/chart.js/dist/adapter.js' %}"></script>
+
+<script src="{% static 'js/pages/reports.js' %}"></script>
+{% endblock %}

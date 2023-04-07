@@ -1,0 +1,88 @@
+
+    <div class="my-2">
+        <h4>طلبات معلقة</h4>
+    </div>
+    <div class="table-responsive">
+        <table class="table search-table " id="serviceTable">
+            <thead class="header-item bg-dark text-light text-center">
+                <th>#</th>
+                <th>رقم الطلب </th>
+                <th>اسم العميل </th>
+                <th>الجوال</th>
+                <th>البائع</th>
+                <th>التاريخ</th>
+                <th>حالة الطلب</th>
+         
+            </thead>
+            <tbody>
+                <!-- row -->
+                {% for service in services %}
+                <tr class="search-items text-center {% if service.late %} bg-light-danger {% endif %}">
+                    <td>{{forloop.counter}} </td>
+                    <td>
+                        <a href="{% url 'service:service_details' service.id %}">{{service.ref_number}}</a>
+                    </td>
+    
+    
+                    <td> {{service.customer}}</td>
+                    <td>{{service.phone_number}}</td>
+                    <td><a href="{% url 'users:user_details' service.created_by.id %}">{{service.created_by}}</a></td>
+                    <td>{{service.created_at.date|date:"F j"}}</td>
+                    <td>
+                        <a href="{% url 'service:service_details' service.id %}">
+
+                        {% if service.hold %}
+                        <span class="badge round-pill bg-danger">معلق</span>
+                        {% else %}
+                        <span class="badge rounded-pill 
+
+                    {% if service.status  == 'new' %}
+                       bg-warning
+                    {% elif service.status == 'under_process' %}
+                        bg-primary
+                    {% elif  service.status == 'done' or service.status  == 'closed' %}
+                        bg-success
+                    {% endif %} 
+   
+                       ">
+                           
+                       {{service.get_status_display}}
+                        </span>
+                        {% endif %}
+                        </a>
+                    </td>
+                    
+                </tr>
+                {% endfor %}
+                <!-- /.row -->
+    
+            </tbody>
+        </table>
+    </div>
+
+
+    <script>
+        $(document).ready(function () {
+            $('#serviceTable').DataTable({
+                pageLength: 50,
+                ordering: false,
+                scrollY: 350,
+                "language": {
+                    "paginate": {
+                        "next": "الصفحة التالية",
+                        "previous": "الصفحة السابقة"
+                    },
+                    "emptyTable": "لا يوجد بيانات للعرض ",
+                    "info": "عرض _START_ الي _END_ من _TOTAL_ طلبات",
+                    "infoEmpty": "Showing 0 to 0 of 0 entries",
+                    "infoFiltered": "(تم البحث في  _MAX_ طلب)",
+                    "search": "البحث:",
+                    "zeroRecords": "لا يوجد بيانات مطابقة للبحث",
+                    "lengthMenu": "عرض _MENU_ طلب في الصفحة ",
+    
+                },
+                "pagingType": "numbers"
+    
+            })
+        })
+    </script>

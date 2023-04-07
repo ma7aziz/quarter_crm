@@ -1,0 +1,84 @@
+<div class="card card-body">
+    <h3>مشاريع كوارتر </h3>
+    <div class="table-responsive">
+        <table class="table search-table " id="QuarterTable">
+            <thead class="header-item bg-dark text-light text-center">
+                <th>#</th>
+                <th>رقم</th>
+                <th>اسم العميل </th>
+                <th>الجوال</th>
+                <th>التاريخ</th>
+                <th>حالة الطلب </th>
+            </thead>
+            <tbody>
+                <!-- row -->
+                {% for project in services %}
+                <tr class="search-items text-center ">
+                    <td>{{forloop.counter}} </td>
+                    <td>
+                        <a href="{% url 'quarter:project_details'  project.id %}">{{project.ref_number}}</a>
+                    </td>
+
+                    <td>{{project.name}}</td>
+                    <td>{{project.phone_number}}</td>
+                    <td>{{project.created_at.date|date:"F j"}}</td>
+                    <td>
+                        <a href="">
+
+                        {% if project.hold %}
+                        <span class="badge round-pill bg-danger">معلق</span>
+                        {% else %}
+                        <span class="badge rounded-pill 
+
+                        {% if project.status  == 'new' %}
+                        bg-warning
+                        {% elif  project.status == 'done' or project.status  == 'closed' %}
+                        bg-success
+                        {% else %}
+                            bg-primary
+                        {% endif %} 
+   
+                       ">
+                           
+                       {{project.get_status_display}}
+                        </span>
+                        {% endif %}
+                        </a>
+                    </td>
+                   
+                </tr>
+                {% endfor %}
+                <!-- /.row -->
+    
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% block script %}
+<script>
+    $(document).ready(function () {
+        $('#QuarterTable').DataTable({
+            pageLength: 50,
+            ordering: false,
+            
+            "language": {
+                "paginate": {
+                    "next": "الصفحة التالية",
+                    "previous": "الصفحة السابقة"
+                },
+                "emptyTable": "لا يوجد بيانات للعرض ",
+                "info": "عرض _START_ الي _END_ من _TOTAL_ طلبات",
+                "infoEmpty": "Showing 0 to 0 of 0 entries",
+                "infoFiltered": "(تم البحث في  _MAX_ طلب)",
+                "search": "البحث:",
+                "zeroRecords": "لا يوجد بيانات مطابقة للبحث",
+                "lengthMenu": "عرض _MENU_ طلب في الصفحة ",
+
+            },
+            "pagingType": "numbers"
+
+        })
+    })
+</script>
+{% endblock script %}

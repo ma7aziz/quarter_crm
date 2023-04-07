@@ -1,0 +1,58 @@
+{% extends 'base.html'%}
+{% block title %} الرئيسية{% endblock %}
+{% block content %}
+<div class="row">
+    <div class="col">
+        <div class="card">
+            <div class="card-body">
+                
+                <div class="text-center">
+                    <h6 class="text-muted mt-2 mb-2">مواعيد قادمة </h6>
+                    <h2>{{upcoming_appointments.count}}</h2>
+         
+                </div>
+                
+            </div>
+        </div>
+    </div>
+   
+</div>
+
+<div class="card card-body">
+    <h3>مواعيد قادمة</h3>
+    <div class="table-responsive">
+        <table class="table search-table " id="serviceTable">
+            <thead class="header-item bg-dark text-light text-center">
+                <th>#</th>
+                <th>رقم الطلب </th>
+                <th>اسم العميل </th>
+                <th>الجوال</th>
+                <th>نوع الطلب </th>
+                <th>تاريخ الزيارة</th>
+         
+            </thead>
+            <tbody>
+                <!-- row -->
+                {% for app in upcoming_appointments %}
+                <tr class="search-items text-center {% if app.today %} bg-light-success {% endif %}">
+                    <td>{{forloop.counter}} </td>
+                    <td>
+                        <a href="{% url 'service:service_details' app.service.id %}">{{app.service.ref_number}}</a>
+                    </td>
+
+
+                    <td> {{app.service.customer}}
+                    </td>
+                    <td><a href="tel:{{app.service.phone_number}}">{{app.service.phone_number}}</a></td>
+                    <td>{{app.service.get_service_type_display}}</td>
+                    <td>{{app.date}}</td>
+                    
+                </tr>
+                {% endfor %}
+                <!-- /.row -->
+
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

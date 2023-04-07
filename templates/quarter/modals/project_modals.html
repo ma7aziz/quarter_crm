@@ -1,0 +1,107 @@
+<!-- edit modal -->
+<div class="modal fade" tabindex="-1" id="edit_project">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="mb-3 text-primary text-center">تعديل بيانات المشروع</h4>
+            </div>
+
+        <div class="modal-body">
+            <form action="{% url 'quarter:update_project' project.id %}" method="post" id="install_form" class="needs-validation"
+            enctype="multipart/form-data"  novalidate />
+            {% csrf_token %}
+        
+            <div class="row">
+    
+
+                <div class="col-12 my-2">
+                    <label for="" class="text-primary">الاسم</label>
+                    <input type="text" name="name" id="" value="{{project.name}}" required class="form-control" />
+    
+                    <div class="invalid-feedback">
+                        <p>العميل مطلوب </p>
+                    </div>
+                </div>
+                <div class="col-12 my-2">
+                    <label class="text-primary" for="">الموقع</label>
+                    <input type="text" name="address" class="form-control" value="{{project.address}}" id="cust_address" required>
+                    <div class="invalid-feedback">
+                        <p>بيانات العميل مطلوبة </p>
+                    </div>
+                </div>
+    
+                <div class="col-12 my-2">
+                    <label class="text-primary" for="">الهاتف</label>
+                    <input type="text" name="phone_number" class="form-control"  value="{{project.phone_number}}" id="cust_phone" required >
+                    <div class="invalid-feedback">
+                        <p>بيانات العميل مطلوبة </p>
+                    </div>
+                </div>
+    
+                
+            </div>
+            
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-success " > حفظ</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">الغاء</button>
+            </div>
+        </form>
+        </div>
+    </div>
+    </div>
+
+   
+</div>
+<!-- delete approve  -->
+<div class="modal custom-modal fade" id="project_delete_approve" role="dialog" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="form-header text-center ">  
+                    <i class=" fas fa-trash-alt fa-3x my-3 text-danger"></i> 
+                    <h3>تأكيد الحذف </h3>
+                </div>
+                <div class="modal-btn delete-action my-3">
+                    <div class="row text-center">
+                        <div class="col-6"> 
+                            <form action=" {% url 'quarter:delete_project' project.id %}" method="POST" id="delete-form">
+                                {% csrf_token%}
+                                
+                                <button type="submit" id="confirmed_delete" class="btn btn-danger continue-btn w-100">حذف</a>
+                            </form>
+                        </div>
+                        <div class="col-6">
+                            <a href="javascript:void(0);" data-bs-dismiss="modal" class="btn btn-primary cancel-btn w-100">الغاء</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+{% block script %}
+<script>
+(function () {
+    'use strict'
+  
+    // Fetch all the forms we want to apply custom Bootstrap validation styles to
+    var forms = document.querySelectorAll('.needs-validation')
+  
+    // Loop over them and prevent submission
+    Array.prototype.slice.call(forms)
+      .forEach(function (form) {
+        form.addEventListener('submit', function (event) {
+          if (!form.checkValidity()) {
+            event.preventDefault()
+            event.stopPropagation()
+          }
+  
+          form.classList.add('was-validated')
+        }, false)
+      })
+  })()
+</script>
+{% endblock %}

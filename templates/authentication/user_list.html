@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+{% block title %}
+    قائمة المستخدمين
+{% endblock %}
+
+{% block content %}
+<div class="row page-titles">
+    <div class="col-md-5 col-12 align-self-center">
+        <h3 class="text-themecolor mb-0">قائمة المستخدمين</h3>
+    </div>
+    <div class="col-md-7 col-12 align-self-center d-none d-md-flex justify-content-end">
+        <ol class="breadcrumb mb-0 p-0 bg-transparent">
+            <li class="breadcrumb-item"><a href="javascript:void(0)">Home</a></li>
+            <li class="breadcrumb-item active d-flex align-items-center">قائمة المستخدمين </li>
+        </ol>
+    </div>
+
+</div>
+<div class="widget-content searchable-container list">
+    <div class="card card-body">
+        <div class="row">
+                <div class="col-md-4 col-xl-2">
+                    <form>
+                        <input type="text" class="form-control product-search" id="input-search" placeholder="بحث عن مستخدم..">
+                    </form>
+                </div>
+                <div class="col-md-8 col-xl-10 text-end d-flex justify-content-md-end justify-content-center mt-3 mt-md-0">
+                     <div class="action-btn show-btn" style="display: none">
+                            <a href="javascript:void(0)" class="delete-multiple btn-light-danger btn me-2 text-danger d-flex align-items-center font-weight-medium" >
+                                <i data-feather="trash-2" class="feather-sm fill-white me-1"></i>
+                             Delete All Row</a>
+                        </div>
+                        {% if perms.users.add_user%}
+                        <a href="{% url 'users:create_user'%}" id="btn-add-contact" class="btn btn-info">
+                            <!-- <i data-feather="users" class="feather-sm fill-white me-1"> </i> -->
+
+                            <i class="fas fa-plus"></i>
+                         اضافة مستخدم جديد </a>
+                         {% endif %}
+                </div>
+        </div>
+    </div>
+    <div class="card card-body">
+        <div class="table-responsive">
+            <table class="table search-table v-middle">
+                <thead class="header-item bg-dark text-light text-center">
+                    <th>اسم المستخدم</th>
+                    <th>الوظيفة</th>
+                    <th>اخر تسجيل دخول</th>
+
+                    <th>Action</th>
+                </thead>
+                <tbody class="text-center">
+                    <!-- row -->
+                    {% for user in users %}
+                    <tr>
+                       
+                        <td>    
+                            <h6><a href="{% url 'users:user_details' user.id %}">{{user.username}}</a></h6>   
+                        </td>
+                        <td>
+                            {{user.get_role_display}}
+                        </td>
+                        <td>
+                            <span >{{user.last_login}}</span>
+                        </td>
+                        
+                        <td>
+                            <div class="action-btn">
+                                <a href="{% url 'users:user_details' user.id %}" class="text-info edit"><i data-feather="eye" class="feather-sm fill-white"></i></a>
+                                {% if not request.user == user %}
+                                {% if perms.users.delete_user%}
+                                <a  class="text-dark delete ms-2" id="delete_approve_btn"  data-bs-toggle="modal" data-bs-target="#delete_approve" 
+                                data-url="{% url 'users:delete_user' user.id %}"><i data-feather="trash-2" class="feather-sm fill-white"></i></a>
+                                {% endif %} {% endif %}
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    <!-- /.row -->
+                 
+                </tbody>
+            </table>
+        </div>
+    </div>  
+
+</div>
+
+
+<!-- User Delete Confirmation Modal -->
+{% include './modals/delete_approve_modal.html'  %}
+{% endblock%}

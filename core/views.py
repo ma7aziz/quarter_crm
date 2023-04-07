@@ -1,371 +1,283 @@
+from datetime import datetime, timedelta
 
-import datetime
-from django.db.models.functions import TruncMonth
-from django.db.models import Count
-from django.http import JsonResponse
-from django.http import HttpResponse
-from django.contrib.auth.decorators import login_required
-from collections import OrderedDict
-from django.db.models import Q
-from django.core.paginator import Paginator
-from django.shortcuts import get_object_or_404
-from operator import attrgetter
-from itertools import chain
-from django.shortcuts import render, redirect
-from accounts.models import User
 from django.contrib import messages
-from service.models import Service_request
-from quarter.models import Quarter_service
-from core.models import Task
-from django.http import HttpResponseRedirect
-from .models import Customer
-from service.utils import check_qouta, get_data, set_archived
-# Create your views here.
+from django.db.models import Count, Q
+from django.db.models.functions import TruncDate
+from django.http import JsonResponse
+from django.shortcuts import redirect, render
+from django.urls import reverse_lazy
+from django.utils import timezone
+from django.views import generic
+
+from quarter.models import QuarterProject
+from service.models import Appointment, Service, SparePartRequest
+from service.utils import get_late_count
+
+from . import models
+from .filters import CustomerFilter
+from .forms import CustomerForm
+from .models import LateDays
+from .utils import generate_report
 
 
-@login_required
-def index(request):
-    if request.user.is_authenticated:
-        check_qouta(request.user.id)
-        if request.user.role == 1:  # Admin
-            return render(request, 'index.html')
-        elif request.user.role == 5 or request.user.role == 10:
-            ####sale##
-            return redirect("sales_view")
-        elif request.user.role == 8:  # technician
-            return redirect("new_tasks")
-        elif request.user.role == 2:  # install mngr
-            return redirect("install_index")
-        elif request.user.role == 3:  # repair mngr
-            return redirect("repair_index")
+class Index(generic.View):
+    def get(self, request):
+        template = ''
+        ctx = {}
 
+        if request.user.role == 'admin' or request.user.is_superuser:
+            counts = Service.objects.aggregate(
+                total_counts=Count('id'),
+
+                repair_count=Count('id', filter=Q(service_type='repair')),
+                repair_new_count=Count('id', filter=Q(
+                    service_type='repair', status='new', hold=False)),
+                install_count=Count('id', filter=Q(service_type='install')),
+                install_new_count=Count('id', filter=Q(
+                    service_type='install', status='new', hold=False)),
+                new_count=Count('id', filter=Q(status='new', hold=False)),
+                under_process_count=Count(
+                    'id', filter=Q(status='under_process')),
+                on_hold_count=Count('id', filter=Q(hold=True))
+            )
+            quarter = QuarterProject.objects.aggregate(total_count=Count('id'),
+                                                       new_count=Count('id',  filter=Q(status='new')))
+            new_requests = Service.objects.all().filter(status='new', hold=False)
+            template = 'core/index.html'
+            ctx = {
+                'total_count': counts['total_counts'] + quarter['total_count'],
+                'quarter_count': quarter['total_count'],
+                'quarter_new_count': quarter['new_count'],
+                'repair_count': counts['repair_count'],
+                'repair_new_count': counts['repair_new_count'],
+                'install_count': counts['install_count'],
+                'install_new_count': counts['install_new_count'],
+                'new_count': counts['new_count'],
+                'under_process_count': counts['under_process_count'],
+                'on_hold_count': counts['on_hold_count'],
+                'new_requests': new_requests,
+                'late_count': get_late_count('all')
+
+            }
+        elif request.user.role == 'sales':
+            template = 'core/sales_index.html'
+            counts = Service.objects.filter(created_by=request.user).aggregate(
+                total_count=Count('id'),
+                repair_count=Count('id', filter=Q(service_type='repair')),
+                repair_new_count=Count('id', filter=Q(
+                    service_type='repair', status='new')),
+                install_count=Count('id', filter=Q(service_type='install')),
+                install_new_count=Count('id', filter=Q(
+                    service_type='install', status='new')),
+                new_count=Count('id', filter=Q(status='new')),
+                under_process_count=Count(
+                    'id', filter=Q(status='under_process')),
+                on_hold_count=Count('id', filter=Q(status='hold'))
+
+            )
+            ctx = {
+                'total_count': counts['total_count'],
+                'repair_count': counts['repair_count'],
+                'repair_new_count': counts['repair_new_count'],
+                'install_count': counts['install_count'],
+                'install_new_count': counts['install_new_count'],
+                'new_count': counts['new_count'],
+                'under_process_count': counts['under_process_count'],
+                'on_hold_count': counts['on_hold_count'],
+                'services': Service.objects.filter(created_by=request.user)
+            }
+        elif request.user.role == 'company':
+            template = 'core/company_index.html'
+            ctx = {
+                'services': Service.objects.filter(created_by=request.user),
+                'warranty': Service.objects.repair().filter(company=request.user),
+                'sp_requests': SparePartRequest.objects.all().filter(service__company=request.user)
+            }
+        elif request.user.role == 'technician':
+            template = 'core/tech_index.html'
+            ctx = {
+                'upcoming_appointments': Appointment.objects.upcoming().filter(technician=request.user),
+                'past_appointmanets': Appointment.objects.past().filter(technician=request.user),
+                'services': Service.objects.all().filter(created_by=request.user)
+            }
+        elif request.user.role == 'repair_supervisor':
+            return redirect(reverse_lazy('service:repair'))
+        elif request.user.role == 'install_supervisor':
+            return redirect(reverse_lazy('service:install'))
+        elif request.user.role in ['quarter_supervisor', 'accountant', 'quarter_sales', 'egypt_office']:
+            return redirect(reverse_lazy('quarter:project_list'))
+        return render(request, template, ctx)
+
+
+class CustomerList(generic.ListView):
+    model = models.Customer
+    template_name = 'core/customer_list.html'
+    context_object_name = 'customers'
+
+    def get_queryset(self):
+        print(self.request.GET)
+        qs = super().get_queryset()
+        if self.request.user.role == 'sales':
+            qs = self.model.objects.filter(created_by=self.request.user)
+        self.filterset = CustomerFilter(self.request.GET, queryset=qs)
+        return self.filterset.qs.order_by('-created_at')
+
+    def get_context_data(self, **kwargs):
+        kwargs['customer_form'] = CustomerForm
+        kwargs['filterform'] = self.filterset.form
+        return super().get_context_data(**kwargs)
+
+
+class CreateCustomerView(generic.CreateView):
+    model = models.Customer
+    fields = ['name', 'phone_number', 'address', 'city']
+
+    def form_valid(self, form):
+        form.instance.created_by = self.request.user
+        form.save()
+        messages.success(self.request, 'تم اضافة العميل !')
+        return redirect(self.request.META.get('HTTP_REFERER'))
+
+
+class CustomerDetails(generic.DetailView):
+    model = models.Customer
+    lookup_field = 'pk'
+    context_object_name = 'customer'
+    template_name = 'core/customer_details.html'
+
+
+class Archive(generic.ListView):
+
+    '''
+    List all aarchived services 
+    service is archived after 30 days if status == closed
+    '''
+    template_name = 'service/archive.html'
+    model = Service
+    context_object_name = 'services'
+
+    def get_queryset(self):
+        if self.request.user.is_superuser:
+            qs = Service.objects.archive()
+        elif self.request.user.role == 'install_supervisor':
+            qs = Service.objects.archive().filter(service_type='install')
+        elif self.request.user.role == 'repair_supervisor':
+            qs = Service.objects.archive().filter(service_type='repair')
         else:
-            # quarter staff
-            return redirect("quarter_index")
+            qs = self.request.user.service_set.filter(archive=True)
+        print(qs.explain())
+        return qs
 
-    return render(request, 'index.html')
 
+class Reports(generic.View):
+    def get(self, request):
+        start_date = request.GET.get('start_date')
+        end_date = request.GET.get('end_data')
 
-@login_required
-def dashboard(request):
-    if request.user.role == 1:
-        repair_requests = Service_request.objects.repair()
-        install_requests = Service_request.objects.install()
-        quarter_requests = Quarter_service.objects.all()
-        all_requests = sorted(
-            chain(repair_requests.exclude(archived=True), install_requests.exclude(archived=True), quarter_requests), key=attrgetter('timestamp'), reverse=True)
-
-        # ON HOLD #####
-        quarter_hold = quarter_requests.filter(hold=True)
-
-        service_hold = Service_request.objects.on_hold()
-        all_on_hold = sorted(chain(quarter_hold, service_hold),
-                             key=attrgetter('timestamp'), reverse=True)
-
-        # under_process #####
-        repair_under_process = repair_requests.exclude(
-            status="closed").exclude(status="done")
-        install_under_process = install_requests.exclude(
-            status="closed").exclude(status="done")
-
-        ########################################################### NEED TO CHANGE LATER ###########
-        quarter_under_process = quarter_requests
-        ###############################
-        # All under process
-        all_under_process = sorted(
-            chain(repair_under_process, install_under_process,
-                  quarter_under_process),
-            key=attrgetter('timestamp'), reverse=True)
-
-        # NEW REQUESTS
-        new_repair = repair_requests.filter(status="new").count()
-        new_install = install_requests.filter(status="new").count()
-        new_quarter = Quarter_service.objects.all().filter(status=1).count()
-        # all_new = sorted(
-        #     chain(new_repair, new_install, new_quarter), key=attrgetter('timestamp'), reverse=True
-        # )
-        all_new = new_install + new_quarter + new_repair
-        # special tasks
-        # tasks = Task.objects.all()
-        # current_tasks = Task.objects.all().exclude(status="closed")
-        # active_tasks = Task.objects.all().filter(status="open")
-        # completed_tasks = Task.objects.all().filter(status="completed")
-
-        users = User.objects.all().order_by("role")
-        ####### THIS MONTH ORDERS #######
-        today = datetime.date.today()
-        repair_month = repair_requests.filter(
-            timestamp__year=today.year,  timestamp__month=today.month).count()
-        install_month = install_requests.filter(
-            timestamp__year=today.year, timestamp__month=today.month).count()
-        quarter_month = quarter_requests.filter(
-            timestamp__year=today.year, timestamp__month=today.month).count()
+        report = generate_report(start_date, end_date)
         ctx = {
-            "all_users": users,
-            'users': users[:10],
-            # all requests
-
-            "quarter_requests": quarter_requests,
-            "repair_requests": repair_requests.exclude(archived=True).order_by("-timestamp"),
-            "install_requests": install_requests.exclude(archived=True).order_by("-timestamp"),
-            "all_requests": all_requests,
-
-            # COUNT
-            "quarter_count": quarter_requests.count(),
-            "repair_count": repair_requests.count(),
-            "install_count": install_requests.count(),
-            "all_count": quarter_requests.count() + repair_requests.count() + install_requests.count(),
-
-            # ON HOLD
-            'quarter_hold': quarter_hold,
-            'service_hold': service_hold,
-            'all_on_hold': all_on_hold,
-            ## under process requests ##
-            "all_cur": all_under_process,
-            'repair_cur': repair_under_process,
-            'install_cur': install_under_process,
-            'quarter_cur': quarter_under_process,
-            # NEW REQUESTS
-            "all_new": all_new,
-            # "new_install": new_install,
-            # "new_repair": new_repair,
-            # "new_quarter": new_quarter,
-            # TASKS
-            # "tasks": current_tasks,
-            # "active_tasks": active_tasks,
-            # "completed_tasks": completed_tasks,
-            # this month requests
-            "repair_month": repair_month,
-            "install_month": install_month,
-            "quarter_month": quarter_month,
-            "all_this_month": int(quarter_month + install_month + repair_month)
+            'report': report,
 
         }
-        return render(request, 'core/dashboard.html', ctx)
-    else:
-        messages.error(request, "لا يمكنك الوصول لهذة الصفحة ")
-        return redirect('index')
+        return render(request, 'core/reports.html', ctx)
 
 
-def all_users(request):
-    if request.user.role == 1:
-        all_users = User.objects.all().order_by('role')
-        sales = User.objects.all().filter(role=4)
-        tech = User.objects.all().filter(role=3)
+# dashboard htmx
+def index_data(request):
+    '''
+    Htmx tables in index page 
+    repair == new , current 
+    install == new , current 
+    hold  
+    '''
+    service_type = request.GET['service']
+    base_temp_name = 'core/partials/htmx/'
+    if service_type == 'install':
+        template = base_temp_name + 'install.html'
+        ctx = {
+            'services': Service.objects.install().filter(Q(status='new') | Q(status='under_process'))
+        }
+    elif service_type == 'repair':
+        template = base_temp_name + 'repair.html'
+        ctx = {
+            'services': Service.objects.repair().filter(Q(status='new') | Q(status='under_process'))
+        }
+    elif service_type == 'hold':
+        template = base_temp_name + 'hold.html'
+        ctx = {
+            'services': Service.objects.repair().filter(hold=True)
+        }
+    elif service_type == 'late':
+        template = base_temp_name + 'late.html'
+        days = LateDays.objects.last().days
+        days_ago = timezone.now() - timedelta(days=days - 1)
+        late_orders = Service.objects.filter(
+            status='new', created_at__lte=days_ago)
 
         ctx = {
-            "all_users": all_users,
-            "sales": sales,
-            "tech": tech
+            'services': late_orders,
         }
-        return render(request, "core/users.html", ctx)
-    else:
-        messages.error(request, "لا يمكنك الوصول لهذة الصفحة ")
-        return redirect('index')
-
-
-def archive(request):
-    qs = Service_request.objects.all().filter(archived=True).order_by("-timestamp")
-
-    paginator = Paginator(qs, 40)
-
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
-
-    ctx = {
-        "page_obj": page_obj
-    }
-    return render(request, "core/archive.html", ctx)
-
-
-def create_task(request):
-    task = Task(title=request.POST["title"], due_date=request.POST['due_date'],
-                created_by=request.user, employee=User.objects.get(pk=request.POST["employee"]), details=request.POST['details'])
-    task.save()
-    if request.FILES:
-        task.files = request.FILES['files']
-        task.save()
-    messages.success(request, "تم ارسال المهمة ! ")
-    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-
-
-def update_task(request):
-    task = Task.objects.get(pk=request.POST['task_id'])
-    if task.status == "open":
-        task.status = "completed"
-        task.save()
-        messages.success(request, "اتمام المهمة بنجاح ")
-    elif task.status == "completed":
-        task.status = "closed"
-        task.save()
-        messages.success(request, "تم اغلاق المهمة بنجاح !")
-    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-
-
-def delete_task(request, id):
-    task = get_object_or_404(Task, pk=id)
-    task.delete()
-    messages.error(request, " تم حذف المهمة ")
-    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-
-
-def customers(request):
-    customers = Customer.objects.all()
-    paginator = Paginator(customers, 25)
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
-    count = customers.count()
-
-    return render(request, 'core/customers_data.html', {'page_obj': page_obj, })
-
-
-def customer_details(request, id):
-    customer = Customer.objects.get(pk=id)
-    quarter_orders = Quarter_service.objects.all().filter(customer=customer)
-    service_requests = Service_request.objects.all().filter(customer=customer)
-    orders = sorted(
-        chain(quarter_orders, service_requests), key=attrgetter('timestamp'), reverse=True
-    )
-
-    ctx = {
-        "customer": customer,
-        "quarter_orders": quarter_orders,
-        "service_requests": service_requests,
-        "orders": orders
-    }
-
-    return render(request, "core/customer_details.html", ctx)
-
-
-def search(request):
-    keyword = request.GET.get('s').strip()
-    quarter_result = Quarter_service.objects.filter(Q(name__icontains=keyword) | Q(phone__icontains=keyword) | Q(
-        notes__icontains=keyword) | Q(request_number__iexact=keyword))
-    service_result = Service_request.objects.filter(Q(customer_name__icontains=keyword) | Q(phone__icontains=keyword) | Q(
-        notes__icontains=keyword) | Q(request_number__iexact=keyword))
-    customer_result = Customer.objects.filter(
-        Q(name__icontains=keyword) | Q(phone__icontains=keyword))
-    user_result = User.objects.filter(
-        Q(name__icontains=keyword) | Q(phone__icontains=keyword))
-
-    result = list(chain(quarter_result, service_result,
-                        customer_result, user_result))
-
-    ctx = {
-        'results': result,
-        'quarter_result': quarter_result,
-        'service_result': service_result,
-        'customer_result': customer_result,
-        'user_result': user_result,
-        'keyword': keyword
-    }
-
-    return render(request, 'core/search_results.html', ctx)
-
-
-def sales_view(request):
-    if request.user.role == 10:  # QUARTER SALES VIEW
-        new_requests = Quarter_service.objects.all().filter(status=1).filter(sales=None)
-        print(new_requests)
-        current_assigned_requests = Quarter_service.objects.all().filter(
-            sales=request.user).exclude(status=15).exclude(status=13)
-        quarter_current = Quarter_service.objects.all().filter(
-            created_by=request.user).order_by('-timestamp').exclude(status=15).exclude(status=13)
-        all_current_requests = sorted(chain(current_assigned_requests, quarter_current), key=attrgetter(
-            'timestamp'), reverse=True)
-
-        all_requests = sorted(chain(Quarter_service.objects.all().filter(
-            created_by=request.user).order_by('-timestamp'), Quarter_service.objects.all().filter(
-            sales=request.user)), key=attrgetter(
-            'timestamp'), reverse=True)
+    elif service_type == 'quarter':
+        template = base_temp_name + 'quarter.html'
         ctx = {
-            "new_requests": new_requests,
-            "assigned_requests": current_assigned_requests,
-            "quarter_history": quarter_current,
-            "all_current_requests": all_current_requests,
-            "all_requests": all_requests
+            'services': QuarterProject.objects.all()
         }
-    else:
-        check_qouta(request.user.id)
-        service_history = Service_request.objects.all().filter(
-            created_by=request.user).order_by('-favourite', '-timestamp')
-        quarter_history = Quarter_service.objects.all().filter(
-            created_by=request.user).order_by('-favourite', '-timestamp')
+    elif service_type == 'all':
+        template = base_temp_name + 'all.html'
+        quarter = QuarterProject.objects.all().filter(status='new')
+        service = Service.objects.new()
 
-        all_history = sorted(chain(service_history, quarter_history),
-                             key=attrgetter('favourite', 'timestamp'), reverse=True)
-        # Current
-        current_services = Service_request.objects.all().filter(created_by=request.user).order_by(
-            '-favourite', '-timestamp').exclude(status="done").exclude(status="closed").exclude(status="new")
-        current_quarter = Quarter_service.objects.all().filter(created_by=request.user).order_by(
-            '-favourite', '-timestamp').exclude(status=13).exclude(status=15).exclude(status=1)
-        all_current = sorted(chain(current_services, current_quarter),
-                             key=attrgetter('favourite', 'timestamp'), reverse=True)
-        # favorits
-        favorites = Service_request.objects.all().filter(
-            created_by=request.user).filter(favourite=True).order_by('-timestamp')
         ctx = {
-            "service_history": service_history,
-            "quarter_history": quarter_history,
-            "all_history": all_history,
-            # Current
-            "current_services": current_services,
-            "current_quarter": current_quarter,
-            "all_current": all_current,
-            # Favorites
-            "favs": favorites
+            'services': service,
+            'quarter': quarter
         }
-    return render(request, "core/sales_view.html", ctx)
+
+    return render(request, template, ctx)
 
 
-def chart(request):
-    if request.is_ajax():
-        repair_count = Service_request.objects.repair().count()
-        install_count = Service_request.objects.install().count()
-        quarter_count = Quarter_service.objects.all().count()
-        labels = ['الصيانة', "التركيب ", 'كوارتر ']
-        data = [repair_count, install_count, quarter_count]
-        colors = ['rgba(0, 63, 92, 0.7)', 'rgba(255, 166, 0, 0.7)',
-                  'rgba(239, 86, 117, 0.7)']
+class ServiceChartView(generic.View):
+    def get(self, request, *args, **kwargs):
+        start_date = request.GET.get('start_date')
+        end_date = request.GET.get('end_date')
+        start_date = datetime.strptime(start_date, '%Y-%m-%d')
+        end_date = datetime.strptime(end_date, '%Y-%m-%d')
+        data = Service.objects.filter(created_at__gte=start_date, created_at__lte=end_date).values(
+            'service_type').annotate(count=Count('id'))
 
-        return JsonResponse(data={
-            'labels': labels,
-            'data': data,
-            'colors':  colors
-        })
-    return render(request, "charts.html")
+        service_labels = [item['service_type'] for item in data]
+        service_counts = [item['count'] for item in data]
 
-
-def current_requests(request):
-    if request.is_ajax():
-        repair_under_process = Service_request.objects.repair().exclude(
-            status="closed").exclude(active=False)
-        install_under_process = Service_request.objects.install().exclude(
-            status="closed").exclude(active=False)
-        quarter_under_process = Quarter_service.objects.all().exclude(
-            status=13).exclude(active=False)
-
-        labels = ['الصيانة', "التركيب ", 'كوارتر ']
-        data = [repair_under_process.count(), install_under_process.count(),
-                quarter_under_process.count()]
-        colors = ['rgba(0, 63, 92, 0.7)', 'rgba(255, 166, 0, 0.7)',
-                  'rgba(239, 86, 117, 0.7)']
-
-        return JsonResponse(data={
-            'labels': labels,
-            'data': data,
-            'colors':  colors
-        })
-# ===============================================================================
-############################# CUSTOME ERROR PAGES , 404 , 500 ###################
+        # Quarter
+        quarter = QuarterProject.objects.filter(
+            created_at__gte=start_date, created_at__lte=end_date)
+        quarter_lable = ['Qurater']
+        quarter_counts = [quarter.count()]
+        labels = service_labels + quarter_lable
+        counts = service_counts + quarter_counts
+        return JsonResponse({'labels': labels, 'counts': counts})
 
 
-# def handle_404(request, exception):
-#     messages.error(
-#         request, "عنوان الصفحة المطلوبة غير صحيح .. برجاء المحاولة مرة اخري ! ")
-#     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+class SalesPerformance(generic.View):
+    def get(self, request):
+        start_date = request.GET.get('start_date')
+        end_date = request.GET.get('end_date')
+        start_date = datetime.strptime(start_date, '%Y-%m-%d')
+        end_date = datetime.strptime(end_date, '%Y-%m-%d')
+        data = Service.objects.filter(created_at__gte=start_date, created_at__lte=end_date).values(
+            'created_by__username').annotate(count=Count('id'))
+        labels = [item['created_by__username'] for item in data]
+        counts = [item['count'] for item in data]
+        return JsonResponse({'labels': labels, 'counts': counts})
 
 
-# def handle_500(request, exception):
-#     messages.error(request, "حدث خطأ  ما .. برجاة المحاولة مرة اخري !")
-#     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+class DailyPerformance(generic.View):
+    def get(self, request):
+        start_date = request.GET.get('start_date')
+        end_date = request.GET.get('end_date')
+        start_date = datetime.strptime(start_date, '%Y-%m-%d')
+        end_date = datetime.strptime(end_date, '%Y-%m-%d')
+        data = Service.objects.filter(created_at__gte=start_date, created_at__lte=end_date).annotate(
+            date=TruncDate('created_at')).values('date').annotate(count=Count('id')).order_by('date')
+        labels = [d['date'].strftime('%Y-%m-%d') for d in data]
+        counts = [d['count'] for d in data]
+        return JsonResponse({'labels': labels, 'counts': counts})

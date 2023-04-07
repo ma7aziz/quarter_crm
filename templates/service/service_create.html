@@ -1,0 +1,114 @@
+{% extends 'base.html' %}
+{% block title  %} طلب خدمة {% endblock %}
+{% load widget_tweaks %}
+{% block content %}
+<div class="row page-titles">
+    <div class="col-md-5 col-12 align-self-center">
+        <h3 class="text-themecolor mb-0">طلب خدمة جديد </h3>
+    </div>
+    <div class="col-md-7 col-12 align-self-center d-none d-md-flex justify-content-end">
+        <ol class="breadcrumb mb-0 p-0 bg-transparent">
+            <li class="breadcrumb-item"><a href="">طلب جديد </a></li>
+            <li class="breadcrumb-item"><a href="{% url 'core:customer_list' %}">الطلبات</a></li>
+            <li class="breadcrumb-item active d-flex align-items-center">Dashboard</li>
+        </ol>
+    </div>
+</div>
+<div class="card">
+    <div class="card-body">
+        <div class="d-flex justify-content-center">
+            <button class="btn btn-lg waves-effect btn-success w-50 m-1" hx-get="/service/service_request?type=install"
+                hx-trigger="click" 
+                hx-target="#request_form"
+                hx-swap="outerHTML">تركيب</button>
+            <button class="btn btn-lg waves-effect btn-primary w-50 m-1"
+            hx-get="/service/service_request?type=repair"
+                hx-trigger="click" 
+                hx-target="#request_form"
+                hx-swap="outerHTML" 
+            >صيانة</button>
+        </div>
+        <div class="card card-body" id="request_form">
+
+        </div>
+
+    </div>
+</div>
+<div class="modal custom-modal fade" id="addCustomerModal" role="dialog" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body">
+                    <div class="text-center">
+                        <h3>اضافة عميل جديد </h3>
+                    </div>
+                    <div class="mx-3">
+                        <form action="#" method="POST" id="addCustomerForm" onsubmit="submitForm()">
+                            <input type="hidden" name="user" value="{{user.id}}">
+                            {% csrf_token%}
+                            <div class="row">
+
+                               {% for field in customer_form %}
+                               <div class="col-12 my-1">
+                                   {{field.label_tag}}
+                                   {{field|attr:'class:form-control'}}
+
+                               </div>
+                               {% endfor %}
+                            </div>
+                            <div class="modal-btn my-3">
+                    
+                                <div class="">
+                                    <button type="submit" id="updateUserBtn" class="btn btn-danger continue-btn w-100 my-1"  >حفظ</button>
+                                    <a href="javascript:void(0);" data-bs-dismiss="modal"
+                                        class="btn btn-primary cancel-btn w-100">الغاء</a>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                
+                
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}
+
+{% block script %}
+<script src="https://unpkg.com/htmx.org@1.8.6"></script>
+
+
+<script>
+      function submitForm(){
+
+        let form = document.getElementById('addCustomerForm')
+        console.log('formdata ', form)
+        let formdata = new FormData(form)
+    
+        fetch('/api/customers', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': formdata.get('csrfmiddlewaretoken'),
+                },
+                body: JSON.stringify({
+                    name: formdata.get('name'),
+                    phone_number: formdata.get('phone_number'),
+                    billing_address: formdata.get('address'),
+                    city: formdata.get('city'),
+             
+                })
+            })
+            .then(response => response.json()
+            )
+            .then(
+            $('#addCustomerModal').modal('hide')
+            )
+            .catch(error => console.error(error))
+    
+    }
+</script>
+{% endblock %}
+
+

@@ -1,52 +1,28 @@
 from django.db import models
-from accounts.models import User
+from django.conf import settings
+
+
 # Create your models here.
-
-# MODEL TASK
-
-
-class TaskManager(models.Manager):
-    def open(self):
-        return self.filter(status="open")
-
-
-class Task(models.Model):
-    TASK_STATUS = [
-        ("open", "open"),
-        ("completed", "completed"),
-        ("closed", "closed")
-    ]
-    title = models.CharField(max_length=100, blank=True, null=True)
-    created_by = models.ForeignKey(
-        User, on_delete=models.SET_NULL, related_name="task_added_by", null=True)
-    employee = models.ForeignKey(
-        User, on_delete=models.CASCADE)
-    details = models.TextField(max_length=500, blank=True, null=True)
-    files = models.FileField(upload_to='tasks/files', blank=True, null=True)
-    due_date = models.DateTimeField()
-    status = models.CharField(
-        max_length=10, choices=TASK_STATUS, default="open")
-    timestamp = models.DateTimeField(auto_now_add=True)
-    objects = TaskManager()
-
-    def __str__(self):
-        return f"{self.title} for {self.employee}"
-
+User = settings.AUTH_USER_MODEL
 
 class Customer(models.Model):
-    name = models.CharField(max_length=100)
-    phone = models.CharField(max_length=20)
-    email = models.CharField(max_length=100, blank=True, null=True)
-
+    name = models.CharField(max_length=255 ) 
+    phone_number = models.CharField(max_length= 15 , unique = True )
+    address = models.CharField(max_length= 255 , blank=True)
+    city = models.CharField(max_length=50 , blank=True)
+    created_by = models.ForeignKey(User , on_delete=models.SET_NULL , null =True , blank = True )
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    
     def __str__(self):
         return self.name
+    
 
-
-class Upload(models.Model):
-    name = models.CharField(max_length= 100 )
-    file = models.FileField(upload_to="uploads")
-    timestamp = models.DateTimeField(auto_now_add=True)
-
-
+class LateDays(models.Model):
+    days = models.PositiveIntegerField(default=3)
+    
+    class Meta:
+        verbose_name_plural = 'Late Days'
+    
     def __str__(self):
-        return self.name
+        return f'late days are {self.days}'

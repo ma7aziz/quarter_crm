@@ -1,0 +1,262 @@
+{% extends 'base.html' %}
+{% block title %} الرئيسية {% endblock %}
+{% block content %}
+<div class="row">
+    <div class="col-lg-4 col-md-6">
+        <div class="card">
+            <div class="card-body">
+                
+                <div class="text-center">
+                    <h6 class="text-muted mt-2 mb-2">الطلبات</h6>
+                    <h2>{{services.count}}</h2>
+         
+                </div>
+                
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4 col-md-6">
+        <div class="card">
+            <div class="card-body">
+         
+                    <div class="text-center">
+                        <h6 class="text-muted mt-2 mb-2">طلبات الضمان</h6>
+                        <h2>{{warranty.count}}</h2>
+                    </div>
+ 
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4 col-md-6">
+        <div class="card">
+            <div class="card-body">
+         
+                    <div class="text-center">
+                        <h6 class="text-muted mt-2 mb-2">طلبات قطع الغيار</h6>
+                        <h2>{{sp_requests.count}}</h2>
+                       
+                    </div>
+ 
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card card-body">
+    <h3>الطلبات </h3>
+    <div class="table-responsive">
+        <table class="table search-table " id="serviceTable">
+            <thead class="header-item bg-dark text-light text-center">
+                <th>#</th>
+                <th>رقم الطلب </th>
+                <th>اسم العميل </th>
+                <th>الجوال</th>
+                <th>نوع الطلب </th>
+                <th>التاريخ</th>
+                <th>حالة الطلب </th>
+                <th>Action</th>
+            </thead>
+            <tbody>
+                <!-- row -->
+                {% for service in services %}
+                <tr class="search-items text-center {% if service.late %} bg-light-danger {% endif %} ">
+                    <td>{{forloop.counter}} </td>
+                    <td>
+                        <a href="{% url 'service:service_details' service.id %}">{{service.ref_number}}</a>
+                    </td>
+
+
+                    <td> {{service.customer}}
+                    </td>
+                    <td>{{service.phone_number}}</td>
+                    <td>
+                        <span class="badge rounded-pill 
+                        {% if service.service_type == 'install' %}
+                        bg-primary
+                        {% elif service.service_type == 'repair' %}
+                        bg-secondary
+                        {% endif %}
+                        ">
+    
+                            {{service.get_service_type_display}}
+                        </span>
+                    </td>
+                    <td>{{service.created_at.date|date:"F j"}}</td>
+                    <td>
+                        <span class="badge rounded-pill 
+                    {% if service.status  == 'new' %}
+                       bg-warning
+                    {% elif service.status == 'under_process' %}
+                        bg-primary
+                    {% elif  service.status == 'done' or service.status  == 'closed' %}
+                        bg-success
+                    {% endif %} 
+                       ">
+                            {{service.get_status_display}}
+                        </span>
+
+                    </td>
+                    <td>
+                        <div class="action-btn">
+                            <a href="" class="text-info edit"><i data-feather="eye"
+                                    class="feather-sm fill-white"></i></a>
+                            {% if perms.sales.delete_customer %}
+                            <a class="text-dark delete ms-2" id="delete_approve_btn" data-url="" data-bs-toggle="modal"
+                                data-bs-target="#delete_approve"><i data-feather="trash-2"
+                                    class="feather-sm fill-white"></i></a>
+                            {% endif %}
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+                <!-- /.row -->
+
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="card card-body">
+    <h3>طلبات الضمان الخاصة بالشركة </h3>
+    <div class="table-responsive">
+        <table class="table search-table " id="warrantyTable">
+            <thead class="header-item bg-dark text-light text-center">
+                <th>#</th>
+                <th>رقم الطلب </th>
+                <th>اسم العميل </th>
+                <th>الجوال</th>
+                <th>نوع الطلب </th>
+                <th>التاريخ</th>
+                <th>حالة الطلب </th>
+
+            </thead>
+            <tbody>
+                <!-- row -->
+                {% for service in warranty %}
+                <tr class="search-items text-center {% if service.late %} bg-light-danger {% endif %}">
+                    <td>{{forloop.counter}} </td>
+                    <td>
+                        <a href="{% url 'service:service_details' service.id %}">{{service.ref_number}}</a>
+                    </td>
+
+
+                    <td> {{service.customer}}
+                    </td>
+                    <td>{{service.phone_number}}</td>
+                    <td>
+                        <span class="badge rounded-pill 
+                        {% if service.service_type == 'install' %}
+                        bg-primary
+                        {% elif service.service_type == 'repair' %}
+                        bg-secondary
+                        {% endif %}
+                        ">
+    
+                            {{service.get_service_type_display}}
+                        </span>
+                    </td>
+                    <td>{{service.created_at.date|date:"F j"}}</td>
+                    <td>
+                        <span class="badge rounded-pill 
+                    {% if service.status  == 'new' %}
+                       bg-warning
+                    {% elif service.status == 'under_process' %}
+                        bg-primary
+                    {% elif  service.status == 'done' or service.status  == 'closed' %}
+                        bg-success
+                    {% endif %} 
+                       ">
+                            {{service.get_status_display}}
+                        </span>
+
+                    </td>
+            
+                </tr>
+                {% endfor %}
+                <!-- /.row -->
+
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="card card-body">
+    <h3>طلبات قطع الغيار </h3>
+    <div class="table-responsive">
+        <table class="table search-table " id="">
+            <thead class="header-item bg-dark text-light text-center">
+                <th>#</th>
+                <th>رقم الطلب </th>
+                <th>اسم العميل </th>
+                <th>نوع الجهاز </th>
+                <th>القطعة</th>
+                <th>التاريخ</th>
+                <th>حالة الطلب </th>
+ 
+            </thead>
+            <tbody>
+                <!-- row -->
+                {% for req in sp_requests %}
+                <tr class="text-center">
+                    <td>{{forloop.counter}} </td>
+                    <td>
+                        <a href="{% url 'service:service_details' req.service.id %}">{{req.service.ref_number}}</a>
+                    </td>
+
+
+                    <td> <a>{{req.service.name}}</a>
+                    </td>
+                    <td>{{req.service.machine_type}}</td>
+                    <td>{{req.requested_parts}}</td>
+
+                    
+                    <td>{{req.created_at.date|date:"F j"}}</td>
+                    <td>
+                        <span class="badge rounded-pill 
+                    {% if req.status  == 'pending' %}
+                       bg-warning
+                    {% elif req.status == 'recieved' %}
+                        
+                        bg-success
+                    {% endif %} 
+                       ">
+                            {{req.get_status_display}}
+                        </span>
+
+                    </td>
+                    
+                </tr>
+                {% endfor %}
+                <!-- /.row -->
+
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
+{% block script %}
+  
+<script>
+        $(document).ready(function () {
+            $('table' ).DataTable({
+                pageLength: 25,
+                ordering: false,
+                "language": {
+                    "paginate": {
+                        "next": "الصفحة التالية",
+                        "previous": "الصفحة السابقة"
+                    },
+                    "emptyTable": "لا يوجد بيانات للعرض ",
+                    "info": "عرض _START_ الي _END_ من _TOTAL_ طلبات",
+                    "infoEmpty": "Showing 0 to 0 of 0 entries",
+                    "infoFiltered": "(تم البحث في  _MAX_ طلب)",
+                    "search": "البحث:",
+                    "zeroRecords": "لا يوجد بيانات مطابقة للبحث",
+                    "lengthMenu": "عرض _MENU_ طلب في الصفحة ",
+    
+                },
+                "pagingType": "numbers"
+    
+            })
+        })
+
+</script>
+{% endblock script %}

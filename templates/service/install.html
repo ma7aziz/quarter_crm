@@ -1,0 +1,166 @@
+{% extends 'base.html' %}
+{% block title %} التركيب {% endblock %}
+{% block content %}
+<div class="row page-titles">
+    <div class="col-md-5 col-12 align-self-center">
+        <h3 class="text-themecolor mb-2">التركيــب</h3>
+    </div>
+    <div class="col-md-7 col-12 align-self-center d-none d-md-flex justify-content-end">
+        <ol class="breadcrumb mb-0 p-0 bg-transparent">
+            <li class="breadcrumb-item"><a href="">التركيب</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'service:service_list' %}">الخدمات</a></li>
+            <li class="breadcrumb-item active d-flex align-items-center">Dashboard</li>
+        </ol>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-3 col-md-6 pointer"
+    hx-trigger="click" 
+    hx-swap="innerHTML"
+    hx-target="#displayData"
+    hx-get="/service/get_data?service=install&data=all">
+
+        <div class="card">
+            <div class="card-body">
+
+                <div class="text-center">
+                    <h6 class="text-muted mt-2 mb-2">اجمالي الطلبات المستلمة </h6>
+                    <h2>{{total_count}}</h2>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-6 pointer" hx-trigger="click" hx-get="/service/get_data?service=install&data=on_hold"
+        hx-target="#displayData" hx-swap="innerHTML">
+        <div class="card">
+            <div class="card-body">
+
+                <div class="text-center">
+                    <h6 class="text-muted mt-2 mb-2">الطلبات المعلقة</h6>
+                    <h2>{{on_hold_count}}</h2>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-6 pointer" hx-trigger="click" hx-get="/service/get_data?service=install&data=new"
+        hx-target="#displayData" hx-swap="innerHTML">
+        <div class="card">
+            <div class="card-body">
+                <div class="text-center">
+                    <h6 class="text-muted mt-2 mb-2">طلبات جديدة </h6>
+                    <h2>{{new_count}}</h2>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-6 pointer" hx-trigger="click" hx-get="/service/get_data?service=install&data=late_services"
+        hx-target="#displayData" hx-swap="innerHTML">
+        <div class="card border border-danger">
+            <div class="card-body">
+                <div class="text-center">
+                    <h6 class="text-muted mt-2 mb-2">طلبات متأخرة</h6>
+                    <h2>{{late_count}}</h2>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+<div class="card card-body" id="displayData">
+    <div class="table-responsive">
+        <table class="table search-table " id="serviceTable">
+            <thead class="header-item bg-dark text-light text-center">
+                <th>#</th>
+                <th>رقم الطلب </th>
+                <th>اسم العميل </th>
+                <th>الجوال</th>
+                <th>البائع</th>
+                <th>رقم الفاتورة</th>
+                <th>التاريخ</th>
+                <th>حالة الطلب </th>
+                
+            </thead>
+            <tbody>
+                <!-- row -->
+                {% for service in services %}
+                <tr class="search-items text-center {% if service.late %} bg-light-danger {% elif service.favourite and service.late == False  %} bg-light-success {% endif %}">
+                    <td>{{forloop.counter}} </td>
+                    <td>
+                        <a href="{% url 'service:service_details' service.id %}">{{service.ref_number}}</a>
+                    </td>
+
+
+                    <td> {{service.customer}}</td>
+                    <td>{{service.phone_number}}</td>
+                    <td><a href="{% url 'users:user_details' service.created_by.id %}">{{service.created_by}}</a></td>
+                    <td>{% if service.invoice_number%} {{service.invoice_number }} {% else%} - {% endif %}</td>
+                    <td>{{service.created_at.date|date:"F j"}}</td>
+                    <td>
+                        <a href="{% url 'service:service_details' service.id %}">
+
+                        {% if service.hold %}
+                        <span class="badge round-pill bg-danger">معلق</span>
+                        {% else %}
+                        <span class="badge rounded-pill 
+
+                    {% if service.status  == 'new' %}
+                       bg-warning
+                    {% elif service.status == 'under_process' %}
+                        bg-primary
+                    {% elif  service.status == 'done' or service.status  == 'closed' %}
+                        bg-success
+                    {% endif %} 
+   
+                       ">
+                           
+                       {{service.get_status_display}}
+                        </span>
+                        {% endif %}
+                        </a>
+                    </td>
+                 
+                </tr>
+                {% endfor %}
+                <!-- /.row -->
+
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
+
+{% block script%}
+<script src="https://unpkg.com/htmx.org@1.8.6"></script>
+<script>
+    $(document).ready(function () {
+        $('#serviceTable').DataTable({
+            pageLength: 50,
+            ordering: false,
+            scrollY: 350,
+            "language": {
+                "paginate": {
+                    "next": "الصفحة التالية",
+                    "previous": "الصفحة السابقة"
+                },
+                "emptyTable": "لا يوجد بيانات للعرض ",
+                "info": "عرض _START_ الي _END_ من _TOTAL_ طلبات",
+                "infoEmpty": "Showing 0 to 0 of 0 entries",
+                "infoFiltered": "(تم البحث في  _MAX_ طلب)",
+                "search": "البحث:",
+                "zeroRecords": "لا يوجد بيانات مطابقة للبحث",
+                "lengthMenu": "عرض _MENU_ طلب في الصفحة ",
+
+            },
+            "pagingType": "numbers"
+
+        })
+    })
+</script>
+{% endblock %}

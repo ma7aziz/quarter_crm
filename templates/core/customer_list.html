@@ -1,0 +1,153 @@
+{% extends 'base.html' %}
+{% block title %}
+قائمة العملاء 
+{% endblock %}
+{% load widget_tweaks %}
+{% block content %}
+<div class="row page-titles">
+    <div class="col-md-5 col-12 align-self-center">
+        <h3 class="text-themecolor mb-0">العملاء</h3>
+    </div>
+    <div class="col-md-7 col-12 align-self-center d-none d-md-flex justify-content-end">
+        <ol class="breadcrumb mb-0 p-0 bg-transparent">
+            <li class="breadcrumb-item"><a href="{% url 'core:customer_list' %}">العملاء</a></li>
+            <li class="breadcrumb-item active d-flex align-items-center">Dashboard</li>
+        </ol>
+    </div>
+</div>
+
+<div class="widget-content searchable-container list">
+    <div class="card card-body">
+        <div class="row">
+            <div class="col-md-4 col-xl-2">
+
+            </div>
+            <div class="col-md-8 col-xl-10 text-end d-flex justify-content-md-end justify-content-center mt-3 mt-md-0">
+                <div class="action-btn">
+
+                    <a href="" id="" class="btn btn-success mx-1" data-bs-toggle="collapse" data-bs-target="#search-form">
+                            <i data-feather="search" class="feather-sm fill-white me-1"> </i>
+                            بحث متقدم </a>
+                    {%if perms.sales.add_customer %}
+                    <a href="" id="btn-add-contact" class="btn btn-info" data-bs-toggle="modal"
+                        data-bs-target="#addCustomerModal">
+                        <!-- <i data-feather="users" class="feather-sm fill-white me-1"> </i> -->
+                        <i class="fas fa-plus"></i>
+                        اضافة عميل جديد
+                    </a> 
+                    <!-- <a href="" 
+                        data-bs-toggle="modal" data-bs-target="#addCustomersExcelModal"
+                        class="btn btn-light-info">
+                            <i class="fa fa-file-excel"></i>
+                            اضافة من ملف اكسيل
+                        </a> -->
+                    {% endif %}
+                </div>
+            </div>
+            <div id="search-form" class="accordion-collapse collapse ">
+                <form action="">
+                <div class="row">
+    
+                    <div class="col col-lg-6">
+    
+                        {{filterform.name.label_tag}}
+                        {{filterform.name|attr:'class:form-control'}}
+                    </div>
+                    <div class="col col-lg-6">
+                        {{filterform.phone_number.label_tag}}
+                        {{filterform.phone_number|attr:'class:form-control'|attr:'style:width:100%'}}
+                    </div>
+    
+             
+                    <div class="col col-lg-6">
+                        {{filterform.city.label_tag}}
+                        {{filterform.city|attr:'class:form-control'|attr:'style:width:100%'}}
+                    </div>
+                    <div class="col col-lg-6">
+                        {{filterform.tax_number.label_tag}}
+                        {{filterform.tax_number|attr:'class:form-control'|attr:'style:width:100%'}}
+                    </div>
+    
+                    
+                    <button class="btn btn-success my-2" > بحث </button>
+                    
+                </div>
+            </form>
+            </div>
+        </div>
+    </div>
+    <div class="card card-body">
+        <div class="table-responsive">
+            <table class="table search-table v-middle" id="customer-table">
+                <thead class="header-item bg-dark text-light text-center">
+                    <th>#</th>
+                    <th>اسم العميل </th>
+                    <th>الجوال</th>
+                    <th>المدينة</th>
+                    <th>Action</th>
+                </thead>
+                <tbody>
+                    <!-- row -->
+                    {% for customer in customers %}
+                    <tr class="search-items text-center">
+                        <td>{{forloop.counter}}</td>
+                        <td>
+                            <a href="{% url 'core:customer_details' customer.id %}"
+                            
+                                data-name="{{customer.name}}">{{customer.name}}</a>
+
+                        </td>
+                        <td>{{customer.phone_number}}</td>
+                        <td>{{customer.city}}</td>
+
+                        <td>
+                            <div class="action-btn">
+                                <a href="" class="text-info edit"><i
+                                        data-feather="eye" class="feather-sm fill-white"></i></a>
+                                {% if perms.sales.delete_customer %}
+                                <a class="text-dark delete ms-2" id="delete_approve_btn"
+                                    data-url="" data-bs-toggle="modal"
+                                    data-bs-target="#delete_approve"><i data-feather="trash-2"
+                                        class="feather-sm fill-white"></i></a>
+                                {% endif %}
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    <!-- /.row -->
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% include './modals/add_customer_modal.html' %}
+{% endblock %}
+
+{% block script%}
+
+
+<script>
+    $(document).ready(function(){
+        $('#customer-table').DataTable({
+            pageLength : 50,
+            ordering: false ,
+            "language": {
+                "paginate": {
+                    "next": "الصفحة التالية",
+                    "previous": "الصفحة السابقة"
+                            },
+                    "emptyTable":     "لا يوجد بيانات للعرض ",
+                    "info":           "عرض _START_ الي _END_ من _TOTAL_ عميل",
+                    "infoEmpty":      "Showing 0 to 0 of 0 entries",
+                    "infoFiltered":   "(تم البحث في  _MAX_ عميل)",
+                    "search":         "البحث:",
+                    "zeroRecords":    "لا يوجد بيانات مطابقة للبحث",
+                    "lengthMenu":     "عرض _MENU_ عميل في الصفحة ",
+                
+            },
+            "pagingType": "numbers"
+
+        })
+    })
+</script>
+{% endblock %}

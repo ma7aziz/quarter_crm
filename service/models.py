@@ -1,169 +1,176 @@
-from datetime import date
 from django.db import models
-from accounts.models import User
+from .choices import SERVICE_TYPE, CUSTOMER_TYPE, REQUEST_STATUS, SPARE_PART_STATUS
 from core.models import Customer
+from django.conf import settings
 import random
-import string
+from .utils import generate_ref_number
+from datetime import timedelta, date
+from django.utils import timezone
+from django.db.models import Case, When
+from .managers import ServiceManager, AppointmentManager
+from core.models import LateDays
+import uuid
+import os 
 # Create your models here.
+    
+def get_file_path(instance, filename):
+    """Generate a unique filename for the uploaded file."""
+    ext = filename.split('.')[-1]
+    filename = f"{uuid.uuid4()}.{ext}"
+    return os.path.join('files/', filename)
 
 
-class RequestManager(models.Manager):
 
-    def repair(self):
-        return self.filter(service_type="repair").filter(hold=False)
+User = settings.AUTH_USER_MODEL
 
-    def install(self):
-        return self.filter(service_type="install").filter(hold=False)
-
-    def on_hold(self):
-        return self.filter(hold=True)
-
-    def install_favourites(self):
-        return self.filter(favourite=True).filter(service_type="install").filter(hold=False).exclude(status="done").filter(active=True)
-
-    def new(self):
-        # new requests
-        return self.filter(status='new')
-
-    def under_process(self):
-        return self.filter(status="under_process")
-
-    def done(self):
-        return self.filter(status="done")
-
-    def suspended(self):
-        return self.filter(status="suspended")
+status_ordering = Case(
+    When(status='new', then=0),
+    When(status='under_process', then=1),
+    When(status='done', then=2),
+    When(status='completed', then=3),
+    output_field=models.IntegerField(),
+)
 
 
-REQUEST_STATUS = [
-    ('new', 'جديد'),
-    ('under_process', 'قيد التنفيذ'),
-    ('done', 'تم'),
-    ('closed', 'انتهي'),
-]
 
-
-class Service_request(models.Model):
-    CUSTOMER_TYPE = [
-        ('cash', 'كاش'),
-        ('warranty', 'ضمان')
-    ]
-
-    REQUEST_TYPE = (
-        ("repair", "صيانة"),
-        ("install", "تركيب")
-    )
-
-    request_number = models.CharField(blank=True, null=True, max_length=15)
-    service_type = models.CharField(
-        max_length=10, choices=REQUEST_TYPE)
+class Service(models.Model):
+    ref_number = models.CharField(max_length=15, blank=True, null=True)
+    customer = models.CharField(max_length=255  , null = True , blank=True )
+    phone_number = models.CharField(max_length=255 , null = True , blank=True )
+    address = models.CharField(max_length=255, blank=True, null=True)
+    customer_type = models.CharField(
+        max_length=15, choices=CUSTOMER_TYPE, default='cash')
+    service_type = models.CharField(max_length=10, choices=SERVICE_TYPE)
+    machine_type = models.CharField(max_length=100, blank=True, null=True)
+    invoice_number = models.CharField(max_length=30, blank=True, null=True)
+    status = models.CharField(
+        max_length=15, choices=REQUEST_STATUS, default='new')
+    notes = models.CharField(max_length=255, blank=True, null=True)
+    company = models.ForeignKey(User, on_delete=models.SET_NULL,
+                                null=True, blank=True, related_name='warranty_company')
+    ac_count = models.PositiveIntegerField(default= 0, blank=True , null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
     created_by = models.ForeignKey(
         User, on_delete=models.SET_NULL, null=True, blank=True)
-    customer_name = models.CharField(max_length=200)
-    customer = models.ForeignKey(
-        Customer, on_delete=models.SET_NULL, null=True, blank=True)
-    phone = models.CharField(max_length=25)
-    machine_type = models.CharField(max_length=200)
-    customer_type = models.CharField(choices=CUSTOMER_TYPE, max_length=10)
-    invoice_number = models.CharField(max_length=25, blank=True, null=True)
-    address = models.CharField(max_length=250, blank=True, null=True)
-    notes = models.CharField(max_length=300, blank=True, null=True)
-    status = models.CharField(
-        max_length=25, choices=REQUEST_STATUS, default='new')
-    file = models.FileField(upload_to='service/files/', blank=True, null=True)
-    timestamp = models.DateTimeField(auto_now_add=True)
-    updated = models.DateTimeField(auto_now=True)
-    code = models.CharField(
-        unique=True, max_length=40, blank=True, null=True, editable=False)
-    appointment = models.ForeignKey(
-        "Appointment", on_delete=models.SET_NULL, null=True, blank=True, related_name="service_appointment")
-    hold = models.BooleanField(default=False)
-    hold_reason = models.ForeignKey(
-        "Hold_reason", on_delete=models.SET_NULL, null=True, blank=True)
+    last_update = models.DateTimeField(auto_now=True)
+    code = models.CharField(unique=True, max_length=12,
+                            blank=True, null=True, editable=False)
     favourite = models.BooleanField(default=False)
-    active = models.BooleanField(default=True)
-    archived = models.BooleanField(default=False)
-    excution_files = models.ManyToManyField(
-        "ExcutionFile", blank=True, related_name="service_files")
-    objects = RequestManager()
+    hold = models.BooleanField(default=False)
+    archive = models.BooleanField(default=False)
+
+    objects = ServiceManager()
+
+    def __str__(self):
+        return self.ref_number
 
     def save(self, *args, **kwargs):
         if not self.code:
-            new_id = random.randint(10000, 99999)
-            unique = False
-            while not unique:
-                if Service_request.objects.all().filter(code=new_id):
-                    unique = False
-                else:
-                    unique = True
-                    self.code = new_id
+            while True:
+                code = str(random.randint(1000, 9999))
+                if not Service.objects.filter(code=code , archive = False).exists():
+                    self.code = code
+                    break
+        if not self.ref_number:
+            self.ref_number = generate_ref_number(self.service_type)
+        super().save(*args, **kwargs)
 
-        super(Service_request, self).save(*args, **kwargs)
+    @property
+    def late(self):
+        '''
+        Return True if order is late 
+        late order has passed --latedays settings default == 3 -- and status is still new 
+        '''
+        days = LateDays.objects.last().days
+        three_days_ago = timezone.now() - timedelta(days=days - 1)
+        return self.status == 'new' and self.created_at <= three_days_ago and self.hold == False
 
-    def __str__(self):
-        return self.customer_name
+    def has_open_sp_requests(self):
+        '''
+        Checks if service has unrecieved spare parts requests 
+        '''
+        return self.sp_request.filter(status='pending').exists()
 
 
-class ExcutionFile(models.Model):
-    service = models.ForeignKey(Service_request, on_delete=models.CASCADE)
-    file = models.FileField(upload_to="service/files/excution_files")
+class File(models.Model):
+    service = models.ForeignKey(Service, on_delete=models.CASCADE)
+    file = models.FileField(upload_to=get_file_path)
+    cretaed_at = models.DateTimeField(auto_now_add=True)
+    created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
 
-    def __str__(self):
-        return f'excution file for request {self.service.id}'
-
-
-class AppointmentManager(models.Manager):
-    def repair(self):
-        return self.filter(service_type="repair")
-
-    def install(self):
-        return self.filter(service_type="install")
+    def __str__(self) -> str:
+        return 'Service File '
 
 
 class Appointment(models.Model):
-    STATUS = [
-        ('open', 'open'),
-        ('closed', 'closed')
-    ]
-    REQUEST_TYPE = (
-        ("repair", "صيانة"),
-        ("install", "تركيب")
-    )
-    service_request = models.ForeignKey(
-        Service_request, on_delete=models.CASCADE, related_name="request")
+    service = models.ForeignKey(Service, on_delete=models.CASCADE)
+    technician = models.ForeignKey(
+        User, on_delete=models.SET_NULL, null=True, blank=True, related_name='appointment_tech')
     date = models.DateField()
-    technician = models.ForeignKey(User, on_delete=models.CASCADE)
-    timestamp = models.DateTimeField(auto_now_add=True)
-    service_type = models.CharField(max_length=100, choices=REQUEST_TYPE)
-    status = models.CharField(max_length=20, choices=STATUS, default="open")
-
+    notes = models.CharField(max_length=300, blank=True, null=True)
+    created_by = models.ForeignKey(
+        User, on_delete=models.SET_NULL, null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
     objects = AppointmentManager()
 
-    @property
-    def is_past_due(self):
-        return date.today() > self.date
+    def __str__(self):
+        return f'{self.service} Appointment !'
 
     @property
-    def is_today(self):
-        return date.today() == self.date
+    def today(self):
+        today = date.today()
+        return self.date == today
+
+
+class ExcutionFile(models.Model):
+    service = models.ForeignKey(Service, on_delete=models.CASCADE)
+    file = models.FileField(upload_to=get_file_path)
+    cretaed_at = models.DateTimeField(auto_now_add=True)
+    created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
 
     def __str__(self):
-        return self.service_request.customer_name
+        return f'{self.service} exec file . '
 
 
-class Hold_reason(models.Model):
-    service = models.ForeignKey(
-        Service_request, on_delete=models.CASCADE, related_name="service_on_hold")
-    file = models.FileField(upload_to="hold_files/", blank=True, null=True)
-    timestamp = models.DateTimeField(auto_now=True)
-    hold_by = models.ForeignKey(
+class HoldReason(models.Model):
+    service = models.ForeignKey(Service, on_delete=models.CASCADE)
+    reason = models.TextField(max_length=300, blank=True, null=True)
+    details = models.TextField(max_length=300 , blank = True , null = True )
+    created_by = models.ForeignKey(
         User, on_delete=models.SET_NULL, null=True, blank=True)
-
-    reason = models.CharField(max_length=500, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    canceled_by = models.ForeignKey(
+        User, on_delete=models.SET_NULL, null=True, blank=True, related_name='hold_canceled_by')
+    canceled_at = models.DateTimeField(null=True, blank=True)
 
     def __str__(self):
         return f'{self.service} Hold Reason !'
 
 
-class lateDays(models.Model):
-    days = models.IntegerField(default=3)
+class HoldFile(models.Model):
+    hold_reason = models.ForeignKey(HoldReason, on_delete=models.CASCADE)
+    file = models.FileField(upload_to=get_file_path)
+    cretaed_at = models.DateTimeField(auto_now_add=True)
+    created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+
+
+# spare parts request :
+class SparePartRequest(models.Model):
+    service = models.ForeignKey(
+        Service, on_delete=models.CASCADE, related_name='sp_request')
+    requested_parts = models.CharField(max_length=255, blank=True, null=True)
+    details = models.CharField(max_length=300, blank=True, null=True)
+    status = models.CharField(
+        max_length=15, choices=SPARE_PART_STATUS, default='pending')
+    created_by = models.ForeignKey(
+        User, on_delete=models.SET_NULL, null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    recievied_at = models.DateTimeField(blank=True , null=True)
+    recievied_by = models.ForeignKey(User , on_delete=models.SET_NULL , null=True ,blank=True , related_name='sp_recieved')
+
+    class Meta:
+        verbose_name = 'Spare Part Reauest'
+        verbose_name_plural = 'Spare Part Reauests'
+
+    def __str__(self):
+        return f'{self.service} spare part request .'

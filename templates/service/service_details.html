@@ -1,0 +1,204 @@
+{% extends 'base.html' %}
+
+{% block title %} تفاصيل طلب {{service.get_service_type_display}} رقم {{service.ref_number}} {% endblock %}
+{% block content %}
+<div class="row page-titles">
+    <div class="col-md-5 col-12 align-self-center">
+        <h3 class="text-themecolor mb-0"> تفاصيل طلب {{service.get_service_type_display}} رقم {{service.ref_number}}
+        </h3>
+    </div>
+    <div class="col-md-7 col-12 align-self-center d-none d-md-flex justify-content-end">
+        <ol class="breadcrumb mb-0 p-0 bg-transparent">
+            <li class="breadcrumb-item">{{service.ref_number}}</li>
+
+            <li class="breadcrumb-item"><a {% if service.service_type == 'repair' %} href="{% url 'service:repair' %}"
+                    {% elif  service.service_type == 'install' %} href="{% url 'service:install' %}"
+                    {% endif %}>ال{{service.get_service_type_display}}</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'service:service_list' %}">الخدمات</a></li>
+            <li class="breadcrumb-item active d-flex align-items-center">Dashboard</li>
+        </ol>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6 card ">
+        {% include './partials/service_info.html' %}
+    </div>
+    <div class="col-md-6 ">
+        <div class="card">
+            <div class="card-body">
+                {% if service.hold %}
+                {% include './partials/hold.html' %}
+                {% else %}
+                <div class="btn-group d-flex flex-column">
+                    {% if service.status == 'new' and service.service_type == 'install' and service.favourite == False %}
+                    {% if request.user.remaining_qouta  or request.user.is_superuser or request.user.role == 'install_supervisor' %}
+                    <form method="post" action="{% url 'service:favourite_service' %}">
+                        {% csrf_token%}
+                        <input type="hidden" name="service" value="{{service.id}}">
+                        <button class="btn btn-success w-100">تفضيل الطلب </button>
+                    </form>
+                    {% endif %}
+                    {% endif %}
+
+                    {% if service.status  == 'new' or service.status == 'under_process' %}
+                    {% if service.service_type == 'repair' and service.status == 'under_process' and request.user.role == 'repair_supervisor' or request.user.is_superuser  %}
+                    <button class="btn btn-warning my-1" data-bs-target="#hold_service" data-bs-toggle="modal"><i
+                            data-feather="pause-circle"></i> تعليق </button>
+                    {% endif %}
+                    {% endif %}
+
+                    {% if request.user.is_superuser or request.user.role == 'admin' or request.user.role == 'install_supervisor' or request.user.role == 'repair_supervisor' %}
+                    <button class="btn btn-primary my-1" data-bs-toggle="modal" data-bs-target="#change_status">
+                        <i data-feather="edit"></i>
+                        تعديل
+                        حالة الطلب</button>
+                    {% endif %}
+                    {% if service.status == 'new' and request.user == service.created_by or request.user.is_superuser %}
+                    <button class="btn btn-danger my-1" data-bs-toggle="modal" data-bs-target="#delete_approve"><i
+                            data-feather="trash-2"></i> حذف </button>
+                    {% endif %}
+                    {% if service.status == 'under_process'  %}
+                    {% if request.user.role == 'repair_supervisor' or request.user.role == 'install_supervisor'   or request.user == appointment.technician or request.user.is_superuser%}
+                    <button class="btn btn-success my-2 " data-bs-target="#confirm_excution" data-bs-toggle="modal"> <i
+                            data-feather="check-circle"></i> تأكيد التنفيذ</button>
+                    {% endif %}
+                    {% endif %}
+                    {% if service.status == 'done'   %}
+                    {%   if request.user.role == 'repair_supervisor' or request.user.role == 'install_supervisor' or request.user.is_superuser %}
+                    <a class="btn btn-success my-2"
+                        href="/service/update_status?service={{service.id}}&status=closed"><i
+                            data-feather="check-circle"></i> تأكيد التنفيذ و اغلاق الطلب </a>
+                    {% endif %}
+                    {% endif %}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        {% if service.has_open_sp_requests %}
+        <div class="card card-body">
+            <h3>طلبات قطع الغيار </h3>
+            {% for req in service.sp_request.all %}
+            <div>
+                <ul class="list-group">
+                    <li class="list-group-item">
+                        القطع المطلوبة : <span class="text-primary"> {{req.requested_parts}} </span>
+                    </li>
+                    {% if req.details %}
+                    <li class="list-group-item">
+                        تفاصيل : <span class="text-primary"> {{req.details}} </span>
+
+                    </li>
+                    {% endif %}
+                    <li class="list-group-item">
+                        تم الطلب في {{req.created_at }} بواسطة {{req.created_by}}
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between">
+                        <div>
+
+                            الاستلام :
+                            {% if req.status == 'pending' %}
+                            <span class="badge rounded-pill bg-danger"> لا </span>
+                            {% elif req.status == 'recieved' %}
+                            <span class="badge rounded-pill bg-success"> نعم</span>
+                            {% endif %}
+                        </div>
+                        {% if req.status == 'pending' %}
+                        {% if request.user.is_superuser or request.user.role == 'repair_supervisor' %}
+                        <form action="{% url 'service:confirm_sp_recievce' %}" method="post">
+                            {% csrf_token %}
+                            <input type="hidden" name="sp_request" value="{{req.id}}">
+                            <button type="submit" class="btn btn-success">تأكيد الاستلام</button>
+                        </form>
+                        {% endif %}
+                        {% endif %}
+                    </li>
+
+                </ul>
+
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+
+        {% if service.status == 'new'  %}
+        {% if  request.user.role == 'repair_supervisor' or request.user.role == 'install_supervisor' or request.user.is_superuser  %}
+        <div class="card">
+            <div class="card-body">
+                <h3 class="text-center">تحديد موعد التنفيذ</h3>
+                <form action="{% url 'service:set_appointment' %}" method="post">
+                    <input type="hidden" name="service" value="{{service.id}}">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="">اختر الفني </label>
+                        <select name="technician" id="" class="form-control" required>
+                            <option value="" selected disabled>اختر من القائمة </option>
+                            {% for tech in technician %}
+                            <option value="{{tech.id}}">{{tech.name}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="form-group my-2">
+                        <label for="">ملاحظات</label>
+                        <textarea name="notes" class="form-control" id="" cols="30" rows="2"></textarea>
+                    </div>
+                    <input type="submit" value="حفظ" class="btn btn-success w-100">
+                </form>
+            </div>
+
+        </div>
+        {% endif %}
+        {% elif service.status == 'under_process' and service.hold == False  and service.appointment_set %}
+        <div class="card">
+            <div class="card-body">
+                <h3>موعد التنفيذ</h3>
+                <ul class="list-group">
+                    <li class="list-group-item">الموعد المحدد : <span>{{appointment.date}}</span></li>
+                    <li class="list-group-item">الفني : <span><a href="">{{appointment.technician.name}}</a></span></li>
+                    <li class="list-group-item">رقم الفني : <span><a
+                                href="">{{appointment.technician.phone_number}}</a></span></li>
+                </ul>
+                <div class="text-end">
+                    {% if request.user.role == 'install_supervisor' or reques.user.role == 'repair_supervisor' or request.user.is_superuser %}
+                    <button class="btn btn-secondary my-2 " data-bs-target="#chnage-appointment"
+                        data-bs-toggle="modal">تعديل موعد
+                        التنفيذ</button>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        {% endif %}
+
+
+    </div>
+</div>
+
+{% include './modals/service_modals.html' %}
+{% endblock %}
+
+
+
+{% block script %}
+<script>
+    function reasonSelect() {
+        let el = document.getElementById('hold_reason_select')
+        let selectedOption = el.selectedOptions[0]
+        let sp_input_group = document.getElementById('spare_parts_input_group')
+        let sp_input = document.getElementById('sp_input')
+        if (selectedOption.value == 'spare_parts') {
+            sp_input_group.classList.toggle('hide')
+            sp_input.setAttribute('required', '')
+
+
+        } else {
+            sp_input_group.classList.add('hide');
+            sp_input.removeAttribute('required')
+
+        }
+    }
+</script>
+{% endblock %}

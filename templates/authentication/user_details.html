@@ -1,0 +1,208 @@
+{% extends 'base.html' %}
+{% block title %}
+بيانات المستخدم - {{user}}
+{% endblock %}
+{% load static %}
+{% block content %}
+<div class="row page-titles">
+    <div class="col-md-5 col-12 align-self-center">
+        <h3 class="text-themecolor mb-0">صفحة المستخدم {{user}}</h3>
+    </div>
+    <div class="col-md-7 col-12 align-self-center d-none d-md-flex justify-content-end">
+        <ol class="breadcrumb mb-0 p-0 bg-transparent">
+            <li class="breadcrumb-item  d-flex align-items-center active">{{user}} </li>
+            <li class="breadcrumb-item  d-flex align-items-center"><a href="{% url 'users:user_list' %}">المستخدمين</a>
+            </li>
+            <li class="breadcrumb-item"><a href="{% url 'core:index' %} "> الرئيسية</a></li>
+        </ol>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-6">
+        <div class="card">
+            <div class="card-header">
+                بيانات المستخدم
+            </div>
+            <div class="card-body">
+
+                <div class="text-center my-2">
+                    {% if user.profile_pic %}
+                    <img src="{{ MEDIA_URL }}{{ user.profile_pic.url }}" alt="" width="120" class="rounded-circle"
+                        style="border: 2px solid #ded6cf;">
+                    {% else %}
+                    <img src="{% static 'img/avatar.jpg' %}" alt="" width="120">
+                    {% endif %}
+                </div>
+                <div class="d-flex justify-content-between my-1">
+                    {% if perms.users.change_user %}
+                    <a href="" data-bs-toggle="modal" data-bs-target="#edit_user_modal" class="btn btn-primary"><i
+                            data-feather="edit-2"></i> تعديل البيانات</a>
+                    {%  endif %}
+                    {% if request.user.is_superuser or request.user == user %}
+                    <a href="" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#change_password"><i data-feather="edit-2" ></i> تغيير كلمة السر</a>
+                    {% endif %}
+                    {% if perms.users.delete_user %}
+                    <a href="{% url 'users:delete_user' user.id %}" class="btn btn-danger"><i
+                            data-feather="trash-2"></i>حذف المستخدم </a>
+                    {% endif %}
+                </div>
+                <ul class="list-group">
+                    <li class="list-group-item text-muted">الاسم: <span class="text-primary">{{user.name}}</span></li>
+                    <li class="list-group-item text-muted">اسم المستخدم: <span
+                            class="text-primary">{{user.username}}</span></li>
+                    <li class="list-group-item text-muted">رقم الجوال : <span
+                            class="text-primary">{{user.phone_number}}</span>
+                    </li>
+                    <li class="list-group-item text-muted">الوظيفة: <span
+                            class="text-primary">{{user.get_role_display}}</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between">
+                        <p class="text-muted"> عدد مفضلات التركيب/ الصيانة المسموح بها :
+                            <span class="text-primary">{{user.favourite_qouta}}</span> </p>
+                    </li>
+                    <li class="list-group-item text-muted">
+                        عدد المفضلات المتبقي لليوم : <span class="text-primary">{{user.remaining_qouta}}</span>
+                    </li>
+                    <li class="list-group-item text-muted">
+                        الخدمات المسموحة للمستخدم : <span class="text-primary"> {% if user.install %} التركيب {% endif %}</span> 
+                         <span class="text-primary">{% if user.repair %}  الصيانة{% endif %} </span>
+                         <span class="text-primary">{% if user.quarter %}  كوارتر{% endif %} </span>
+                    </li>
+                </ul>
+
+
+
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="card">
+            <div class="card-header">
+                تاريخ المستخدم
+            </div>
+            <div class="card-body">
+                <h6>الطلبات المستلمة </h6>
+                <div class="table-responsive">
+                    <table class="table search-table " id="serviceTable">
+                        <thead class="header-item bg-dark text-light text-center">
+                            <th>#</th>
+                            <th>رقم الطلب </th>
+                            <th>اسم العميل </th>
+                            <th>التاريخ</th>
+                            <th>حالة الطلب </th>
+                        </thead>
+                        <tbody>
+                            <!-- row -->
+                            {% for service in user.service_set.all %}
+                            <tr class="search-items text-center {% if service.late %} bg-light-danger {% endif %}">
+                                <td>{{forloop.counter}} </td>
+                                <td>
+                                    <a href="{% url 'service:service_details' service.id %}">{{service.ref_number}}</a>
+                                </td>
+            
+            
+                                <td> {{service.customer}}</td>
+                                
+                                <td>{{service.created_at.date}}</td>
+                                <td>
+                                    <span class="badge rounded-pill 
+                                {% if service.status  == 'new' %}
+                                   bg-warning
+                                {% elif service.status == 'under_process' %}
+                                    bg-primary
+                                {% elif  service.status == 'done' or service.status  == 'closed' %}
+                                    bg-success
+                                {% endif %} 
+                                   ">
+                                        {{service.get_status_display}}
+                                    </span>
+            
+                                </td>
+                                
+                            </tr>
+                            {% endfor %}
+                            <!-- /.row -->
+            
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% include './modals/edit_user_modal.html'%}
+
+<!-- change password modal  -->
+<div class="modal custom-modal fade" id="change_password" role="dialog" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="form-header text-center ">  
+                    <h3>تغيير كلمة السر </h3>
+                </div>
+                <form action="{% url 'users:change_password' %}" method="POST" id="delete-form">
+                    <input type="hidden" name="user" value="{{user.id}}">
+                    {% csrf_token%}
+                    <div>
+                        <label for="">كلمة السر الجديدة </label>
+                        <input type="password" name="password1" class="form-control">
+                        <div class="invalid-feedback" id="password1-validation">
+                            يرجي ادخال رمز المرور
+                        </div>
+                    </div>
+                    <div>
+                        <label for="">تأكيد كلمة السر </label>
+                        <input type="password" name="password2" class="form-control">
+                        <div class="invalid-feedback">
+                            يرجي تأكيد رمز المرور
+                        </div>
+                    </div>
+           
+                    <div class="modal-btn delete-action my-3">
+                        <div class="row text-center">
+                            <div class="col-6">
+                                <button type="submit" class="btn btn-success continue-btn w-100">حفظ</button>
+                            </div>
+
+                            <div class="col-6">
+                                <a href="javascript:void(0);" data-bs-dismiss="modal" class="btn btn-primary cancel-btn w-100">الغاء</a>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
+{% block script %}
+<script src="{% static 'js/pages/validate_user_creation.js' %}"></script>
+<script>
+    $(document).ready(function () {
+        $('#serviceTable').DataTable({
+            pageLength: 50,
+            ordering: false,
+            scrollY: 350,
+            "language": {
+                "paginate": {
+                    "next": "الصفحة التالية",
+                    "previous": "الصفحة السابقة"
+                },
+                "emptyTable": "لا يوجد بيانات للعرض ",
+                "info": "عرض _START_ الي _END_ من _TOTAL_ طلبات",
+                "infoEmpty": "Showing 0 to 0 of 0 entries",
+                "infoFiltered": "(تم البحث في  _MAX_ طلب)",
+                "search": "البحث:",
+                "zeroRecords": "لا يوجد بيانات مطابقة للبحث",
+                "lengthMenu": "",
+
+            },
+            "pagingType": "numbers"
+
+        })
+    })
+</script>
+{% endblock %}

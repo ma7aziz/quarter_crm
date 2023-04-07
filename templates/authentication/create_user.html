@@ -1,0 +1,119 @@
+{% extends 'base.html' %}
+{% block title %}مستخدم جديد {% endblock %}
+{% block content %} {% load static %}
+{% load widget_tweaks %}
+<style>
+    label {
+        color: #11427e
+    }
+</style>
+<div class="row page-titles">
+    <div class="col-md-5 col-12 align-self-center">
+        <h3 class="text-themecolor mb-0">أضافة مستخدم جديد </h3>
+    </div>
+    <div class="col-md-7 col-12 align-self-center d-none d-md-flex justify-content-end">
+        <ol class="breadcrumb mb-0 p-0 bg-transparent">
+            <li class="breadcrumb-item"><a href="{% url 'users:user_list' %}">قائمة المستخدمين</a></li>
+            <li class="breadcrumb-item active d-flex align-items-center">Dashboard</li>
+        </ol>
+    </div>
+</div>
+
+<div class="card card-body">
+    <p id="validation">
+
+    </p>
+
+    <form action="" method="post" class="needs_validation" id="userForm">
+        {% csrf_token %}
+        <div class="row ">
+            <div class="col-6 my-2 ">
+                <!-- <label for="" class="text-primary">الاسم </label> -->
+                {{form.name.label_tag}}
+                {{form.name|attr:'class:form-control'}}
+                <div class="invalid-feedback">
+                    الاسم مطلوب
+                </div>
+            </div>
+            <div class="col-6 my-2 ">
+
+                {{form.phone_number.label_tag}}
+                {{form.phone_number|attr:'class:form-control'}}
+                <div class="invalid-feedback">
+                    الجوال مطلوب
+                </div>
+            </div>
+            <hr class="my-1 ">
+            <div class="col-12 my-2 ">
+
+                {{form.username.label_tag}}
+                {{form.username|attr:'class:form-control'}}
+                <div class="invalid-feedback" id="username-validation">
+                    اسم المستخدم مطلوب
+                </div>
+            </div>
+
+            <div class="col-6 my-2 ">
+                <label for="">رمز المرور </label>
+                {{form.password1|attr:'class:form-control'}}
+                <div class="invalid-feedback" id="password1-validation">
+                    يرجي ادخال رمز المرور
+                </div>
+            </div>
+            <div class="col-6  my-2 ">
+
+                <label for="">تأكيد رمز المرور </label>
+                {{form.password2|attr:'class:form-control'}}
+                <div class="invalid-feedback">
+                    يرجي تأكيد رمز المرور
+                </div>
+            </div>
+            <hr class="my-1">
+            <div class="col-6 my-2">
+                {{form.role.label_tag}}
+                {{form.role|attr:'class:form-control'}}
+            </div>
+            <div class="col-6 my-2">
+                {{form.favourite_qouta.label_tag}}
+                {{form.favourite_qouta|attr:'class:form-control'}}
+            </div>
+
+
+        </div>
+        <div class="form-group my-3">
+            الخدمات المسموحة : 
+            <div class="form-check ">
+                <input class="form-check-input" name="install" type="checkbox" >
+                <label class="form-check-label fw-bold text-primary mx-1" for="flexCheckDefault">
+                    التركيب 
+                </label>
+
+            </div>
+            <div class="form-check ">
+                <input class="form-check-input" name="repair" type="checkbox" >
+                <label class="form-check-label fw-bold text-primary mx-1" for="flexCheckDefault">
+                    الصيانة
+                </label>
+
+            </div>
+            <div class="form-check ">
+                <input class="form-check-input" name="quarter" type="checkbox" >
+                <label class="form-check-label fw-bold text-primary mx-1" for="flexCheckDefault">
+                    كوارتر 
+                </label>
+
+            </div>
+        </div>
+        <button type="submit" class="btn btn-lg btn-success w-100 waves-effect " id="userCreateBtn">
+            حفظ
+        </button>
+    </form>
+
+
+</div>
+{% endblock %}
+
+{% block script %}
+<script src="{% static 'js/pages/validate_user_creation.js' %}"></script>
+
+{% endblock %}

@@ -1,0 +1,49 @@
+<thead class="header-item bg-dark text-light text-center">
+    <th>#</th>
+    <th>رقم</th>
+    <th>اسم العميل </th>
+    <th>الجوال</th>
+    <th>التاريخ</th>
+    <th>حالة الطلب </th>
+</thead>
+<tbody>
+    <!-- row -->
+    {% for project in projects %}
+    <tr class="search-items text-center ">
+        <td>{{forloop.counter}} </td>
+        <td>
+            <a href="{% url 'quarter:project_details'  project.id %}">{{project.ref_number}}</a>
+        </td>
+
+        <td>{{project.name}}</td>
+        <td>{{project.phone_number}}</td>
+        <td>{{project.created_at.date}}</td>
+        <td>
+            <a href="">
+
+            {% if project.hold %}
+            <span class="badge round-pill bg-danger">معلق</span>
+            {% else %}
+            <span class="badge rounded-pill 
+
+            {% if project.status  == 'new' %}
+            bg-warning
+            {% elif  project.status == 'done' or project.status  == 'closed' %}
+            bg-success
+            {% else %}
+                bg-primary
+            {% endif %} 
+
+           ">
+               
+           {{project.get_status_display}}
+            </span>
+            {% endif %}
+            </a>
+        </td>
+       
+    </tr>
+    {% endfor %}
+    <!-- /.row -->
+
+</tbody>

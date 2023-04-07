@@ -1,0 +1,217 @@
+{% extends 'base.html' %}
+{% block title %}
+تفاصيل المشروع {{project.ref_number}}
+{% endblock %}
+{% block content %}
+<div class="row page-titles">
+    <div class="col-md-5 col-12 align-self-center">
+        <h3 class="text-themecolor mb-0">تفاصيل المشروع {{project}}</h3>
+    </div>
+    <div class="col-md-7 col-12 align-self-center d-none d-md-flex justify-content-end">
+        <ol class="breadcrumb mb-0 p-0 bg-transparent">
+            <li class="breadcrumb-item active "><a href="">{{project}}</a></li>
+            <li class="breadcrumb-item"><a href="">كوارتر </a></li>
+            <li class="breadcrumb-item d-flex align-items-center">Dashboard</li>
+        </ol>
+    </div>
+</div>
+<div class="row">
+    <div class="col-6">
+        <div class="card card-body">
+            <ul class="list-group">
+                <li class="list-group-item"> رقم الطلب : <span class="text-primary">{{project.ref_number}}</span></li>
+                <li class="list-group-item"> الاسم : <span class="text-primary">{{project.name}}</span></li>
+                <li class="list-group-item"> الجوال :<span class="text-primary">{{project.phone_number}}</span></li>
+                <li class="list-group-item"> الموقع : <span class="text-primary">{{project.address}}</span></li>
+                <li class="list-group-item"> حالة الطلب :  <span class="badge rounded-pill 
+
+                    {% if project.status  == 'new' %}
+                    bg-warning
+                    {% elif  project.status == 'done' or project.status  == 'closed' %}
+                    bg-success
+                    {% elif project.status == 'canceled' %}
+                    bg-danger
+                    {% else %}
+                        bg-primary
+                    {% endif %} 
+
+                   "> {{project.get_status_display}}
+                </li>
+                {% if project.rep %}
+                <li class="list-group-item"> مندوب التواصل: <span class="text-primary"><a
+                            href="{% url 'users:user_details' project.rep.id %}">{{project.rep}}</a></span>
+                {% endif %}
+                <li class="list-group-item"> البائع : <span class="text-primary"><a
+                            href="{% url 'users:user_details' project.created_by.id %}">{{project.created_by}}</a></span>
+                </li>
+                <li class="list-group-item">وقت الطلب : <span class="text-primary">{{project.created_at}}</span></li>
+                <li class="list-group-item">اخر تحديث : <span class="text-primary">{{project.last_update}}</span></li>
+            </ul>
+
+        </div>
+
+        {% if excution_files %}
+        <div class="card card-body">
+                <h4>ملفات المشروع</h4>
+                <ul class="list-group">
+
+                    {% for file in excution_files.files.all %}
+                    <li class="list-group-item">
+
+                        <a href="{{file.file.url}}">ملف {{forloop.counter}}</a>
+                    </li>
+                    {% endfor %}
+                </ul>
+        </div>
+        {% endif %}
+    </div>
+    <div class="col-6">
+        <div class="card card-body">
+            <!-- edit -->
+            {%  if request.user.is_superuser %}
+            {% if project.status == 'new' or project.status == 'negotiation' %}
+            <button class="btn btn-warning pointer" data-bs-target="#edit_project" data-bs-toggle="modal">تعديل بيانات
+                المشروع</button>
+            
+            <!-- delete -->
+            <button class="btn btn-danger my-2" data-bs-target="#project_delete_approve" data-bs-toggle="modal"> حذف
+                المشروع </button>
+            {% endif %}
+            {% endif %}
+            {% if project.status ==  'new'  %}
+            {% if request.user.is_superuser or  request.user.role == 'quarter_supervisor' or request.user.role == 'quarter_sales'  %}
+            <form action="{% url 'quarter:start_negotiation' %}" method="post">
+                {% csrf_token %}
+                <input type="hidden" name="project" value="{{project.id}}">
+                <button class="btn btn-primary my-2 w-100" type="submit">بداية المفاوضات </button>
+            </form>
+            {% endif %}
+            {% endif %}
+
+
+        {% if project.status == 'negotiation' %}
+
+        <div class="card card-body">
+            <h4>جاري التفاوض</h4>
+            <p> بدء التفاوض : {{project.negotiation_set.last.created_at}}</p>
+            <p>بواسطة : {{project.negotiation_set.last.created_by}} </p>
+
+            {% if request.user.is_superuser or request.user.role == 'quarter_supervisor' or request.user ==  project.negotiation_set.last.created_by %}
+            <div class="">
+                <form action="{% url 'quarter:negotiation_status' %}" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="project" value="{{project.id}}">
+                    <input type="hidden" name="negotiation" value="{{project.negotiation_set.last.id}}">
+                    <input type="hidden" name="status" value="approved">
+                    <button class="btn btn-success my-1 w-100">موافقة</button>
+                </form>
+                <form action="{% url 'quarter:negotiation_status' %}" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="project" value="{{project.id}}">
+                    <input type="hidden" name="negotiation" value="{{project.negotiation_set.last.id}}">
+                    <input type="hidden" name="status" value="rejected">
+                    <button class="btn btn-danger  w-100">رفض</button>
+                </form>
+                {% endif %}
+            </div>
+        </div>
+        {% endif %}
+        {% if project.status == 'waiting_designs' %}
+
+            <div class="card card-body">
+                <h3>تم اتمام التفاوض مع العميل .. في انتظار ملفات المشروع </h3>
+            </div>
+
+        {% if request.user.is_superuser or request.user.role == 'quarter_supervisor'  or request.user.role == 'egypt_office' %}
+        <div class="card card-body">
+            <h4>ارفاق التصاميم و العقود </h4>
+            <form action="{% url 'quarter:attach_files' %}" method="post" novalidate class="needs-validation"
+                enctype="multipart/form-data">
+                <input type="hidden" name="project" value="{{project.id}}">
+                {% csrf_token %}
+                <div>
+                    <label for="">ملفات المشروع </label>
+                    <input type="file" class="form-control" name="file" multiple required />
+                    <p class="invalid-feedback">
+                        يرجي ارفاق الملفات
+                    </p>
+                </div>
+                <div>
+                    <label for="">ملاحظات</label>
+                    <textarea name="notes" class="form-control" id="" cols="30" rows="2"></textarea>
+                </div>
+                <div class=" d-flex justify-content-end my-2">
+                    <button type="submit" class="btn btn-success">
+                        حفظ
+                    </button>
+                </div>
+
+            </form>
+        </div>
+        {% endif %}
+        {% endif %}
+        {% if project.status == 'waiting_approval' %}
+        <div class="card card-body">
+            <h4>ملفات المشروع</h4>
+            <div class="">
+                <ul class="list-group">
+
+                    {% for file in excution_files.files.all %}
+                    <li class="list-group-item">
+
+                        <a href="{{file.file.url}}">ملف {{forloop.counter}}</a>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% if request.user.is_superuser  or request.user.role == 'accountant' %}
+
+            <div class="my-2">
+                <form action="{% url 'quarter:confirm_project' %}" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="project" value="{{project.id}}">
+                    <button class="btn btn-success w-100">تأكيد توقيع العقد </button>
+                </form>
+
+            </div>
+            {% endif %}
+
+        </div>
+        {% endif %}
+        {% if project.status == 'under_process'  %}
+        <h4 class="text-primary">جاري تنفيذ الطلب </h4>
+        <h6>ملفات المشروع</h6>
+            <div class="">
+                <ul class="list-group">
+
+                    {% for file in excution_files.files.all %}
+                    <li class="list-group-item">
+
+                        <a href="{{file.file.url}}">ملف {{forloop.counter}}</a>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% if request.user.is_superuser  or request.user.role == 'accountant'  %}
+        <div class="card card-body">
+            <form action="{% url 'quarter:confirm_project' %}" method="post">
+                {% csrf_token %}
+                <input type="hidden" name="project" value="{{project.id}}">
+                <button class="btn btn-success w-100" type="submit"> تأكيد التنفيذ </button>
+            </form>
+        </div>
+        {% endif %}
+        {% endif %}
+
+        {% if project.status == 'done'%}
+            <h3>تم تنفيذ المشروع</h3>
+            <p>تاريخ انهاء المشروع : <span class="text-primary">{{project.closed_date}}</span></p>
+
+        {% endif %}
+    </div>
+</div>
+</div>
+
+
+{% include './modals/project_modals.html' %}
+{% endblock %}

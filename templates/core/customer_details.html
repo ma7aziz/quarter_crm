@@ -1,100 +1,138 @@
-{% extends '../base.html' %}
-{% block title %} بيانات العميل {% endblock %}
+{%extends 'base.html'%}
+{% load static %}
+{% block title %}{{customer}}{% endblock %}
 {% block content %}
-<div class="row " dir="rtl">
-    <div class="col-12 ">
-        <div class="page-title-box d-flex align-items-center justify-content-between">
-            <h3 class="mb-0 ">بيانات عميل </h3>
-
-
-
-        </div>
+<div class="row page-titles">
+    <div class="col-md-5 col-12 align-self-center">
+        <h3 class="text-themecolor mb-0">بيانات العميل {{customer}}</h3>
+    </div>
+    <div class="col-md-7 col-12 align-self-center d-none d-md-flex justify-content-end">
+        <ol class="breadcrumb mb-0 p-0 bg-transparent">
+            <li class="breadcrumb-item active"><a href="">{{customer}}</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'core:customer_list' %}">العملاء</a></li>
+            <li class="breadcrumb-item d-flex align-items-center">Dashboard</li>
+        </ol>
     </div>
 </div>
-<!-- end page title -->
-<div class="card">
-    <div class="card-body">
 
-        <!-- end row -->
+        <div class="card">
+            <div class="card-header">
+                بيانات العميل 
+            </div>
+            <div class="card-body">
 
-        <div class="mt-4">
-            <h5 class="font-size-14 mb-3"></h5>
-            <div class="product-desc">
+                
+                <ul class="list-group">
+                    <li class="list-group-item text-muted">الاسم: <span class="text-primary">{{customer.name}}</span></li>
+                    <li class="list-group-item text-muted">رقم الجوال : <span
+                            class="text-primary">{{customer.phone_number}}</span>
+                    </li>
+                    <li class="list-group-item text-muted">العنوان : <span
+                            class="text-primary">{{customer.address}}</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between">
+                        <p class="text-muted"> المدينة
+                            <span class="text-primary">{{customer.city}}</span> </p>
 
-                <div class="tab-content border border-top-0 p-4">
+                    </li>
+                    
+                </ul>
 
-                    <div class="tab-pane fade show active" id="specifi" role="tabpanel">
-                        <div class="table-responsive">
-                            <table class="table table-nowrap mb-0">
-                                <tbody>
-                                    <tr>
-                                        <th scope="row" style="width: 20%;">اسم العميل </th>
-                                        <td>{{customer.name}}</td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">الجوال</th>
-                                        <td>{{ customer.phone }}</td>
-                                    </tr>
-                                    {% if customer.email%}
-                                    <tr>
-                                        <th scope="row">البريد الاليكتروني </th>
-                                        <td>{{ customer.email }}</td>
-                                    </tr>
+
+
+            </div>
+        </div>
+        <div class="card ">
+            <div class="card-header">
+                الخدمات
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table search-table " id="serviceTable">
+                        <thead class="header-item bg-dark text-light text-center">
+                            <th>#</th>
+                            <th>رقم الطلب </th>
+                            <th>نوع الطلب </th>
+                            <th>البائع</th>
+                            <th>تاريخ الطلب</th>
+                            <th>حالة الطلب </th>
+
+                        </thead>
+                        <tbody>
+                            <!-- row -->
+                            {% for service in customer.service_set.all %}
+                            <tr class="search-items text-center {% if service.late %} bg-light-danger {% endif %}">
+                                <td>{{forloop.counter}} </td>
+                                <td>
+                                    <a href="{% url 'service:service_details' service.id %}">{{service.ref_number}}</a>
+                                </td>
+                
+                                <td>
+                                    <span class="badge rounded-pill 
+                                    {% if service.service_type == 'install' %}
+                                    bg-primary
+                                    {% elif service.service_type == 'repair' %}
+                                    bg-secondary
                                     {% endif %}
-
-
-                                </tbody>
-                            </table>
-                        </div>
-
-                    </div>
-                    <div class="table-responsive mt-5 container">
-                        <h2>تاريخ التعاملات </h2>
-                        <table class="table table-nowrap mb-0 ">
-                            <thead class="bg-dark text-light">
-                                <tr>
-                                    <th scope="col">#</th>
-                                    <th scope="col">تاريخ المعاملة </th>
-                                    <th scope="col">الحالة </th>
-                                    <th scope="col">نوع المعاملة </th>
-                                </tr>
-                            </thead>
-
-                            <tbody>
-                                {% for order in orders%}
-                                <tr>
-                                    <td>{{order.id}}</td>
-
-
-                                    <td>
-
-                                        {{ order.timestamp }}
-                                    </td>
-
-                                    <td>
-
-                                        {{order.get_status_display}}
-                                    </td>
-                                    <td>
-                                        {% if order in quarter_orders%}
-                                        كوارتر
-                                        {% else %}
-                                        {{ order.get_service_type_display }}
-                                        {% endif %}
-                                    </td>
-                                </tr>
-
-                                {% endfor %}
-
-                            </tbody>
-                        </table>
-                    </div>
-
+                                    ">
+                
+                                        {{service.get_service_type_display}}
+                                    </span>
+                                </td>
+                                <td><a href="{% url 'users:user_details' service.created_by.id %}">{{service.created_by}}</a></td>
+                                <td>{{service.created_at}}</td>
+                                <td>
+                                    <span class="badge rounded-pill 
+                                {% if service.status  == 'new' %}
+                                   bg-warning
+                                {% elif service.status == 'under_process' %}
+                                    bg-primary
+                                {% elif  service.status == 'done' or service.status  == 'closed' %}
+                                    bg-success
+                                {% endif %} 
+                                   ">
+                                    {{service.get_status_display}}
+                                    </span>
+                
+                                </td>
+                                
+                            </tr>
+                            {% endfor %}
+                            <!-- /.row -->
+                
+                        </tbody>
+                    </table>
                 </div>
             </div>
-
         </div>
+{% endblock %}
 
-    </div>
-</div>
+{% block script%}
+
+
+<script>
+    $(document).ready(function(){
+        $('#serviceTable').DataTable({
+            pageLength : 25,
+            ordering: false ,
+
+            "language": {
+                "paginate": {
+                    "next": "الصفحة التالية",
+                    "previous": "الصفحة السابقة"
+                            },
+                    "emptyTable":     "لا يوجد بيانات للعرض ",
+                    "info":           "عرض _START_ الي _END_ من _TOTAL_ طلبات",
+                    "infoEmpty":      "Showing 0 to 0 of 0 entries",
+                    "infoFiltered":   "(تم البحث في  _MAX_ طلب)",
+                    "search":         "البحث:",
+                    "zeroRecords":    "لا يوجد بيانات مطابقة للبحث",
+                    "lengthMenu":     "عرض _MENU_ طلب في الصفحة ",
+                
+            },
+            "pagingType": "numbers"
+
+        })
+    })
+</script>
 {% endblock %}

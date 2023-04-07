@@ -1,724 +1,479 @@
 <!DOCTYPE html>
-<html>
+<html dir="rtl" lang="en">
 {% load static %}
 
 <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="">
+    <meta name="description" content="Bussiness Managment System .... under development !">
+    <meta name="robots" content="noindex,nofollow">
+    <title>
+        {% block title %} {% endblock %}
+    </title>
 
-    <meta charset="UTF-8">
-    <title>Quarter CRM {% block title %} {% endblock %} </title>
-    <!-- <meta name="keywords" content="" /> -->
-    <meta name="description" content="QUARTER AC _ CRM SYSTEM ">
-    <!-- <meta name="author" content=""> -->
-    <link rel="shortcut icon " href="{% static 'images/favicon.png'%}">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <link href="https://fonts.googleapis.com/css2?family=El+Messiri:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Favicon icon -->
+    <link rel="icon" type="image/png" sizes="16x16" href="">
+    <link rel="stylesheet" href="{% static 'asset/libs/apexcharts/dist/apexcharts.css' %}">
+    <!-- Custom CSS -->
+    <link href="{% static 'css/style.min.css' %}" rel="stylesheet">
+    <link href="{% static 'css/custom.css' %}" rel="stylesheet">
 
-    <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800%7COpen+Sans:400,700,800"
-        rel="stylesheet" type="text/css">
-    <link rel="stylesheet" href="https://unicons.iconscout.com/release/v2.1.5/css/unicons.css">
-
-
-    <!-- Bootstrap Css -->
-    <link href="{% static 'css/bootstrap-rtl.min.css' %}" rel="stylesheet" type="text/css" />
-
-    <!-- Icons Css -->
-    <link href="{% static 'css/icons.min.css' %}" rel="stylesheet" type="text/css" />
-    <!-- App Css-->
-    <link href="{% static 'css/app-rtl.min.css' %}" rel="stylesheet" type="text/css" />
-    <link rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/MaterialDesign-Webfont/5.9.55/css/materialdesignicons.css"
-        integrity="sha512-cQpRsNnonGHFzzAZzZdR05ndKsRXZ5MVcuq+RMKiEbRYmQlLevgdtPjvSI1uGYjqEgio3uQurahmcUde6mMUJQ=="
-        crossorigin="anonymous" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
-        integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w=="
-        crossorigin="anonymous" />
-    {% block link %}
-    <!-- add external links  -->
-    {% endblock %}
-    <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-CCYPFP58TK"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-
-        function gtag() {
-            dataLayer.push(arguments);
-        }
-        gtag('js', new Date());
-
-        gtag('config', 'G-CCYPFP58TK');
-    </script>
+    <!-- select 2  -->
+    <link rel="stylesheet" type="text/css" href="{% static 'asset/libs/select2/dist/css/select2.min.css' %}">
+    <link href="{% static 'asset/extra-libs/datatables.net-bs4/css/dataTables.bootstrap4.css' %}" rel="stylesheet">
+    <link rel="stylesheet" type="text/css"
+        href="{% static 'asset/extra-libs/datatables.net-bs4/css/responsive.dataTables.min.css' %}">
 
 </head>
+
 <style>
-    /* Chrome, Safari, Edge, Opera */
-    input::-webkit-outer-spin-button,
-    input::-webkit-inner-spin-button {
-        -webkit-appearance: none;
-        margin: 0;
-    }
-
-    /* Firefox */
-    input[type=number] {
-        -moz-appearance: textfield;
-    }
-
-    * {
-        font-family: 'El Messiri', sans-serif
-    }
-
-    .adminActions {
-        position: fixed;
-        bottom: 50px;
-        left: 35px;
-        z-index: 10
-    }
-
-
-    .adminButton {
-        height: 60px;
-        width: 60px;
-        background-color: rgba(67, 83, 143, .8);
-        border-radius: 50%;
-        display: block;
-        color: #fff;
-        text-align: center;
-        position: relative;
-
-    }
-
-    .adminButton i {
-        font-size: 22px;
-    }
-
-    .adminButtons {
-        position: absolute;
-        width: 100%;
-        bottom: 120%;
-        text-align: center;
-    }
-
-    .adminButtons a {
-        display: block;
-        width: 45px;
-        height: 45px;
-        border-radius: 50%;
-        text-decoration: none;
-        margin: 10px auto 0;
-        line-height: 1.15;
-        color: #fff;
-        opacity: 0;
-        visibility: hidden;
-        position: relative;
-        box-shadow: 0 0 5px 1px rgba(51, 51, 51, .3);
-    }
-
-    .adminButtons a:hover {
-        transform: scale(1.05);
-    }
-
-    .adminButtons a:nth-child(1) {
-        background-color: #ff5722;
-        transition: opacity .2s ease-in-out .3s, transform .15s ease-in-out;
-    }
-
-    .adminButtons a:nth-child(2) {
-        background-color: #4CAF50;
-        transition: opacity .2s ease-in-out .25s, transform .15s ease-in-out;
-    }
-
-    .adminButtons a:nth-child(3) {
-        background-color: #f44336;
-        transition: opacity .2s ease-in-out .2s, transform .15s ease-in-out;
-    }
-
-    .adminButtons a:nth-child(4) {
-        background-color: #4CAF50;
-        transition: opacity .2s ease-in-out .15s, transform .15s ease-in-out;
-    }
-
-    .adminActions a i {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-    }
-
-    .adminToggle {
-        -webkit-appearance: none;
-        position: absolute;
-        border-radius: 50%;
-        top: 0;
-        left: 0;
-        margin: 0;
-        width: 100%;
-        height: 100%;
+    .pointer {
         cursor: pointer;
-        background-color: transparent;
-        border: none;
-        outline: none;
-        z-index: 2;
-        transition: box-shadow .2s ease-in-out;
-        box-shadow: 0 3px 5px 1px rgba(51, 51, 51, .3);
+        transition: transform 0.3s;
+        
     }
+    .pointer:hover{
+        transform: scale(1.05);
+        color: #11427e;
 
-    .adminToggle:hover {
-        box-shadow: 0 3px 6px 2px rgba(51, 51, 51, .3);
-    }
-
-    .adminToggle:checked~.adminButtons a {
-        opacity: 1;
-        visibility: visible;
-    }
-
-    .required-field {
-        color: red;
-        font-weight: 600
-    }
-
-    #loading {
-        position: fixed;
-        width: 100%;
-        height: 100vh;
-        background: #fff url("{% static 'images/preloader.gif' %}") no-repeat center;
-        z-index: 99999999;
     }
 </style>
-{% block style %}{% endblock %}
 
+<body>
 
-<body data-sidebar="dark" dir="rtl" onload="loadfun()">
-    <div id="loading"></div>
-    <div id="layout-wrapper" dir="rtl">
-        <header id="page-topbar">
-            <div class="navbar-header">
-                <div class="d-flex">
-                    <!-- LOGO -->
-                    <div class="navbar-brand-box">
-                        <a href="{% url 'index' %}" class="logo logo-dark">
-                            <span class="logo-sm">
-                                <img src="{% static 'images/favicon.png'%}" width="60" height="60" alt="">
-                            </span>
-                            <span class="logo-lg">
-                                <img src="{% static 'images/favicon.png'%}" width="60" height="60" alt="">
-                            </span>
-                        </a>
+    <!-- -------------------------------------------------------------- -->
+    <!-- Preloader - style you can find in spinners.css -->
+    <!-- -------------------------------------------------------------- -->
+    <!-- <div class="preloader">
+        <svg class="tea lds-ripple" width="37" height="48" viewbox="0 0 37 48" fill="none"
+            xmlns="http://www.w3.org/2000/svg">
+            <path
+                d="M27.0819 17H3.02508C1.91076 17 1.01376 17.9059 1.0485 19.0197C1.15761 22.5177 1.49703 29.7374 2.5 34C4.07125 40.6778 7.18553 44.8868 8.44856 46.3845C8.79051 46.79 9.29799 47 9.82843 47H20.0218C20.639 47 21.2193 46.7159 21.5659 46.2052C22.6765 44.5687 25.2312 40.4282 27.5 34C28.9757 29.8188 29.084 22.4043 29.0441 18.9156C29.0319 17.8436 28.1539 17 27.0819 17Z"
+                stroke="#2962FF" stroke-width="2"></path>
+            <path
+                d="M29 23.5C29 23.5 34.5 20.5 35.5 25.4999C36.0986 28.4926 34.2033 31.5383 32 32.8713C29.4555 34.4108 28 34 28 34"
+                stroke="#2962FF" stroke-width="2"></path>
+            <path id="teabag" fill="#2962FF" fill-rule="evenodd" clip-rule="evenodd"
+                d="M16 25V17H14V25H12C10.3431 25 9 26.3431 9 28V34C9 35.6569 10.3431 37 12 37H18C19.6569 37 21 35.6569 21 34V28C21 26.3431 19.6569 25 18 25H16ZM11 28C11 27.4477 11.4477 27 12 27H18C18.5523 27 19 27.4477 19 28V34C19 34.5523 18.5523 35 18 35H12C11.4477 35 11 34.5523 11 34V28Z">
+            </path>
+            <path id="steamL" d="M17 1C17 1 17 4.5 14 6.5C11 8.5 11 12 11 12" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round" stroke="#2962FF"></path>
+            <path id="steamR" d="M21 6C21 6 21 8.22727 19 9.5C17 10.7727 17 13 17 13" stroke="#2962FF" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round"></path>
+        </svg>
+    </div> -->
+    <!-- -------------------------------------------------------------- -->
+    <!-- Main wrapper - style you can find in pages.scss -->
+    <!-- -------------------------------------------------------------- -->
+    <div id="main-wrapper">
 
-                        <a href="{% url 'index' %}" class="logo logo-light">
-                            <span class="logo-sm">
-                                <img src="{% static 'images/favicon.png'%}" width="40" height="40" alt="">
-                            </span>
-                            <span class="logo-lg">
-                                <img src="{% static 'images/favicon.png'%}" width="40" height="40" alt="">
-                            </span>
-                        </a>
-                    </div>
-
-                    <!-- <button type="button"
-                        class="btn btn-sm px-3 font-size-16 header-item waves-effect vertical-menu-btn">
-                        <i class="fa fa-fw fa-bars"></i>
-                    </button> -->
-
-                    <!-- App Search-->
-                    <form action="{% url 'search' %}" class="app-search d-none d-lg-block">
-                        <div class="position-relative">
-                            <input type="text" class="form-control" placeholder="الـبـحـث... " name="s">
-                            <span class="uil-search"></span>
-                        </div>
-                    </form>
+        <!-- -------------------------------------------------------------- -->
+        <!-- Topbar header - style you can find in pages.scss -->
+        <!-- -------------------------------------------------------------- -->
+        <header class="topbar">
+            <nav class="navbar top-navbar navbar-expand-md navbar-dark">
+                <div class="navbar-header">
+                    <!-- This is for the sidebar toggle which is visible on mobile only -->
+                    <a class="nav-toggler waves-effect waves-light d-block d-md-none" href="javascript:void(0)">
+                        <i class="ri-close-line fs-6 ri-menu-2-line"></i>
+                    </a>
+                    <!-- -------------------------------------------------------------- -->
+                    <!-- Logo -->
+                    <!-- -------------------------------------------------------------- -->
+                    <a class="navbar-brand" href="/">
+                        <!-- Logo icon -->
+                        <b class="logo-icon">
+                            <!--You can put here icon as well // <i class="wi wi-sunset"></i> //-->
+                            <!-- Dark Logo icon -->
+                            <!-- <img src="" alt="homepage" class="dark-logo" /> -->
+                            <!-- Light Logo icon -->
+                            <!-- <img src="" alt="homepage" class="light-logo" /> -->
+                        </b>
+                        <!--End Logo icon -->
+                        <!-- Logo text -->
+                        <span class="logo-text">
+                            <!-- dark Logo text -->
+                            <!-- <img src="{% static 'asset/images/logo-text.png' %}" alt="homepage" class="dark-logo" /> -->
+                            <!-- Light Logo text -->
+                            <!-- <img src="{% static 'asset/images/logo-light-text.png' %}" class="light-logo" alt="homepage" /> -->
+                        </span>
+                    </a>
+                    <!-- -------------------------------------------------------------- -->
+                    <!-- End Logo -->
+                    <!-- -------------------------------------------------------------- -->
+                    <!-- -------------------------------------------------------------- -->
+                    <!-- Toggle which is visible on mobile only -->
+                    <!-- -------------------------------------------------------------- -->
+                    <a class="topbartoggler d-block d-md-none waves-effect waves-light" href="javascript:void(0)"
+                        data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+                        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><i
+                            data-feather="more-horizontal" class="feather-sm"></i></a>
                 </div>
+                <!-- -------------------------------------------------------------- -->
+                <!-- End Logo -->
+                <!-- -------------------------------------------------------------- -->
+                <div class="navbar-collapse collapse" id="navbarSupportedContent">
+                    <!-- -------------------------------------------------------------- -->
+                    <!-- toggle and nav items -->
+                    <!-- -------------------------------------------------------------- -->
+                    <ul class="navbar-nav me-auto">
+                        <!-- This is  -->
+                        <li class="nav-item"> <a
+                                class="nav-link sidebartoggler d-none d-md-block waves-effect waves-dark"
+                                href="javascript:void(0)"><i data-feather="menu" class="feather-sm"></i></a> </li>
+                    </ul>
+                    <!-- -------------------------------------------------------------- -->
+                    <!-- Right side toggle and nav items -->
+                    <!-- -------------------------------------------------------------- -->
+                    <ul class="navbar-nav justify-content-end">
+                        <!-- -------------------------------------------------------------- -->
+                        <!-- Search -->
+                        <!-- -------------------------------------------------------------- -->
+                        <!-- <li class="nav-item d-none d-md-block search-box"> <a
+                                class="nav-link d-none d-md-block waves-effect waves-dark" href="javascript:void(0)"><i
+                                    data-feather="search"></i></a>
+                            <form class="app-search">
+                                <input type="text" class="form-control" placeholder="Search & enter">
+                                <a class="srh-btn"><i data-feather="x" class="feather-sm"></i></a>
+                            </form>
+                        </li> -->
+                        <!-- -------------------------------------------------------------- -->
+                        <!-- Comment -->
+                        <!-- -------------------------------------------------------------- -->
+                       
+                        <!-- -------------------------------------------------------------- -->
+                        <!-- End Comment -->
+                        <!-- -------------------------------------------------------------- -->
+                        <!-- -------------------------------------------------------------- -->
+                        <!-- Messages -->
+                        <!-- -------------------------------------------------------------- -->
+                       
+                        <!-- -------------------------------------------------------------- -->
+                        <!-- End Messages -->
+                        <!-- -------------------------------------------------------------- -->
+                        <!-- -------------------------------------------------------------- -->
 
-                <div class="d-flex">
+                        <!-- -------------------------------------------------------------- -->
 
-                    <div class="dropdown d-inline-block d-lg-none ms-2">
-                        <button type="button" class="btn header-item noti-icon waves-effect"
-                            id="page-header-search-dropdown" data-bs-toggle="dropdown" aria-haspopup="true"
-                            aria-expanded="false">
-                            <i class="uil-search"></i>
-                        </button>
-                        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right p-0"
-                            aria-labelledby="page-header-search-dropdown">
-
-                            <form class="p-3" action="{% url 'search' %}">
-                                <div class="form-group m-0">
-                                    <div class="input-group">
-                                        <input type="text" class="form-control" placeholder="الـبـحـث... " name="s">
-                                        <div class="input-group-append">
-                                            <button class="btn btn-primary" type="submit"><i
-                                                    class="mdi mdi-magnify"></i></button>
-                                        </div>
+                        <!-- Profile -->
+                        <!-- -------------------------------------------------------------- -->
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle waves-effect waves-dark" href="#"
+                                data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <img src="{% static 'img/avatar.jpg' %}" alt="user" width="50"
+                                    class="profile-pic rounded-circle" />
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-end user-dd animated flipInY">
+                                <div class="d-flex no-block align-items-center p-3 bg-primary text-white mb-2">
+                                    <div class="">
+                                        <!-- <img src="" alt="user" class="rounded-circle" width="60"> -->
+                                    </div>
+                                    <div class="ms-2">
+                                        <h4 class="mb-0 text-white">{{request.user}}</h4>
+                                        <p class=" mb-0">{{request.user.email}}</p>
                                     </div>
                                 </div>
-                            </form>
-                        </div>
-                    </div>
 
+                                
+                                <a class="dropdown-item" href="" data-bs-target="#change_password_modal" data-bs-toggle="modal">تغيير كلمة السر </a>
 
-
-
-
-                    <div class="dropdown d-none d-lg-inline-block ms-1">
-                        <button type="button" class="btn header-item noti-icon waves-effect"
-                            data-bs-toggle="fullscreen">
-                            <i class="uil-minus-path"></i>
-                        </button>
-                    </div>
-
-
-                    <div class="dropdown d-inline-block">
-                        <button type="button" class="btn header-item waves-effect" id="page-header-user-dropdown"
-                            data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <img class="rounded-circle header-profile-user" {% if request.user.profile_pic %}
-                                src="{{request.user.profile_pic.url}}" {% else %}
-                                src="{% static 'images/users/avatar.jpg' %}" {% endif %} alt="Header Avatar">
-                            <span class="d-none d-xl-inline-block ms-1 fw-medium font-size-15">{{request.user}}</span>
-                            <i class="uil-angle-down d-none d-xl-inline-block font-size-15"></i>
-                        </button>
-                        <div class="dropdown-menu dropdown-menu-end">
-                            <!-- item-->
-                            <a class="dropdown-item" href="{% url 'profile' request.user.username %}">
-                                الملف الشخصي</a>
-                            <a class="dropdown-item" href="{% url 'change_password' %}">
-                                تغيير كلمة السر </a>
-
-                            <a class="dropdown-item" href="{% url 'logout' %}"><i
-                                    class="uil uil-sign-out-alt font-size-18 align-middle me-1 text-muted"></i> <span
-                                    class="align-middle">تسجيل الخروج </span></a>
-                        </div>
-                    </div>
-
-
+                                <a class="dropdown-item" href="{% url 'users:logout' %}"><i data-feather="log-out"
+                                        class="feather-sm text-danger me-1 ms-1"></i> خروج</a>
+                            </div>
+                        </li>
+                    </ul>
                 </div>
-            </div>
+            </nav>
         </header>
-
-        <!-- ========== Left Sidebar Start ========== -->
-        <div class="vertical-menu">
-
-            <!-- LOGO -->
-            <div class="navbar-brand-box">
-                <a href="{% url 'index' %}" class="logo logo-dark text-center">
-                    <span style="font-size: 22px ; color : #fff" class="text-center">
-                        <img src="{% static 'images/favicon.png'%}" width="60" height="60" alt="">
-
-                        كوارتر
-                    </span>
-                </a>
-
-                <a href="{% url 'index' %}" class="logo logo-light text-center ">
-
-                    <span style="font-size: 22px ; color : #fff " class="text-center">
-                        <img src="{% static 'images/favicon.png'%}" width="60" height="60" alt="">
-
-                        كوارتر
-                    </span>
-                </a>
-            </div>
-
-            <!-- <button type="button" class="btn btn-sm px-3 font-size-16 header-item waves-effect vertical-menu-btn">
-                <i class="fa fa-fw fa-bars"></i>
-            </button> -->
-
-            <div data-simplebar class="sidebar-menu-scroll">
-
-                <!--- Sidemenu -->
-                <div id="sidebar-menu">
-                    <!-- Left Menu Start -->
-                    <ul class="metismenu list-unstyled" id="side-menu">
-                        <li class="menu-title">Menu</li>
-                        {% if request.user.role == 1 %}
-                        <li>
-                            <a href="javascript: void(0);" class="has-arrow waves-effect">
-                                <i class="uil-home-alt"></i>
-                                <span>Dashboard</span>
+        <!-- -------------------------------------------------------------- -->
+        <!-- End Topbar header -->
+        <!-- -------------------------------------------------------------- -->
+        <!-- -------------------------------------------------------------- -->
+        <!-- Left Sidebar - style you can find in sidebar.scss  -->
+        <!-- -------------------------------------------------------------- -->
+        <aside class="left-sidebar">
+            <!-- Sidebar scroll-->
+            <div class="scroll-sidebar">
+                <!-- Sidebar navigation-->
+                <nav class="sidebar-nav">
+                    <ul id="sidebarnav">
+                        <li class="sidebar-item user-profile">
+                            <a class="sidebar-link has-arrow waves-effect waves-dark" href="javascript:void(0)"
+                                aria-expanded="false">
+                                <!-- <img src="" alt="user"> -->
+                                <span class="hide-menu">{{request.user}} </span>
                             </a>
-
-
-                            <ul class="sub-menu" aria-expanded="false">
-                                <li><a href="{% url 'dashboard' %}">الرئيسية </a></li>
-                                <li><a href="{% url 'all_users' %}">بيانات المستخدمين</a></li>
-                                <li><a href="{% url 'customers_data' %}">العملاء</a></li>
-                                <li><a href="{% url 'archive' %}">أرشيف الطلبات السابقة </a></li>
-
+                            <ul aria-expanded="false" class="collapse  first-level">
+                                <!-- <li class="sidebar-item">
+                                    <a href="javascript:void(0)" class="sidebar-link p-0">
+                                        <i class="mdi mdi-adjust"></i>
+                                        <span class="hide-menu"> My Profile </span>
+                                    </a>
+                                </li> -->
+                                <li class="sidebar-item">
+                                    <a href="{% url 'users:logout' %}" class="sidebar-link p-0">
+                                        <i class="mdi mdi-adjust"></i>
+                                        <span class="hide-menu"> تسجيل الخروج</span>
+                                    </a>
+                                </li>
                             </ul>
                         </li>
-
-                        <li>
-                            <a href="/repair" class="waves-effect">
-                                <i class="fas fa-tools"></i>
-                                <span>الصيانة </span>
+                        
+                        <li class="sidebar-item">
+                            <a class="sidebar-link  waves-effect waves-dark" href="{% url 'core:index' %}">
+                                <i data-feather="home" class="feather-icon"></i>
+                                <span class="hide-menu">الرئيـسـية </span>
                             </a>
+
                         </li>
+                        
 
-                        <li>
-                            <a href="/install" class=" waves-effect">
-                                <i class="fas fa-toolbox"></i>
-
-                                <span>التركيب</span>
+                        {% if request.user.is_Superuser or request.user.role == 'admin' %}
+                        <li class="sidebar-item">
+                            <a class="sidebar-link  waves-effect waves-dark" href="{% url 'service:install' %}">
+                                <!-- <i data-feather="home" class="feather-icon"></i> -->
+                                <i class="fa fa-wrench"></i>
+                                <span class="hide-menu">التركيب  </span>
                             </a>
-                        </li>
 
-                        <li>
-                            <a href="/quarter" class=" waves-effect">
+                        </li>
+                        <li class="sidebar-item">
+                            <a class="sidebar-link  waves-effect waves-dark" href="{% url 'service:repair' %}">
+                                <!-- <i data-feather="home" class="feather-icon"></i> -->
+                                <i class="fas fa-cogs"></i>
+                                <span class="hide-menu">الصيانة </span>
+                            </a>
+
+                        </li>
+                        {% endif %}
+                        {% if request.user.is_superuser or request.user.role == 'repair_supervisor' %}
+                        <li class="sidebar-item">
+                            <a class="sidebar-link  waves-effect waves-dark" href="{% url 'service:spare_part_request' %}">
+                                <!-- <i data-feather="home" class="feather-icon"></i> -->
+                                <i class="fas fa-cog"></i>
+                                <span class="hide-menu">طلبات قطع الغيار </span>
+                            </a>
+
+                        </li>
+                        {% endif%}
+                        {% if request.user.is_superuser %}
+                        <li class="sidebar-item">
+                            <a class="sidebar-link  waves-effect waves-dark" href="{% url 'quarter:project_list' %}">
+                                <!-- <i data-feather="archive " ></i> -->
                                 <i class="fab fa-quora"></i>
-                                <span>كوارتر </span>
-                            </a>
-
-                        </li>
-
-                        <li>
-                            <a href="javascript: void(0);" class="has-arrow waves-effect">
-                                <i class="far fa-file-excel"></i>
-                                <span>تقارير </span>
-                            </a>
-
-
-                            <ul class="sub-menu" aria-expanded="true">
-                                <li class="menu-title">الافراد</li>
-                                <li><a href="{% url 'export_users' %}">مستخدمي الموقع </a></li>
-                                <li><a href="{% url 'export_customers_data' %}">العملاء</a></li>
-                                <li class="menu-title">الطلبات الحالية </li>
-                                <li><a href="{% url 'export_current_service' %}">طلبات الصيانة و التركيب الحالية </a>
-                                </li>
-                                <li><a href="{% url 'export_current_quarter_services' %}">طلبات كوارتر الحالية </a></li>
-
-                                <li class="menu-title">جميع الطلبات </li>
-                                <li><a href="{% url 'export_all_services' %}"> جميع طلبات الصيانة و التركيب </a>
-                                </li>
-                                <li><a href="{% url 'export_all_quarter_services' %}">طلبات كوارتر </a></li>
-
-                            </ul>
-                        </li>
-
-                        {% elif request.user.role == 3 %}
-                        <li>
-                            <a href="/repair" class="waves-effect">
-                                <i class="fas fa-tools"></i>
-                                <span>الصيانة </span>
-                            </a>
-                        </li>
-
-
-                        {% elif request.user.role == 2 %}
-                        <li>
-                            <a href="/install" class=" waves-effect">
-                                <i class="fas fa-toolbox"></i>
-
-                                <span>التركيب</span>
-                            </a>
-                        </li>
-
-
-                        {% elif request.user.role == 4 %}
-                        <li>
-                            <a href="/quarter" class=" waves-effect">
-                                <i class="fab fa-quora"></i>
-                                <span>كوارتر </span>
-                            </a>
-
-                        </li>
-                        {% else %}
-
-                        <li>
-                            <a href="{% url 'index' %}" class=" waves-effect">
-                                <i class="uil-home-alt"></i>
-                                <span></span>الصفحة الرئيسة
+                                <span class="hide-menu">كوارتر </span>
                             </a>
 
                         </li>
                         {% endif %}
 
+                        <li class="sidebar-item">
+                            <a class="sidebar-link  waves-effect waves-dark" href="{% url 'core:archive' %}">
+                                <i class=" fas fa-archive"></i>
+                                <span class="hide-menu">الأرشيف </span>
+                            </a>
 
+                        </li>
 
+                        {% if request.user.is_superuser%}
+                        <li class="sidebar-item">
+                            <a class="sidebar-link  waves-effect waves-dark" href="{% url 'core:reports' %}">
+                                <i class=" fas fa-chart-pie"></i>
+                                <span class="hide-menu">تقارير</span>
+                            </a>
+
+                        </li>
+                        <li class="sidebar-item">
+                            <a class="sidebar-link  waves-effect waves-dark" href="{% url 'users:user_list' %}">
+                                <i class="fas fa-user"></i>
+                                <span class="hide-menu">المستخدمين</span>
+                            </a>
+
+                        </li>
+                       {% endif %}
+                       
+                        {% if request.user.is_authenticated %}
+                        <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link"
+                                href="{% url 'users:logout' %}" aria-expanded="false"><i data-feather="log-out"
+                                    class="feather-icon"></i><span class="hide-menu">Log Out</span></a></li>
+                        {% endif %}
                     </ul>
-                </div>
-                <!-- Sidebar -->
+                </nav>
+                <!-- End Sidebar navigation -->
             </div>
-        </div>
-        <!-- Left Sidebar End -->
-        <div class="main-content">
+            <!-- End Sidebar scroll-->
+        </aside>
+        <!-- -------------------------------------------------------------- -->
+        <!-- End Left Sidebar - style you can find in sidebar.scss  -->
+        <!-- -------------------------------------------------------------- -->
+        <!-- -------------------------------------------------------------- -->
+        <!-- Page wrapper  -->
+        <!-- -------------------------------------------------------------- -->
 
-            <div class="page-content">
-                <div class="container-fluid">
-                    <div class="alert text-center alert-success d-none">
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+        <div class="page-wrapper">
+            <div class="d-flex justify-content-center my-2">
+                {% if request.user.install %}
+                <button 
+                data-bs-target="#install_request" data-bs-toggle="modal"
+                class="btn btn-primary btn-rounded mt-3 mx-4 py-2 px-3"> <i class="fa fa-wrench"></i> طلب تركيب </button>
+                {% endif %}
+                {% if request.user.repair %}
+                <button 
+                data-bs-target="#repair_request" data-bs-toggle="modal"
+                class=" text-light btn btn-success btn-rounded mt-3 mx-4 py-2 px-3" >  <i class="fas fa-cogs"></i> طلب صيانة</button>
+                {% endif %}
+                {% if request.user.quarter %}
+                <button data-bs-target="#quarter_request" data-bs-toggle="modal" class="text-light btn btn-primary btn-rounded mt-3 mx-4 py-2 px-3 text-light"><i class="fab fa-quora"></i> مشروع جديد </button>
+                {% endif %}
+                {% if request.user.is_superuser or request.user.role == 'website_admin' %}
+                 <a href="{% url 'users:create_user' %}" class="text-light btn btn-primary btn-rounded mt-3 mx-4 py-2 px-3 text-light"><i class="fa fa-user"></i> مستخدم جديد </a>
+                 {% endif %}
+    
+            </div>
+            <!-- -------------------------------------------------------------- -->
+            <!-- Container fluid  -->
+            <!-- -------------------------------------------------------------- -->
+            <div class="container-fluid" id="page-body">
+                {% if messages %}
+                {% for message in messages %}
+                <div class="alert customize-alert alert-dismissible 
+                {% if 'success' in  message.tags %}
+                text-success alert-light-success 
+                {% elif 'error' in message.tags %}
+                text-danger alert-light-danger
+                {% else %} 
+                text-primary text-primary alert-light-primary
+                {% endif %}
+                fade show" role="alert">
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    <div class="d-flex align-items-center font-weight-medium">
+                        <i data-feather="info" class="text-primary feather-sm me-2 flex-shrink-0"></i>
 
-                        </button>
+                        {{ message }}
                     </div>
-                    {% if messages %}
-                    {% for  message in messages %}
-                    <div class="alert text-center 
-                    {% if "success" in  message.tags %}
-                    alert-success
-                    {% elif "error" in message.tags %}
-                    alert-danger
-                    {% endif %}
-                    alert-dismissible fade show" role="alert">
-                        {{message}}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+                </div>
+                {% endfor %}
+                {% endif %}
 
-                        </button>
-                    </div>
-                    {% endfor %}
-                    {% endif%}
-                    {% if not request.user.role == 8 %}
-                    <div class="d-none d-lg-block d-md-none ">
-                        <div class="row mb-3 " dir="rtl">
-                            {% if request.user.role == 1  %}
-                            <div class=" col  mb-1 text-center ">
+                
+                {% block content %}
 
-                                <button class="btn btn-lg btn-primary btn-rounded waves-effect waves-light "
-                                    data-bs-toggle="modal" data-bs-target="#newUserModal">
-                                    مستخدم
-                                    جديد
-                                    <i class="fas fa-user-friends"></i></button>
 
+                {% endblock %}
+                <div class="modal custom-modal fade" id="change_password_modal" role="dialog" tabindex="-1">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-body">
+                                <div class="form-header text-center ">  
+                                    <h3>تغيير كلمة السر </h3>
+                                </div>
+                                <form action="{% url 'users:change_password' %}" method="POST" >
+                                    <input type="hidden" name="user" value="{{request.user.id}}">
+                                    {% csrf_token%}
+                                    <div>
+                                        <label for="">كلمة السر الجديدة </label>
+                                        <input type="password" name="password1" class="form-control">
+                                        <div class="invalid-feedback" id="password1-validation">
+                                            يرجي ادخال رمز المرور
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label for="">تأكيد كلمة السر </label>
+                                        <input type="password" name="password2" class="form-control">
+                                        <div class="invalid-feedback">
+                                            يرجي تأكيد رمز المرور
+                                        </div>
+                                    </div>
+                           
+                                    <div class="modal-btn delete-action my-3">
+                                        <div class="row text-center">
+                                            <div class="col-6">
+                                                <button type="submit" class="btn btn-success continue-btn w-100">حفظ</button>
+                                            </div>
+                
+                                            <div class="col-6">
+                                                <a href="javascript:void(0);" data-bs-dismiss="modal" class="btn btn-primary cancel-btn w-100">الغاء</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
                             </div>
-                            {% endif %}
-                            {% if request.user.repair %}
-                            <div class="col  mb-1 text-center">
-                                <button class="btn btn-lg btn-primary btn-rounded waves-effect waves-light"
-                                    data-bs-toggle="modal" data-bs-target="#newRepairRequestModal"> طلب صيانة
-                                    <i class="fas fa-tools"></i>
-                                </button>
-
-                            </div>
-                            {% endif %}
-                            {% if request.user.install %}
-                            <div class="col  mb-1 text-center">
-                                <button class="btn btn-lg btn-primary btn-rounded waves-effect waves-light"
-                                    data-bs-toggle="modal" data-bs-target="#newInstallRequestModal"> طلب تركيب
-                                    <i class="fas fa-toolbox"></i>
-                                </button>
-
-                            </div>
-                            {% endif %}
-                            {% if request.user.quarter %}
-                            <div class="col  mb-1 text-center">
-                                <button class="btn btn-lg btn-primary btn-rounded waves-effect waves-light"
-                                    data-bs-toggle="modal" data-bs-target="#newQuarterRequestModal"> طلب خدمة
-                                    <i class="fab fa-quora "></i></button>
-
-                            </div>
-                            {% endif %}
                         </div>
-
                     </div>
-                    {% endif %}
-                    {% block content %}
-
-                    {% endblock %}
-
-                    {% include './core/partials/_task_modal.html'%}
-                    {% include './core/partials/_new_requests_modals.html' %}
-
-                    {% include './core/partials/_action_btn.html' %}
                 </div>
-                <footer class="bg-light text-lg-start">
-                    <!-- Grid container -->
-                    <div class="container p-4">
-                        <!--Grid row-->
-                        <h5 class="text-uppercase"></h5>
-
-                        <ul class="list-unstyled mb-0 d-flex justify-content-between">
-                            {% if request.user.role == 1 %}
-                            <li>
-                                <a href="/dashboard" class="text-dark waves-effect"><i
-                                        class="uil-home-alt text-success"></i>
-                                    <span>Dashboard</span></a>
-                            </li>
-                            <li>
-                                <a href="/repair" class="waves-effect text-dark ">
-                                    <i class="fas fa-tools text-success"></i>
-                                    <span>الصيانة </span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="/install" class=" waves-effect text-dark ">
-                                    <i class="fas fa-toolbox text-success"></i>
-
-                                    <span>التركيب</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="/quarter" class=" waves-effect text-dark ">
-                                    <i class="fab fa-quora text-success"></i>
-                                    <span>كوارتر </span>
-                                </a>
-                            </li>
-                            {% elif request.user.role == 3 %}
-                            <li>
-                                <a href="/repair" class="waves-effect text-dark ">
-                                    <i class="fas fa-tools text-success"></i>
-                                    <span>الصيانة </span>
-                                </a>
-                            </li>
-
-
-                            {% elif request.user.role == 2 %}
-                            <li>
-                                <a href="/install" class=" waves-effect text-dark ">
-                                    <i class="fas fa-toolbox text-success"></i>
-
-                                    <span>التركيب</span>
-                                </a>
-                            </li>
-
-
-                            {% elif request.user.role == 4 %}
-                            <li>
-                                <a href="/quarter" class=" waves-effect text-dark ">
-                                    <i class="fab fa-quora text-success"></i>
-                                    <span>كوارتر </span>
-                                </a>
-
-                            </li>
-                            {% else %}
-
-                            <li>
-                                <a href="{% url 'index' %}" class=" waves-effect text-dark ">
-                                    <i class="uil-home-alt text-success"></i>
-                                    <span>
-
-                                        الصفحة الرئيسة
-                                    </span>
-                                </a>
-
-                            </li>
-                            {% endif %}
-                            <li>
-                                <a href="{% url 'logout' %}" class="text-dark">
-                                    <i class="fas fa-sign-out-alt text-success"></i>
-                                    <span>
-                                        الخروج
-                                    </span>
-                                </a>
-                            </li>
-                        </ul>
-
-                        <!--Grid row-->
-                    </div>
-                    <!-- Grid container -->
-
-                    <!-- Copyright -->
-                    <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2);">
-                        © 2021 Copyright:
-                        <a class="text-dark" href="">Quarter-ac.com</a>
-                    </div>
-                    <!-- Copyright -->
-                </footer>
+                {% include 'service/modals/repair_modal.html'%}
+                {% include 'service/modals/install_modal.html'%}
+                {% include 'quarter/modals/create_project_modal.html'%}
             </div>
+            <!-- -------------------------------------------------------------- -->
+            <!-- End Container fluid  -->
+            <!-- -------------------------------------------------------------- -->
         </div>
-
-
+        <!-- -------------------------------------------------------------- -->
+        <!-- End Page wrapper  -->
+        <!-- -------------------------------------------------------------- -->
     </div>
+    <!-- -------------------------------------------------------------- -->
+    <!-- End Wrapper -->
+    <!-- -------------------------------------------------------------- -->
+    <!-- -------------------------------------------------------------- -->
+    <!-- customizer Panel -->
+    <!-- -------------------------------------------------------------- -->
 
+    <!-- -------------------------------------------------------------- -->
+    <!-- All Jquery -->
+    <!-- -------------------------------------------------------------- -->
+    <script src="{% static 'asset/libs/jquery/dist/jquery.min.js' %}"></script>
+    <!-- Bootstrap tether Core JavaScript -->
+    <script src="{% static 'asset/libs/bootstrap/dist/js/bootstrap.bundle.min.js' %}"></script>
+    <!-- apps -->
+    <script src="{% static 'js/app.min.js' %}"></script>
+    <script src="{% static 'js/app.init.js' %}"></script>
+    <script src="{% static 'js/app-style-switcher.js' %}"></script>
+    <!-- slimscrollbar scrollbar JavaScript -->
+    <script src="{% static 'asset/libs/perfect-scrollbar/dist/perfect-scrollbar.jquery.min.js' %}"></script>
+    <script src="{% static 'asset/extra-libs/sparkline/sparkline.js' %}"></script>
+    <!--Wave Effects -->
+    <script src="{% static 'js/waves.js' %}"></script>
+    <!--Menu sidebar -->
+    <script src="{% static 'js/sidebarmenu.js' %}"></script>
+    <!--Custom JavaScript -->
+    <script src="{% static 'js/feather.min.js' %}"></script>
+    <script src="{% static 'js/custom.min.js' %}"></script>
 
-    <!-- JAVASCRIPT -->
-    <script src="{% static 'libs/jquery/jquery.min.js' %}"></script>
+    <script src="{% static 'asset/libs/select2/dist/js/select2.full.min.js' %}"></script>
+    <script src="{% static 'asset/libs/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js' %}"></script>
+    <script src="{% static 'asset/extra-libs/datatables.net/js/jquery.dataTables.min.js' %}"></script>
+    <script src="https://unpkg.com/htmx.org@1.8.6"></script>
+    <script src="{% static 'js/pages/validate_user_creation.js' %}"></script>
     <script>
-        $(function () {
-            $('.btn-group-fab').on('click', '.btn', function () {
-                $('.btn-group-fab').toggleClass('active');
-            });
-            $('has-tooltip').tooltip();
-        });
+        
+    (function () {
+        'use strict'
+      
+        // Fetch all the forms we want to apply custom Bootstrap validation styles to
+        var forms = document.querySelectorAll('.needs-validation')
+      
+        // Loop over them and prevent submission
+        Array.prototype.slice.call(forms)
+          .forEach(function (form) {
+            form.addEventListener('submit', function (event) {
+              if (!form.checkValidity()) {
+                event.preventDefault()
+                event.stopPropagation()
+              }
+      
+              form.classList.add('was-validated')
+            }, false)
+          })
+      })()
     </script>
-    <script>
-        $(document).ready(function () {
-            $(".table_search").on("keyup", function () {
-                var value = $(this).val().toLowerCase();
-                $('.data-table tr').filter(function () {
-                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
-                });
-            });
-        });
-    </script>
-    <!-- 
-    <script>
-        $("#install-form-submit").on("click", function (e) {
-            if ($("#favInstall").prop("checked") == true) {
-                e.preventDefault()
-                $.ajax({
-                    url: "{% url 'check_favorite' %}",
-                    success: function (data) {
-                        if (data.remaining > 0) {
-                            $("#install-form").submit()
-
-                        } else {
-                            $(".fav-info").removeClass("d-none")
-                            console.log("can't submit ")
-                        }
-                    }
-                })
-            } else {
-                console.log("not checked")
-            }
-
-        })
-        $("#repair-form-submit").on("click", function (e) {
-            if ($("#favRepair").prop("checked") == true) {
-                e.preventDefault()
-                $.ajax({
-                    url: "{% url 'check_favorite' %}",
-                    success: function (data) {
-                        if (data.remaining > 0) {
-                            console.log(data.remaining)
-                            $("#repair-form").submit()
-                        } else {
-                            $(".fav-info").removeClass("d-none")
-                            console.log("can't submit ")
-                        }
-                    }
-                })
-            } else {
-                console.log("not checked")
-            }
-        })
-    </script> -->
-    <script>
-        let load = document.getElementById("loading")
-
-        function loadfun() {
-            load.style.display = 'none'
-        }
-    </script>
-    <!-- validate phone number  -->
-
-    <script>
-        function validatePhone(event) {
-            let txt = event.target.value
-            console.log(txt.length)
-            if (txt.length == 10) {
-                console.log('10 digits')
-                event.target.classList.remove('is-invalid')
-                document.querySelectorAll("input[type=submit]").disabled = false;
-                return true
-            } else {
-                console.log('invalid phone number ')
-                event.target.classList.add('is-invalid')
-                return false;
-            }
-        }
-        // let input = document.getElementsByClassName("phone_number")[0];
-        // input.addEventListener("keyUp", validatePhone(input.value))
-    </script>
-    <!-- <script src="https://unpkg.com/isotope-layout@3/dist/isotope.pkgd.min.js"></script> -->
-    <script src="{% static 'js/multipleDelete.js' %}"></script>
-    <script src="{% static 'libs/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
-    <script src="{% static 'libs/metismenu/metisMenu.min.js' %}"></script>
-    <script src="{% static 'libs/simplebar/simplebar.min.js' %}"></script>
-    <script src="{% static 'libs/node-waves/waves.min.js' %}"></script>
-    <script src="{% static 'libs/waypoints/lib/jquery.waypoints.min.js' %}"></script>
-    <script src="{% static 'libs/jquery.counterup/jquery.counterup.min.js' %}"></script>
-
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.2.1/dist/chart.min.js"></script>
-
-
-    <script src="{% static 'js/pages/dashboard.init.js' %}"></script>
-
-    <script src="{% static 'js/app-rtl.js' %}"></script>
-    {% block script %} {% endblock %}
-
+    {% block script %}
+    
+    {% endblock %}
 </body>
 
 </html>

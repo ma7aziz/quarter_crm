@@ -1,308 +1,516 @@
-from datetime import date
-from .models import lateDays
-from django.http import JsonResponse
 from django.shortcuts import render, redirect
-from .models import Service_request, Appointment, REQUEST_STATUS, Hold_reason, ExcutionFile
-from accounts.models import User
-from django.contrib import messages
-from django.contrib.auth.decorators import login_required
+from django.views import generic
+from django.urls import reverse_lazy
 from django.http import HttpResponseRedirect
-from django.views.decorators.csrf import csrf_exempt
-from .utils import check_qouta, send_appointment_message
+from . import models
+from django.contrib import messages
+from core.forms import CustomerForm
+from . import choices
+from django.db import transaction
+import datetime
+from users.models import User
+from django.shortcuts import get_object_or_404
+from django.db.models import Case, When, Count, Q 
+from django.db import models as md
+from core.decorators import allowed_roles
+from django.utils.decorators import method_decorator
+from .utils import get_late_count
 
 # Create your views here.
+@method_decorator(allowed_roles(['admin']), name='dispatch')
+class ServiceListView(generic.ListView):
+    model = models.Service
+    template_name = 'service_list.html'
+    context_object_name = 'services'
+
+    def get_queryset(self):
+        status_ordering = Case(
+            When(status='new', then=0),
+            When(status='under_process', then=1),
+            When(status='done', then=2),
+            When(status='completed', then=3),
+            output_field=md.IntegerField(),
+        )
+        queryset = super().get_queryset().order_by(
+            status_ordering,
+            '-favourite',
+            'created_at',
+        )
+        if self.request.user.role == 'sales':
+            queryset = queryset.filter(created_by=self.request.user)
+
+        # Order by Favourite first, only if the status is 'new'
+        queryset = queryset.annotate(fav_first=Case(
+            When(status='new', favourite=True, then=True),
+            default=False,
+            output_field=md.BooleanField(),
+        )).order_by(status_ordering, '-fav_first')
+        return queryset
 
 
-@login_required
-def service_request_details(request, id):
-    req = Service_request.objects.get(pk=id)
-    technicians = User.objects.all().filter(role=8)
-    appointment = Appointment.objects.all().filter(service_request=req).first()
-    ctx = {
-        'req': req,
-        'tech': technicians,
-        'appointment': appointment,
-        'request_status': REQUEST_STATUS
+@method_decorator(allowed_roles(['admin', 'install_supervisor']), name='dispatch')
+class InstallListView(generic.ListView):
+    model = models.Service
+    template_name = 'service/install.html'
+    context_object_name = 'services'
 
-    }
+    def get_queryset(self):
+        queryset = models.Service.objects.install()
+        queryset = queryset.annotate(
+                fav_new_first=Case(
+                    When(status='new', favourite=True, then=True),
+                    default=False,
+                    output_field=md.BooleanField(),
+                ),
+            ).order_by( '-fav_new_first'  , models.status_ordering  , '-created_at' )
+        if self.request.user.role == 'sales':
+            queryset = queryset.filter(created_by=self.request.user)
+        return queryset
 
-    return render(request, 'repair/request_details.html', ctx)
+    def get_context_data(self, **kwargs):
+        counts = models.Service.objects.install().aggregate(
+            total_count=Count('id'),
+            on_hold_count=Count('id', filter=Q(hold=True)),
+            new_count=Count('id', filter=Q(status='new')),
+            under_process_count=Count('id', filter=Q(
+                status='under_process', hold=False)),
+            new_favs=Count('id', filter=Q(status='new', favourite=True)),
+            current_favs=Count('id', filter=Q(
+                status='under_process', favourite=True, hold=False)),
+        )
+        kwargs.update(counts)
 
-
-@login_required
-def appointment_details(request, id):
-
-    appointment = Appointment.objects.get(pk=id)
-
-    ctx = {
-        "appointment": appointment
-    }
-    return render(request, 'repair/appointment_details.html', ctx)
-
-
-@login_required
-def service_appointment(request):
-    """
-    set NEW appointment && asign technician for repair service
-    - should be done by admin or supervisor
-    - send message to client
-    - change request status from new => underprocess
-
-    """
-    if request.method == 'POST':
-        service_request = Service_request.objects.get(
-            pk=request.POST['request'])
-        technician = User.objects.get(pk=request.POST['technician'])
-        date = request.POST['appoint_date']
-        appointment = Appointment(
-            date=date, technician=technician, service_request=service_request, service_type=service_request.service_type)
-        appointment.save()
-        service_request.status = 'under_process'
-        service_request.appointment = appointment
-        service_request.save()
-        messages.success(request, "تم تحديد الموعد !")
-        send_appointment_message(service_request)
-    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+        kwargs['upcoming_appointments_count'] = models.Appointment.objects.upcoming_install(
+        ).only('id').count()
+        kwargs['late_count'] = get_late_count('install')
+        return super().get_context_data(**kwargs)
 
 
-@login_required
-def change_appointment(request):
-    appointment = Appointment.objects.get(pk=request.POST["appoint_id"])
-    technician = User.objects.get(pk=request.POST['technician'])
-    date = request.POST['appoint_date']
-    appointment.technician = technician
-    appointment.date = date
-    appointment.save()
-    messages.success(request, "تم تغيير الموعد !")
-    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+@method_decorator(allowed_roles(['admin', 'repair_supervisor']), name='dispatch')
+class RepairListView(generic.ListView):
+    model = models.Service
+    template_name = 'service/repair.html'
+    context_object_name = 'services'
+
+    def get_queryset(self):
+
+        queryset = models.Service.objects.repair().order_by(
+            models.status_ordering, '-created_at')
+        if self.request.user.role == 'sales':
+            queryset = queryset.filter(created_by=self.request.user)
+
+        queryset = queryset.annotate(fav_first=Case(
+            When(status='new', favourite=True, then=True),
+            default=False,
+            output_field=md.BooleanField(),
+        )).order_by(models.status_ordering, '-fav_first')
+        return queryset
+
+    def get_context_data(self, **kwargs):
+
+        counts = models.Service.objects.repair().aggregate(
+            total_count=Count('id'),
+            on_hold_count=Count('id', filter=Q(hold=True)),
+            new_count=Count('id', filter=Q(status='new')),
+            under_process_count=Count('id', filter=Q(
+                status='under_process',  hold=False)),
+            new_favs=Count('id', filter=Q(status='new', favourite=True)),
+            current_favs=Count('id', filter=Q(status='under_process', favourite=True,   hold=False)))
+        kwargs.update(counts)
+        kwargs['upcoming_appointments_count'] = models.Appointment.objects.upcoming_repair(
+        ).only('id').count()
+        kwargs['late_count'] = get_late_count('repair')
+        return super().get_context_data(**kwargs)
 
 
-@login_required
-def complete_request(request):
-    """
-    change request status from under process to done .. using a verification code .
-    """
-    if request.method == "POST":
-        req = Service_request.objects.get(
-            pk=request.POST['request_id'])
-        appointment = Appointment.objects.get(pk=request.POST['appoint_id'])
-        code = request.POST['code']
-        if request.user.role == 1 or request.user.role == 2 or request.user.role == 3:
-            if code == "0000" or code == req.code:
-                req.status = "done"
-                # CHANGE HOLD STATUS IF REQUEST IS ON HOLD
-                req.hold = False
-                req.save()
-                appointment.status = "closed"
-                appointment.save()
-                messages.success(request, "تم تنفيذ الطلب ")
-            else:
-                # send error message
-                messages.error(request, "برجاء ادخال كود صحيح ")
-                return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+class CreateService(generic.CreateView):
+    '''
+    create new service request 
+    use form 
+    validation is done in the frontend and back end 
+    '''
+    model = models.Service
+    fields = ['customer', 'address', 'customer_type', 'favourite', 'phone_number',
+              'service_type', 'machine_type', 'invoice_number', 'notes' , 'ac_count']
+    success_url = reverse_lazy('core:index')
+    template_name = 'service/service_create.html'
 
-        else:
-            if code == req.code:
-                req.status = "done"
-                # CHANGE HOLD STATUS IF REQUEST IS ON HOLD
-                req.hold = False
-                req.save()
-                appointment.status = "closed"
-                appointment.save()
-                messages.success(request, "تم تنفيذ الطلب ")
-            else:
-                # send error message
-                messages.error(request, "برجاء ادخال كود صحيح ")
-                return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-
-    # add excution files if exist
-    if request.FILES['files']:
-        for f in request.FILES.getlist("files"):
-            new_file = ExcutionFile(service=req, file=f)
-            new_file.save()
-            req.excution_files.add(new_file)
-            req.save()
-
-    if request.user.role == 1:
-        if req.service_type == "repair":
-            return redirect('/repair')
-        elif req.service_type == "install":
-            return redirect('/install')
-    else:
-        return redirect('/')
+    def get_success_url(self) :
+        if self.request.POST['service_type'] == 'install': 
+            return reverse_lazy('service:install')
+        elif self.request.POST['service_type'] == 'repair' :
+            return reverse_lazy('service:repair')
 
 
-def close_request(request):
-    """
-      done by supervisor or admin
-      confirm finishing the repair service and close the request
-      == change status to closed
-    """
-    if request.method == "POST":
-        req = Service_request.objects.get(
-            pk=request.POST['request_id'])
-        req.status = "closed"
 
-        #  technician completed task count
-        appointment = Appointment.objects.get(service_request=req)
-        technician = appointment.technician
-        technician.completed_tasks += 1
-        technician.save()
+    def get_context_data(self, **kwargs):
+        kwargs['customer_form'] = CustomerForm
+        kwargs['companies'] = User.objects.filter(role='company')
+        return super().get_context_data(**kwargs)
 
-        # sales submitted orders count
-        sales = req.created_by
-        sales.submitted_orders += 1
-        sales.save()
+    def form_valid(self, form):
+        form.instance.created_by = self.request.user
+        if self.request.POST.getlist('favourite'):
+            form.instance.favourite = True
+        if self.request.POST.getlist('company'):
+            company = User.objects.get(pk=self.request.POST['company'])
+            form.instance.company = company
+        service = form.save()  # Save the Service instance first
+        if self.request.FILES:
+            files = self.request.FILES.getlist('file')
+            for f in files:
+                file_instance = models.File(service=service, file=f)
+                file_instance.save()
+        messages.success(self.request, 'تم اضافة الطلب بنجاح !')
+        return super().form_valid(form)
 
-        req.save()
-
-        messages.success(request, "تم تنفيذ و اغلاق الطلب بنجاح !")
-        if req.service_type == "repair":
-            return redirect('/repair')
-        elif req.service_type == "install":
-            return redirect('/install')
+    def form_invalid(self, form):
+        print(form.errors)
+        messages.error(self.request, 'حدث خطأ .. يرجي المحاولة مرة اخري  !')
+        return HttpResponseRedirect(self.request.META.get('HTTP_REFERER'))
 
 
-def delete_request(request, id):
-    req = Service_request.objects.get(pk=id)
-    req.delete()
-    if req.favourite:
-        if req.timestamp.date() == date.today():
-            req.created_by.favourite_qouta.current_requests -= 1
-            req.created_by.favourite_qouta.save()
-    messages.success(request, "تم حذف الطلب ")
-    if request.user.role == 5:
-        return redirect('sales_view')
-    else:
-        if req.service_type == "repair":
-            return redirect('/repair')
-        elif req.service_type == "install":
-            return redirect('/install')
+class ServiceDetails(generic.DetailView):
+
+    model = models.Service
+    lookup_field = 'pk'
+    context_object_name = 'service'
+    template_name = 'service/service_details.html'
+
+    def get_context_data(self, **kwargs):
+        if self.object.hold:
+            # print(self.object.holdreason_set.last())
+            kwargs['hold_reason'] = self.object.holdreason_set.last()
+        if self.object.status == 'under_process':
+            kwargs['appointment'] = self.object.appointment_set.last()
+        kwargs['technician'] = User.objects.filter(role='technician')
+        kwargs['status_choices'] = choices.REQUEST_STATUS
+        return super().get_context_data(**kwargs)
 
 
-def hold(request, id):
-    if request.method == "POST":
-        req = Service_request.objects.get(pk=request.POST['req_id'])
-        reason = request.POST['hold_reason']
-        if req.hold_reason:
-            req.hold_reason.reason = reason
-            req.hold_by = request.user
-            if request.FILES:
-                req.hold_reason.file = request.FILES["holding_file"]
+class DeleteService(generic.DeleteView):
+    model = models.Service
+    lookup_field = 'pk'
+    success_url = reverse_lazy('core:index')
 
-            req.hold_reason.save()
-            req.hold = True
-            req.save()
-            messages.success(request, "تم تعليق الطلب !")
+    def form_valid(self, form):
+        messages.success(self.request, 'تم حذف الطلب !')
+        return super().form_valid(form)
 
-        else:
-            hold_reason = Hold_reason(
-                service=req, reason=reason, hold_by=request.user)
-            if request.FILES:
-                hold_reason.file = request.FILES["holding_file"]
-            hold_reason.save()
-            req.hold_reason = hold_reason
-            req.hold = True
-            req.save()
-            messages.success(request, "تم تعليق الطلب !")
-    else:
-        req = Service_request.objects.get(pk=id)
-        req.hold = False
-        req.save()
-        messages.success(request, "تم اعادة تفعيل الطلب  !")
-    if req.hold:
-        if req.service_type == "repair":
-            return redirect('/repair')
-        elif req.service_type == "install":
-            return redirect('/install')
-    else:
+
+class UpdateServiceStatus(generic.View):
+    def get(self, request):
+        print(request.GET)
+        try:
+            service_id = request.GET.get('service')
+            status = request.GET.get('status')
+            if service_id and status:
+                service = get_object_or_404(models.Service, id=service_id)
+                if status == 'closed':
+                    service.status = 'closed'
+                    service.save()
+                    messages.success(request, 'تم اغلاق الطلب ')
+                    return redirect(reverse_lazy('core:index'))
+        except Exception as e:
+            print(e)
+            messages.error(request, 'خطأ')
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+    def post(self, request):
+        service = models.Service.objects.get(pk=request.POST['service'])
+        if not service.status == request.POST['status']:
+            service.status = request.POST['status']
+            service.save()
+            messages.success(request, 'تم تحديث حالة الطلب !')
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
-def change_status(request):
-    if request.method == "POST":
-        req = Service_request.objects.get(pk=request.POST['request'])
-        req.status = request.POST['new_status']
-        req.save()
-        messages.success(request, "تم تحديث حالة الطلب بنجاح !")
-    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+class HoldService(generic.View):
+    def post(self, request):
+        try:
+            with transaction.atomic():
+                service = models.Service.objects.get(
+                    pk=request.POST['service'])
+                if not service.hold:
+                    hold_reason = models.HoldReason(
+                        service=service,
+                        details=request.POST['hold_reason'],
+                        created_by=request.user
+                    )
+                    hold_reason.save()
+                    service.hold = True
+                    service.status = 'under_process'
+                    service.save()
+                    if self.request.FILES:
+                        files = self.request.FILES.getlist('file')
+                        for f in files:
+                            file_instance = models.HoldFile(
+                                hold_reason=hold_reason, file=f, created_by=request.user)
+                            file_instance.save()
+
+                    if request.POST['reason'] == 'spare_parts':
+                        hold_reason.reason = 'طلب قطع غيار '
+                        hold_reason.save()
+                        sp_request = models.SparePartRequest(
+                            service=service,
+                            requested_parts=request.POST['spare_parts'],
+                            details=request.POST['hold_reason'],
+                            created_by=request.user)
+                        sp_request.save()
+                    
+                    messages.success(request, 'تم تعليق الطلب !')
+
+                else:
+                    # unhold service .. change service status , cancel hold reason by user at time
+                    hold_reason = models.HoldReason.objects.get(
+                        pk=request.POST['hold_reason'])
+                    hold_reason.canceled_by = request.user
+                    hold_reason.canceled_at = datetime.datetime.now()
+                    hold_reason.save()
+                    service.hold = False
+                    service.save()
+                    messages.success(request, 'تم اعادة تفعيل الطلب !!')
+
+        except Exception as e:
+            messages.error(
+                request, 'An error occurred while processing your request: {}'.format(e))
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+# favourite / unvaforite
 
 
-def deactivate_request(request, id):
-    req = Service_request.objects.get(pk=id)
-    req.active = not req.active
-
-    req.save()
-    if req.active:
-        if req.hold:
-            req.hold = False
-            req.save()
-        messages.success(request, "تم اعادة تفعيل الطلب  !")
-    else:
-        messages.success(request, "تم اغلاق الطلب  !")
-    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-
-
-@csrf_exempt
-def multiple_delete(request):
-    if request.is_ajax:
-        ids = request.POST.getlist('ids[]')
-        for i in ids:
-            req = Service_request.objects.get(pk=i)
-            req.delete()
-            if req.favourite:
-                if req.timestamp.date() == date.today():
-                    req.created_by.favourite_qouta.current_requests -= 1
-                    req.created_by.favourite_qouta.save()
-
-        data = {
-            'message':  'تم حذف الطلبات المختارة '
-        }
-
-        return JsonResponse(data)
-
-
-def favorite(request, id):
-    """
-    ALLOW USER TO ADD REQUEST TO FAVORITES 
-    """
-    req = Service_request.objects.get(pk=id)
-    user = request.user
-    if not req.favourite:
-        check_qouta(request.user.id)
-        if user.favourite_qouta.current_requests < user.favourite_qouta.max_requests:
-            service = req
-            service.favourite = True
+class FavouriteService(generic.View):
+    def post(self, request):
+        service = models.Service.objects.get(pk=request.POST['service'])
+        if service.favourite:
+            service.favourite = False
             service.save()
-            user.favourite_qouta.current_requests += 1
-            user.favourite_qouta.save()
-            messages.success(request, "تم الاضافة للمفضلات ")
+            messages.success(request, 'تم الازالة من المفضلات .')
         else:
-            messages.error(request, "لم يتم أضافة الطلب الي المفضلات ")
-    else:  # remove from favorites
-        service = req
-        service.favourite = False
+            if request.user.remaining_qouta or request.user.is_superuser or request.user.role == 'install_supervisor':
+                service.favourite = True
+                service.save()
+                messages.success(request, 'تم تفضيل الطلب !')
+            else:
+                messages.error(
+                    request, 'لا يمكنك أضافة طلب جديد الي المفضلات اليوم !!')
+
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+# Excution
+
+
+class SetAppointment(generic.View):
+    '''
+    Set appointment for service request ,
+    done by install or repair manager 
+    data : technician , date , notes 
+    '''
+
+    def post(self, request):
+        with transaction.Atomic(using='default', savepoint=True, durable=False):
+            try:
+                service = models.Service.objects.get(
+                    pk=request.POST['service'])
+                technician = User.objects.get(pk=request.POST['technician'])
+                appointment = models.Appointment.objects.update_or_create(
+                    service=service,
+                    defaults={
+                        'technician': technician,
+                        'date': datetime.datetime.today(),
+                        'notes': request.POST['notes']
+                    }
+                )
+                service.status = 'under_process'
+                service.save()
+                messages.success(request, 'تم تحديد الموعد !')
+                if request.POST.getlist('hold_reason'):
+                    hold_reason = models.HoldReason.objects.get(
+                            pk=request.POST['hold_reason'])
+                    hold_reason.canceled_by = request.user
+                    hold_reason.canceled_at = datetime.datetime.now()
+                    hold_reason.save()
+                    service.hold = False
+                    service.save()
+                    messages.success(request, 'تم  اعادة تفعيل الطلب  !')
+            except Exception as e:
+                messages.error(request, f'خطأ {e}.. يرجي المحاولة مرة اخري ')
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
+# confirm excution by tech, instal supervisor  => change status to done
+class ConfirmExcution(generic.View):
+    '''
+    Confirm service excution 
+    need service code if confirmation done by technician 
+    if confirm done by admin , supervisor === 0000
+    '''
+
+    def post(self, request):
+        code = request.POST['code']
+        service = models.Service.objects.get(pk=request.POST['service'])
+        if code == service.code:
+            service.status = 'done'
+        elif request.user.role == 'repair_supervisor' or request.user.role == 'install_supervisor' or request.user.is_superuser:
+            if code == '0000':
+                service.status = 'done'
+        else:
+            if request.user.role == 'technician':
+                messages.error(
+                    request, 'يرجي ادخال كود التنفيذ الصحيح أو التواصل مع المشرف')
+                messages.error(
+                    request, 'Wrong code ! please submit the right code or contact your supervisor !')
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
         service.save()
-        user.favourite_qouta.current_requests -= 1
-        user.favourite_qouta.save()
-        messages.success(request, "تم الحذف من المفضلات ")
-    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+        if service.status == 'done':
+            if request.FILES:
+                files = request.FILES.getlist('file')
+                for f in files:
+                    file_instance = models.ExcutionFile(
+                        service=service, file=f, created_by=request.user)
+                    file_instance.save()
+            messages.success(request, 'تم التحديث !')
+
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
-def change_late_days(request):
-    latedays = lateDays.objects.get(pk=1)
-    latedays.days = request.POST['days']
-    latedays.save()
-    messages.success(request, "تم التعديل ")
-    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-
-
-def check_favorite(request):
-    if request.is_ajax():
-        user = User.objects.get(pk=request.user.id)
-        remaining_favs = user.favourite_qouta.max_requests - \
-            user.favourite_qouta.current_requests
-        data = {
-            "remaining": remaining_favs
+class SparePartRequest(generic.View):
+    def get(self, request, *args, **kwargs):
+        template_name = 'service/sp_requests.html'
+        ctx = {
+            'sp_requests' : models.SparePartRequest.objects.all().order_by('-created_at')
         }
-        return JsonResponse(data)
+        return render(request , template_name , ctx)
+
+    def post(self, request):
+        service = models.Service.objects.get(pk=request.POST['service'])
+        sp_request = models.SparePartRequest(
+            service=service,
+            requested_parts=request.POST['requested_parts'],
+            details=request.POST['details'],
+            created_by=request.user
+        )
+        sp_request.save()
+        messages.success(request, 'تم حفظ الطلب !')
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
+
+class ConfirmSparePartRecieve(generic.View):
+    def post(self, request):
+        sp_request = models.SparePartRequest.objects.get(
+            pk=request.POST['sp_request'])
+        sp_request.status = 'recieved'
+        sp_request.recievied_by = request.user
+        sp_request.recievied_at = datetime.datetime.now()
+        sp_request.save()
+
+        messages.success(request, 'تم تأكيد استلام قطع الغيار ')
+
+        return redirect(reverse_lazy('service:service_details', kwargs={'pk':  sp_request.service.id}))
+
+
+
+# htmx views
+def service_request(request):
+    service_type = request.GET['type']
+    if service_type == 'install':
+        template = 'service/partials/install.html'
+    elif service_type == 'repair':
+        template = 'service/partials/repair.html'
+    ctx = {
+        'companies': User.objects.filter(role='company')
+    }
+    return render(request, template, ctx)
+
+
+def render_service_data(request):
+    '''
+    Using HTMX to  return specific filtered service and patial dom elements 
+    '''
+    base_temp_name = 'service/partials/htmx/'
+    service = request.GET['service']
+    data = request.GET['data']
+    templates = {
+        ('install', 'all'): base_temp_name + 'all.html',
+        ('install', 'new'): base_temp_name + 'new_services.html',
+        ('install', 'under_process'): base_temp_name + 'under_process.html',
+        ('install', 'upcoming_appoints'): base_temp_name + 'upcoming_appointments.html',
+        ('install', 'late_services'): base_temp_name + 'late_services.html',
+        ('install', 'on_hold'): base_temp_name + 'on_hold.html',
+        ('install', 'new_favourite'): base_temp_name + 'favs.html',
+        ('install', 'processing_favourite'): base_temp_name + 'favs.html',
+        ('repair', 'all'): base_temp_name + 'all.html',
+        ('repair', 'new'): base_temp_name + 'new_services.html',
+        ('repair', 'under_process'): base_temp_name + 'under_process.html',
+        ('repair', 'upcoming_appoints'): base_temp_name + 'upcoming_appointments.html',
+        ('repair', 'late_services'): base_temp_name + 'late_services.html',
+        ('repair', 'on_hold'): base_temp_name + 'on_hold.html',
+        ('repair', 'spare_parts'): base_temp_name + 'spare_parts.html',
+    }
+
+    late_services = list(
+        filter(lambda x: x.late, models.Service.objects.all()))
+    late_repair_services = [
+        service for service in late_services if service.service_type == 'repair']
+    late_install_services = [
+        service for service in late_services if service.service_type == 'install']
+    ctxs = {
+        ('install', 'all'): {
+            'services': models.Service.objects.install().filter( archive =False )
+        },
+        ('install', 'upcoming_appoints'): {
+            'appointments': models.Appointment.objects.upcoming_install()
+        },
+        ('install', 'late_services'): {
+            'services': late_install_services
+        },
+        ('install', 'new'): {
+            'services': models.Service.objects.new().filter(service_type='install' , hold = False),
+            'title': 'طلبات التركيب الجديدة '
+        },
+        ('install', 'under_process'): {
+            'services': models.Service.objects.under_process().filter(service_type='install').exclude(hold=True),
+            'title': 'طلبات التركيب الجارية '
+        },
+        ('install', 'on_hold'): {
+            'services': models.Service.objects.hold().filter(service_type='install')
+        },
+        ('install', 'new_favourite'): {
+            'services': models.Service.objects.install().filter(favourite=True, status='new' , hold = False),
+            'title': 'مفضلات التركيب الجديدة '
+        },
+        ('install', 'processing_favourite'): {
+            'services': models.Service.objects.install().filter(favourite=True, status='under_process'),
+            'title': 'مفضلات التركيب جاري تنفيذها  '
+        },
+        ('repair', 'all'): {
+            'services': models.Service.objects.repair().filter( archive =False )} ,
+        ('repair', 'upcoming_appoints'): {
+            'appointments': models.Appointment.objects.upcoming_repair()
+        },
+        ('repair', 'new'): {
+            'services': models.Service.objects.new().filter(service_type='repair' , hold = False),
+            'title': 'طلبات الصيانة الجديدة '
+        },
+        ('repair', 'under_process'): {
+            'services': models.Service.objects.under_process().filter(service_type='repair', hold = False),
+            'title': 'طلبات الصيانة الجارية '
+        },
+        ('repair', 'late_services'): {
+            'services': late_repair_services
+        },
+        ('repair', 'on_hold'): {
+            'services': models.Service.objects.hold().filter(service_type='repair')
+        },
+        ('repair', 'spare_parts'): {
+            'services': models.SparePartRequest.objects.filter(service__service_type='repair')
+        },
+
+    }
+
+    template = templates.get((service, data), '')
+    ctx = ctxs.get((service, data), {})
+
+    return render(request, template, ctx)

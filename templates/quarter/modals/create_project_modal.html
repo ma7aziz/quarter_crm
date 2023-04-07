@@ -1,0 +1,80 @@
+
+<div class="modal fade" tabindex="-1" id="quarter_request">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="mb-3 text-primary text-center">مشروع جديد</h4>
+            </div>
+
+        <div class="modal-body">
+            <form action="{% url 'quarter:create_project' %}" method="post" id="install_form" class="needs-validation"
+            enctype="multipart/form-data"  />
+            {% csrf_token %}
+        
+            <div class="row">
+    
+
+                <div class="col-12 my-2">
+                    <label for="" class="text-primary">الاسم</label>
+                    <input type="text" name="name" id="" required class="form-control" />
+    
+                    <div class="invalid-feedback">
+                        <p>العميل مطلوب </p>
+                    </div>
+                </div>
+                <div class="col-12 my-2">
+                    <label class="text-primary" for="">الموقع</label>
+                    <input type="text" name="address" class="form-control" id="cust_address" required>
+                    <div class="invalid-feedback">
+                        <p>بيانات العميل مطلوبة </p>
+                    </div>
+                </div>
+    
+                <div class="col-12 my-2">
+                    <label class="text-primary" for="">الهاتف</label>
+                    <input type="text" name="phone_number" class="form-control" id="cust_phone" required >
+                    <div class="invalid-feedback">
+                        <p>بيانات العميل مطلوبة </p>
+                    </div>
+                </div>
+    
+                
+            </div>
+            
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-success " > حفظ</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">الغاء</button>
+            </div>
+        </form>
+        </div>
+    </div>
+    </div>
+
+   
+</div>
+
+
+
+{% block script %}
+<script>
+(function () {
+    'use strict'
+  
+    // Fetch all the forms we want to apply custom Bootstrap validation styles to
+    var forms = document.querySelectorAll('.needs-validation')
+  
+    // Loop over them and prevent submission
+    Array.prototype.slice.call(forms)
+      .forEach(function (form) {
+        form.addEventListener('submit', function (event) {
+          if (!form.checkValidity()) {
+            event.preventDefault()
+            event.stopPropagation()
+          }
+  
+          form.classList.add('was-validated')
+        }, false)
+      })
+  })()
+</script>
+{% endblock %}

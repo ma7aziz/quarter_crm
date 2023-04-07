@@ -1,10 +1,12 @@
 from django.contrib import admin
+from . import models 
+# Register your models here.
 
-# Register your models here.
-from .models import Service_request, Appointment, Hold_reason, lateDays, ExcutionFile
-# Register your models here.
-admin.site.register(Service_request)
-admin.site.register(Appointment)
-admin.site.register(Hold_reason)
-admin.site.register(lateDays)
-admin.site.register(ExcutionFile)
+class ServiceAdmin(admin.ModelAdmin):
+    list_display = ['ref_number' , 'archive' , 'favourite']
+    list_editable = ['archive' , 'favourite']
+
+
+admin.site.register(models.Service , ServiceAdmin)
+admin.site.register(models.File)
+admin.site.register(models.SparePartRequest)
