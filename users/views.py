@@ -14,7 +14,7 @@ from django.utils.decorators import method_decorator
 ##login 
 ##create user 
 ##edit user 
-@method_decorator(allowed_roles(['admin']) ,name='dispatch')
+@method_decorator(allowed_roles(['admin' , 'install_supervisor' ]) ,name='dispatch')
 class UserList(generic.ListView ,PermissionRequiredMixin ):
     '''
     List all sytsem users 
@@ -49,17 +49,17 @@ class Login(LoginView):
         form.errors['__all__'][0] = 'يرجي التأكد من اسم المستخدم وكلمة المرور !!'
         return super().form_invalid(form)
 
-class CreateUser( PermissionRequiredMixin , generic.View ):
-    permission_required = ['user.add_user']
+@method_decorator(allowed_roles(['admin' , 'install_supervisor' ]) ,name='dispatch')
+class CreateUser(generic.View ):
     template_name = 'authentication/create_user.html'
     def get(self , request , *args , **kwargs ):
         ctx = {
-            'form' : CreateUserForm()
+            'form' : CreateUserForm(user_role=request.user.role)
         }
         return render(request , self.template_name , ctx)
     
     def post(self , request):
-        form  = CreateUserForm(request.POST)
+        form  = CreateUserForm(request.POST )
         
         if form.is_valid():
             user = form.save()

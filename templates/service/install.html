@@ -83,6 +83,7 @@
                 <th>الجوال</th>
                 <th>البائع</th>
                 <th>رقم الفاتورة</th>
+                <th>عدد المكيفات</th>
                 <th>التاريخ</th>
                 <th>حالة الطلب </th>
                 
@@ -101,6 +102,7 @@
                     <td>{{service.phone_number}}</td>
                     <td><a href="{% url 'users:user_details' service.created_by.id %}">{{service.created_by}}</a></td>
                     <td>{% if service.invoice_number%} {{service.invoice_number }} {% else%} - {% endif %}</td>
+                    <td>{% if service.ac_count %} {{service.ac_count}} {% else %} - {% endif %}</td>
                     <td>{{service.created_at.date|date:"F j"}}</td>
                     <td>
                         <a href="{% url 'service:service_details' service.id %}">

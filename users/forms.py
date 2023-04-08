@@ -26,3 +26,10 @@ class CreateUserForm(UserCreationForm):
             'favourite_qouta' : forms.NumberInput(attrs={'required' : True }) ,
 
         }
+        
+    def __init__(self, *args, **kwargs):
+        user_role = kwargs.pop('user_role', None)
+        super(CreateUserForm, self).__init__(*args, **kwargs)
+        if user_role == 'install_supervisor':
+            self.fields['role'].choices = [('technician', 'فني')]
+

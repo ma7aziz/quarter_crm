@@ -19,11 +19,7 @@
 <div class="widget-content searchable-container list">
     <div class="card card-body">
         <div class="row">
-                <div class="col-md-4 col-xl-2">
-                    <form>
-                        <input type="text" class="form-control product-search" id="input-search" placeholder="بحث عن مستخدم..">
-                    </form>
-                </div>
+
                 <div class="col-md-8 col-xl-10 text-end d-flex justify-content-md-end justify-content-center mt-3 mt-md-0">
                      <div class="action-btn show-btn" style="display: none">
                             <a href="javascript:void(0)" class="delete-multiple btn-light-danger btn me-2 text-danger d-flex align-items-center font-weight-medium" >
@@ -42,7 +38,7 @@
     </div>
     <div class="card card-body">
         <div class="table-responsive">
-            <table class="table search-table v-middle">
+            <table class="table search-table v-middle" id="userTable">
                 <thead class="header-item bg-dark text-light text-center">
                     <th>اسم المستخدم</th>
                     <th>الوظيفة</th>
@@ -90,3 +86,33 @@
 <!-- User Delete Confirmation Modal -->
 {% include './modals/delete_approve_modal.html'  %}
 {% endblock%}
+
+{% block script %}
+<script>
+    
+        $(document).ready(function () {
+            $('#userTable').DataTable({
+                pageLength: 50,
+                ordering: false,
+                scrollY: 350,
+                "language": {
+                    "paginate": {
+                        "next": "الصفحة التالية",
+                        "previous": "الصفحة السابقة"
+                    },
+                    "emptyTable": "لا يوجد بيانات للعرض ",
+                    "info": "عرض _START_ الي _END_ من _TOTAL_ مستخدم",
+                    "infoEmpty": "Showing 0 to 0 of 0 entries",
+                    "infoFiltered": "(تم البحث في  _MAX_ مستخدم)",
+                    "search": "البحث:",
+                    "zeroRecords": "لا يوجد بيانات مطابقة للبحث",
+                    "lengthMenu": "عرض _MENU_ طلب في الصفحة ",
+    
+                },
+                "pagingType": "numbers"
+    
+            })
+        })
+    
+</script>
+{% endblock script %}
