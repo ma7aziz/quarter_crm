@@ -1,3 +1,4 @@
+from typing import Any, Dict
 from django.shortcuts import render , redirect
 from django.views import generic
 from django.contrib.auth.mixins import PermissionRequiredMixin
@@ -15,7 +16,7 @@ from django.utils.decorators import method_decorator
 ##create user 
 ##edit user 
 @method_decorator(allowed_roles(['admin' , 'install_supervisor' ]) ,name='dispatch')
-class UserList(generic.ListView ,PermissionRequiredMixin ):
+class UserList(PermissionRequiredMixin  , generic.ListView ):
     '''
     List all sytsem users 
     '''
@@ -23,6 +24,9 @@ class UserList(generic.ListView ,PermissionRequiredMixin ):
     model = User
     template_name = 'authentication/user_list.html'
     context_object_name = 'users'
+    def get_context_data(self, **kwargs: Any) -> Dict[str, Any]:
+        print(super().get_context_data(**kwargs))
+        return super().get_context_data(**kwargs)
     
 class UserDetails(generic.DetailView , PermissionRequiredMixin):
     '''

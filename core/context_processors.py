@@ -5,7 +5,7 @@ def context(request):
     ctx = {}
     if request.user.is_authenticated : 
         if  request.user.role == 'company':
-            companies = request.user
+            companies = User.objects.all().filter(id = request.user.id)
         else :
             companies =  User.objects.filter(role='company')
         ctx = {

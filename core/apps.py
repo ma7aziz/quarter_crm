@@ -11,6 +11,6 @@ class CoreConfig(AppConfig):
         '''
         from apscheduler.schedulers.background import BackgroundScheduler
         from .jobs import check_old_requests 
-        scheduler = BackgroundScheduler()
+        scheduler = BackgroundScheduler({'apscheduler.timezone': 'Asia/Riyadh'})
         scheduler.add_job(check_old_requests, 'cron', hour=0 , minute = 0) 
         scheduler.start()
