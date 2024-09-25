@@ -21,51 +21,51 @@
 </div>
 
 <div class="row">
-    <div class="col-md-6 card ">
+    <div class="col-12 card ">
         {% include './partials/service_info.html' %}
     </div>
-    <div class="col-md-6 ">
+    <div class="col-md-12 ">
         <div class="card">
             <div class="card-body">
                 {% if service.hold %}
                 {% include './partials/hold.html' %}
                 {% else %}
-                <div class="btn-group d-flex flex-column">
+                <div class="btn-group d-flex flex-column flex-md-row gap-4">
                     {% if service.status == 'new' and service.service_type == 'install' and service.favourite == False %}
                     {% if request.user.remaining_qouta  or request.user.is_superuser or request.user.role == 'install_supervisor' %}
                     <form method="post" action="{% url 'service:favourite_service' %}">
                         {% csrf_token%}
                         <input type="hidden" name="service" value="{{service.id}}">
-                        <button class="btn btn-success w-100">{%trans 'add_to_favs' %}</button>
+                        <button class="btn btn-success">{%trans 'add_to_favs' %}</button>
                     </form>
                     {% endif %}
                     {% endif %}
 
                     {% if service.status  == 'new' or service.status == 'under_process' %}
                     {% if service.service_type == 'repair' and service.status == 'under_process' and request.user.role == 'repair_supervisor' or request.user.is_superuser  %}
-                    <button class="btn btn-warning my-1" data-bs-target="#hold_service" data-bs-toggle="modal"><i
+                    <button class="btn btn-warning " data-bs-target="#hold_service" data-bs-toggle="modal"><i
                             data-feather="pause-circle"></i> {% trans 'hold' %} </button>
                     {% endif %}
                     {% endif %}
 
                     {% if request.user.is_superuser or request.user.role == 'admin' or request.user.role == 'install_supervisor' or request.user.role == 'repair_supervisor' %}
-                    <button class="btn btn-primary my-1" data-bs-toggle="modal" data-bs-target="#change_status">
+                    <button class="btn btn-info " data-bs-toggle="modal" data-bs-target="#change_status">
                         <i data-feather="edit"></i>
                         {% trans 'change_status' %} </button>
                     {% endif %}
                     {% if service.status == 'new' and request.user == service.created_by or request.user.is_superuser %}
-                    <button class="btn btn-danger my-1" data-bs-toggle="modal" data-bs-target="#delete_approve"><i
+                    <button class="btn btn-danger " data-bs-toggle="modal" data-bs-target="#delete_approve"><i
                             data-feather="trash-2"></i> {%trans  'delete' %} </button>
                     {% endif %}
                     {% if service.status == 'under_process'  %}
                     {% if request.user.role == 'repair_supervisor' or request.user.role == 'install_supervisor'   or request.user == appointment.technician or request.user.is_superuser%}
-                    <button class="btn btn-success my-2 " data-bs-target="#confirm_excution" data-bs-toggle="modal"> <i
+                    <button class="btn btn-success " data-bs-target="#confirm_excution" data-bs-toggle="modal"> <i
                             data-feather="check-circle"></i> {% trans 'confirm_exec' %}</button>
                     {% endif %}
                     {% endif %}
                     {% if service.status == 'done'   %}
                     {%   if request.user.role == 'repair_supervisor' or request.user.role == 'install_supervisor' or request.user.is_superuser %}
-                    <a class="btn btn-success my-2"
+                    <a class="btn btn-success"
                         href="/service/update_status?service={{service.id}}&status=closed"><i
                             data-feather="check-circle"></i> {%trans  'confirm_exec_close' %} </a>
                     {% endif %}
@@ -101,9 +101,9 @@
 
                             {% trans 'recieved' %}:
                             {% if req.status == 'pending' %}
-                            <span class="badge rounded-pill bg-danger"> {% trans 'no' %} </span>
+                            <span class="badge bg-danger"> {% trans 'no' %} </span>
                             {% elif req.status == 'recieved' %}
-                            <span class="badge rounded-pill bg-success"> {% trans 'yes' %}</span>
+                            <span class="badge bg-success"> {% trans 'yes' %}</span>
                             {% endif %}
                         </div>
                         {% if req.status == 'pending' %}
@@ -129,7 +129,7 @@
         {% if  request.user.role == 'repair_supervisor' or request.user.role == 'install_supervisor' or request.user.is_superuser  %}
         <div class="card">
             <div class="card-body">
-                <h3 class="text-center">{% trans 'set_appointment'%}</h3>
+                <h3 class="text-start mb-2">{% trans 'set_appointment'%}</h3>
                 <form action="{% url 'service:set_appointment' %}" method="post">
                     <input type="hidden" name="service" value="{{service.id}}">
                     {% csrf_token %}
@@ -147,7 +147,10 @@
                         <label for="">{% trans 'notes' %}</label>
                         <textarea name="notes" class="form-control" id="" cols="30" rows="2"></textarea>
                     </div>
-                    <input type="submit" value="{% trans 'save' %}" class="btn btn-success w-100">
+                    <div class="d-flex justify-content-end">
+
+                        <input type="submit" value="{% trans 'save' %}" class="btn btn-info w-25">
+                    </div>
                 </form>
             </div>
 
@@ -157,15 +160,31 @@
         <div class="card">
             <div class="card-body">
                 <h3>{% trans 'appointment' %}</h3>
-                <ul class="list-group">
-                    <li class="list-group-item">{% trans 'date' %}% : <span>{{appointment.date}}</span></li>
-                    <li class="list-group-item">{% trans 'technician' %}: <span><a href="">{{appointment.technician.name}}</a></span></li>
-                    <li class="list-group-item">{% trans 'technician_phone' %}: <span><a
-                                href="">{{appointment.technician.phone_number}}</a></span></li>
-                </ul>
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            <div class="row g-2 mx-4">
+                                <div class="col-sm-6 p-2 border-bottom mb-4">
+                                    <span class="text-muted">{% trans 'date' %}:</span>
+                                    <span class="ms-2">{{appointment.date}}</span>
+                                </div>
+                
+                                <div class="col-sm-6 p-2 border-bottom mb-4">
+                                    <span class="text-muted">{% trans 'technician' %}:</span>
+                                    <span class="ms-2"><a href="">{{appointment.technician.name}}</a></span>
+                                </div>
+                
+                                <div class="col-sm-6 p-2 border-bottom mb-4">
+                                    <span class="text-muted">{% trans 'technician_phone' %}:</span>
+                                    <span class="ms-2"><a href="">{{appointment.technician.phone_number}}</a></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
                 <div class="text-end">
                     {% if request.user.role == 'install_supervisor' or reques.user.role == 'repair_supervisor' or request.user.is_superuser %}
-                    <button class="btn btn-secondary my-2 " data-bs-target="#chnage-appointment"
+                    <button class="btn btn-info my-2 " data-bs-target="#chnage-appointment"
                         data-bs-toggle="modal">{% trans 'change_appointment' %}</button>
                     {% endif %}
                 </div>

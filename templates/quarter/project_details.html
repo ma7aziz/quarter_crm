@@ -11,82 +11,40 @@
         <ol class="breadcrumb mb-0 p-0 bg-transparent">
             <li class="breadcrumb-item active "><a href="">{{project}}</a></li>
             <li class="breadcrumb-item"><a href="">كوارتر </a></li>
-            <li class="breadcrumb-item d-flex align-items-center">Dashboard</li>
+            <li class="breadcrumb-item d-flex align-items-center">الرئيسية</li>
         </ol>
     </div>
 </div>
 <div class="row">
-    <div class="col-6">
-        <div class="card card-body">
-            <ul class="list-group">
-                <li class="list-group-item"> رقم الطلب : <span class="text-primary">{{project.ref_number}}</span></li>
-                <li class="list-group-item"> الاسم : <span class="text-primary">{{project.name}}</span></li>
-                <li class="list-group-item"> الجوال :<span class="text-primary">{{project.phone_number}}</span></li>
-                <li class="list-group-item"> الموقع : <span class="text-primary">{{project.address}}</span></li>
-                <li class="list-group-item"> حالة الطلب :  <span class="badge rounded-pill 
 
-                    {% if project.status  == 'new' %}
-                    bg-warning
-                    {% elif  project.status == 'done' or project.status  == 'closed' %}
-                    bg-success
-                    {% elif project.status == 'canceled' %}
-                    bg-danger
-                    {% else %}
-                        bg-primary
-                    {% endif %} 
 
-                   "> {{project.get_status_display}}
-                </li>
-                {% if project.rep %}
-                <li class="list-group-item"> مندوب التواصل: <span class="text-primary"><a
-                            href="{% url 'users:user_details' project.rep.id %}">{{project.rep}}</a></span>
-                {% endif %}
-                <li class="list-group-item"> البائع : <span class="text-primary"><a
-                            href="{% url 'users:user_details' project.created_by.id %}">{{project.created_by}}</a></span>
-                </li>
-                <li class="list-group-item">وقت الطلب : <span class="text-primary">{{project.created_at}}</span></li>
-                <li class="list-group-item">اخر تحديث : <span class="text-primary">{{project.last_update}}</span></li>
-            </ul>
 
-        </div>
-
-        {% if excution_files %}
-        <div class="card card-body">
-                <h4>ملفات المشروع</h4>
-                <ul class="list-group">
-
-                    {% for file in excution_files.files.all %}
-                    <li class="list-group-item">
-
-                        <a href="{{file.file.url}}">ملف {{forloop.counter}}</a>
-                    </li>
-                    {% endfor %}
-                </ul>
-        </div>
-        {% endif %}
-    </div>
-    <div class="col-6">
-        <div class="card card-body">
+    <div class="col-12 ">
+        <div class="card card-body  ">
             <!-- edit -->
-            {%  if request.user.is_superuser %}
-            {% if project.status == 'new' or project.status == 'negotiation' %}
-            <button class="btn btn-warning pointer" data-bs-target="#edit_project" data-bs-toggle="modal">تعديل بيانات
-                المشروع</button>
-            
-            <!-- delete -->
-            <button class="btn btn-danger my-2" data-bs-target="#project_delete_approve" data-bs-toggle="modal"> حذف
-                المشروع </button>
-            {% endif %}
-            {% endif %}
-            {% if project.status ==  'new'  %}
-            {% if request.user.is_superuser or  request.user.role == 'quarter_supervisor' or request.user.role == 'quarter_sales'  %}
-            <form action="{% url 'quarter:start_negotiation' %}" method="post">
-                {% csrf_token %}
-                <input type="hidden" name="project" value="{{project.id}}">
-                <button class="btn btn-primary my-2 w-100" type="submit">بداية المفاوضات </button>
-            </form>
-            {% endif %}
-            {% endif %}
+            <div class="d-flex flex-md-row gap-2">
+                {%  if request.user.is_superuser %}
+                {% if project.status == 'new' or project.status == 'negotiation' %}
+                <button class="btn btn-info" data-bs-target="#edit_project" data-bs-toggle="modal">تعديل بيانات
+                    المشروع</button>
+                
+                <!-- delete -->
+                <button class="btn btn-danger my-2" data-bs-target="#project_delete_approve" data-bs-toggle="modal"> حذف
+                    المشروع </button>
+                {% endif %}
+                {% endif %}
+                {% if project.status ==  'new'  %}
+                {% if request.user.is_superuser or  request.user.role == 'quarter_supervisor' or request.user.role == 'quarter_sales'  %}
+                <form action="{% url 'quarter:start_negotiation' %}" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="project" value="{{project.id}}">
+                    <button class="btn btn-primary my-2 " type="submit">بداية المفاوضات </button>
+                </form>
+                {% endif %}
+                {% endif %}
+    
+            </div>
+
 
 
         {% if project.status == 'negotiation' %}
@@ -210,6 +168,93 @@
         {% endif %}
     </div>
 </div>
+
+    <div class="col-12">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <div class="row g-2 mx-4">
+                    <div class="col-6 p-2 border-bottom mb-4">
+                        <span class="text-muted">رقم الطلب :</span>
+                        <span class="ms-2 text-primary">{{project.ref_number}}</span>
+                    </div>
+    
+                    <div class="col-6 p-2 border-bottom mb-4">
+                        <span class="text-muted">الاسم :</span>
+                        <span class="ms-2 text-primary">{{project.name}}</span>
+                    </div>
+    
+                    <div class="col-6 p-2 border-bottom mb-4">
+                        <span class="text-muted">الجوال :</span>
+                        <span class="ms-2 text-primary">{{project.phone_number}}</span>
+                    </div>
+    
+                    <div class="col-6 p-2 border-bottom mb-4">
+                        <span class="text-muted">الموقع :</span>
+                        <span class="ms-2 text-primary">{{project.address}}</span>
+                    </div>
+    
+                    <div class="col-6 p-2 border-bottom mb-4">
+                        <span class="text-muted">حالة الطلب :</span>
+                        <span class="badge  
+                            {% if project.status == 'new' %}
+                                bg-warning
+                            {% elif project.status == 'done' or project.status == 'closed' %}
+                                bg-success
+                            {% elif project.status == 'canceled' %}
+                                bg-danger
+                            {% else %}
+                                bg-primary
+                            {% endif %}">
+                            {{project.get_status_display}}
+                        </span>
+                    </div>
+    
+                    {% if project.rep %}
+                    <div class="col-6 p-2 border-bottom mb-4">
+                        <span class="text-muted">مندوب التواصل:</span>
+                        <span class="ms-2 text-primary">
+                            <a href="{% url 'users:user_details' project.rep.id %}">{{project.rep}}</a>
+                        </span>
+                    </div>
+                    {% endif %}
+    
+                    <div class="col-6 p-2 border-bottom mb-4">
+                        <span class="text-muted">البائع :</span>
+                        <span class="ms-2 text-primary">
+                            <a href="{% url 'users:user_details' project.created_by.id %}">{{project.created_by}}</a>
+                        </span>
+                    </div>
+    
+                    <div class="col-6 p-2 border-bottom mb-4">
+                        <span class="text-muted">وقت الطلب :</span>
+                        <span class="ms-2 text-primary">{{project.created_at}}</span>
+                    </div>
+    
+                    <div class="col-6 p-2 border-bottom mb-4">
+                        <span class="text-muted">اخر تحديث :</span>
+                        <span class="ms-2 text-primary">{{project.last_update}}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+        {% if excution_files %}
+        <div class="card shadow-sm mt-4">
+            <div class="card-body">
+                <ul class="list-group">
+                    {% for file in excution_files.files.all %}
+                    <li class="list-group-item">
+                        <a href="{{file.file.url}}">ملف {{forloop.counter}}</a>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+
+
 </div>
 
 

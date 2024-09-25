@@ -10,7 +10,7 @@
     <div class="col-md-7 col-12 align-self-center d-none d-md-flex justify-content-end">
         <ol class="breadcrumb mb-0 p-0 bg-transparent">
             <li class="breadcrumb-item"><a href="">كوارتر </a></li>
-            <li class="breadcrumb-item active d-flex align-items-center">Dashboard</li>
+            <li class="breadcrumb-item active d-flex align-items-center">الرئيسية</li>
         </ol>
     </div>
 </div>
@@ -76,9 +76,9 @@
                         <a href="{% url 'quarter:project_details' project.id %}">
 
                         {% if project.hold %}
-                        <span class="badge round-pill bg-danger">معلق</span>
+                        <span class="badge  bg-danger">معلق</span>
                         {% else %}
-                        <span class="badge rounded-pill 
+                        <span class="badge  
 
                         {% if project.status  == 'new' %}
                         bg-warning

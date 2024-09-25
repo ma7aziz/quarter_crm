@@ -10,7 +10,7 @@
         <ol class="breadcrumb mb-0 p-0 bg-transparent">
             <li class="breadcrumb-item active "><a href="">الأرشيف </a></li>
             <li class="breadcrumb-item"><a >الخدمات</a></li>
-            <li class="breadcrumb-item d-flex align-items-center">Dashboard</li>
+            <li class="breadcrumb-item d-flex align-items-center">الرئيسية</li>
         </ol>
     </div>
 </div>
@@ -43,7 +43,7 @@
                     <td><a href="{% url 'users:user_details' service.created_by.id %}">{{service.created_by}}</a></td>
                     <td>{{service.created_at.date}}</td>
                     <td>
-                        <span class="badge rounded-pill 
+                        <span class="badge 
                     {% if service.status  == 'new' %}
                        bg-warning
                     {% elif service.status == 'under_process' %}
