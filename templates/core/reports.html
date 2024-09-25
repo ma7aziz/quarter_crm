@@ -1,14 +1,15 @@
 {% extends 'base.html' %}
-{% block title %} التقارير {% endblock %}
+{% load i18n %}
+{% block title %} {% trans 'reports' %} {% endblock %}
 {% load static %}
 {% block content %}
 <div class="row page-titles">
     <div class="col-md-5 col-12 align-self-center">
-        <h3 class="text-themecolor mb-0">التقارير</h3>
+        <h3 class="text-themecolor mb-0">{% trans 'reports' %}</h3>
     </div>
     <div class="col-md-7 col-12 align-self-center d-none d-md-flex justify-content-end">
         <ol class="breadcrumb mb-0 p-0 bg-transparent">
-            <li class="breadcrumb-item active"><a href="">التقارير</a></li>
+            <li class="breadcrumb-item active"><a href="">{% trans 'reports' %}</a></li>
             <li class="breadcrumb-item  d-flex align-items-center">Dashboard</li>
         </ol>
     </div>
@@ -19,18 +20,18 @@
     <div class="row align-items-end">
 
             <div class="col-lg-5 col-md-12">
-                <label for="">من</label>
+                <label for="">{% trans 'from'%}</label>
                 <input type="date" class="form-control" name="start_date" id="startDate" value="{{report.start_date|date:'Y-m-d'}}">
             </div>
     
             <div class="col-lg-5 col-md-12">
-                <label for="">الي</label>
+                <label for="">{% trans 'to' %}</label>
                 <input type="date" class="form-control" name="end_data" id="endDate" value="{{report.end_date|date:'Y-m-d'}}">
             </div>
             <div class="col-lg-2">
                 <button class="btn btn-success w-100"
                 >
-                    عرض
+                    {% trans 'show'%}
                 </button>
             </div>
         </div>

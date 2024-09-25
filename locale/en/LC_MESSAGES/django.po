@@ -1,0 +1,619 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-05-18 17:59+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: templates/authentication/create_user.html:12
+msgid "add_new_user"
+msgstr "New User"
+
+#: templates/authentication/create_user.html:16
+#: templates/authentication/user_details.html:15
+#: templates/authentication/user_list.html:4
+#: templates/authentication/user_list.html:10
+#: templates/authentication/user_list.html:15 templates/base.html:305
+msgid "users"
+msgstr "Users"
+
+#: templates/authentication/create_user.html:17
+#: templates/authentication/user_details.html:17
+#: templates/authentication/user_list.html:14 templates/base.html:241
+#: templates/core/index.html:4 templates/service/repair.html:13
+#: templates/service/service_create.html:14
+#: templates/service/service_details.html:18
+#: templates/service/sp_requests.html:16
+msgid "home"
+msgstr "Home"
+
+#: templates/authentication/create_user.html:54
+msgid "password"
+msgstr " Password"
+
+#: templates/authentication/create_user.html:62
+#: templates/authentication/user_details.html:156 templates/base.html:398
+msgid "confirm_password"
+msgstr "Confirm Password"
+
+#: templates/authentication/create_user.html:81
+#: templates/authentication/user_details.html:69
+msgid "allowed_services"
+msgstr "Allowed Services"
+
+#: templates/authentication/create_user.html:85
+#: templates/authentication/user_details.html:69 templates/base.html:252
+#: templates/core/partials/htmx/install.html:4
+#: templates/core/partials/htmx/stats.html:35 templates/service/install.html:3
+#: templates/service/install.html:7 templates/service/install.html:11
+#: templates/service/service_create.html:24
+msgid "install"
+msgstr "Install "
+
+#: templates/authentication/create_user.html:92
+#: templates/authentication/user_details.html:70 templates/base.html:260
+#: templates/core/partials/htmx/stats.html:48 templates/service/repair.html:3
+#: templates/service/repair.html:7 templates/service/repair.html:11
+#: templates/service/service_create.html:30
+#: templates/service/sp_requests.html:14
+msgid "repair"
+msgstr "Repair"
+
+#: templates/authentication/create_user.html:99
+#: templates/authentication/user_details.html:71 templates/base.html:280
+#: templates/core/index.html:70 templates/core/partials/htmx/all.html:77
+#: templates/core/partials/htmx/quarter.html:4
+#: templates/core/partials/htmx/stats.html:21
+msgid "projects"
+msgstr "Projects"
+
+#: templates/authentication/create_user.html:105
+#: templates/authentication/user_details.html:166 templates/base.html:408
+#: templates/service/modals/install_modal.html:82
+#: templates/service/modals/repair_modal.html:90
+#: templates/service/modals/service_modals.html:54
+#: templates/service/modals/service_modals.html:131
+#: templates/service/modals/service_modals.html:172
+#: templates/service/modals/service_modals.html:208
+#: templates/service/modals/service_modals.html:243
+#: templates/service/service_create.html:62
+#: templates/service/service_details.html:150
+msgid "save"
+msgstr "Save"
+
+#: templates/authentication/modals/delete_approve_modal.html:8
+msgid "confirm_delete"
+msgstr "Confirm Deleting ..  "
+
+#: templates/authentication/modals/delete_approve_modal.html:17
+#: templates/authentication/user_details.html:48
+#: templates/service/modals/service_modals.html:84
+#: templates/service/service_details.html:58
+msgid "delete"
+msgstr "Delete"
+
+#: templates/authentication/modals/delete_approve_modal.html:21
+#: templates/authentication/user_details.html:170 templates/base.html:412
+#: templates/service/modals/install_modal.html:83
+#: templates/service/modals/repair_modal.html:91
+#: templates/service/modals/service_modals.html:57
+#: templates/service/modals/service_modals.html:89
+#: templates/service/modals/service_modals.html:134
+msgid "cancel"
+msgstr "Cancel"
+
+#: templates/authentication/user_details.html:10
+#: templates/authentication/user_details.html:26
+msgid "user_details"
+msgstr "User Details"
+
+#: templates/authentication/user_details.html:41
+msgid "edit"
+msgstr "Edit"
+
+#: templates/authentication/user_details.html:44
+#: templates/authentication/user_details.html:143 templates/base.html:385
+msgid "change_password"
+msgstr "Change Password"
+
+#: templates/authentication/user_details.html:52
+#: templates/core/partials/htmx/stats.html:67
+msgid "name"
+msgstr "Name"
+
+#: templates/authentication/user_details.html:53
+#: templates/authentication/user_list.html:44
+msgid "user_name"
+msgstr "User Name"
+
+#: templates/authentication/user_details.html:58
+#: templates/authentication/user_list.html:45
+msgid "job_title"
+msgstr "Job Title"
+
+#: templates/authentication/user_details.html:62
+msgid "allowed_fav_requests"
+msgstr "Allowed favourite requests"
+
+#: templates/authentication/user_details.html:66
+msgid "day_remaining_favs"
+msgstr "Today remaining favourite requests."
+
+#: templates/authentication/user_details.html:83
+msgid "user_history"
+msgstr "User History"
+
+#: templates/authentication/user_details.html:86
+#: templates/service/service_create.html:13
+msgid "requests"
+msgstr "Requests"
+
+#: templates/authentication/user_details.html:91 templates/core/index.html:119
+#: templates/core/partials/htmx/all.html:8
+#: templates/core/partials/htmx/hold.html:11
+#: templates/core/partials/htmx/install.html:9
+#: templates/core/partials/htmx/quarter.html:9
+#: templates/core/partials/htmx/repair.html:9 templates/service/install.html:82
+#: templates/service/partials/service_info.html:8
+#: templates/service/repair.html:80 templates/service/sp_requests.html:26
+msgid "req_number"
+msgstr "Request Number"
+
+#: templates/authentication/user_details.html:92 templates/core/index.html:121
+#: templates/core/partials/htmx/all.html:10
+#: templates/core/partials/htmx/hold.html:13
+#: templates/core/partials/htmx/install.html:10
+#: templates/core/partials/htmx/quarter.html:10
+#: templates/core/partials/htmx/repair.html:10
+#: templates/service/install.html:83
+#: templates/service/modals/install_modal.html:28
+#: templates/service/modals/repair_modal.html:17
+#: templates/service/partials/service_info.html:26
+#: templates/service/repair.html:81
+msgid "customer_name"
+msgstr "Customer Name"
+
+#: templates/authentication/user_details.html:93 templates/core/index.html:125
+#: templates/core/partials/htmx/all.html:13
+#: templates/core/partials/htmx/hold.html:17
+#: templates/core/partials/htmx/install.html:14
+#: templates/core/partials/htmx/quarter.html:12
+#: templates/core/partials/htmx/repair.html:12
+#: templates/service/install.html:88 templates/service/repair.html:83
+#: templates/service/service_details.html:161
+#: templates/service/sp_requests.html:29
+msgid "date"
+msgstr "Date"
+
+#: templates/authentication/user_details.html:94 templates/core/index.html:126
+#: templates/core/partials/htmx/all.html:14
+#: templates/core/partials/htmx/hold.html:18
+#: templates/core/partials/htmx/install.html:15
+#: templates/core/partials/htmx/quarter.html:13
+#: templates/core/partials/htmx/repair.html:13
+#: templates/service/install.html:89
+#: templates/service/modals/service_modals.html:123
+#: templates/service/partials/service_info.html:9
+#: templates/service/repair.html:85 templates/service/sp_requests.html:30
+msgid "status"
+msgstr "Status"
+
+#: templates/authentication/user_details.html:149 templates/base.html:391
+msgid "new_password"
+msgstr "New Password"
+
+#: templates/authentication/user_details.html:152 templates/base.html:394
+msgid "password_required"
+msgstr "Password Required"
+
+#: templates/authentication/user_details.html:159 templates/base.html:401
+msgid "password_confirmation_required"
+msgstr "Password Confirmation Required"
+
+#: templates/authentication/user_list.html:35 templates/base.html:345
+msgid "new_user"
+msgstr "New User"
+
+#: templates/authentication/user_list.html:46
+msgid "last_login"
+msgstr "Last Login"
+
+#: templates/base.html:154
+msgid "switch"
+msgstr "Switch"
+
+#: templates/base.html:202 templates/base.html:232 templates/base.html:314
+msgid "logout"
+msgstr "Log Out"
+
+#: templates/base.html:270 templates/service/service_details.html:80
+#: templates/service/sp_requests.html:4 templates/service/sp_requests.html:9
+msgid "sp_requests"
+msgstr "Spare Parts Requests"
+
+#: templates/base.html:289
+msgid "archive"
+msgstr "Archive"
+
+#: templates/base.html:298 templates/core/reports.html:3
+#: templates/core/reports.html:8 templates/core/reports.html:12
+msgid "reports"
+msgstr "Reports"
+
+#: templates/base.html:334 templates/service/modals/install_modal.html:8
+msgid "new_install_request"
+msgstr "New Install Request"
+
+#: templates/base.html:339 templates/service/modals/repair_modal.html:7
+msgid "new_repair_request"
+msgstr "New Repair Request"
+
+#: templates/base.html:342
+msgid "new_project"
+msgstr "New Project"
+
+#: templates/core/index.html:18 templates/core/partials/htmx/stats.html:8
+#: templates/service/install.html:29 templates/service/repair.html:27
+msgid "total_requests_number"
+msgstr "Total Requests"
+
+#: templates/core/index.html:20 templates/service/install.html:54
+#: templates/service/repair.html:52
+msgid "new_requests"
+msgstr "New Requests"
+
+#: templates/core/index.html:36
+msgid "install_requests"
+msgstr "Install Requests"
+
+#: templates/core/index.html:38 templates/core/index.html:55
+#: templates/core/index.html:72 templates/core/index.html:114
+#: templates/core/partials/htmx/all.html:3
+msgid "new"
+msgstr "New"
+
+#: templates/core/index.html:53
+msgid "repair_requests"
+msgstr "Repair Requests"
+
+#: templates/core/index.html:86 templates/core/partials/htmx/all.html:47
+#: templates/service/install.html:42 templates/service/install.html:112
+#: templates/service/partials/service_info.html:12
+#: templates/service/repair.html:40
+msgid "on_hold"
+msgstr "On Hold"
+
+#: templates/core/index.html:101 templates/service/install.html:66
+#: templates/service/repair.html:64
+msgid "late_requests"
+msgstr "Late Requests"
+
+#: templates/core/index.html:120 templates/core/partials/htmx/all.html:9
+#: templates/core/partials/htmx/hold.html:12
+#: templates/service/partials/service_info.html:34
+msgid "req_type"
+msgstr "Request Type"
+
+#: templates/core/index.html:122 templates/core/partials/htmx/all.html:11
+#: templates/core/partials/htmx/hold.html:14
+#: templates/core/partials/htmx/install.html:11
+#: templates/core/partials/htmx/quarter.html:11
+#: templates/core/partials/htmx/repair.html:11
+#: templates/service/install.html:84 templates/service/repair.html:82
+msgid "customer_phone "
+msgstr "Phone"
+
+#: templates/core/index.html:123 templates/core/partials/htmx/hold.html:16
+#: templates/core/partials/htmx/install.html:13
+#: templates/core/partials/htmx/repair.html:14
+#: templates/service/install.html:86
+#: templates/service/modals/install_modal.html:52
+#: templates/service/modals/repair_modal.html:51
+#: templates/service/partials/service_info.html:49
+#: templates/service/repair.html:84
+msgid "invoice_number"
+msgstr "Invoice Number"
+
+#: templates/core/index.html:124 templates/core/partials/htmx/all.html:12
+#: templates/core/partials/htmx/hold.html:15
+#: templates/core/partials/htmx/install.html:12
+#: templates/core/partials/htmx/repair.html:16
+#: templates/service/install.html:85
+#: templates/service/partials/service_info.html:80
+#: templates/service/partials/service_info.html:82
+#: templates/service/repair.html:87
+msgid "seller"
+msgstr "Seller"
+
+#: templates/core/partials/htmx/hold.html:5
+msgid "requests_on_hold"
+msgstr "Requests On Hold"
+
+#: templates/core/partials/htmx/repair.html:15
+#: templates/service/modals/repair_modal.html:38
+#: templates/service/repair.html:86
+msgid "customer_type"
+msgstr "Customer Type"
+
+#: templates/core/partials/htmx/stats.html:62
+msgid "sellers"
+msgstr "Sellers"
+
+#: templates/core/partials/htmx/stats.html:69
+msgid "requests_count"
+msgstr "Requests Count"
+
+#: templates/core/partials/htmx/stats.html:85
+msgid "technicians"
+msgstr "Technicians"
+
+#: templates/core/partials/htmx/stats.html:89
+#: templates/service/modals/service_modals.html:160
+#: templates/service/service_details.html:137
+#: templates/service/service_details.html:162
+msgid "technician"
+msgstr "Technician"
+
+#: templates/core/partials/htmx/stats.html:91
+msgid "visits_count"
+msgstr "Visits Count"
+
+#: templates/core/partials/htmx/stats.html:92
+msgid "machines_count"
+msgstr "Machines Count"
+
+#: templates/core/reports.html:23
+msgid "from"
+msgstr "From"
+
+#: templates/core/reports.html:28
+msgid "to"
+msgstr "To"
+
+#: templates/core/reports.html:34
+msgid "show"
+msgstr "Show"
+
+#: templates/service/install.html:87
+#: templates/service/modals/install_modal.html:61
+#: templates/service/partials/service_info.html:55
+msgid "ac_count"
+msgstr "AC Count"
+
+#: templates/service/modals/install_modal.html:23
+#: templates/service/service_details.html:39
+msgid "add_to_favs"
+msgstr "Add To favourites"
+
+#: templates/service/modals/install_modal.html:32
+#: templates/service/modals/install_modal.html:39
+#: templates/service/modals/install_modal.html:47
+#: templates/service/modals/repair_modal.html:20
+#: templates/service/modals/repair_modal.html:27
+#: templates/service/modals/repair_modal.html:34
+#: templates/service/modals/repair_modal.html:47
+#: templates/service/modals/repair_modal.html:55
+#: templates/service/modals/repair_modal.html:68
+msgid "field_required"
+msgstr "Field Required"
+
+#: templates/service/modals/install_modal.html:36
+#: templates/service/modals/repair_modal.html:24
+#: templates/service/partials/service_info.html:30
+msgid "address"
+msgstr "Address"
+
+#: templates/service/modals/install_modal.html:44
+#: templates/service/modals/repair_modal.html:31
+#: templates/service/partials/service_info.html:28
+#: templates/service/partials/service_info.html:83
+msgid "phone"
+msgstr "Phone"
+
+#: templates/service/modals/install_modal.html:71
+#: templates/service/modals/repair_modal.html:79
+#: templates/service/modals/service_modals.html:169
+#: templates/service/modals/service_modals.html:205
+#: templates/service/partials/service_info.html:66
+#: templates/service/service_details.html:147
+msgid "notes"
+msgstr "Notes"
+
+#: templates/service/modals/install_modal.html:71
+#: templates/service/modals/repair_modal.html:79
+#: templates/service/modals/service_modals.html:43
+#: templates/service/modals/service_modals.html:236
+#: templates/service/partials/service_info.html:66
+#: templates/service/service_details.html:89
+msgid "details"
+msgstr "Details"
+
+#: templates/service/modals/install_modal.html:76
+#: templates/service/modals/repair_modal.html:84
+#: templates/service/modals/service_modals.html:49
+msgid "attache_file"
+msgstr "Attach File"
+
+#: templates/service/modals/repair_modal.html:41
+#: templates/service/modals/repair_modal.html:61
+#: templates/service/modals/service_modals.html:162
+#: templates/service/service_details.html:139
+msgid "choose_from_list"
+msgstr "Choose from the list"
+
+#: templates/service/modals/repair_modal.html:59
+#: templates/service/sp_requests.html:27
+msgid "company"
+msgstr "Company"
+
+#: templates/service/modals/repair_modal.html:73
+#: templates/service/partials/service_info.html:42
+msgid "machine_type"
+msgstr "Machine Type"
+
+#: templates/service/modals/service_modals.html:9
+msgid "hold_request"
+msgstr "Hold Request"
+
+#: templates/service/modals/service_modals.html:20
+#: templates/service/modals/service_modals.html:22
+#: templates/service/modals/service_modals.html:30
+msgid "hold_reason"
+msgstr "Hold Reason"
+
+#: templates/service/modals/service_modals.html:22
+#: templates/service/modals/service_modals.html:30
+msgid "choose"
+msgstr "Choose"
+
+#: templates/service/modals/service_modals.html:23
+#: templates/service/modals/service_modals.html:221
+msgid "sp_request"
+msgstr "Spare Parts Request"
+
+#: templates/service/modals/service_modals.html:24
+msgid "other"
+msgstr "Other .. "
+
+#: templates/service/modals/service_modals.html:38
+#: templates/service/modals/service_modals.html:231
+#: templates/service/service_details.html:85
+msgid "requested_parts"
+msgstr "Requested Parts"
+
+#: templates/service/modals/service_modals.html:40
+#: templates/service/modals/service_modals.html:233
+msgid "requested_parts_required"
+msgstr "Parts Required"
+
+#: templates/service/modals/service_modals.html:46
+msgid "reason_required"
+msgstr "Hold Reason Required"
+
+#: templates/service/modals/service_modals.html:75
+msgid "confirm_delete_request"
+msgstr "Confirm Deleting Request "
+
+#: templates/service/modals/service_modals.html:105
+#: templates/service/service_details.html:54
+msgid "change_status"
+msgstr "Change Status"
+
+#: templates/service/modals/service_modals.html:106
+msgid "current_status"
+msgstr "Current Status"
+
+#: templates/service/modals/service_modals.html:150
+#: templates/service/service_details.html:169
+msgid "change_appointment"
+msgstr "Change Appointment"
+
+#: templates/service/modals/service_modals.html:185
+msgid "confirm_exc"
+msgstr "Confirm Execution"
+
+#: templates/service/modals/service_modals.html:195
+#: templates/service/partials/service_info.html:61
+msgid "exec_code"
+msgstr "Execution Code"
+
+#: templates/service/modals/service_modals.html:197
+msgid "exec_code_required"
+msgstr "Execution Code Required"
+
+#: templates/service/modals/service_modals.html:198
+msgid "code_sent_message"
+msgstr "Code sent to the customer's phone .. "
+
+#: templates/service/modals/service_modals.html:201
+msgid "attach_exec_files"
+msgstr "Attach Execution Files"
+
+#: templates/service/modals/service_modals.html:240
+#: templates/service/partials/service_info.html:71
+msgid "files"
+msgstr "Files"
+
+#: templates/service/partials/service_info.html:5
+#: templates/service/service_details.html:7
+msgid "req_details"
+msgstr "Request Details"
+
+#: templates/service/partials/service_info.html:45
+#: templates/service/service_details.html:94
+msgid "created_at"
+msgstr "Created At"
+
+#: templates/service/repair.html:12 templates/service/service_details.html:17
+msgid "services"
+msgstr "Services"
+
+#: templates/service/service_create.html:3
+#: templates/service/service_create.html:12
+msgid "new_request"
+msgstr "New Request"
+
+#: templates/service/service_create.html:43
+msgid "add_new_customer"
+msgstr "New Customer"
+
+#: templates/service/service_details.html:47
+msgid "hold"
+msgstr "Hold"
+
+#: templates/service/service_details.html:63
+msgid "confirm_exec"
+msgstr "Confirm Execution"
+
+#: templates/service/service_details.html:70
+msgid "confirm_exec_close"
+msgstr "Confirm execution and close"
+
+#: templates/service/service_details.html:97
+msgid "created_by"
+msgstr "Created By"
+
+#: templates/service/service_details.html:102
+msgid "recieved"
+msgstr "Recieved"
+
+#: templates/service/service_details.html:104
+msgid "no"
+msgstr "No"
+
+#: templates/service/service_details.html:106
+msgid "yes"
+msgstr "Yes"
+
+#: templates/service/service_details.html:114
+msgid "confirm_recieve"
+msgstr "Confirm recieve"
+
+#: templates/service/service_details.html:132
+msgid "set_appointment"
+msgstr "Set an appointment"
+
+#: templates/service/service_details.html:159
+msgid "appointment"
+msgstr "Appointment"
+
+#: templates/service/service_details.html:163
+msgid "technician_phone"
+msgstr "Technician Phone"
+
+#: templates/service/sp_requests.html:28
+msgid "added_by"
+msgstr "Added By"

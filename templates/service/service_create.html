@@ -1,16 +1,17 @@
 {% extends 'base.html' %}
-{% block title  %} طلب خدمة {% endblock %}
+{% load i18n %}
+{% block title  %} {%trans 'new_request' %} {% endblock %}
 {% load widget_tweaks %}
 {% block content %}
 <div class="row page-titles">
     <div class="col-md-5 col-12 align-self-center">
-        <h3 class="text-themecolor mb-0">طلب خدمة جديد </h3>
+        <h3 class="text-themecolor mb-0"></h3>
     </div>
     <div class="col-md-7 col-12 align-self-center d-none d-md-flex justify-content-end">
         <ol class="breadcrumb mb-0 p-0 bg-transparent">
-            <li class="breadcrumb-item"><a href="">طلب جديد </a></li>
-            <li class="breadcrumb-item"><a href="{% url 'core:customer_list' %}">الطلبات</a></li>
-            <li class="breadcrumb-item active d-flex align-items-center">Dashboard</li>
+            <li class="breadcrumb-item"><a href="">{% trans 'new_request' %} </a></li>
+            <li class="breadcrumb-item"><a href="">{% trans 'requests' %}</a></li>
+            <li class="breadcrumb-item active d-flex align-items-center">{% trans 'home' %}</li>
         </ol>
     </div>
 </div>
@@ -20,13 +21,13 @@
             <button class="btn btn-lg waves-effect btn-success w-50 m-1" hx-get="/service/service_request?type=install"
                 hx-trigger="click" 
                 hx-target="#request_form"
-                hx-swap="outerHTML">تركيب</button>
+                hx-swap="outerHTML">{% trans 'install' %}</button>
             <button class="btn btn-lg waves-effect btn-primary w-50 m-1"
             hx-get="/service/service_request?type=repair"
                 hx-trigger="click" 
                 hx-target="#request_form"
                 hx-swap="outerHTML" 
-            >صيانة</button>
+            >{% trans 'repair' %}</button>
         </div>
         <div class="card card-body" id="request_form">
 
@@ -39,7 +40,7 @@
         <div class="modal-content">
             <div class="modal-body">
                     <div class="text-center">
-                        <h3>اضافة عميل جديد </h3>
+                        <h3>{% trans 'add_new_customer'%} </h3>
                     </div>
                     <div class="mx-3">
                         <form action="#" method="POST" id="addCustomerForm" onsubmit="submitForm()">
@@ -58,7 +59,7 @@
                             <div class="modal-btn my-3">
                     
                                 <div class="">
-                                    <button type="submit" id="updateUserBtn" class="btn btn-danger continue-btn w-100 my-1"  >حفظ</button>
+                                    <button type="submit" id="updateUserBtn" class="btn btn-danger continue-btn w-100 my-1"  >{% trans 'save' %}</button>
                                     <a href="javascript:void(0);" data-bs-dismiss="modal"
                                         class="btn btn-primary cancel-btn w-100">الغاء</a>
                                 </div>

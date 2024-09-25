@@ -1,13 +1,15 @@
+
+{% load i18n %}
 <div class="card-body">
     <div>
-        <h3>تفاصيل الطلب </h3>
+        <h3>{% trans 'req_details' %}</h3>
 
         <ul class="list-group">
-            <li class="list-group-item">رقم الطلب : <span class="text-primary">{{service.ref_number}}</span>
-            <li class="list-group-item">حالة الطلب :
+            <li class="list-group-item">{% trans 'req_number'  %} : <span class="text-primary">{{service.ref_number}}</span>
+            <li class="list-group-item"> {% trans 'status'%}:
                 {% if service.hold %}
                 <span class="badge rounded-pill bg-danger">
-                    معلق
+                    {% trans 'on_hold' %}
                 </span>
                 {% else %}
                 <span class="badge rounded-pill 
@@ -21,15 +23,15 @@
                    ">{{service.get_status_display}}</span>
                 {% endif %}
             </li>
-            <li class="list-group-item">العميل: <span class="text-primary">{{service.customer}}</span>
+            <li class="list-group-item">{% trans 'customer_name'%}: <span class="text-primary">{{service.customer}}</span>
             </li>
-            <li class="list-group-item">رقم الجوال: <span class="text-primary">{{service.phone_number}}</span>
+            <li class="list-group-item">{% trans 'phone' %}: <span class="text-primary">{{service.phone_number}}</span>
             </li>
-            <li class="list-group-item">العنوان: <span class="text-primary">{{service.address}} -
+            <li class="list-group-item">{%trans 'address'%}: <span class="text-primary">{{service.address}} -
                     {{service.city}}</span></li>
 
             {% if service.service_type == 'repair' %}
-            <li class="list-group-item">نوع الطلب : <span class=" badge  p-2
+            <li class="list-group-item">{% trans 'req_type' %}: <span class=" badge  p-2
                  {% if service.customer_type == 'cash' %}
                  bg-success
                  {% else %}
@@ -37,37 +39,37 @@
                  {% endif %}
                  ">{{service.get_customer_type_display}}</span></li>
 
-            <li class="list-group-item"> نوع الجهاز : <span class="text-primary">
+            <li class="list-group-item"> {% trans 'machine_type' %}: <span class="text-primary">
                     {{ service.machine_type}}</span></li>
             {% endif %}
-            <li class="list-group-item"> وقت الطلب : <span class="text-primary">
+            <li class="list-group-item"> {% trans 'created_at' %}: <span class="text-primary">
                     {{service.created_at.date|date:'F j, Y'}} {{service.created_at.time|time:'g:i a'}} </span>
             </li>
             {% if service.invoice_number%}
-            <li class="list-group-item">رقم الفاتورة : <span class="text-primary">
+            <li class="list-group-item">{% trans 'invoice_number' %}: <span class="text-primary">
                     {{service.invoice_number}}</span></li>
             {% endif %}
             {% if service.service_type == 'install'%}
 
                 <li class="list-group-item">
-                    عدد المكيفات : <span class="text-primary">{{service.ac_count}}</span>
+                    {% trans 'ac_count' %}: <span class="text-primary">{{service.ac_count}}</span>
                 </li>
             {% endif %}
 
             {% if request.user.role == 'install_supervisor' or request.user.role  == 'repair_supervisor' or request.user.is_superuser %}
             <li class="list-group-item">
-                كود التنفيذ : <span class="text-primary">{{ service.code }}</span>
+                {% trans 'exec_code' %}: <span class="text-primary">{{ service.code }}</span>
             </li>
             {% endif %}
             {% if service.notes %}
             <li class="list-group-item">
-                ملاحظات - تفاصيل : <span>{{service.notes }}</span>
+                {% trans 'notes' %} / {% trans 'details' %}: <span>{{service.notes }}</span>
             </li>
             {% endif %}
             {% if service.file_set.all %}
             <li class="list-group-item">
-                الملفـات :
-                {% for file in service.file_set.all %} <a href="{{file.file.url}}">ملف
+                {% trans 'files' %}:
+                {% for file in service.file_set.all %} <a href="{{file.file.url}}">
                     {{forloop.counter}}</a>{% endfor %}
             </li>
             {% endif %}
@@ -75,10 +77,10 @@
     </div>
     <div class="my-2">
 
-        <h3>البائع </h3>
+        <h3>{% trans 'seller' %} </h3>
         <ul class="list-group">
-            <li class="list-group-item">البائع : <a href="">{{service.created_by}}</a> </li>
-            <li class="list-group-item">رقم البائع: <a href="">{{service.created_by.phone_number}}</a> </li>
+            <li class="list-group-item">{% trans 'seller'%} : <a href="">{{service.created_by}}</a> </li>
+            <li class="list-group-item">{% trans 'phone' %}: <a href="">{{service.created_by.phone_number}}</a> </li>
         </ul>
     </div>
 </div>

@@ -1,10 +1,12 @@
+{% load i18n %}
 <div class="modal custom-modal fade" id="delete_approve" role="dialog" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-body">
                 <div class="form-header text-center ">  
                     <i class=" fas fa-trash-alt fa-3x my-3 text-danger"></i> 
-                    <h3>تأكيد الحذف </h3>
+                    <h3>{% trans 'confirm_delete'%}</h3>
+
                 </div>
                 <div class="modal-btn delete-action my-3">
                     <div class="row text-center">
@@ -12,11 +14,11 @@
                             <form action="" method="POST" id="delete-form">
                                 {% csrf_token%}
                                 
-                                <button type="submit" id="confirmed_delete" class="btn btn-danger continue-btn w-100">حذف</a>
+                                <button type="submit" id="confirmed_delete" class="btn btn-danger continue-btn w-100">{% trans 'delete' %}</a>
                             </form>
                         </div>
                         <div class="col-6">
-                            <a href="javascript:void(0);" data-bs-dismiss="modal" class="btn btn-primary cancel-btn w-100">الغاء</a>
+                            <a href="javascript:void(0);" data-bs-dismiss="modal" class="btn btn-primary cancel-btn w-100">{% trans 'cancel' %}</a>
                         </div>
                     </div>
                 </div>

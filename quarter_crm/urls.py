@@ -26,6 +26,8 @@ urlpatterns = [
     path('service/' , include('service.urls' ,namespace='service')),
     path('auth/' , include('users.urls' , namespace='users')) , 
     path('quarter/', include('quarter.urls' , namespace='quarter') ) ,
+    path('i18n/', include('django.conf.urls.i18n')),
     path('__debug__/', include('debug_toolbar.urls')),
+
 ]
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

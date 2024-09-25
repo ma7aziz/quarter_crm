@@ -1,18 +1,21 @@
+
+{%load i18n %}
 <div class="card">
     <div class="card-body">
-        <h3>طلبات معلقة</h3>
+        <h3>{% trans 'requests_on_hold'  %}</h3>
             <div class="table-responsive">
                 <table class="table search-table " id="onHold">
                     <thead class="header-item bg-dark text-light text-center">
                         <th>#</th>
-                        <th>رقم الطلب </th>
-                        <th>نوع الطلب </th>
-                        <th>اسم العميل </th>
-                        <th>الجوال</th>
-                        <th>البائع</th>
-                        <th>رقم الفاتورة</th>
-                        <th>التاريخ</th>
-                        <th>حالة الطلب </th>
+                       
+                <th>{% trans 'req_number' %}</th>
+                <th>{% trans 'req_type' %}</th>
+                <th>{% trans 'customer_name' %}</th>
+                <th>{% trans 'customer_phone '%}</th>
+                <th>{% trans 'seller' %}</th>
+                <th>{% trans 'invoice_number'%}</th>
+                <th>{%trans 'date'%}</th>
+                <th>{% trans 'status' %}</th>
                         
                     </thead>
                     <tbody>

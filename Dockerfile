@@ -2,16 +2,14 @@ FROM python:3.11
 
 WORKDIR /app
 
-ADD . /app/
+RUN pip install --upgrade pip    
 
-EXPOSE 8000
 
-COPY requirements.txt /app
-
+COPY ./requirements.txt  /app/
+RUN apt-get update
+RUN apt-get install -y postgresql-client gettext && apt-get clean
 RUN pip3 install -r requirements.txt --no-cache-dir
 
-COPY . /app
-
-ENTRYPOINT ["python3"]
-
-CMD ["manage.py", "runserver", "0.0.0.0:8000"]
+COPY . /app/
+RUN chmod +x /app/entrypoint.sh
+ENTRYPOINT ["/app/entrypoint.sh"]

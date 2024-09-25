@@ -1,4 +1,4 @@
-
+{% load i18n %}
 <!-- Hold service  -->
 
 <div class="modal custom-modal fade" id="hold_service" role="dialog" tabindex="-1">
@@ -6,7 +6,7 @@
         <div class="modal-content">
             <div class="modal-body">
                 <div class="form-header text-center ">
-                    <h3>تعليق الطلب </h3>
+                    <h3>{% trans 'hold_request'%}</h3>
                 </div>
                 <div class="modal-btn delete-action my-3">
                     <div class="">
@@ -17,17 +17,17 @@
                             <input type="hidden" name="service" value="{{service.id}}">
                             {% if service.service_type == 'repair'%}
                             <div class="form-group">
-                                <label for="">سبب التعليق</label>
+                                <label for="">{% trans 'hold_reason' %}</label>
                                 <select name="reason" id="hold_reason_select" class="form-control" onchange="reasonSelect()">
-                                    <option value="" disabled selected>اختر سبب التعليق </option>
-                                    <option value="spare_parts">قطع غيار مطلوبة</option>
-                                    <option value="other">سبب أخر </option>
+                                    <option value="" disabled selected>{% trans 'choose' %} {%trans 'hold_reason'%} </option>
+                                    <option value="spare_parts">{%trans  'sp_request' %}</option>
+                                    <option value="other">{% trans 'other' %}</option>
                                 </select>
                             </div>
                             {% else %}
 
                             <div class="form-group">
-                                <label for="">سبب التعليق</label>
+                                <label for="">{% trans 'choose' %} {%trans 'hold_reason'%} </label>
                                 <input type="text" name="reason" class="form-control" id="">  
                             </div>
 
@@ -35,26 +35,26 @@
 
                             
                             <div class="form-group hide" id="spare_parts_input_group">
-                                <label for="">قطع الغيار المطلوبة </label>
+                                <label for="">{% trans 'requested_parts' %}</label>
                                 <input type="text" name="spare_parts" id="sp_input" class="form-control">
-                                <p class="invalid-feedback">قطع الغيار مطلوبة !!</p>
+                                <p class="invalid-feedback"> {% trans 'requested_parts_required' %}</p>
                             </div>
                             <div class="form-group">
-                                <label for="">التفاصيل</label>
+                                <label for="">{% trans 'details' %}</label>
                                 <textarea name="hold_reason" id="" cols="30" rows="3" required
                                     class="form-control"></textarea>
-                                <p class="invalid-feedback">سبب التعليق مطلوب !! </p>
+                                <p class="invalid-feedback">{%trans  'reason_required' %} !! </p>
                             </div>
                             <div class="form-group my-3">
-                                <label for="">ارفاق ملفات </label>
+                                <label for="">{% trans 'attache_file'%}</label>
                                 <input type="file" name="file" class="form-control" multiple id="">
                             </div>
 
                             <div class="d-flex my-3">
-                                <button type="submit" class="btn btn-success continue-btn  w-100">حفظ</button>
+                                <button type="submit" class="btn btn-success continue-btn  w-100">{% trans 'save' %}</button>
 
                                 <a href="javascript:void(0);" data-bs-dismiss="modal"
-                                    class="btn btn-primary cancel-btn w-100">الغاء</a>
+                                    class="btn btn-primary cancel-btn w-100">{% trans 'cancel' %}</a>
                             </div>
 
                         </form>
@@ -72,7 +72,7 @@
             <div class="modal-body">
                 <div class="form-header text-center ">
                     <i class=" fas fa-trash-alt fa-3x my-3 text-danger"></i>
-                    <h3>تأكيد الحذف الطلب رقم {{service.ref_number}}</h3>
+                    <h3>{%trans  'confirm_delete_request' %} {{service.ref_number}}</h3>
                 </div>
                 <div class="modal-btn delete-action my-3">
                     <div class="row text-center">
@@ -81,12 +81,12 @@
                                 {% csrf_token%}
 
                                 <button type="submit" id="confirmed_delete"
-                                    class="btn btn-danger continue-btn w-100">حذف</a>
+                                    class="btn btn-danger continue-btn w-100">{% trans 'delete' %}</a>
                             </form>
                         </div>
                         <div class="col-6">
                             <a href="javascript:void(0);" data-bs-dismiss="modal"
-                                class="btn btn-primary cancel-btn w-100">الغاء</a>
+                                class="btn btn-primary cancel-btn w-100">{% trans 'cancel' %}</a>
                         </div>
                     </div>
                 </div>
@@ -102,8 +102,8 @@
             <div class="modal-body">
                 <div class="form-header text-center ">
 
-                    <h3>تعديل حالة الطلب {{service.ref_number}}</h3>
-                    <h5>حالة الطلب الحالية :
+                    <h3>{% trans 'change_status' %} {{service.ref_number}}</h3>
+                    <h5>{% trans 'current_status' %}:
                         <span class="badge pill-rounded 
                         
                     {% if service.status  == 'new' %}
@@ -120,7 +120,7 @@
                         <form action="{% url 'service:update_service_status' %}" method="POST">
                             <input type="hidden" name="service" value="{{service.id}}">
                             {% csrf_token%}
-                            <label for="">حالة الطلب : </label>
+                            <label for="">{% trans 'status' %} : </label>
                             <select name="status" id="" class="form-control">
                                 {% for k ,v in status_choices  %}
 
@@ -128,10 +128,10 @@
                                 {% endfor %}
                             </select>
                             <div class="d-flex my-3">
-                                <button type="submit" class="btn btn-success continue-btn  w-100">حفظ</button>
+                                <button type="submit" class="btn btn-success continue-btn  w-100">{% trans 'save' %}</button>
 
                                 <a href="javascript:void(0);" data-bs-dismiss="modal"
-                                    class="btn btn-primary cancel-btn w-100">الغاء</a>
+                                    class="btn btn-primary cancel-btn w-100">{% trans 'cancel'%}</a>
                             </div>
 
                         </form>
@@ -147,7 +147,7 @@
         <div class="modal-content">
 
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLongTitle">تعديل موعد التنفيذ</h5>
+                <h5 class="modal-title" id="exampleModalLongTitle">{% trans 'change_appointment' %}</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -157,19 +157,19 @@
                     {% csrf_token %}
                     <input type="hidden" name="service" value="{{service.id}}">
                     <div class="form-group">
-                        <label for="">اختر الفني </label>
+                        <label for="">{% trans 'technician' %}</label>
                         <select name="technician" id="" class="form-control" required>
-                            <option value="" selected disabled>اختر من القائمة </option>
+                            <option value="" selected disabled>{%trans 'choose_from_list' %} </option>
                             {% for tech in technician %}
                             <option value="{{tech.id}}" {% if tech.id == appointment.technician.id %} selected {% endif %} >{{tech.name}}</option>
                             {% endfor %}
                         </select>
                     </div>
                     <div class="form-group my-2">
-                        <label for="">ملاحظات</label>
+                        <label for="">{% trans 'notes' %}</label>
                         <textarea name="notes" class="form-control" id="" cols="30" rows="2"></textarea>
                     </div>
-                    <input type="submit" value="حفظ" class="btn btn-success w-100">
+                    <input type="submit" value="{% trans 'save' %}" class="btn btn-success w-100">
                 </form>
             </div>
         </div>
@@ -182,7 +182,7 @@
 
             <div class="modal-header">
                 
-                <h2 class="modal-title" id="">تأكيد التنفيذ </h2>
+                <h2 class="modal-title" id="">{% trans 'confirm_exc' %}</h2>
                 <button type="button" class="close btn btn-secondary" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">x</span>
                 </button>
@@ -192,20 +192,20 @@
                     {% csrf_token %}
                     <input type="hidden" name="service" value="{{service.id}}">
                     <div class="form-group my-2">
-                        <label for="" class="text-primary">كود التنفيذ</label>
+                        <label for="" class="text-primary">{% trans 'exec_code' %}</label>
                         <input type="text" name="code" id="" class="form-control">
-                        <p class="invalid-feedback">كود التنفيذ مطلوب</p>
-                        <p class="text-muted text-start">تم ارسال الكود للعميل عبر الجوال </p>
+                        <p class="invalid-feedback">{% trans 'exec_code_required' %}</p>
+                        <p class="text-muted text-start">{% trans 'code_sent_message' %} </p>
                     </div>
                     <div class="form-group my-2">
-                        <label for="" class="text-primary"> ارفاق ملفات التنفيذ </label>
+                        <label for="" class="text-primary"> {% trans 'attach_exec_files'%}</label>
                         <input type="file" name="file" multiple id="" class="form-control" required />
                     </div>
                     <div class="form-group my-2">
-                        <label for="" class="text-primary">ملاحظات</label>
+                        <label for="" class="text-primary">{% trans 'notes' %}</label>
                         <textarea name="notes" class="form-control" id="" cols="30" rows="2"></textarea>
                     </div>
-                    <input type="submit" value="حفظ" class="btn btn-success w-100">
+                    <input type="submit" value="{% trans 'save' %}" class="btn btn-success w-100">
                 </form>
             </div>
         </div>
@@ -218,7 +218,7 @@
         <div class="modal-content">
 
             <div class="modal-header">
-                <h2 class="modal-title" id="">طلب قطع غيار </h2>
+                <h2 class="modal-title" id="">{%trans 'sp_request' %} </h2>
                 <button type="button" class="close btn btn-secondary" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">x</span>
                 </button>
@@ -228,19 +228,19 @@
                     {% csrf_token %}
                     <input type="hidden" name="service" value="{{service.id}}">
                     <div class="form-group my-2">
-                        <label for="">القطع المطلوبة</label>
+                        <label for="">{% trans 'requested_parts'%}</label>
                         <input type="text" name="requested_parts" id="" class="form-control" required />
-                        <p class="invalid-feedback">يجب ادخال اسم القطعة المطلوبة </p>
+                        <p class="invalid-feedback">{% trans 'requested_parts_required' %} </p>
                     </div>
                     <div class="form-group my-2">
-                        <label for="" class="text-primary">تفاصيل</label>
+                        <label for="" class="text-primary">{% trans 'details' %}</label>
                         <textarea name="details" class="form-control" id="" cols="30" rows="2"></textarea>
                     </div>
                     <div class="form-group my-2">
-                        <label for="" class="text-primary"> ملفات </label>
+                        <label for="" class="text-primary"> {% trans 'files' %}</label>
                         <input type="file" name="file" multiple id="" class="form-control">
                     </div>
-                    <input type="submit" value="حفظ" class="btn btn-success w-100">
+                    <input type="submit" value="{% trans 'save' %}" class="btn btn-success w-100">
                 </form>
             </div>
         </div>

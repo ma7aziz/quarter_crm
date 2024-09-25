@@ -1,13 +1,14 @@
 {% extends 'base.html' %}
-{% block title %} التركيب {% endblock %}
+{% load i18n %}
+{% block title %} {%trans 'install' %} {% endblock %}
 {% block content %}
 <div class="row page-titles">
     <div class="col-md-5 col-12 align-self-center">
-        <h3 class="text-themecolor mb-2">التركيــب</h3>
+        <h3 class="text-themecolor mb-2">{%trans 'install' %} </h3>
     </div>
     <div class="col-md-7 col-12 align-self-center d-none d-md-flex justify-content-end">
         <ol class="breadcrumb mb-0 p-0 bg-transparent">
-            <li class="breadcrumb-item"><a href="">التركيب</a></li>
+            <li class="breadcrumb-item"><a href="">{%trans 'install' %} </a></li>
             <li class="breadcrumb-item"><a href="{% url 'service:service_list' %}">الخدمات</a></li>
             <li class="breadcrumb-item active d-flex align-items-center">Dashboard</li>
         </ol>
@@ -25,7 +26,7 @@
             <div class="card-body">
 
                 <div class="text-center">
-                    <h6 class="text-muted mt-2 mb-2">اجمالي الطلبات المستلمة </h6>
+                    <h6 class="text-muted mt-2 mb-2">{% trans 'total_requests_number' %}</h6>
                     <h2>{{total_count}}</h2>
                 </div>
 
@@ -38,7 +39,7 @@
             <div class="card-body">
 
                 <div class="text-center">
-                    <h6 class="text-muted mt-2 mb-2">الطلبات المعلقة</h6>
+                    <h6 class="text-muted mt-2 mb-2">{% trans 'on_hold' %}</h6>
                     <h2>{{on_hold_count}}</h2>
                 </div>
 
@@ -50,7 +51,7 @@
         <div class="card">
             <div class="card-body">
                 <div class="text-center">
-                    <h6 class="text-muted mt-2 mb-2">طلبات جديدة </h6>
+                    <h6 class="text-muted mt-2 mb-2">{% trans 'new_requests' %}</h6>
                     <h2>{{new_count}}</h2>
                 </div>
 
@@ -62,7 +63,7 @@
         <div class="card border border-danger">
             <div class="card-body">
                 <div class="text-center">
-                    <h6 class="text-muted mt-2 mb-2">طلبات متأخرة</h6>
+                    <h6 class="text-muted mt-2 mb-2">{% trans 'late_requests' %}</h6>
                     <h2>{{late_count}}</h2>
                 </div>
 
@@ -78,15 +79,15 @@
         <table class="table search-table " id="serviceTable">
             <thead class="header-item bg-dark text-light text-center">
                 <th>#</th>
-                <th>رقم الطلب </th>
-                <th>اسم العميل </th>
-                <th>الجوال</th>
-                <th>البائع</th>
-                <th>رقم الفاتورة</th>
-                <th>عدد المكيفات</th>
-                <th>التاريخ</th>
-                <th>حالة الطلب </th>
-                
+                <th>{% trans 'req_number' %}</th>
+                <th>{% trans 'customer_name' %}</th>
+                <th>{% trans 'customer_phone '%}</th>
+                <th>{% trans 'seller' %}</th>
+                <th>{% trans 'invoice_number'%}</th>
+                <th>{% trans 'ac_count' %}</th>
+                <th>{%trans 'date'%}</th>
+                <th>{% trans 'status' %}</th>
+
             </thead>
             <tbody>
                 <!-- row -->
@@ -108,7 +109,7 @@
                         <a href="{% url 'service:service_details' service.id %}">
 
                         {% if service.hold %}
-                        <span class="badge round-pill bg-danger">معلق</span>
+                        <span class="badge round-pill bg-danger">{%trans 'on_hold' %}</span>
                         {% else %}
                         <span class="badge rounded-pill 
 

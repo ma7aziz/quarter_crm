@@ -1,16 +1,17 @@
+{% load i18n %}
 <div class="card card-body" id="data">
-    <h3>الطلبات الجديدة</h3>
+    <h3>{% trans 'new' %}</h3>
 <div class="table-responsive">
     <table class="table search-table " id="serviceTable">
         <thead class="header-item bg-dark text-light text-center">
             <th>#</th>
-            <th>رقم الطلب </th>
-            <th>نوع الطلب</th>
-            <th>اسم العميل</th>
-            <th>الجوال</th>
-            <th>البائع</th>
-            <th>التاريخ</th>
-            <th>حالة الطلب</th>
+            <th>{% trans 'req_number' %}</th>
+            <th>{% trans 'req_type' %}</th>
+            <th>{% trans 'customer_name' %}</th>
+            <th>{% trans 'customer_phone '%}</th>
+            <th>{% trans 'seller' %}</th>
+            <th>{%trans 'date'%}</th>
+            <th>{% trans 'status' %}</th>
 
         </thead>
         <tbody>
@@ -43,7 +44,7 @@
                     
                     <a href="{% url 'service:service_details' service.id %}">
                     {% if service.hold %}
-                    <span class="badge round-pill bg-danger">معلق</span>
+                    <span class="badge round-pill bg-danger">{% trans 'on_hold' %}</span>
                     {% else %}
                     <span class="badge rounded-pill 
 
@@ -73,7 +74,7 @@
                 <td>
                     <span class="badge rounded-pill bg-success
                     ">
-                        كوارتر 
+                        {% trans 'projects' %} 
                     </span>
                 </td>
 

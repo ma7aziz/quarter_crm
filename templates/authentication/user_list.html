@@ -1,17 +1,18 @@
 {% extends 'base.html' %}
+{% load i18n %}
 {% block title %}
-    قائمة المستخدمين
+ {% trans 'users' %}
 {% endblock %}
 
 {% block content %}
 <div class="row page-titles">
     <div class="col-md-5 col-12 align-self-center">
-        <h3 class="text-themecolor mb-0">قائمة المستخدمين</h3>
+        <h3 class="text-themecolor mb-0">{% trans 'users' %}</h3>
     </div>
     <div class="col-md-7 col-12 align-self-center d-none d-md-flex justify-content-end">
         <ol class="breadcrumb mb-0 p-0 bg-transparent">
-            <li class="breadcrumb-item"><a href="javascript:void(0)">Home</a></li>
-            <li class="breadcrumb-item active d-flex align-items-center">قائمة المستخدمين </li>
+            <li class="breadcrumb-item"><a href="javascript:void(0)">{% trans 'home' %}</a></li>
+            <li class="breadcrumb-item active d-flex align-items-center">{% trans 'users' %}</li>
         </ol>
     </div>
 
@@ -31,7 +32,7 @@
                             <!-- <i data-feather="users" class="feather-sm fill-white me-1"> </i> -->
 
                             <i class="fas fa-plus"></i>
-                         اضافة مستخدم جديد </a>
+                            {% trans 'new_user' %}</a>
                          {% endif %}
                 </div>
         </div>
@@ -40,9 +41,9 @@
         <div class="table-responsive">
             <table class="table search-table v-middle" id="userTable">
                 <thead class="header-item bg-dark text-light text-center">
-                    <th>اسم المستخدم</th>
-                    <th>الوظيفة</th>
-                    <th>اخر تسجيل دخول</th>
+                    <th>{% trans 'user_name' %}</th>
+                    <th>{% trans 'job_title' %}</th>
+                    <th>{% trans 'last_login' %}</th>
 
                     <th>Action</th>
                 </thead>
@@ -65,7 +66,7 @@
                             <div class="action-btn">
                                 <a href="{% url 'users:user_details' user.id %}" class="text-info edit"><i data-feather="eye" class="feather-sm fill-white"></i></a>
                                 {% if not request.user == user %}
-                                {% if perms.users.delete_user%}
+                                {% if perms.users.delete_user %}
                                 <a  class="text-dark delete ms-2" id="delete_approve_btn"  data-bs-toggle="modal" data-bs-target="#delete_approve" 
                                 data-url="{% url 'users:delete_user' user.id %}"><i data-feather="trash-2" class="feather-sm fill-white"></i></a>
                                 {% endif %} {% endif %}

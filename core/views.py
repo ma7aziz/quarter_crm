@@ -26,6 +26,7 @@ class Index(generic.View):
     def get(self, request):
         template = ''
         ctx = {}
+        print(request.LANGUAGE_CODE)
 
         if request.user.role == 'admin' or request.user.is_superuser:
             counts = Service.objects.aggregate(

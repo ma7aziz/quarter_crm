@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
+{% load i18n%}
 {%block title %}
-الرئيسية
+{% trans 'home' %}
 {% endblock%}
 
 {% block content %}
@@ -14,9 +15,9 @@
             <div class="card-body">
                 
                 <div class="text-center">
-                    <h6 class="text-muted mt-2 mb-2">اجمالي الطلبات المستلمة </h6>
+                    <h6 class="text-muted mt-2 mb-2">{% trans 'total_requests_number' %}</h6>
                     <h2>{{total_count}}</h2>
-                    <h5 class="text-success">{{new_count}} طلبات جديدة </h5>
+                    <h5 class="text-success">{{new_count}} {% trans 'new_requests' %} </h5>
                 </div>
                 
             </div>
@@ -32,9 +33,9 @@
             <div class="card-body">
 
                     <div class="text-center">
-                        <h6 class="text-muted mt-2 mb-2">طلبات التركيب</h6>
+                        <h6 class="text-muted mt-2 mb-2">{% trans 'install_requests'  %}</h6>
                         <h2>{{install_count}}</h2>
-                        <h5 class="text-success">{{install_new_count}} طلبات جديدة </h5>
+                        <h5 class="text-success">{{install_new_count}} {% trans 'new'%} </h5>
                     </div>
  
             </div>
@@ -49,9 +50,9 @@
             <div class="card-body">
          
                     <div class="text-center">
-                        <h6 class="text-muted mt-2 mb-2">طلبات الصيانة</h6>
+                        <h6 class="text-muted mt-2 mb-2">{%trans 'repair_requests' %}</h6>
                         <h2>{{repair_count}}</h2>
-                        <h5 class="text-success">{{repair_new_count}} طلبات جديدة </h5>
+                        <h5 class="text-success">{{repair_new_count}} {% trans 'new' %} </h5>
                     </div>
  
             </div>
@@ -66,9 +67,9 @@
             <div class="card-body">
          
                     <div class="text-center">
-                        <h6 class="text-muted mt-2 mb-2">مشاريع كوارتر </h6>
+                        <h6 class="text-muted mt-2 mb-2">{% trans 'projects' %}</h6>
                         <h2>{{quarter_count}}</h2>
-                        <h5 class="text-success">{{quarter_new_count}} مشاريع جديدة </h5>
+                        <h5 class="text-success">{{quarter_new_count}} {% trans 'new' %} </h5>
                     </div>
  
             </div>
@@ -82,7 +83,7 @@
         <div class="card">
             <div class="card-body ">
                     <div class="text-center">
-                        <h6 class="text-muted mt-1 mb-1">الطلبات المعلقة</h6>
+                        <h6 class="text-muted mt-1 mb-1">{% trans 'on_hold' %}</h6>
                         <h2>{{on_hold_count}}</h2>
                     </div>
  
@@ -97,7 +98,7 @@
         <div class="card">
             <div class="card-body">
                     <div class="text-center">
-                        <h6 class="text-muted mt-1 mb-1">الطلبات المتأخرة</h6>
+                        <h6 class="text-muted mt-1 mb-1">{% trans 'late_requests' %}</h6>
                         <h2>{{late_count}}</h2>
                     </div>
  
@@ -110,19 +111,19 @@
 
 </div> -->
 <div class="card card-body" id="data">
-        <h3>الطلبات الجديدة</h3>
+        <h3>{% trans 'new' %}</h3>
     <div class="table-responsive">
         <table class="table search-table " id="serviceTable">
             <thead class="header-item bg-dark text-light text-center">
                 <th>#</th>
-                <th>رقم الطلب </th>
-                <th>نوع الطلب</th>
-                <th>اسم العميل</th>
-                <th>الجوال</th>
-                <th>رقم الفاتورة </th>
-                <th>البائع</th>
-                <th>التاريخ</th>
-                <th>حالة الطلب</th>
+                <th>{% trans 'req_number' %}</th>
+                <th>{% trans 'req_type' %}</th>
+                <th>{% trans 'customer_name' %}</th>
+                <th>{% trans 'customer_phone '%}</th>
+                <th>{% trans 'invoice_number'%}</th>
+                <th>{% trans 'seller' %}</th>
+                <th>{%trans 'date'%}</th>
+                <th>{% trans 'status' %}</th>
 
             </thead>
             <tbody>

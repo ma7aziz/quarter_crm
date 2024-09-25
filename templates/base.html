@@ -1,6 +1,7 @@
 <!DOCTYPE html>
-<html dir="rtl" lang="en">
+{% load i18n %}
 {% load static %}
+<html lang="{% get_current_language as lang %}" dir="{% if lang == 'ar' %}rtl{% else %}ltr{% endif %}">
 
 <head>
     <meta charset="utf-8">
@@ -8,10 +9,10 @@
     <!-- Tell the browser to be responsive to screen width -->
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="keywords" content="">
-    <meta name="description" content="Quarter CRM ">
+    <meta name="description" content="Service management system">
     <meta name="robots" content="noindex,nofollow">
     <title>
-        كوارتر - {% block title %} {% endblock %}
+        service Management System -{% block title %} {% endblock %}
     </title>
 
     <!-- Favicon icon -->
@@ -88,7 +89,7 @@
                         <b class="logo-icon ">
                             <!--You can put here icon as well // <i class="wi wi-sunset"></i> //-->
                             <!-- Dark Logo icon -->
-                            <img src="{% static 'img/logo_2.png' %}" alt="الرئيسية" class="dark-logo" width="125" height="55" />
+                            {% comment %} <img src="" alt="الرئيسية" class="dark-logo" width="125" height="55" /> {% endcomment %}
 
                             <!-- Light Logo icon -->
                             <!-- <img src="" alt="homepage" class="light-logo" /> -->
@@ -127,14 +128,34 @@
                         <!-- -------------------------------------------------------------- -->
                         <!-- Search -->
                         <!-- -------------------------------------------------------------- -->
-                        <!-- <li class="nav-item d-none d-md-block search-box"> <a
-                                class="nav-link d-none d-md-block waves-effect waves-dark" href="javascript:void(0)"><i
-                                    data-feather="search"></i></a>
-                            <form class="app-search">
-                                <input type="text" class="form-control" placeholder="Search & enter">
-                                <a class="srh-btn"><i data-feather="x" class="feather-sm"></i></a>
-                            </form>
-                        </li> -->
+                        <li class="nav-item  dropdown "> 
+                            <a class="nav-link dropdown-toggle waves-effect waves-dark" href="#"
+                                data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                {% get_current_language as LANGUAGE_CODE %}  
+                                {{LANGUAGE_CODE}}
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-end user-dd animated flipInY">
+                                
+                                
+                                <div class="m-3">
+                                    <form action="{% url 'set_language' %}" method="post">  {#2#}
+                                        {% csrf_token %}  
+                                        <select name="language" class='form-control '>  
+                                        {% get_current_language as LANGUAGE_CODE %}  
+                                        {% get_available_languages as LANGUAGES %}  
+                                        {% get_language_info_list for LANGUAGES as languages %}  
+                                        {% for language in languages %}
+                                        <option value="{{ language.code }}"{% if language.code == LANGUAGE_CODE %} selected{% endif %}>  {#8#}
+                                            {{ language.name_local }} ({{ language.code }})
+                                        </option>
+                                        {% endfor %}
+                                    </select>
+                                    <button class='btn btn-light waves-effect waves-dark mt-2' type="submit" > {% trans 'switch' %} </button> 
+                                </form>
+                            </div>
+                            </div>
+
+                        </li> 
                         <!-- -------------------------------------------------------------- -->
                         <!-- Comment -->
                         <!-- -------------------------------------------------------------- -->
@@ -176,7 +197,8 @@
                                 <a class="dropdown-item" href="" data-bs-target="#change_password_modal" data-bs-toggle="modal">تغيير كلمة السر </a>
 
                                 <a class="dropdown-item" href="{% url 'users:logout' %}"><i data-feather="log-out"
-                                        class="feather-sm text-danger me-1 ms-1"></i> خروج</a>
+                                        class="feather-sm text-danger me-1 ms-1"></i> 
+                                        {% trans 'logout' %} </a>
                             </div>
                         </li>
                     </ul>
@@ -202,16 +224,11 @@
                                 <span class="hide-menu">{{request.user}} </span>
                             </a>
                             <ul aria-expanded="false" class="collapse  first-level">
-                                <!-- <li class="sidebar-item">
-                                    <a href="javascript:void(0)" class="sidebar-link p-0">
-                                        <i class="mdi mdi-adjust"></i>
-                                        <span class="hide-menu"> My Profile </span>
-                                    </a>
-                                </li> -->
+                          
                                 <li class="sidebar-item">
                                     <a href="{% url 'users:logout' %}" class="sidebar-link p-0">
                                         <i class="mdi mdi-adjust"></i>
-                                        <span class="hide-menu"> تسجيل الخروج</span>
+                                        <span class="hide-menu">{% trans 'logout' %}</span>
                                     </a>
                                 </li>
                             </ul>
@@ -220,7 +237,7 @@
                         <li class="sidebar-item">
                             <a class="sidebar-link  waves-effect waves-dark" href="{% url 'core:index' %}">
                                 <i data-feather="home" class="feather-icon"></i>
-                                <span class="hide-menu">الرئيـسـية </span>
+                                <span class="hide-menu">{%trans 'home' %} </span>
                             </a>
 
                         </li>
@@ -231,7 +248,7 @@
                             <a class="sidebar-link  waves-effect waves-dark" href="{% url 'service:install' %}">
                                 <!-- <i data-feather="home" class="feather-icon"></i> -->
                                 <i class="fa fa-wrench"></i>
-                                <span class="hide-menu">التركيب  </span>
+                                <span class="hide-menu">{% trans 'install' %}</span>
                             </a>
 
                         </li>
@@ -239,7 +256,7 @@
                             <a class="sidebar-link  waves-effect waves-dark" href="{% url 'service:repair' %}">
                                 <!-- <i data-feather="home" class="feather-icon"></i> -->
                                 <i class="fas fa-cogs"></i>
-                                <span class="hide-menu">الصيانة </span>
+                                <span class="hide-menu">{% trans 'repair' %} </span>
                             </a>
 
                         </li>
@@ -249,7 +266,7 @@
                             <a class="sidebar-link  waves-effect waves-dark" href="{% url 'service:spare_part_request' %}">
                                 <!-- <i data-feather="home" class="feather-icon"></i> -->
                                 <i class="fas fa-cog"></i>
-                                <span class="hide-menu">طلبات قطع الغيار </span>
+                                <span class="hide-menu">{% trans 'sp_requests' %} </span>
                             </a>
 
                         </li>
@@ -259,7 +276,7 @@
                             <a class="sidebar-link  waves-effect waves-dark" href="{% url 'quarter:project_list' %}">
                                 <!-- <i data-feather="archive " ></i> -->
                                 <i class="fab fa-quora"></i>
-                                <span class="hide-menu">كوارتر </span>
+                                <span class="hide-menu">{% trans 'projects' %} </span>
                             </a>
 
                         </li>
@@ -268,7 +285,7 @@
                         <li class="sidebar-item">
                             <a class="sidebar-link  waves-effect waves-dark" href="{% url 'core:archive' %}">
                                 <i class=" fas fa-archive"></i>
-                                <span class="hide-menu">الأرشيف </span>
+                                <span class="hide-menu">{% trans 'archive' %} </span>
                             </a>
 
                         </li>
@@ -277,14 +294,14 @@
                         <li class="sidebar-item">
                             <a class="sidebar-link  waves-effect waves-dark" href="{% url 'core:reports' %}">
                                 <i class=" fas fa-chart-pie"></i>
-                                <span class="hide-menu">تقارير</span>
+                                <span class="hide-menu">{% trans 'reports' %} </span>
                             </a>
 
                         </li>
                         <li class="sidebar-item">
                             <a class="sidebar-link  waves-effect waves-dark" href="{% url 'users:user_list' %}">
                                 <i class="fas fa-user"></i>
-                                <span class="hide-menu">المستخدمين</span>
+                                <span class="hide-menu">{% trans 'users' %}</span>
                             </a>
 
                         </li>
@@ -293,7 +310,7 @@
                         {% if request.user.is_authenticated %}
                         <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link"
                                 href="{% url 'users:logout' %}" aria-expanded="false"><i data-feather="log-out"
-                                    class="feather-icon"></i><span class="hide-menu">Log Out</span></a></li>
+                                    class="feather-icon"></i><span class="hide-menu">{% trans 'logout' %}</span></a></li>
                         {% endif %}
                     </ul>
                 </nav>
@@ -313,18 +330,18 @@
                 {% if request.user.install %}
                 <button 
                 data-bs-target="#install_request" data-bs-toggle="modal"
-                class="btn btn-primary btn-rounded mt-3 mx-4 py-2 px-3"> <i class="fa fa-wrench"></i> طلب تركيب </button>
+                class="btn btn-primary btn-rounded mt-3 mx-4 py-2 px-3"> <i class="fa fa-wrench"></i> {% trans 'new_install_request' %} </button>
                 {% endif %}
                 {% if request.user.repair %}
                 <button 
                 data-bs-target="#repair_request" data-bs-toggle="modal"
-                class=" text-light btn btn-success btn-rounded mt-3 mx-4 py-2 px-3" >  <i class="fas fa-cogs"></i> طلب صيانة</button>
+                class=" text-light btn btn-success btn-rounded mt-3 mx-4 py-2 px-3" >  <i class="fas fa-cogs"></i> {% trans 'new_repair_request' %} </button>
                 {% endif %}
                 {% if request.user.quarter %}
-                <button data-bs-target="#quarter_request" data-bs-toggle="modal" class="text-light btn btn-primary btn-rounded mt-3 mx-4 py-2 px-3 text-light"><i class="fab fa-quora"></i> مشروع جديد </button>
+                <button data-bs-target="#quarter_request" data-bs-toggle="modal" class="text-light btn btn-primary btn-rounded mt-3 mx-4 py-2 px-3 text-light"><i class="fab fa-quora"></i>{% trans 'new_project' %} </button>
                 {% endif %}
                 {% if request.user.is_superuser or request.user.role == 'website_admin' or request.user.role == 'install_supervisor' %}
-                 <a href="{% url 'users:create_user' %}" class="text-light btn btn-primary btn-rounded mt-3 mx-4 py-2 px-3 text-light"><i class="fa fa-user"></i> مستخدم جديد </a>
+                 <a href="{% url 'users:create_user' %}" class="text-light btn btn-primary btn-rounded mt-3 mx-4 py-2 px-3 text-light"><i class="fa fa-user"></i> {% trans 'new_user' %} </a>
                  {% endif %}
 
     
@@ -364,34 +381,34 @@
                         <div class="modal-content">
                             <div class="modal-body">
                                 <div class="form-header text-center ">  
-                                    <h3>تغيير كلمة السر </h3>
+                                    <h3>{% trans 'change_password' %} </h3>
                                 </div>
                                 <form action="{% url 'users:change_password' %}" method="POST" >
                                     <input type="hidden" name="user" value="{{request.user.id}}">
                                     {% csrf_token%}
                                     <div>
-                                        <label for="">كلمة السر الجديدة </label>
+                                        <label for="">{% trans 'new_password' %}</label>
                                         <input type="password" name="password1" class="form-control">
                                         <div class="invalid-feedback" id="password1-validation">
-                                            يرجي ادخال رمز المرور
+                                            {% trans 'password_required' %}
                                         </div>
                                     </div>
                                     <div>
-                                        <label for="">تأكيد كلمة السر </label>
+                                        <label for="">{% trans 'confirm_password' %} </label>
                                         <input type="password" name="password2" class="form-control">
                                         <div class="invalid-feedback">
-                                            يرجي تأكيد رمز المرور
+                                            {% trans 'password_confirmation_required' %}
                                         </div>
                                     </div>
                            
                                     <div class="modal-btn delete-action my-3">
                                         <div class="row text-center">
                                             <div class="col-6">
-                                                <button type="submit" class="btn btn-success continue-btn w-100">حفظ</button>
+                                                <button type="submit" class="btn btn-success continue-btn w-100">{% trans 'save' %}</button>
                                             </div>
                 
                                             <div class="col-6">
-                                                <a href="javascript:void(0);" data-bs-dismiss="modal" class="btn btn-primary cancel-btn w-100">الغاء</a>
+                                                <a href="javascript:void(0);" data-bs-dismiss="modal" class="btn btn-primary cancel-btn w-100">{% trans 'cancel' %} </a>
                                             </div>
                                         </div>
                                     </div>
@@ -468,6 +485,8 @@
             }, false)
           })
       })()
+
+      
     </script>
     {% block script %}
     

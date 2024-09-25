@@ -1,19 +1,20 @@
 {% extends 'base.html' %}
+{% load i18n%}
 {% block title %}
-بيانات المستخدم - {{user}}
+ {{user}}
 {% endblock %}
 {% load static %}
 {% block content %}
 <div class="row page-titles">
     <div class="col-md-5 col-12 align-self-center">
-        <h3 class="text-themecolor mb-0">صفحة المستخدم {{user}}</h3>
+        <h3 class="text-themecolor mb-0">{% trans 'user_details' %} {{user}}</h3>
     </div>
     <div class="col-md-7 col-12 align-self-center d-none d-md-flex justify-content-end">
         <ol class="breadcrumb mb-0 p-0 bg-transparent">
             <li class="breadcrumb-item  d-flex align-items-center active">{{user}} </li>
-            <li class="breadcrumb-item  d-flex align-items-center"><a href="{% url 'users:user_list' %}">المستخدمين</a>
+            <li class="breadcrumb-item  d-flex align-items-center"><a href="{% url 'users:user_list' %}">{% trans 'users' %}</a>
             </li>
-            <li class="breadcrumb-item"><a href="{% url 'core:index' %} "> الرئيسية</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'core:index' %} "> {% trans 'home' %}</a></li>
         </ol>
     </div>
 </div>
@@ -22,7 +23,7 @@
     <div class="col-lg-6">
         <div class="card">
             <div class="card-header">
-                بيانات المستخدم
+                {% trans 'user_details' %}
             </div>
             <div class="card-body">
 
@@ -34,40 +35,40 @@
                     <img src="{% static 'img/avatar.jpg' %}" alt="" width="120">
                     {% endif %}
                 </div>
-                <div class="d-flex justify-content-between my-1">
+                <div class="d-flex justify-content-start my-1">
                     {% if perms.users.change_user %}
-                    <a href="" data-bs-toggle="modal" data-bs-target="#edit_user_modal" class="btn btn-primary"><i
-                            data-feather="edit-2"></i> تعديل البيانات</a>
+                    <a href="" data-bs-toggle="modal" data-bs-target="#edit_user_modal" class="btn btn-primary mx-1"><i
+                            data-feather="edit-2"></i> {% translate 'edit' %}</a>
                     {%  endif %}
                     {% if request.user.is_superuser or request.user == user %}
-                    <a href="" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#change_password"><i data-feather="edit-2" ></i> تغيير كلمة السر</a>
+                    <a href="" class="btn btn-primary mx-1" data-bs-toggle="modal" data-bs-target="#change_password"><i data-feather="edit-2" ></i>{% trans 'change_password' %}</a>
                     {% endif %}
-                    {% if perms.users.delete_user %}
-                    <a href="{% url 'users:delete_user' user.id %}" class="btn btn-danger"><i
-                            data-feather="trash-2"></i>حذف المستخدم </a>
+                    {% if perms.users.delete_user and not request.user.id == user.id  %}
+                    <a href="{% url 'users:delete_user' user.id %}" class="btn btn-danger mx-1"><i
+                            data-feather="trash-2"></i>{% trans 'delete' %}</a>
                     {% endif %}
                 </div>
                 <ul class="list-group">
-                    <li class="list-group-item text-muted">الاسم: <span class="text-primary">{{user.name}}</span></li>
-                    <li class="list-group-item text-muted">اسم المستخدم: <span
+                    <li class="list-group-item text-muted">{%trans 'name' %} : <span class="text-primary">{{user.name}}</span></li>
+                    <li class="list-group-item text-muted">{% trans 'user_name' %}: <span
                             class="text-primary">{{user.username}}</span></li>
-                    <li class="list-group-item text-muted">رقم الجوال : <span
+                    <li class="list-group-item text-muted">{% trans phone%}: <span
                             class="text-primary">{{user.phone_number}}</span>
                     </li>
-                    <li class="list-group-item text-muted">الوظيفة: <span
+                    <li class="list-group-item text-muted">{% trans 'job_title' %}: <span
                             class="text-primary">{{user.get_role_display}}</span>
                     </li>
                     <li class="list-group-item d-flex justify-content-between">
-                        <p class="text-muted"> عدد مفضلات التركيب/ الصيانة المسموح بها :
+                        <p class="text-muted"> {% trans 'allowed_fav_requests' %}:
                             <span class="text-primary">{{user.favourite_qouta}}</span> </p>
                     </li>
                     <li class="list-group-item text-muted">
-                        عدد المفضلات المتبقي لليوم : <span class="text-primary">{{user.remaining_qouta}}</span>
+                        {% trans 'day_remaining_favs' %}: <span class="text-primary">{{user.remaining_qouta}}</span>
                     </li>
                     <li class="list-group-item text-muted">
-                        الخدمات المسموحة للمستخدم : <span class="text-primary"> {% if user.install %} التركيب {% endif %}</span> 
-                         <span class="text-primary">{% if user.repair %}  الصيانة{% endif %} </span>
-                         <span class="text-primary">{% if user.quarter %}  كوارتر{% endif %} </span>
+                        {% trans 'allowed_services' %} : <span class="text-primary"> {% if user.install %} {% trans 'install' %} {% endif %}</span> 
+                         <span class="text-primary">{% if user.repair %}  {%trans 'repair' %} {% endif %} </span>
+                         <span class="text-primary">{% if user.quarter %}  {% trans 'projects' %} {% endif %} </span>
                     </li>
                 </ul>
 
@@ -79,18 +80,18 @@
     <div class="col-lg-6">
         <div class="card">
             <div class="card-header">
-                تاريخ المستخدم
+                {% trans 'user_history' %}
             </div>
             <div class="card-body">
-                <h6>الطلبات المستلمة </h6>
+                <h6> {% trans 'requests' %} </h6>
                 <div class="table-responsive">
                     <table class="table search-table " id="serviceTable">
                         <thead class="header-item bg-dark text-light text-center">
                             <th>#</th>
-                            <th>رقم الطلب </th>
-                            <th>اسم العميل </th>
-                            <th>التاريخ</th>
-                            <th>حالة الطلب </th>
+                            <th>{% trans 'req_number' %}</th>
+                            <th>{% trans 'customer_name' %}</th>
+                            <th>{% trans 'date'%}</th>
+                            <th>{% trans 'status' %}</th>
                         </thead>
                         <tbody>
                             <!-- row -->
@@ -139,34 +140,34 @@
         <div class="modal-content">
             <div class="modal-body">
                 <div class="form-header text-center ">  
-                    <h3>تغيير كلمة السر </h3>
+                    <h3>{% trans 'change_password' %}</h3>
                 </div>
                 <form action="{% url 'users:change_password' %}" method="POST" id="delete-form">
                     <input type="hidden" name="user" value="{{user.id}}">
                     {% csrf_token%}
                     <div>
-                        <label for="">كلمة السر الجديدة </label>
+                        <label for="">{% trans 'new_password' %}</label>
                         <input type="password" name="password1" class="form-control">
                         <div class="invalid-feedback" id="password1-validation">
-                            يرجي ادخال رمز المرور
+                            {% trans 'password_required' %}
                         </div>
                     </div>
                     <div>
-                        <label for="">تأكيد كلمة السر </label>
+                        <label for="">{% trans 'confirm_password' %} </label>
                         <input type="password" name="password2" class="form-control">
                         <div class="invalid-feedback">
-                            يرجي تأكيد رمز المرور
+                            {% trans 'password_confirmation_required' %}
                         </div>
                     </div>
            
                     <div class="modal-btn delete-action my-3">
                         <div class="row text-center">
                             <div class="col-6">
-                                <button type="submit" class="btn btn-success continue-btn w-100">حفظ</button>
+                                <button type="submit" class="btn btn-success continue-btn w-100">{% trans 'save' %}</button>
                             </div>
 
                             <div class="col-6">
-                                <a href="javascript:void(0);" data-bs-dismiss="modal" class="btn btn-primary cancel-btn w-100">الغاء</a>
+                                <a href="javascript:void(0);" data-bs-dismiss="modal" class="btn btn-primary cancel-btn w-100">{% trans 'cancel' %} </a>
                             </div>
                         </div>
                     </div>
