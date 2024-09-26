@@ -15,7 +15,7 @@
             <tbody>
                 <!-- row -->
                 {% for service in services %}
-                <tr class="search-items text-center {% if service.late %} bg-light-danger {% endif %}">
+                <tr class="search-items text-center">
                     <td>{{forloop.counter}} </td>
                     <td>
                         <a href="{% url 'service:service_details' service.service.id %}">{{service.service.ref_number}}</a>

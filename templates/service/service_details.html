@@ -36,14 +36,14 @@
                     <form method="post" action="{% url 'service:favourite_service' %}">
                         {% csrf_token%}
                         <input type="hidden" name="service" value="{{service.id}}">
-                        <button class="btn btn-success">{%trans 'add_to_favs' %}</button>
+                        <button class="btn btn-info">{%trans 'add_to_favs' %}</button>
                     </form>
                     {% endif %}
                     {% endif %}
 
                     {% if service.status  == 'new' or service.status == 'under_process' %}
                     {% if service.service_type == 'repair' and service.status == 'under_process' and request.user.role == 'repair_supervisor' or request.user.is_superuser  %}
-                    <button class="btn btn-warning " data-bs-target="#hold_service" data-bs-toggle="modal"><i
+                    <button class="btn btn-info " data-bs-target="#hold_service" data-bs-toggle="modal"><i
                             data-feather="pause-circle"></i> {% trans 'hold' %} </button>
                     {% endif %}
                     {% endif %}
@@ -80,45 +80,51 @@
             <h3>{% trans 'sp_requests' %}</h3>
             {% for req in service.sp_request.all %}
             <div>
-                <ul class="list-group">
-                    <li class="list-group-item">
-                        {% trans 'requested_parts' %} : <span class="text-primary"> {{req.requested_parts}} </span>
-                    </li>
-                    {% if req.details %}
-                    <li class="list-group-item">
-                        {% trans 'details' %}: <span class="text-primary"> {{req.details}} </span>
-
-                    </li>
-                    {% endif %}
-                    <li class="list-group-item">
-                        {% trans 'created_at' %}  : {{req.created_at }}
-                    </li>
-                    <li>
-                        {% trans 'created_by' %} : {{req.created_by}}
-                    </li>
-                    <li class="list-group-item d-flex justify-content-between">
-                        <div>
-
-                            {% trans 'recieved' %}:
-                            {% if req.status == 'pending' %}
-                            <span class="badge bg-danger"> {% trans 'no' %} </span>
-                            {% elif req.status == 'recieved' %}
-                            <span class="badge bg-success"> {% trans 'yes' %}</span>
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <div class="row g-2 mx-4">
+                            <div class="col-sm-6 p-2 border-bottom mb-4">
+                                <span class="text-muted">{% trans 'requested_parts' %}:</span>
+                                <span class="ms-2 fw-bold">{{req.requested_parts}}</span>
+                            </div>
+                            {% if req.details %}
+                            <div class="col-sm-6 p-2 border-bottom mb-4">
+                                <span class="text-muted">{% trans 'details' %}:</span>
+                                <span class="ms-2 fw-bold">{{req.details}}</span>
+                            </div>
                             {% endif %}
+                            <div class="col-sm-6 p-2 border-bottom mb-4">
+                                <span class="text-muted">{% trans 'created_at' %}:</span>
+                                <span class="ms-2 fw-bold">{{req.created_at}}</span>
+                            </div>
+                            <div class="col-sm-6 p-2 border-bottom mb-4">
+                                <span class="text-muted">{% trans 'created_by' %}:</span>
+                                <span class="ms-2 fw-bold">{{req.created_by}}</span>
+                            </div>
+                            <div class="col-12 p-2 border-bottom mb-4">
+                                <span class="text-muted">{% trans 'recieved' %}:</span>
+                                <span class="ms-2">
+                                    {% if req.status == 'pending' %}
+                                    <span class="badge bg-danger">{% trans 'no' %}</span>
+                                    {% elif req.status == 'recieved' %}
+                                    <span class="badge bg-success">{% trans 'yes' %}</span>
+                                    {% endif %}
+                                </span>
+                            </div>
                         </div>
-                        {% if req.status == 'pending' %}
-                        {% if request.user.is_superuser or request.user.role == 'repair_supervisor' %}
-                        <form action="{% url 'service:confirm_sp_recievce' %}" method="post">
-                            {% csrf_token %}
-                            <input type="hidden" name="sp_request" value="{{req.id}}">
-                            <button type="submit" class="btn btn-success">{%trans 'confirm_recieve' %}</button>
-                        </form>
+                        {% if req.status == 'pending' and request.user.is_superuser or request.user.role == 'repair_supervisor' %}
+                        <div class="d-flex justify-content-end">
+                            <form action="{% url 'service:confirm_sp_recievce' %}" method="post" class="m-0">
+                                {% csrf_token %}
+                                <input type="hidden" name="sp_request" value="{{req.id}}">
+                                <button type="submit" class="btn btn-success">
+                                    <i class="bi bi-check-circle"></i> {% trans 'confirm_recieve' %}
+                                </button>
+                            </form>
+                        </div>
                         {% endif %}
-                        {% endif %}
-                    </li>
-
-                </ul>
-
+                    </div>
+                </div>
             </div>
             {% endfor %}
         </div>

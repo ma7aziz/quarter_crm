@@ -17,14 +17,14 @@
         <tbody>
             <!-- row -->
             {% for service in services %}
-            <tr class="search-items text-center {% if service.late %} bg-light-danger {% endif %}">
+            <tr class="search-items text-center">
 
                 <td>{{forloop.counter}} </td>
                 <td>
                     <a href="{% url 'service:service_details' service.id %}">{{service.ref_number}}</a>
                 </td>
                 <td>
-                    <span class="badge rounded-pill 
+                    <span class="badge  
                     {% if service.service_type == 'install' %}
                     bg-primary
                     {% elif service.service_type == 'repair' %}
@@ -44,9 +44,9 @@
                     
                     <a href="{% url 'service:service_details' service.id %}">
                     {% if service.hold %}
-                    <span class="badge round-pill bg-danger">{% trans 'on_hold' %}</span>
+                    <span class="badge  bg-danger">{% trans 'on_hold' %}</span>
                     {% else %}
-                    <span class="badge rounded-pill 
+                    <span class="badge  
 
                     {% if service.status  == 'new' %}
                     bg-warning
@@ -72,7 +72,7 @@
                     <a href="{% url 'service:service_details' service.id %}">{{service.ref_number}}</a>
                 </td>
                 <td>
-                    <span class="badge rounded-pill bg-success
+                    <span class="badge  bg-success
                     ">
                         {% trans 'projects' %} 
                     </span>
@@ -88,7 +88,7 @@
                     <a href="{% url 'service:service_details' service.id %}">
 
 
-                    <span class="badge rounded-pill 
+                    <span class="badge  
 
                     {% if project.status  == 'new' %}
                     bg-warning

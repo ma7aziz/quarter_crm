@@ -34,7 +34,7 @@
                 <!-- row -->
                 {% for req in sp_requests %}
                 <tr
-                    class="search-items text-center {% if service.late %} bg-light-danger {% elif service.favourite and service.late == False and service.status == 'new' %} bg-light-success {% endif %}">
+                    class="search-items text-center ">
                     <td>{{forloop.counter}} </td>
                     <td>
                         <a href="{% url 'service:service_details' req.service.id %}">{{req.service}}</a>
@@ -47,7 +47,7 @@
                     <td><a href="{% url 'users:user_details' req.service.created_by.id %}">{{req.created_by}}</a></td>
                     <td>{{req.created_at.date}}</td>
                     <td>
-                        <span class="badge rounded-pill 
+                        <span class="badge  
                     {% if req.status  == 'pending' %}
                        bg-warning
                     {% elif req.status == 'recieved' %}

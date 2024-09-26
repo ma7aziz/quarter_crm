@@ -43,13 +43,6 @@
                     </a>
                     {% endif %}
                 </div>
-                <div class="text-center mb-4">
-                    {% if user.profile_pic %}
-                    <img src="{{ MEDIA_URL }}{{ user.profile_pic.url }}" alt="" width="120" class="img-thumbnail">
-                    {% else %}
-                    <img src="{% static 'img/avatar.jpg' %}" alt="" width="120" class="img-thumbnail">
-                    {% endif %}
-                </div>
                 <div class="row g-2 mx-4">
                     <div class="col-sm-6 p-2 border-bottom mb-4">
                         <span class="text-muted">{% trans 'name' %}:</span>
@@ -181,11 +174,11 @@
                     <div class="modal-btn delete-action my-3">
                         <div class="row text-center">
                             <div class="col-6">
-                                <button type="submit" class="btn btn-success continue-btn w-100">{% trans 'save' %}</button>
+                                <button type="submit" class="btn btn-info continue-btn w-100">{% trans 'save' %}</button>
                             </div>
 
                             <div class="col-6">
-                                <a href="javascript:void(0);" data-bs-dismiss="modal" class="btn btn-primary cancel-btn w-100">{% trans 'cancel' %} </a>
+                                <a href="javascript:void(0);" data-bs-dismiss="modal" class="btn btn-secondary cancel-btn w-100">{% trans 'cancel' %} </a>
                             </div>
                         </div>
                     </div>

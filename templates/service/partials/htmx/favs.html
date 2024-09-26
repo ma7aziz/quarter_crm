@@ -17,7 +17,7 @@
             <tbody>
                 <!-- row -->
                 {% for service in services %}
-                <tr class="search-items text-center  bg-light-success">
+                <tr class="search-items text-center ">
                     <td>{{forloop.counter}} </td>
                     <td>
                         <a href="{% url 'service:service_details' service.id %}">{{service.ref_number}}</a>
@@ -29,7 +29,7 @@
                     <td><a href="{% url 'users:user_details' service.created_by.id %}">{{service.created_by}}</a></td>
                     <td>{{service.created_at.date|date:"F j"}}</td>
                     <td>
-                        <span class="badge rounded-pill 
+                        <span class="badge  
                     {% if service.status  == 'new' %}
                        bg-warning
                     {% elif service.status == 'under_process' %}

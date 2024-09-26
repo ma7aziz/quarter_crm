@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load i18n %}
 {% block title %}
 تفاصيل المشروع {{project.ref_number}}
 {% endblock %}
@@ -11,7 +12,7 @@
         <ol class="breadcrumb mb-0 p-0 bg-transparent">
             <li class="breadcrumb-item active "><a href="">{{project}}</a></li>
             <li class="breadcrumb-item"><a href="">كوارتر </a></li>
-            <li class="breadcrumb-item d-flex align-items-center">الرئيسية</li>
+            <li class="breadcrumb-item d-flex align-items-center">{% trans 'home' %}</li>
         </ol>
     </div>
 </div>
@@ -55,13 +56,13 @@
             <p>بواسطة : {{project.negotiation_set.last.created_by}} </p>
 
             {% if request.user.is_superuser or request.user.role == 'quarter_supervisor' or request.user ==  project.negotiation_set.last.created_by %}
-            <div class="">
+            <div class="d-flex flex-column flex-md-row gap-2 justify-content-end ">
                 <form action="{% url 'quarter:negotiation_status' %}" method="post">
                     {% csrf_token %}
                     <input type="hidden" name="project" value="{{project.id}}">
                     <input type="hidden" name="negotiation" value="{{project.negotiation_set.last.id}}">
                     <input type="hidden" name="status" value="approved">
-                    <button class="btn btn-success my-1 w-100">موافقة</button>
+                    <button class="btn btn-info w-100">موافقة</button>
                 </form>
                 <form action="{% url 'quarter:negotiation_status' %}" method="post">
                     {% csrf_token %}
@@ -99,7 +100,7 @@
                     <textarea name="notes" class="form-control" id="" cols="30" rows="2"></textarea>
                 </div>
                 <div class=" d-flex justify-content-end my-2">
-                    <button type="submit" class="btn btn-success">
+                    <button type="submit" class="btn btn-info mt-1">
                         حفظ
                     </button>
                 </div>

@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load i18n %}
 {% block title %}الأرشيف {% endblock%}
 {% block content %}
 <div class="row page-titles">
@@ -10,7 +11,7 @@
         <ol class="breadcrumb mb-0 p-0 bg-transparent">
             <li class="breadcrumb-item active "><a href="">الأرشيف </a></li>
             <li class="breadcrumb-item"><a >الخدمات</a></li>
-            <li class="breadcrumb-item d-flex align-items-center">الرئيسية</li>
+            <li class="breadcrumb-item d-flex align-items-center">{% trans 'home' %}</li>
         </ol>
     </div>
 </div>
@@ -31,7 +32,7 @@
             <tbody>
                 <!-- row -->
                 {% for service in services %}
-                <tr class="search-items text-center {% if service.late %} bg-light-danger {% elif service.favourite and service.late == False and service.status == 'new' %} bg-light-success {% endif %}">
+                <tr class="search-items text-center ">
                     <td>{{forloop.counter}} </td>
                     <td>
                         <a href="{% url 'service:service_details' service.id %}">{{service.ref_number}}</a>

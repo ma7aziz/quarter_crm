@@ -59,7 +59,7 @@
             <tbody>
                 <!-- row -->
                 {% for service in services %}
-                <tr class="search-items text-center {% if service.late %} bg-light-danger {% endif %} ">
+                <tr class="search-items text-center">
                     <td>{{forloop.counter}} </td>
                     <td>
                         <a href="{% url 'service:service_details' service.id %}">{{service.ref_number}}</a>
@@ -70,7 +70,7 @@
                     </td>
                     <td>{{service.phone_number}}</td>
                     <td>
-                        <span class="badge rounded-pill 
+                        <span class="badge  
                         {% if service.service_type == 'install' %}
                         bg-primary
                         {% elif service.service_type == 'repair' %}
@@ -83,7 +83,7 @@
                     </td>
                     <td>{{service.created_at.date|date:"F j"}}</td>
                     <td>
-                        <span class="badge rounded-pill 
+                        <span class="badge  
                     {% if service.status  == 'new' %}
                        bg-warning
                     {% elif service.status == 'under_process' %}
@@ -143,7 +143,7 @@
                     </td>
                     <td>{{service.phone_number}}</td>
                     <td>
-                        <span class="badge rounded-pill 
+                        <span class="badge  
                         {% if service.service_type == 'install' %}
                         bg-primary
                         {% elif service.service_type == 'repair' %}
@@ -156,7 +156,7 @@
                     </td>
                     <td>{{service.created_at.date|date:"F j"}}</td>
                     <td>
-                        <span class="badge rounded-pill 
+                        <span class="badge  
                     {% if service.status  == 'new' %}
                        bg-warning
                     {% elif service.status == 'under_process' %}
@@ -210,7 +210,7 @@
                     
                     <td>{{req.created_at.date|date:"F j"}}</td>
                     <td>
-                        <span class="badge rounded-pill 
+                        <span class="badge  
                     {% if req.status  == 'pending' %}
                        bg-warning
                     {% elif req.status == 'recieved' %}

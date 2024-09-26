@@ -8,7 +8,7 @@
                 <div class="form-header text-center ">
                     <h3>{% trans 'hold_request'%}</h3>
                 </div>
-                <div class="modal-btn delete-action my-3">
+                <div class="modal-btn delete-action mt-3">
                     <div class="">
 
                         <form action="{% url 'service:hold_service' %}" method="POST" enctype="multipart/form-data"
@@ -50,11 +50,11 @@
                                 <input type="file" name="file" class="form-control" multiple id="">
                             </div>
 
-                            <div class="d-flex my-3">
-                                <button type="submit" class="btn btn-success continue-btn  w-100">{% trans 'save' %}</button>
+                            <div class="d-flex mt-3 gap-3">
+                                <button type="submit" class="btn btn-info continue-btn  w-100">{% trans 'save' %}</button>
 
                                 <a href="javascript:void(0);" data-bs-dismiss="modal"
-                                    class="btn btn-primary cancel-btn w-100">{% trans 'cancel' %}</a>
+                                    class="btn btn-secondary cancel-btn w-100">{% trans 'cancel' %}</a>
                             </div>
 
                         </form>
@@ -86,7 +86,7 @@
                         </div>
                         <div class="col-6">
                             <a href="javascript:void(0);" data-bs-dismiss="modal"
-                                class="btn btn-primary cancel-btn w-100">{% trans 'cancel' %}</a>
+                                class="btn btn-secondary cancel-btn w-100">{% trans 'cancel' %}</a>
                         </div>
                     </div>
                 </div>
@@ -115,7 +115,7 @@
                     {% endif %} ">{{service.get_status_display}}</span>
                     </h5>
                 </div>
-                <div class="modal-btn delete-action my-3">
+                <div class="modal-btn delete-action">
                     <div class="row ">
                         <form action="{% url 'service:update_service_status' %}" method="POST">
                             <input type="hidden" name="service" value="{{service.id}}">
@@ -127,11 +127,11 @@
                                 <option value="{{k}}" {% if service.status == k %} selected {% endif %}>{{v}}</option>
                                 {% endfor %}
                             </select>
-                            <div class="d-flex my-3">
-                                <button type="submit" class="btn btn-success continue-btn  w-100">{% trans 'save' %}</button>
+                            <div class="d-flex mt-3 gap-3">
+                                <button type="submit" class="btn btn-info continue-btn  w-100">{% trans 'save' %}</button>
 
                                 <a href="javascript:void(0);" data-bs-dismiss="modal"
-                                    class="btn btn-primary cancel-btn w-100">{% trans 'cancel'%}</a>
+                                    class="btn btn-secondary cancel-btn w-100">{% trans 'cancel'%}</a>
                             </div>
 
                         </form>
@@ -148,7 +148,7 @@
 
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLongTitle">{% trans 'change_appointment' %}</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
@@ -169,7 +169,7 @@
                         <label for="">{% trans 'notes' %}</label>
                         <textarea name="notes" class="form-control" id="" cols="30" rows="2"></textarea>
                     </div>
-                    <input type="submit" value="{% trans 'save' %}" class="btn btn-success w-100">
+                    <input type="submit" value="{% trans 'save' %}" class="btn btn-info w-100">
                 </form>
             </div>
         </div>
@@ -183,7 +183,7 @@
             <div class="modal-header">
                 
                 <h2 class="modal-title" id="">{% trans 'confirm_exc' %}</h2>
-                <button type="button" class="close btn btn-secondary" data-dismiss="modal" aria-label="Close">
+                <button type="button" class="close btn btn-secondary" data-bs-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">x</span>
                 </button>
             </div>
@@ -205,7 +205,7 @@
                         <label for="" class="text-primary">{% trans 'notes' %}</label>
                         <textarea name="notes" class="form-control" id="" cols="30" rows="2"></textarea>
                     </div>
-                    <input type="submit" value="{% trans 'save' %}" class="btn btn-success w-100">
+                    <input type="submit" value="{% trans 'save' %}" class="btn btn-info w-100">
                 </form>
             </div>
         </div>
@@ -219,7 +219,7 @@
 
             <div class="modal-header">
                 <h2 class="modal-title" id="">{%trans 'sp_request' %} </h2>
-                <button type="button" class="close btn btn-secondary" data-dismiss="modal" aria-label="Close">
+                <button type="button" class="close btn btn-secondary" data-bs-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">x</span>
                 </button>
             </div>
@@ -240,7 +240,7 @@
                         <label for="" class="text-primary"> {% trans 'files' %}</label>
                         <input type="file" name="file" multiple id="" class="form-control">
                     </div>
-                    <input type="submit" value="{% trans 'save' %}" class="btn btn-success w-100">
+                    <input type="submit" value="{% trans 'save' %}" class="btn btn-info w-100">
                 </form>
             </div>
         </div>

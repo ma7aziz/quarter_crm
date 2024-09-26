@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load i18n %}
 {% block title %}
 الخدمات - الرئيسية
 {% endblock %}
@@ -11,7 +12,7 @@
     <div class="col-md-7 col-12 align-self-center d-none d-md-flex justify-content-end">
         <ol class="breadcrumb mb-0 p-0 bg-transparent">
             <li class="breadcrumb-item"><a href="">الخدمات</a></li>
-            <li class="breadcrumb-item active d-flex align-items-center">الرئيسية</li>
+            <li class="breadcrumb-item active d-flex align-items-center">{% trans 'home' %}</li>
         </ol>
     </div>
 </div>

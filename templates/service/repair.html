@@ -90,7 +90,7 @@
             <tbody>
                 <!-- row -->
                 {% for service in services %}
-                <tr class="search-items text-center {% if service.late %} bg-light-danger {% endif %}">
+                <tr class="search-items text-center ">
                     <td>{{forloop.counter}} </td>
                     <td>
                         <a href="{% url 'service:service_details' service.id %}">{{service.ref_number}}</a>
@@ -107,7 +107,7 @@
                         <a href="{% url 'service:service_details' service.id %}">
 
                             {% if service.hold %}
-                            <span class="badge round-pill bg-danger">{trans 'hold' }</span>
+                            <span class="badge bg-danger">{trans 'hold' }</span>
                             {% else %}
                             <span class="badge  
     
