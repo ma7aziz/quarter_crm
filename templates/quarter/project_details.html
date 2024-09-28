@@ -30,7 +30,7 @@
                     المشروع</button>
                 
                 <!-- delete -->
-                <button class="btn btn-danger my-2" data-bs-target="#project_delete_approve" data-bs-toggle="modal"> حذف
+                <button class="btn btn-danger" data-bs-target="#project_delete_approve" data-bs-toggle="modal"> حذف
                     المشروع </button>
                 {% endif %}
                 {% endif %}
@@ -39,7 +39,7 @@
                 <form action="{% url 'quarter:start_negotiation' %}" method="post">
                     {% csrf_token %}
                     <input type="hidden" name="project" value="{{project.id}}">
-                    <button class="btn btn-primary my-2 w-100" type="submit">بداية المفاوضات </button>
+                    <button class="btn btn-primary w-100" type="submit">بداية المفاوضات </button>
                 </form>
                 {% endif %}
                 {% endif %}
@@ -50,8 +50,8 @@
 
         {% if project.status == 'negotiation' %}
 
-        <div class="card card-body">
-            <h4>جاري التفاوض</h4>
+        <div class="card card-body mt-3">
+            <h4 class="mb-3">جاري التفاوض</h4>
             <p> بدء التفاوض : {{project.negotiation_set.last.created_at}}</p>
             <p>بواسطة : {{project.negotiation_set.last.created_by}} </p>
 
@@ -129,6 +129,7 @@
                 <form action="{% url 'quarter:confirm_project' %}" method="post">
                     {% csrf_token %}
                     <input type="hidden" name="project" value="{{project.id}}">
+                    <!--  -->
                     <button class="btn btn-success w-100">تأكيد توقيع العقد </button>
                 </form>
 
